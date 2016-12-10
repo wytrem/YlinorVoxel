@@ -1,0 +1,3 @@
+rootProject.name = 'Ylinor'
+
+include 'client', 'client:core', 'client:desktop', 'library', 'library:api', 'library:network', 'library:util', 'server'

@@ -1,0 +1,32 @@
+allprojects {
+    apply plugin: 'java'
+
+    group = 'com.ylinor'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/releases/'
+        }
+
+        maven {
+            url 'http://wytrem.github.io/maven/'
+        }
+    }
+    
+    jar {
+        from 'LICENSE'
+    }
+}

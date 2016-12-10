@@ -1,0 +1,75 @@
+package com.ylinor.client.screen.pregame;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.kotcrab.vis.ui.widget.VisProgressBar;
+import com.ylinor.client.resource.Assets;
+import com.ylinor.client.screen.YlinorScreen;
+import net.wytrem.logging.Logger;
+import net.wytrem.logging.LoggerFactory;
+
+/**
+ * L'écran de chargement, lancé après le preloading
+ * des assets, affiche le chargement des assets.
+ *
+ * @author Litarvan
+ * @since 1.0.0
+ */
+public class LoadingScreen extends YlinorScreen
+{
+    /* Logo afficher au milieu de l'écran */
+    private Image logo;
+
+    /* La progressBar */
+    private ProgressBar loading;
+
+    /* Logger */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    /* Appele lors de la création du screen */
+    @Override
+    public void show()
+    {
+        /* Définie l'InputProcessor (cf YlinorScreen) */
+        super.show();
+
+        /* Prend un objet local d'assets */
+        Assets assets = Assets.get();
+
+        /* Créer le logo a partire de la classe Asset */
+        logo = new Image(assets.screen.splash());
+        this.addActor(logo);
+
+        /* Créer la ProgressBar */
+        loading = new VisProgressBar(0, assets.assetsToLoad() + assets.assetsLoaded(), 1, false);
+        this.addActor(loading);
+
+        logger.debug(assets.assetsLoaded() + "/" + assets.assetsToLoad() + " assets loaded");
+    }
+
+    @Override
+    public void resize(int width, int height)
+    {
+        /* Appeler la méthode super, voire YlinorClient */
+        super.resize(width, height);
+
+        /* Definir la nouvelle taille du logo */
+        logo.setSize(450, 450);
+
+        /* Changer sa position en fonction de la taille de la fenet */
+        logo.setPosition(width / 2 - logo.getWidth() / 2, height / 2 - logo.getHeight() / 2);
+
+        /* Changer la taille de la progress bar en fonction de la taille de la fenetre */
+        loading.setBounds(0, 0, width, 20);
+    }
+
+    @Override
+    public void render(float delta)
+    {
+        /* Appeller la méthode super (cf YlinorClient) */
+        super.render(delta);
+
+        /* Changer la valeur de la progress bar en fonction du nombre d'assets chargés */
+        loading.setValue(Assets.get().assetsLoaded());
+    }
+}
