@@ -29,6 +29,8 @@ allprojects {
         wylogVersion = '1.2'
         jbAnnotationsVersion = '15.0'
     }
+
+    sourceSets.main.java.srcDirs = [ 'src/' ]
 }
 
 tasks.eclipse.doLast {
