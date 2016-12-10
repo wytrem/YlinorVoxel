@@ -1,4 +1,4 @@
-package com.ylinor.library.math;
+package com.ylinor.library.util.math;
 
 import com.badlogic.gdx.math.Vector3;
 import java.util.Random;

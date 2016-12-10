@@ -3,7 +3,7 @@ package com.ylinor.client.render;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import com.ylinor.library.world.World;
+import com.ylinor.library.api.world.World;
 
 public class WorldRenderer implements Renderer<World>
 {
