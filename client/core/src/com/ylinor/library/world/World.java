@@ -21,14 +21,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Litarvan
  * @since 1.0.0
  */
-public class World implements Sizeable3D
+public class World
 {
-    /**
-     * La taille du monde
-     */
-    @NotNull
-    private Sizeable3D size;
-
     /**
      * Le {@link IChunkProvider} qui sera appelé dans le cas
      * d'utilisation de {@link #getChunk(Positionable2D)} sur
@@ -39,27 +33,14 @@ public class World implements Sizeable3D
     private IChunkProvider provider;
 
     /**
-     * La grille de {@link Chunk}
-     */
-    @NotNull
-    private Chunk[][] chunks;
-
-    /**
      * Un monde Ylinor
      *
-     * @param size La taille du monde
      * @param provider Le chunk provider fournissant les Chunks du monde
      */
-    public World(@NotNull Sizeable3D size, @NotNull IChunkProvider provider) throws IllegalArgumentException
+    public World(@NotNull IChunkProvider provider) throws IllegalArgumentException
     {
-        if (size == null)
-        {
-            throw new IllegalArgumentException("size == null");
-        }
-
-        this.size = size;
+        Assert
         this.provider = provider;
-        this.chunks = new Chunk[size.getSizeX()][size.getSizeZ()];
     }
 
     /**
@@ -169,47 +150,11 @@ public class World implements Sizeable3D
     }
 
     /**
-     * @return La taille du monde
-     */
-    @NotNull
-    public Sizeable3D getSize()
-    {
-        return size;
-    }
-
-    /**
      * @return Le chunk provider actuel (null si non donné au constructeur)
      */
-    @Nullable
+    @NotNull
     public IChunkProvider getChunkProvider()
     {
         return provider;
-    }
-
-    @Override
-    public int getSizeX()
-    {
-        return size.getSizeX();
-    }
-
-    @Override
-    public int getSizeY()
-    {
-        return size.getSizeY();
-    }
-
-    @Override
-    public int getSizeZ()
-    {
-        return size.getSizeZ();
-    }
-
-    /**
-     * @return La grille de {@link Chunk}
-     */
-    @NotNull
-    public Chunk[][] getChunks()
-    {
-        return chunks;
     }
 }
