@@ -1,7 +1,7 @@
 package com.ylinor.library.util.math;
 
 import com.badlogic.gdx.math.Vector3;
-import com.ylinor.library.Facing;
+import com.ylinor.library.util.Facing;
 
 public class BlockPosition extends Position3D
 {

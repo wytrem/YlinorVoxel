@@ -1,5 +1,6 @@
 package com.ylinor.library.util.math;
 
+import com.badlogic.gdx.math.Vector3;
 import java.util.Random;
 
 
@@ -64,9 +65,9 @@ public class MathHelper
      */
     private static final float[] SIN_TABLE = new float[65536];
 
-    public static final Vector3f xAxis = new Vector3f(1, 0, 0);
-    public static final Vector3f yAxis = new Vector3f(0, 1, 0);
-    public static final Vector3f zAxis = new Vector3f(0, 0, 1);
+    public static final Vector3 xAxis = new Vector3(1, 0, 0);
+    public static final Vector3 yAxis = new Vector3(0, 1, 0);
+    public static final Vector3 zAxis = new Vector3(0, 0, 1);
 
     private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION;
 
@@ -104,7 +105,7 @@ public class MathHelper
      * the line between this vector and the passed in vector, or null if not
      * possible.
      */
-    public static Vector3f getIntermediateWithXValue(Vector3f u, Vector3f v, float par2)
+    public static Vector3 getIntermediateWithXValue(Vector3 u, Vector3 v, float par2)
     {
         float var4 = v.x - u.x;
         float var6 = v.y - u.y;
@@ -117,7 +118,7 @@ public class MathHelper
         else
         {
             float var10 = (par2 - u.x) / var4;
-            return var10 >= 0.0D && var10 <= 1.0D ? new Vector3f(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
+            return var10 >= 0.0D && var10 <= 1.0D ? new Vector3(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
         }
     }
 
@@ -153,7 +154,7 @@ public class MathHelper
      * the line between this vector and the passed in vector, or null if not
      * possible.
      */
-    public static Vector3f getIntermediateWithYValue(Vector3f u, Vector3f v, float par2)
+    public static Vector3 getIntermediateWithYValue(Vector3 u, Vector3 v, float par2)
     {
         float var4 = v.x - u.x;
         float var6 = v.y - u.y;
@@ -166,7 +167,7 @@ public class MathHelper
         else
         {
             float var10 = (par2 - u.y) / var6;
-            return var10 >= 0.0D && var10 <= 1.0D ? new Vector3f(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
+            return var10 >= 0.0D && var10 <= 1.0D ? new Vector3(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
         }
     }
 
@@ -175,7 +176,7 @@ public class MathHelper
      * the line between this vector and the passed in vector, or null if not
      * possible.
      */
-    public static Vector3f getIntermediateWithZValue(Vector3f u, Vector3f v, float par2)
+    public static Vector3 getIntermediateWithZValue(Vector3 u, Vector3 v, float par2)
     {
         float var4 = v.x - u.x;
         float var6 = v.y - u.y;
@@ -188,7 +189,7 @@ public class MathHelper
         else
         {
             float var10 = (par2 - u.z) / var8;
-            return var10 >= 0.0D && var10 <= 1.0D ? new Vector3f(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
+            return var10 >= 0.0D && var10 <= 1.0D ? new Vector3(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
         }
     }
 
