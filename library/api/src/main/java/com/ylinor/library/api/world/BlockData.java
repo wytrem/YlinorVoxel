@@ -1,8 +1,8 @@
-package com.ylinor.library.world;
+package com.ylinor.library.api.world;
 
-import com.ylinor.library.block.BlockType;
-import com.ylinor.library.math.Position3D;
-import com.ylinor.library.math.Positionable3D;
+import com.ylinor.library.api.block.BlockType;
+import com.ylinor.library.util.math.Position3D;
+import com.ylinor.library.util.math.Positionable3D;
 import org.jetbrains.annotations.NotNull;
 
 /**

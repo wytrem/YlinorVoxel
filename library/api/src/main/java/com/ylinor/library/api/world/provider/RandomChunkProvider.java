@@ -1,9 +1,9 @@
-package com.ylinor.library.world.provider;
+package com.ylinor.library.api.world.provider;
 
-import com.ylinor.library.block.BlockType;
-import com.ylinor.library.math.Positionable2D;
-import com.ylinor.library.world.Chunk;
-import com.ylinor.library.world.World;
+import com.ylinor.library.api.block.BlockType;
+import com.ylinor.library.util.math.Positionable2D;
+import com.ylinor.library.api.world.Chunk;
+import com.ylinor.library.api.world.World;
 import java.util.Random;
 
 public class RandomChunkProvider implements IChunkProvider
@@ -13,16 +13,15 @@ public class RandomChunkProvider implements IChunkProvider
     @Override
     public Chunk provide(World world, Positionable2D pos)
     {
-        int size = world.getChunkSize();
-        Chunk chunk = new Chunk(world, pos, size); // TODO: FIX SIZE PARAMETER
+        Chunk chunk = new Chunk(world, pos); // TODO: FIX SIZE PARAMETER
 
         int max = BlockType.getTypes().length;
 
-        for (int x = 0; x < size; x++)
+        for (int x = 0; x < chunk.getSizeX(); x++)
         {
             for (int y = 0; y < world.getSizeY(); y++)
             {
-                for (int z = 0; z < size; z++)
+                for (int z = 0; z < world.getSizeZ(); z++)
                 {
                     // TODO: Fix NPE
                     chunk.setBlock(x, y, z, BlockType.getByID(random.nextInt(max)));

@@ -1,4 +1,4 @@
-package com.ylinor.library.block;
+package com.ylinor.library.api.block;
 
 import java.util.ArrayList;
 import java.util.List;

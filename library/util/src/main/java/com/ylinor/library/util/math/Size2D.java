@@ -1,4 +1,4 @@
-package com.ylinor.library.math;
+package com.ylinor.library.util.math;
 
 /**
  * Une taille dans un plan en deux dimensions;

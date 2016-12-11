@@ -1,4 +1,4 @@
-package com.ylinor.library.math;
+package com.ylinor.library.util.math;
 
 /**
  * Définition d'un objet ayant une taille dans un plan

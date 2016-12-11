@@ -1,12 +1,12 @@
-package com.ylinor.library.math;
+package com.ylinor.library.util.math;
 
 /**
- * Un objet ayant une position en trois dimensions
+ * Un objet ayant une position en deux dimentions
  *
  * @author Litarvan
  * @since 1.0.0
  */
-public interface Positionable3D
+public interface Positionable2D
 {
     /**
      * @return La position X de l'objet
@@ -17,9 +17,4 @@ public interface Positionable3D
      * @return La position Y de l'objet
      */
     int getY();
-
-    /**
-     * @return La position Z de l'objet
-     */
-    int getZ();
 }

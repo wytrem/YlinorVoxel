@@ -1,4 +1,4 @@
-package com.ylinor.library.math;
+package com.ylinor.library.util.math;
 
 /**
  * Une position en deux dimensions

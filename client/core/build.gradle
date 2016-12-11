@@ -3,9 +3,9 @@ eclipse.project {
 }
 
 dependencies {
-    project(':library:api')
-    project(':library:network')
-    project(':library:util')
+    compile project(':library:api')
+    compile project(':library:network')
+    compile project(':library:util')
 
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "net.wytrem:wylog:$wylogVersion"

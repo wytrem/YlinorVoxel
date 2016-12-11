@@ -1,8 +1,8 @@
-package com.ylinor.library.world.provider;
+package com.ylinor.library.api.world.provider;
 
-import com.ylinor.library.math.Positionable2D;
-import com.ylinor.library.world.Chunk;
-import com.ylinor.library.world.World;
+import com.ylinor.library.util.math.Positionable2D;
+import com.ylinor.library.api.world.Chunk;
+import com.ylinor.library.api.world.World;
 
 /**
  * Un Chunk Provider
