@@ -19,9 +19,9 @@ public class RandomChunkProvider implements IChunkProvider
 
         for (int x = 0; x < chunk.getSizeX(); x++)
         {
-            for (int y = 0; y < world.getSizeY(); y++)
+            for (int y = 0; y < World.MAX_HEIGHT; y++)
             {
-                for (int z = 0; z < world.getSizeZ(); z++)
+                for (int z = 0; z < chunk.getSizeZ(); z++)
                 {
                     // TODO: Fix NPE
                     chunk.setBlock(x, y, z, BlockType.getByID(random.nextInt(max)));

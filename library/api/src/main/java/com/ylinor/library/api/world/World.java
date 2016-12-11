@@ -23,6 +23,11 @@ import org.jetbrains.annotations.Nullable;
 public class World
 {
     /**
+     * La taille maximum d'un monde
+     */
+    public static final int MAX_HEIGHT = 256;
+
+    /**
      * Le {@link IChunkProvider} qui sera appelé dans le cas
      * d'utilisation de {@link #getChunk(Positionable2D)} sur
      * un chunk non-chargé, ou dans le cas du déchargement d'un

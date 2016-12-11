@@ -24,12 +24,6 @@ allprojects {
         aiVersion = '1.8.0'
         visuiVersion = '1.2.4'
         wylogVersion = '1.2'
-        jbAnnotationsVersion = '15.0'
-    }
-
-
-    dependencies {
-        compile project(":library:util")
     }
 
     sourceSets.main.java.srcDirs = [ 'src/' ]
