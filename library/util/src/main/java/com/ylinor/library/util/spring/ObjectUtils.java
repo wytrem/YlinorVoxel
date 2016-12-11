@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.wytrem.utils.spring;
+package com.ylinor.library.util.spring;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

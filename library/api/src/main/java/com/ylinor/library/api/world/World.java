@@ -1,12 +1,11 @@
 package com.ylinor.library.api.world;
 
 import com.ylinor.library.api.block.BlockType;
+import com.ylinor.library.api.world.provider.IChunkProvider;
 import com.ylinor.library.util.math.Position2D;
 import com.ylinor.library.util.math.Position3D;
 import com.ylinor.library.util.math.Positionable2D;
 import com.ylinor.library.util.math.Positionable3D;
-import com.ylinor.library.util.math.Sizeable3D;
-import com.ylinor.library.api.world.provider.IChunkProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +38,6 @@ public class World
      */
     public World(@NotNull IChunkProvider provider) throws IllegalArgumentException
     {
-        Assert
         this.provider = provider;
     }
 

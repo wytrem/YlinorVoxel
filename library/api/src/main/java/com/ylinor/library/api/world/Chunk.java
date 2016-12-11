@@ -5,6 +5,7 @@ import com.ylinor.library.util.math.Positionable2D;
 import com.ylinor.library.util.math.Positionable3D;
 import com.ylinor.library.util.math.Size3D;
 import com.ylinor.library.util.math.Sizeable3D;
+import com.ylinor.library.util.spring.Assert;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +28,9 @@ public class Chunk implements Positionable2D, Sizeable3D
     /**
      * La taille d'un côté d'un chunk
      */
-    public static final int CHUNK_SIZE = 16;
+    public static final int CHUNK_SIZE_X = 16;
+    public static final int CHUNK_SIZE_Y = 256;
+    public static final int CHUNK_SIZE_Z = 16;
 
     /**
      * Le monde où est ce Chunk
@@ -79,21 +82,12 @@ public class Chunk implements Positionable2D, Sizeable3D
      */
     public Chunk(@NotNull World world, @NotNull Positionable2D position) throws IllegalArgumentException
     {
-        if (world == null)
-        {
-            throw new IllegalArgumentException("world == null");
-        }
-
-        if (position == null)
-        {
-            throw new IllegalArgumentException("position == null");
-        }
-
-        // TODO: If null partout
+        Assert.notNull(world, "world cannot be null");
+        Assert.notNull(position, "position cannot be null");
 
         this.world = world;
         this.position = position;
-        this.size = new Size3D(CHUNK_SIZE, world.getSizeY(), CHUNK_SIZE);
+        this.size = new Size3D(CHUNK_SIZE_X, CHUNK_SIZE_Y, CHUNK_SIZE_Z);
         this.blocks = new int[size.getSizeX()][size.getSizeY()][size.getSizeZ()];
         this.data = new BlockData[size.getSizeX()][size.getSizeY()][size.getSizeZ()];
     }
