@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
+import com.ylinor.library.network.ClientNetwork;
 import net.wytrem.logging.Logger;
 import net.wytrem.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
@@ -52,6 +53,12 @@ public class YlinorClient extends Game
      */
     private long assetsTime;
 
+
+    /**
+     * Instance du système reseau client
+     */
+    private ClientNetwork clientNetwork;
+
     @Override
     public void create()
     {
@@ -59,6 +66,9 @@ public class YlinorClient extends Game
 
         assetsTime = System.currentTimeMillis();
         assets.preload();
+
+        clientNetwork = new ClientNetwork();
+        clientNetwork.start("127.0.0.1", 25565);
     }
 
     @Override

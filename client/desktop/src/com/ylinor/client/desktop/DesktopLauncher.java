@@ -16,9 +16,6 @@ public class DesktopLauncher
         config.width = 800;
         config.height = 600;
 
-        ClientNetwork network = new ClientNetwork();
-        network.start("127.0.0.1", 25565);
-
         new LwjglApplication(new YlinorClient(), config);
     }
 }
