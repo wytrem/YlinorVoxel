@@ -1,5 +1,6 @@
 package com.ylinor.library.network;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
@@ -46,8 +47,13 @@ public class ClientNetwork extends AbstractNetwork
      */
     private static final int THREAD_LIMIT = 10;
 
+    public ClientNetwork(Kryo kryo, String ip, int port)
+    {
+        super(kryo, ip, port);
+    }
+
     @Override
-    public void start(String ip, int port)
+    public void run()
     {
         try
         {

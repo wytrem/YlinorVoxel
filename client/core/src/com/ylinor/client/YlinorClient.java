@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.library.network.ClientNetwork;
@@ -67,8 +68,9 @@ public class YlinorClient extends Game
         assetsTime = System.currentTimeMillis();
         assets.preload();
 
-        clientNetwork = new ClientNetwork();
-        clientNetwork.start("127.0.0.1", 25565);
+        clientNetwork = new ClientNetwork(new Kryo(), "127.0.0.1", 25565);
+        Thread t = new Thread(clientNetwork);
+        t.start();
     }
 
     @Override

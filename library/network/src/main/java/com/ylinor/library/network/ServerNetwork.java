@@ -1,10 +1,10 @@
 package com.ylinor.library.network;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
-import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -13,7 +13,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
@@ -57,8 +56,13 @@ public class ServerNetwork extends AbstractNetwork
      */
     private static final int THREAD_LIMIT = 10;
 
+    public ServerNetwork(Kryo kryo, String ip, int port)
+    {
+        super(kryo, ip, port);
+    }
+
     @Override
-    public void start(String ip, int port)
+    public void run()
     {
         try
         {

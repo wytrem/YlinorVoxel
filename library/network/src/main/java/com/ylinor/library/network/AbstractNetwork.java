@@ -8,7 +8,7 @@ import com.ylinor.library.network.packet.IPacket;
  * @author pierre
  * @since 1.0.0
  */
-public abstract class AbstractNetwork
+public abstract class AbstractNetwork implements Runnable
 {
 
     /**
@@ -22,12 +22,23 @@ public abstract class AbstractNetwork
     protected Kryo kryo;
 
     /**
-     * Appellé pour lancer le service network
-     *
-     * @param ip ip sur laquel le serveur va écouté/ sur laquel le client va se connecter
-     * @param port port de connection
+     * Ip sur lequel le service va se lancer
      */
-    public abstract void start(String ip, int port);
+    protected String ip;
+
+    /**
+     * Port de connection
+     *
+     */
+    protected int port;
+
+    public AbstractNetwork(Kryo kryo, String ip, int port)
+    {
+        this.kryo = kryo;
+        this.ip = ip;
+        this.port = port;
+    }
+
 
     /**
      * Appellé pour envoyer un packet
@@ -36,6 +47,8 @@ public abstract class AbstractNetwork
      * @param entity entitée reseau dont le packet provient
      */
     public abstract void sendPacket(IPacket packet, INetworkEntity entity);
+
+
 
 
 }
