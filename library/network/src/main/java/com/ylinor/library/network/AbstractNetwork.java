@@ -1,5 +1,6 @@
 package com.ylinor.library.network;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
 
@@ -9,6 +10,16 @@ import com.ylinor.library.network.packet.IPacket;
  */
 public abstract class AbstractNetwork
 {
+
+    /**
+     * Limite de temps de connection
+     */
+    public static final int CONNECT_TIMEOUT = 5000;
+
+    /**
+     * Instance de kryo (utilisé pour la sérialization)
+     */
+    protected Kryo kryo;
 
     /**
      * Appellé pour lancer le service network
