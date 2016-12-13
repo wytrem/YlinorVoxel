@@ -6,10 +6,7 @@ import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -103,6 +100,23 @@ public class ServerNetwork extends AbstractNetwork
 
     private class ServerNetworkHandler extends ChannelInboundHandlerAdapter
     {
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
+        {
+            System.out.println(msg);
+        }
 
+        @Override
+        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception
+        {
+            super.channelReadComplete(ctx);
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
+        {
+            cause.printStackTrace();
+            ctx.close();
+        }
     }
 }

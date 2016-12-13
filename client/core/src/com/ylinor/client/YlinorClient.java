@@ -8,6 +8,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.library.network.ClientNetwork;
+import com.ylinor.library.network.packet.INetworkEntity;
+import com.ylinor.library.network.packet.IPacket;
 import net.wytrem.logging.Logger;
 import net.wytrem.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;

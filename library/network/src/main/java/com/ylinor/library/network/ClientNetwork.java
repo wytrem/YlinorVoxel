@@ -72,6 +72,7 @@ public class ClientNetwork extends AbstractNetwork
                 }
             });
             this.channel = bootstrap.connect(ip, port).sync().channel();
+            channel.writeAndFlush("bonjour");
             channel.closeFuture().sync();
         } catch (InterruptedException e)
         {
@@ -86,7 +87,14 @@ public class ClientNetwork extends AbstractNetwork
     @Override
     public void sendPacket(IPacket packet, INetworkEntity entity)
     {
-
+        if(channel == null)
+        {
+            sendPacket(packet, entity);
+        }
+        else
+        {
+            channel.writeAndFlush(packet);
+        }
     }
 
     private class ClientNetworkHandler extends ChannelInboundHandlerAdapter
