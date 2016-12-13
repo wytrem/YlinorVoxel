@@ -9,7 +9,7 @@ public class YlinorServer
     public static void main(String[] args)
     {
         ServerNetwork serverNetwork = new ServerNetwork(new Kryo(), "0.0.0.0", 25565);
-        serverNetwork.run();
+        serverNetwork.start();
     }
 
 }

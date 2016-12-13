@@ -8,7 +8,7 @@ import com.ylinor.library.network.packet.IPacket;
  * @author pierre
  * @since 1.0.0
  */
-public abstract class AbstractNetwork implements Runnable
+public abstract class AbstractNetwork extends Thread
 {
 
     /**

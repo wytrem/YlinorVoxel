@@ -69,8 +69,7 @@ public class YlinorClient extends Game
         assets.preload();
 
         clientNetwork = new ClientNetwork(new Kryo(), "127.0.0.1", 25565);
-        Thread t = new Thread(clientNetwork);
-        t.start();
+        clientNetwork.start();
     }
 
     @Override
