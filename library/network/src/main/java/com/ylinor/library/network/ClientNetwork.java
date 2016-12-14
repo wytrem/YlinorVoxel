@@ -88,7 +88,7 @@ public class ClientNetwork extends AbstractNetwork
     {
         while (channel == null)
         {
-            System.out.println("bonjour");
+            continue;
         }
         channel.writeAndFlush(packet);
     }
