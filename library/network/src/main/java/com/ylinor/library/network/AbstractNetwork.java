@@ -3,6 +3,7 @@ package com.ylinor.library.network;
 import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.protocol.IProtocol;
 import com.ylinor.library.network.util.PairPacket;
 
 import java.util.Queue;
@@ -14,6 +15,11 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public abstract class AbstractNetwork extends Thread
 {
+
+    /**
+     * Protocol de redirection de packet
+     */
+    protected IProtocol protocol;
 
     /**
      * Limite de temps de connection
@@ -47,11 +53,12 @@ public abstract class AbstractNetwork extends Thread
     protected boolean isStarted;
 
 
-    public AbstractNetwork(Kryo kryo, String ip, int port)
+    public AbstractNetwork(Kryo kryo, String ip, int port, IProtocol protocol)
     {
         this.kryo = kryo;
         this.ip = ip;
         this.port = port;
+        this.protocol = protocol;
     }
 
 

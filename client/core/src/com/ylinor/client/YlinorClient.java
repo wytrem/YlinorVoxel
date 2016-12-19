@@ -8,9 +8,15 @@ import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.library.network.ClientNetwork;
+import com.ylinor.library.network.protocol.HandlerProtocol;
+import com.ylinor.library.network.protocol.IProtocol;
+import com.ylinor.library.packets.MyNetworkEntity;
+import com.ylinor.library.packets.Packet0KeepAlive;
 import net.wytrem.logging.Logger;
 import net.wytrem.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
+
+import java.net.InetSocketAddress;
 
 /**
  * Le client Ylinor
@@ -54,11 +60,15 @@ public class YlinorClient extends Game
      */
     private long assetsTime;
 
-
     /**
      * Instance du système reseau client
      */
     private ClientNetwork clientNetwork;
+
+    /**
+     * Protocl de redirection de packet
+     */
+    private IProtocol protocol;
 
     @Override
     public void create()
@@ -68,8 +78,11 @@ public class YlinorClient extends Game
         assetsTime = System.currentTimeMillis();
         assets.preload();
 
-        clientNetwork = new ClientNetwork(new Kryo(), "127.0.0.1", 25565);
+        protocol = new HandlerProtocol();
+
+        clientNetwork = new ClientNetwork(new Kryo(), "127.0.0.1", 25565, protocol);
         clientNetwork.start();
+        clientNetwork.sendPacket(new Packet0KeepAlive(4113561), new MyNetworkEntity(new InetSocketAddress("127.0.0.1", 25565)));
     }
 
     @Override

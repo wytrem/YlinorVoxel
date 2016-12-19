@@ -5,6 +5,7 @@ import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.protocol.IProtocol;
 import com.ylinor.library.network.util.PairPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -14,6 +15,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import net.wytrem.logging.Logger;
 import net.wytrem.logging.LoggerFactory;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -54,9 +57,9 @@ public class ClientNetwork extends AbstractNetwork
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public ClientNetwork(Kryo kryo, String ip, int port)
+    public ClientNetwork(Kryo kryo, String ip, int port, IProtocol protocol)
     {
-        super(kryo, ip, port);
+        super(kryo, ip, port, protocol);
     }
 
     @Override
@@ -122,7 +125,14 @@ public class ClientNetwork extends AbstractNetwork
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
         {
-
+            protocol.handlePacket((IPacket) msg, new INetworkEntity()
+            {
+                @Override
+                public SocketAddress getAddress()
+                {
+                    return ctx.channel().remoteAddress();
+                }
+            });
         }
 
         @Override

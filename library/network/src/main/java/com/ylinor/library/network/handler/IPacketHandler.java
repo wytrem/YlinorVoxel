@@ -14,7 +14,7 @@ public interface IPacketHandler<T extends IPacket, U extends INetworkEntity>
 
     default void preHandler(IPacket packet, INetworkEntity entity)
     {
-
+        handle((T) packet, (U) entity);
     }
 
 }
