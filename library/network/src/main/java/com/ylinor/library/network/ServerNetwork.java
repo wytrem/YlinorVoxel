@@ -5,8 +5,6 @@ import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
-import com.ylinor.library.network.packets.NetworkEntity;
-import com.ylinor.library.network.packets.Packet0;
 import com.ylinor.library.network.util.PairPacket;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -72,8 +70,6 @@ public class ServerNetwork extends AbstractNetwork
     private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
 
-    private INetworkEntity entity;
-
     public ServerNetwork(Kryo kryo, String ip, int port)
     {
         super(kryo, ip, port);
@@ -113,7 +109,7 @@ public class ServerNetwork extends AbstractNetwork
                     {
                         for(Channel channel : channels)
                         {
-                            if(channel.remoteAddress().equals(entity.getAddress()))
+                            if(channel.remoteAddress().equals(pair.getSender().getAddress()))
                             {
                                 logger.debug("Sending " + pair.getPacket().getClass().getSimpleName() + " packet");
                                 channel.writeAndFlush(pair.getPacket());
@@ -161,7 +157,6 @@ public class ServerNetwork extends AbstractNetwork
         public void channelActive(ChannelHandlerContext ctx) throws Exception
         {
             channels.add(ctx.channel());
-            entity = new NetworkEntity(ctx.channel().remoteAddress());
         }
 
         @Override
