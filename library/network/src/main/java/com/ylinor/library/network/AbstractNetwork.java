@@ -3,6 +3,10 @@ package com.ylinor.library.network;
 import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.util.PairPacket;
+
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author pierre
@@ -32,6 +36,17 @@ public abstract class AbstractNetwork extends Thread
      */
     protected int port;
 
+    /**
+     * Queue de packet a envoyer
+     */
+    protected Queue<PairPacket<IPacket, INetworkEntity>> packetQueue =new ArrayBlockingQueue<>(10);
+
+    /**
+     * Boolean permettant a la boucle d'envoie de packet de savoir si le service est lancé
+     */
+    protected boolean isStarted;
+
+
     public AbstractNetwork(Kryo kryo, String ip, int port)
     {
         this.kryo = kryo;
@@ -48,7 +63,10 @@ public abstract class AbstractNetwork extends Thread
      */
     public abstract void sendPacket(IPacket packet, INetworkEntity entity);
 
-
+    public void end()
+    {
+        isStarted = false;
+    }
 
 
 }

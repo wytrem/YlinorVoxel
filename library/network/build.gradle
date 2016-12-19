@@ -2,4 +2,6 @@ dependencies {
     compile group: 'io.netty', name: 'netty-all', version: '4.1.6.Final'
 
     compile group: 'com.esotericsoftware.kryo', name: 'kryo', version: '2.24.0'
+
+    compile "net.wytrem:wylog:1.2"
 }

@@ -8,6 +8,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.library.network.ClientNetwork;
+import com.ylinor.library.network.packet.INetworkEntity;
+import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.packets.NetworkEntity;
+import com.ylinor.library.network.packets.Packet0;
 import net.wytrem.logging.Logger;
 import net.wytrem.logging.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
@@ -129,6 +133,7 @@ public class YlinorClient extends Game
     {
         logger.info("Closing !");
         assets.dispose();
+        clientNetwork.end();
 
         logger.info("Bye");
     }

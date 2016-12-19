@@ -5,13 +5,21 @@ import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.packets.NetworkEntity;
+import com.ylinor.library.network.packets.Packet0;
+import com.ylinor.library.network.util.PairPacket;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import net.wytrem.logging.Logger;
+import net.wytrem.logging.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,6 +61,19 @@ public class ServerNetwork extends AbstractNetwork
      */
     private static final int THREAD_LIMIT = 10;
 
+    /**
+     * Logger
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Channels
+     */
+    private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+
+    private INetworkEntity entity;
+
     public ServerNetwork(Kryo kryo, String ip, int port)
     {
         super(kryo, ip, port);
@@ -61,6 +82,7 @@ public class ServerNetwork extends AbstractNetwork
     @Override
     public void run()
     {
+        logger.info("Starting network service");
         try
         {
             this.bossGroup = new NioEventLoopGroup(1);
@@ -80,6 +102,29 @@ public class ServerNetwork extends AbstractNetwork
                 }
             });
             this.channel = bootstrap.bind(ip, port).sync().channel();
+            isStarted = true;
+            logger.info("Network service is ready");
+
+            while (isStarted)
+            {
+                if(channels.size() > 0 && packetQueue.size() > 0)
+                {
+                    for(PairPacket pair : packetQueue)
+                    {
+                        for(Channel channel : channels)
+                        {
+                            if(channel.remoteAddress().equals(entity.getAddress()))
+                            {
+                                logger.debug("Sending " + pair.getPacket().getClass().getSimpleName() + " packet");
+                                channel.writeAndFlush(pair.getPacket());
+                                packetQueue.remove(pair);
+                            }
+                        }
+                    }
+                }
+            }
+
+            logger.info("closing network service");
             channel.closeFuture().sync();
         } catch (InterruptedException e)
         {
@@ -95,7 +140,7 @@ public class ServerNetwork extends AbstractNetwork
     @Override
     public void sendPacket(IPacket packet, INetworkEntity entity)
     {
-
+        packetQueue.add(new PairPacket<>(packet, entity));
     }
 
     private class ServerNetworkHandler extends ChannelInboundHandlerAdapter
@@ -110,6 +155,13 @@ public class ServerNetwork extends AbstractNetwork
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception
         {
             super.channelReadComplete(ctx);
+        }
+
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception
+        {
+            channels.add(ctx.channel());
+            entity = new NetworkEntity(ctx.channel().remoteAddress());
         }
 
         @Override
