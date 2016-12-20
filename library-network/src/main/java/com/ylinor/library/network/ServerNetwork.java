@@ -37,7 +37,6 @@ import net.wytrem.logging.LoggerFactory;
  */
 public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
 {
-
     /**
      * Objet bootstrap netty, utilisé pour la création de la connection
      */
