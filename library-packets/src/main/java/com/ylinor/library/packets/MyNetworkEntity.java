@@ -1,8 +1,8 @@
 package com.ylinor.library.packets;
 
-import com.ylinor.library.network.packet.INetworkEntity;
-
 import java.net.SocketAddress;
+
+import com.ylinor.library.network.packet.INetworkEntity;
 
 /**
  * @author pierre
@@ -10,7 +10,6 @@ import java.net.SocketAddress;
  */
 public class MyNetworkEntity implements INetworkEntity
 {
-
     private SocketAddress address;
 
     public MyNetworkEntity(SocketAddress address)
@@ -19,7 +18,7 @@ public class MyNetworkEntity implements INetworkEntity
     }
 
     @Override
-    public SocketAddress getAddress()
+    public SocketAddress getRemoteAddress()
     {
         return address;
     }

@@ -1,14 +1,13 @@
 package com.ylinor.library.packets;
 
-import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.packet.Packet;
 
 /**
  * @author pierre
  * @since 1.0.0
  */
-public class Packet0KeepAlive implements IPacket
+public class Packet0KeepAlive extends Packet
 {
-
     private int randomID;
 
     /**

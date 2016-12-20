@@ -1,14 +1,25 @@
 package com.ylinor.library.network;
 
+import java.net.SocketAddress;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
 import com.ylinor.library.network.packet.INetworkEntity;
-import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.packet.Packet;
 import com.ylinor.library.network.protocol.IProtocol;
 import com.ylinor.library.network.util.PairPacket;
+
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -20,15 +31,11 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import net.wytrem.logging.Logger;
 import net.wytrem.logging.LoggerFactory;
 
-import java.net.SocketAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * @author pierre
  * @since 1.0.0
  */
-public class ServerNetwork extends AbstractNetwork
+public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
 {
 
     /**
@@ -71,10 +78,13 @@ public class ServerNetwork extends AbstractNetwork
      */
     private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-
-    public ServerNetwork(Kryo kryo, String ip, int port, IProtocol protocol)
+    private Function<SocketAddress, E> entitySupplier;
+    private CopyOnWriteArrayList<E> clients = new CopyOnWriteArrayList<>();
+    
+    public ServerNetwork(Kryo kryo, String ip, int port, IProtocol<E> protocol, Function<SocketAddress, E> entitySupplier)
     {
         super(kryo, ip, port, protocol);
+        this.entitySupplier = entitySupplier;
     }
 
     @Override
@@ -96,7 +106,9 @@ public class ServerNetwork extends AbstractNetwork
                 {
                     ch.pipeline().addLast(new KryoDecoder(kryo));
                     ch.pipeline().addLast(new KryoEncoder(kryo));
-                    ch.pipeline().addLast(new ServerNetworkHandler());
+                    E client = entitySupplier.apply(ch.remoteAddress());
+                    clients.add(client);
+                    ch.pipeline().addLast(new ServerNetworkHandler(client));
                 }
             });
             this.channel = bootstrap.bind(ip, port).sync().channel();
@@ -107,11 +119,11 @@ public class ServerNetwork extends AbstractNetwork
             {
                 if(channels.size() > 0 && packetQueue.size() > 0)
                 {
-                    for(PairPacket pair : packetQueue)
+                    for(PairPacket<?, ?> pair : packetQueue)
                     {
                         for(Channel channel : channels)
                         {
-                            if(channel.remoteAddress().equals(pair.getSender().getAddress()))
+                            if(channel.remoteAddress().equals(pair.getSender().getRemoteAddress()))
                             {
                                 logger.debug("Sending " + pair.getPacket().getClass().getSimpleName() + " packet");
                                 channel.writeAndFlush(pair.getPacket());
@@ -136,17 +148,24 @@ public class ServerNetwork extends AbstractNetwork
     }
 
     @Override
-    public void sendPacket(IPacket packet, INetworkEntity entity)
+    public void sendPacket(Packet packet, INetworkEntity entity)
     {
         packetQueue.add(new PairPacket<>(packet, entity));
     }
 
     private class ServerNetworkHandler extends ChannelInboundHandlerAdapter
     {
+        private E client;
+        
+        public ServerNetworkHandler(E client)
+        {
+            this.client = client;
+        }
+
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
         {
-            protocol.handlePacket((IPacket) msg, () -> ctx.channel().remoteAddress());
+            protocol.handlePacket((Packet) msg, client, ServerNetwork.this);
         }
 
         @Override

@@ -1,34 +1,34 @@
 package com.ylinor.library.network.protocol;
 
-import com.ylinor.library.network.handler.IPacketHandler;
-import com.ylinor.library.network.packet.INetworkEntity;
-import com.ylinor.library.network.packet.IPacket;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ylinor.library.network.AbstractNetwork;
+import com.ylinor.library.network.handler.IPacketHandler;
+import com.ylinor.library.network.packet.INetworkEntity;
+import com.ylinor.library.network.packet.Packet;
 
 /**
  * @author pierre
  * @since 1.0.0
  */
-public class HandlerProtocol implements IProtocol
+public class HandlerProtocol<E extends INetworkEntity> implements IProtocol<E>
 {
-    private Map<Class<? extends IPacket>, IPacketHandler> packetMap = new HashMap<>();
+    private Map<Class<? extends Packet>, IPacketHandler<?, E>> packetMap = new HashMap<>();
 
     @Override
-    public void handlePacket(IPacket packet, INetworkEntity entity)
+    public void handlePacket(Packet packet, E entity, AbstractNetwork<? super E> receiver)
     {
-        for(Map.Entry<Class<? extends IPacket>, IPacketHandler> thePacket : packetMap.entrySet())
+        for(Map.Entry<Class<? extends Packet>, IPacketHandler<?, E>> handlerEntry : packetMap.entrySet())
         {
-            if(packet.getClass().equals(thePacket.getClass()))
+            if(packet.getClass().equals(handlerEntry.getKey()))
             {
-                thePacket.getValue().preHandler(packet, entity);
+                handlerEntry.getValue().castAndHandle(packet, entity, receiver);
             }
         }
     }
 
-    @Override
-    public void registerPacket(Class<? extends IPacket> packet, IPacketHandler handler)
+    public <P extends Packet> void registerPacket(Class<P> packet, IPacketHandler<P, E> handler)
     {
         packetMap.put(packet, handler);
     }

@@ -1,6 +1,5 @@
 package com.ylinor.library.network.packet;
 
-import java.net.Socket;
 import java.net.SocketAddress;
 
 /**
@@ -9,7 +8,5 @@ import java.net.SocketAddress;
  */
 public interface INetworkEntity
 {
-
-    SocketAddress getAddress();
-
+    SocketAddress getRemoteAddress();
 }

@@ -1,16 +1,15 @@
 package com.ylinor.library.network.util;
 
 import com.ylinor.library.network.packet.INetworkEntity;
-import com.ylinor.library.network.packet.IPacket;
+import com.ylinor.library.network.packet.Packet;
 
 /**
  * @author pierre
  * @since 1.0.0
  */
-public class PairPacket<T extends IPacket, U extends INetworkEntity>
+public class PairPacket<T extends Packet, U extends INetworkEntity>
 {
-
-    private IPacket packet;
+    private Packet packet;
     private INetworkEntity sender;
 
     public PairPacket(T packet, U networkEntity)
@@ -19,12 +18,12 @@ public class PairPacket<T extends IPacket, U extends INetworkEntity>
         this.sender = networkEntity;
     }
 
-    public IPacket getPacket()
+    public Packet getPacket()
     {
         return packet;
     }
 
-    public void setPacket(IPacket packet)
+    public void setPacket(Packet packet)
     {
         this.packet = packet;
     }

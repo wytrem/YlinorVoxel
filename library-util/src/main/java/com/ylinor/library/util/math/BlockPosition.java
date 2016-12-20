@@ -1,6 +1,7 @@
 package com.ylinor.library.util.math;
 
-import com.badlogic.gdx.math.Vector3;
+import org.joml.Vector3f;
+
 import com.ylinor.library.util.Facing;
 
 public class BlockPosition extends Position3D
@@ -109,12 +110,12 @@ public class BlockPosition extends Position3D
         return new BlockPosition(-this.getX(), -this.getY(), -this.getZ());
     }
 
-    public Vector3 toVector()
+    public Vector3f toVector()
     {
-        return new Vector3(this.getX(), this.getY(), this.getZ());
+        return new Vector3f(this.getX(), this.getY(), this.getZ());
     }
 
-    public Vector3 toVector(Vector3 dest)
+    public Vector3f toVector(Vector3f dest)
     {
         dest.x = getX();
         dest.y = getY();
@@ -198,7 +199,7 @@ public class BlockPosition extends Position3D
         return "BlockPosition [x=" + getX() + ", y=" + getY() + ", z=" + getZ() + "]";
     }
 
-    public Vector3 clone(Vector3 vect0)
+    public Vector3f clone(Vector3f vect0)
     {
         vect0.x = getX();
         vect0.y = getY();
