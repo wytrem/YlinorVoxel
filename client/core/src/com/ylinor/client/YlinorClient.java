@@ -82,7 +82,6 @@ public class YlinorClient extends Game
 
         clientNetwork = new ClientNetwork(new Kryo(), "127.0.0.1", 25565, protocol);
         clientNetwork.start();
-        clientNetwork.sendPacket(new Packet0KeepAlive(4113561), new MyNetworkEntity(new InetSocketAddress("127.0.0.1", 25565)));
     }
 
     @Override
