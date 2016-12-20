@@ -1,5 +1,5 @@
 project.ext.mainClassName = 'com.ylinor.client.desktop.DesktopLauncher'
-project.ext.assetsDir = new File('../core/assets');
+project.ext.assetsDir = new File('../client-core/assets');
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
@@ -24,8 +24,8 @@ dist.dependsOn classes
 
 eclipse {
     project {
-        name = appName + '-desktop'
-        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/core/assets'
+        name = 'client-desktop'
+        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/client-core/assets'
     }
 }
 
@@ -41,7 +41,7 @@ task afterEclipseImport(description: 'Post processing after project generation',
 }
 
 dependencies {
-    compile project(':client:core')
+    compile project(':client-core')
 
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"

@@ -1,10 +1,11 @@
 eclipse.project {
-    name = appName + '-core'
+    name = 'client-core'
 }
 
 dependencies {
-    compile project(':library:api')
-
+    compile project(':library-api')
+    compile project(':library-util')
+    compile project(':library-network')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "net.wytrem:wylog:$wylogVersion"
     compile "com.kotcrab.vis:vis-ui:$visuiVersion"

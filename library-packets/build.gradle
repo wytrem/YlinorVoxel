@@ -1,0 +1,7 @@
+eclipse.project {
+    name = 'library-packets'
+}
+
+dependencies {
+    compile project(':library-network')
+}

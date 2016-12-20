@@ -1,3 +1,7 @@
+eclipse.project {
+    name = 'library-network'
+}
+
 dependencies {
     compile group: 'io.netty', name: 'netty-all', version: '4.1.6.Final'
 
