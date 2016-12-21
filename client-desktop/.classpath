@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry path="bin" kind="output"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="src" path="/client-core"/>
 	<classpathentry kind="src" path="/library-api"/>
 	<classpathentry kind="src" path="/library-util"/>
 	<classpathentry kind="src" path="/library-network"/>
+	<classpathentry kind="src" path="/library-packets"/>
 	<classpathentry sourcepath="/home/victor/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.4/bcc145f992ce5ab249ddf7c277c576488753af8f/gdx-backend-lwjgl-1.9.4-sources.jar" kind="lib" path="/home/victor/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.4/4c6c108a9dcbc07096de8594b93f9cab33856fe2/gdx-backend-lwjgl-1.9.4.jar"/>
 	<classpathentry kind="lib" path="/home/victor/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-platform/1.9.4/8e93afecc287ab152179983fc1b5f65db4c2fa4c/gdx-platform-1.9.4-natives-desktop.jar"/>
 	<classpathentry kind="lib" path="/home/victor/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype-platform/1.9.4/4bced98798c82ba1cb947343bdd6297243ea09e3/gdx-freetype-platform-1.9.4-natives-desktop.jar"/>

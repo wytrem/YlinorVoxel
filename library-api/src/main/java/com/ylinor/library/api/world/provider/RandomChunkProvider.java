@@ -15,8 +15,6 @@ public class RandomChunkProvider implements IChunkProvider
     {
         Chunk chunk = new Chunk(world, pos); // TODO: FIX SIZE PARAMETER
 
-        int max = BlockType.getTypes().length;
-
         for (int x = 0; x < chunk.getSizeX(); x++)
         {
             for (int y = 0; y < World.MAX_HEIGHT; y++)
@@ -24,7 +22,7 @@ public class RandomChunkProvider implements IChunkProvider
                 for (int z = 0; z < chunk.getSizeZ(); z++)
                 {
                     // TODO: Fix NPE
-                    chunk.setBlock(x, y, z, BlockType.getByID(random.nextInt(max)));
+                    chunk.setBlock(x, y, z, BlockType.getByID(random.nextInt(1)));
                 }
             }
         }

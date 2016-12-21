@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry path="bin" kind="output"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="src" path="/library-api"/>
 	<classpathentry kind="src" path="/library-util"/>
 	<classpathentry kind="src" path="/library-network"/>
+	<classpathentry kind="src" path="/library-packets"/>
 	<classpathentry sourcepath="/home/victor/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.4/f0e4d245a67fc96707610a4260a325fa034c93d1/gdx-1.9.4-sources.jar" kind="lib" path="/home/victor/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.4/4b4b7962d1bc75af0438f5c81ec1010557bc9ee5/gdx-1.9.4.jar"/>
 	<classpathentry kind="lib" path="/home/victor/.gradle/caches/modules-2/files-2.1/net.wytrem/wylog/1.2/9dbec5efa332802eab9a4ee3ed35418704044a92/wylog-1.2.jar"/>
 	<classpathentry sourcepath="/home/victor/.gradle/caches/modules-2/files-2.1/com.kotcrab.vis/vis-ui/1.2.4/29f04f666d6e4c973a79628a1d11f8dad687eb8/vis-ui-1.2.4-sources.jar" kind="lib" path="/home/victor/.gradle/caches/modules-2/files-2.1/com.kotcrab.vis/vis-ui/1.2.4/59a653b254fa9e6dd61171ad15596254f53bc3d1/vis-ui-1.2.4.jar"/>
