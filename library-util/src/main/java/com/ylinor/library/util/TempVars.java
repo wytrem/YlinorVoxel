@@ -1,14 +1,6 @@
-package com.ylinor.library.utils;
+package com.ylinor.library.util;
 
-import org.joml.AxisAngle4f;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import com.ylinor.api.world.objects.BlockPos;
+import org.joml.*;
 
 
 /**
@@ -160,6 +152,8 @@ public class TempVars
     /**
      * BlockPos
      */
+
+    /*
     public final BlockPos blockPos0 = new BlockPos(0, 0, 0);
     public final BlockPos blockPos1 = new BlockPos(0, 0, 0);
     public final BlockPos blockPos2 = new BlockPos(0, 0, 0);
@@ -176,4 +170,6 @@ public class TempVars
     {
         return id == 0 ? blockPos0 : (id == 1 ? blockPos1 : (id == 2 ? blockPos2 : (id == 3 ? blockPos3 : (id == 4 ? blockPos4 : (id == 5 ? blockPos5 : null)))));
     }
+
+    */
 }
