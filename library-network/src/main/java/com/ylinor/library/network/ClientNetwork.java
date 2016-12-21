@@ -5,6 +5,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
@@ -23,8 +26,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import net.wytrem.logging.Logger;
-import net.wytrem.logging.LoggerFactory;
 
 
 /**
@@ -57,7 +58,7 @@ public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S>
      * Nombre de thread maximum utilisé par netty
      */
     private static final int THREAD_LIMIT = 10;
-    
+
     private S serverEntity;
 
     /**
@@ -125,7 +126,7 @@ public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S>
             logger.info("Network service has successfully been stopped");
         }
     }
-    
+
     public void sendPacket(Packet packet)
     {
         sendPacket(packet, serverEntity);

@@ -8,5 +8,5 @@ package com.ylinor.library.network.packet;
  */
 public class Packet
 {
-	
+
 }

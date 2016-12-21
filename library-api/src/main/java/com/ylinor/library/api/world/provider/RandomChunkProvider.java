@@ -1,10 +1,12 @@
 package com.ylinor.library.api.world.provider;
 
+import java.util.Random;
+
 import com.ylinor.library.api.block.BlockType;
-import com.ylinor.library.util.math.Positionable2D;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.World;
-import java.util.Random;
+import com.ylinor.library.util.math.Positionable2D;
+
 
 public class RandomChunkProvider implements IChunkProvider
 {

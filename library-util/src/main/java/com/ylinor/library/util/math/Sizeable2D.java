@@ -1,8 +1,7 @@
 package com.ylinor.library.util.math;
 
 /**
- * Définition d'un objet ayant une taille dans un plan
- * en deux dimensions.
+ * Définition d'un objet ayant une taille dans un plan en deux dimensions.
  *
  * @author Litarvan
  * @since 1.0.0

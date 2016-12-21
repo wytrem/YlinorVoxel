@@ -1,18 +1,18 @@
 package com.ylinor.library.api.world.provider;
 
-import com.ylinor.library.util.math.Positionable2D;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.World;
+import com.ylinor.library.util.math.Positionable2D;
+
 
 /**
  * Un Chunk Provider
  *
- * Un Chunk Provider est un objet fournissant un chunk aux
- * potitions fournies, seulement si le chunk n'a pas déjà
- * été chargé. Il peut aussi décharger des chunks
+ * Un Chunk Provider est un objet fournissant un chunk aux potitions fournies,
+ * seulement si le chunk n'a pas déjà été chargé. Il peut aussi décharger des
+ * chunks
  *
- * Il peut par exemple le charger depuis des fichiers,
- * depuis le network, etc...
+ * Il peut par exemple le charger depuis des fichiers, depuis le network, etc...
  *
  * @author Litarvan
  * @since 1.0.0

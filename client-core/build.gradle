@@ -8,7 +8,6 @@ dependencies {
     compile project(':library-network')
     compile project(':library-packets')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    compile "net.wytrem:wylog:$wylogVersion"
     compile "com.kotcrab.vis:vis-ui:$visuiVersion"
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 }

@@ -1,5 +1,8 @@
 package com.ylinor.client.resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,24 +10,25 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
-import net.wytrem.logging.Logger;
-import net.wytrem.logging.LoggerFactory;
+
 
 /**
  * Les Assets du jeux (Singleton)
  *
  * Cette classe contient les constantes des dossiers d'assets,
- * l'{@link AssetManager}, et les différentes classes d'assets
- * en public comme {@link ScreenAssets}.
+ * l'{@link AssetManager}, et les différentes classes d'assets en public comme
+ * {@link ScreenAssets}.
  *
- * Elle contient aussi les fonctions load et preload pour charger
- * ou precharger les assets.
+ * Elle contient aussi les fonctions load et preload pour charger ou precharger
+ * les assets.
  *
  * @author Litarvan
  * @since 1.0.0
  */
 public class Assets implements Disposable
 {
+    private static final Logger logger = LoggerFactory.getLogger(Assets.class);
+    
     /**
      * Le dossiers des polices
      */
@@ -39,11 +43,6 @@ public class Assets implements Disposable
      * L'instance de la classe
      */
     private static Assets instance = new Assets();
-
-    /**
-     * Le logger
-     */
-    private final Logger logger = LoggerFactory.getLogger(Assets.class);
 
     /**
      * L'assets manager LibGDX
@@ -64,8 +63,8 @@ public class Assets implements Disposable
     }
 
     /**
-     * Charge les pré-assets, càd les assets utilisés avant
-     * ou pendant l'écran de chargement
+     * Charge les pré-assets, càd les assets utilisés avant ou pendant l'écran
+     * de chargement
      */
     public void preload()
     {
@@ -148,7 +147,7 @@ public class Assets implements Disposable
      * @param file Le fichier de l'asset
      * @param type L'asset à charger
      */
-    public void load(String file, Class type)
+    public void load(String file, Class<?> type)
     {
         assets.load(file, type);
     }

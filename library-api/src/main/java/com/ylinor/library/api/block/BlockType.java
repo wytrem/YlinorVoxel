@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
+
 /**
  * Un type de block
  *
@@ -22,7 +23,7 @@ public class BlockType
     public static final BlockType air = new BlockType(0);
     public static final BlockType dirt = new BlockType(1);
     public static final BlockType stone = new BlockType(2);
-    
+
     /**
      * L'id de ce BlockType
      */
@@ -37,7 +38,7 @@ public class BlockType
         {
             throw new IllegalArgumentException("Slot " + id + " already used.");
         }
-        
+
         this.id = id;
         types.put(id, this);
     }
@@ -64,7 +65,7 @@ public class BlockType
         {
             return air;
         }
-        
+
         return types.get(id);
     }
 }

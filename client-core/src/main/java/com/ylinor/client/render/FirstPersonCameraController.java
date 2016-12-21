@@ -50,7 +50,7 @@ public class FirstPersonCameraController extends InputAdapter
             Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
             Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
-        
+
         return true;
     }
 
@@ -138,7 +138,7 @@ public class FirstPersonCameraController extends InputAdapter
         {
             return false;
         }
-        
+
         int magX = Math.abs(mouseX - screenX);
         int magY = Math.abs(mouseY - screenY);
 

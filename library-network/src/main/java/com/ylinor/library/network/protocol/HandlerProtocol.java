@@ -8,6 +8,7 @@ import com.ylinor.library.network.handler.IPacketHandler;
 import com.ylinor.library.network.packet.INetworkEntity;
 import com.ylinor.library.network.packet.Packet;
 
+
 /**
  * @author pierre
  * @since 1.0.0
@@ -19,9 +20,9 @@ public class HandlerProtocol<E extends INetworkEntity> implements IProtocol<E>
     @Override
     public void handlePacket(Packet packet, E entity, AbstractNetwork<? super E> receiver)
     {
-        for(Map.Entry<Class<? extends Packet>, IPacketHandler<?, E>> handlerEntry : packetMap.entrySet())
+        for (Map.Entry<Class<? extends Packet>, IPacketHandler<?, E>> handlerEntry : packetMap.entrySet())
         {
-            if(packet.getClass().equals(handlerEntry.getKey()))
+            if (packet.getClass().equals(handlerEntry.getKey()))
             {
                 handlerEntry.getValue().castAndHandle(packet, entity, receiver);
             }

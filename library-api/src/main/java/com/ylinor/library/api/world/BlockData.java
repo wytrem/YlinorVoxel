@@ -1,19 +1,20 @@
 package com.ylinor.library.api.world;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.ylinor.library.api.block.BlockType;
 import com.ylinor.library.util.math.Position3D;
 import com.ylinor.library.util.math.Positionable3D;
-import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Un Block d'un {@link Chunk}
  *
- * Un Block est un cube qui fait environ 1m x 1m. Il
- * est l'unité la plus petite d'Ylinor, et il constitue
- * les Chunks (donc les mondes).
+ * Un Block est un cube qui fait environ 1m x 1m. Il est l'unité la plus petite
+ * d'Ylinor, et il constitue les Chunks (donc les mondes).
  *
- * Il y a différentes types de blocks, chacun avec leur
- * actions, leur texture, leur forme.
+ * Il y a différentes types de blocks, chacun avec leur actions, leur texture,
+ * leur forme.
  *
  * @author Litarvan
  * @since 1.0.0

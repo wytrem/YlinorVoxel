@@ -1,27 +1,22 @@
 package com.ylinor.client;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
-import com.ylinor.library.network.ClientNetwork;
-import com.ylinor.library.network.packet.ServerEntity;
-import com.ylinor.library.network.protocol.HandlerProtocol;
-import com.ylinor.library.network.protocol.IProtocol;
 
-import net.wytrem.logging.Logger;
-import net.wytrem.logging.LoggerFactory;
+
 
 /**
  * Le client Ylinor
  *
- * Le jeu principal, fait les actions de base, gère
- * les screens, etc...
+ * Le jeu principal, fait les actions de base, gère les screens, etc...
  *
  * @author Litarvan
  * @since 1.0.0
@@ -44,8 +39,8 @@ public class YlinorClient extends Game
     private Assets assets = Assets.get();
 
     /**
-     * Si le preloading (chargement des assets utilisés
-     * avant/pendant le chargement) a été fait
+     * Si le preloading (chargement des assets utilisés avant/pendant le
+     * chargement) a été fait
      */
     private boolean preload = false;
 
@@ -59,15 +54,15 @@ public class YlinorClient extends Game
      */
     private long assetsTime;
 
-    /**
-     * Instance du système reseau client
-     */
-    private ClientNetwork<ServerEntity> clientNetwork;
-
-    /**
-     * Protocl de redirection de packet
-     */
-    private IProtocol<ServerEntity> protocol;
+//    /**
+//     * Instance du système reseau client
+//     */
+//    private ClientNetwork<ServerEntity> clientNetwork;
+//
+//    /**
+//     * Protocl de redirection de packet
+//     */
+//    private IProtocol<ServerEntity> protocol;
 
     @Override
     public void create()
@@ -77,10 +72,10 @@ public class YlinorClient extends Game
         assetsTime = System.currentTimeMillis();
         assets.preload();
 
-        protocol = new HandlerProtocol<>();
+//        protocol = new HandlerProtocol<>();
 
-        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
-        clientNetwork.start();
+//        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
+//        clientNetwork.start();
     }
 
     @Override
@@ -140,7 +135,7 @@ public class YlinorClient extends Game
     {
         logger.info("Closing !");
         assets.dispose();
-        clientNetwork.end();
+//        clientNetwork.end();
 
         logger.info("Bye");
     }

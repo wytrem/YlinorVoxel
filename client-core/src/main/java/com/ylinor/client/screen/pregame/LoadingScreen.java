@@ -1,23 +1,27 @@
 package com.ylinor.client.screen.pregame;
 
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
-import net.wytrem.logging.Logger;
-import net.wytrem.logging.LoggerFactory;
+
 
 /**
- * L'écran de chargement, lancé après le preloading
- * des assets, affiche le chargement des assets.
+ * L'écran de chargement, lancé après le preloading des assets, affiche le
+ * chargement des assets.
  *
  * @author Litarvan
  * @since 1.0.0
  */
 public class LoadingScreen extends YlinorScreen
 {
-    /* Logo afficher au milieu de l'écran */
+    /* Logo affiché au milieu de l'écran */
     private Image logo;
 
     /* La progressBar */
@@ -59,7 +63,10 @@ public class LoadingScreen extends YlinorScreen
         /* Changer sa position en fonction de la taille de la fenet */
         logo.setPosition(width / 2 - logo.getWidth() / 2, height / 2 - logo.getHeight() / 2);
 
-        /* Changer la taille de la progress bar en fonction de la taille de la fenetre */
+        /*
+         * Changer la taille de la progress bar en fonction de la taille de la
+         * fenetre
+         */
         loading.setBounds(0, 0, width, 20);
     }
 
@@ -69,7 +76,10 @@ public class LoadingScreen extends YlinorScreen
         /* Appeller la méthode super (cf YlinorClient) */
         super.render(delta);
 
-        /* Changer la valeur de la progress bar en fonction du nombre d'assets chargés */
+        /*
+         * Changer la valeur de la progress bar en fonction du nombre d'assets
+         * chargés
+         */
         loading.setValue(Assets.get().assetsLoaded());
     }
 }

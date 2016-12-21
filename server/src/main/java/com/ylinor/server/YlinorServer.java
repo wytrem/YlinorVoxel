@@ -6,13 +6,13 @@ import com.ylinor.library.network.protocol.HandlerProtocol;
 import com.ylinor.library.packets.MyNetworkEntity;
 import com.ylinor.library.packets.Packet0KeepAlive;
 
+
 public class YlinorServer
 {
     public static void main(String[] args)
     {
         HandlerProtocol<MyNetworkEntity> protocol = new HandlerProtocol<>();
-        protocol.registerPacket(Packet0KeepAlive.class, (packet, sender, receiver) -> 
-        {
+        protocol.registerPacket(Packet0KeepAlive.class, (packet, sender, receiver) -> {
             System.out.println("J'ai reçu un packet " + packet.getRandomID() + " de l'ip " + sender.getRemoteAddress().toString() + " par le manager " + receiver);
             receiver.sendPacket(new Packet0KeepAlive(3), sender);
         });

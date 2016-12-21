@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 
 import com.ylinor.library.util.Facing;
 
+
 public class BlockPosition extends Position3D
 {
     public static final BlockPosition ORIGIN = new BlockPosition(0, 0, 0);

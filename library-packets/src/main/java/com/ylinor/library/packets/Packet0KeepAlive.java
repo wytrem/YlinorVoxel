@@ -2,6 +2,7 @@ package com.ylinor.library.packets;
 
 import com.ylinor.library.network.packet.Packet;
 
+
 /**
  * @author pierre
  * @since 1.0.0

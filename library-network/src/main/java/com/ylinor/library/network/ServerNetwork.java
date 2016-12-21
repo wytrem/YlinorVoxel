@@ -6,6 +6,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.ylinor.library.network.kryo.KryoDecoder;
 import com.ylinor.library.network.kryo.KryoEncoder;
@@ -28,8 +31,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import net.wytrem.logging.Logger;
-import net.wytrem.logging.LoggerFactory;
+
 
 /**
  * @author pierre
@@ -70,7 +72,7 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
     /**
      * Logger
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(ServerNetwork.class);
 
     /**
      * Channels
@@ -79,7 +81,7 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
 
     private Function<SocketAddress, E> entitySupplier;
     private CopyOnWriteArrayList<E> clients = new CopyOnWriteArrayList<>();
-    
+
     public ServerNetwork(Kryo kryo, String ip, int port, IProtocol<E> protocol, Function<SocketAddress, E> entitySupplier)
     {
         super(kryo, ip, port, protocol);
@@ -98,8 +100,7 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
             bootstrap.group(bossGroup, workerGroup);
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.handler(new LoggingHandler(LogLevel.INFO));
-            bootstrap.childHandler(new ChannelInitializer<SocketChannel>()
-            {
+            bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception
                 {
@@ -116,13 +117,13 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
 
             while (isStarted)
             {
-                if(channels.size() > 0 && packetQueue.size() > 0)
+                if (channels.size() > 0 && packetQueue.size() > 0)
                 {
-                    for(PairPacket<?, ?> pair : packetQueue)
+                    for (PairPacket<?, ?> pair : packetQueue)
                     {
-                        for(Channel channel : channels)
+                        for (Channel channel : channels)
                         {
-                            if(channel.remoteAddress().equals(pair.getSender().getRemoteAddress()))
+                            if (channel.remoteAddress().equals(pair.getSender().getRemoteAddress()))
                             {
                                 logger.debug("Sending " + pair.getPacket().getClass().getSimpleName() + " packet");
                                 channel.writeAndFlush(pair.getPacket());
@@ -135,7 +136,8 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
 
             logger.info("closing network service");
             channel.closeFuture().sync();
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -155,7 +157,7 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
     private class ServerNetworkHandler extends ChannelInboundHandlerAdapter
     {
         private E client;
-        
+
         public ServerNetworkHandler(E client)
         {
             this.client = client;

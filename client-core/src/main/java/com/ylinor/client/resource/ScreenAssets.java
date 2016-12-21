@@ -1,10 +1,11 @@
 package com.ylinor.client.resource;
 
+import static com.ylinor.client.resource.Assets.FONTS_FOLDER;
+import static com.ylinor.client.resource.Assets.IMAGES_FOLDER;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-
-import static com.ylinor.client.resource.Assets.*;
 
 /**
  * Contient tous les assets des screens

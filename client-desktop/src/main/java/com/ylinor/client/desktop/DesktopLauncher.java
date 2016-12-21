@@ -3,7 +3,7 @@ package com.ylinor.client.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.ylinor.client.YlinorClient;
-import com.ylinor.library.network.ClientNetwork;
+
 
 /**
  * Le lanceur de l'appli pour bureau
