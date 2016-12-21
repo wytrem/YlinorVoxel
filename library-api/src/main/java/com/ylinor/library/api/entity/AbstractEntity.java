@@ -15,7 +15,20 @@ public abstract class AbstractEntity
      */
     private Vector3f speed;
 
+    public AbstractEntity()
+    {
+    }
 
+    public AbstractEntity(Vector3f position, Vector3f speed)
+    {
+        this.position = position;
+        this.speed = speed;
+    }
+
+    /**
+     * Artificial Intelligence of the entity
+     */
+    private IArtificialIntelligence ai;
 
 
     public void setSpeedX(float speedX)
@@ -106,5 +119,15 @@ public abstract class AbstractEntity
     public void setPosition(Vector3f position)
     {
         this.position = position;
+    }
+
+    public IArtificialIntelligence getAi()
+    {
+        return ai;
+    }
+
+    public void setAi(IArtificialIntelligence ai)
+    {
+        this.ai = ai;
     }
 }
