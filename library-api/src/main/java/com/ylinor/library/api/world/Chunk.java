@@ -2,303 +2,187 @@ package com.ylinor.library.api.world;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
-import com.ylinor.library.api.block.BlockType;
-import com.ylinor.library.util.math.Positionable2D;
-import com.ylinor.library.util.math.Positionable3D;
-import com.ylinor.library.util.math.Size3D;
+import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.util.math.Sizeable3D;
 import com.ylinor.library.util.spring.Assert;
 
+import gnu.trove.iterator.TShortObjectIterator;
+import gnu.trove.map.TShortObjectMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
+
 
 /**
- * Un Chunk de monde
- *
- * Un Chunk est une partie d'un monde, c'est un pavé droit à base carée dont
- * celle-ci a les dimensions données (qui devraient être puissance de deux, et
- * il a la même hauteur que le monde lui même.
- *
- * Le monde est uniquement composé de Chunk, situés comme une grille en deux
- * dimensions (la hauteur est celle du monde) et les chunks eux contiennent les
- * blocks.
- *
- * @author Litarvan
+ * A world chunk.
+ * 
+ * @author Litarvam
+ * @author wytrem
  * @since 1.0.0
  */
-public class Chunk implements Positionable2D, Sizeable3D
+public class Chunk implements Sizeable3D
 {
-    /**
-     * La taille d'un côté d'un chunk
-     */
     public static final int CHUNK_SIZE_X = 16;
     public static final int CHUNK_SIZE_Y = 256;
     public static final int CHUNK_SIZE_Z = 16;
 
-    /**
-     * Le monde où est ce Chunk
-     */
     @NotNull
     private World world;
 
-    /**
-     * La position du chunk, en 2D car un chunk a toujours une position Y 0 dans
-     * un plan en 3D.
-     *
-     * La position est renseignée en chunk, le premier chunk a 0 pour position,
-     * le deuxième 1 être. La position n'est PAS renseignée en block.
-     */
     @NotNull
-    private Positionable2D position;
+    private Vector2i position;
 
-    /**
-     * Les id des types de blocks du chunk
-     *
-     * Les trois tableaux correspondent aux trois axes blocks[1][2][3]
-     * correspond au block à x: 1, y: 2, z: 3
-     */
     @NotNull
-    private int[][][] blocks;
+    private short[][][] blockIds;
 
-    /**
-     * La taille du Chunk
-     */
-    private Size3D size;
+    private TShortObjectMap<Block> blocks;
 
-    /**
-     * Les données des blocks du chunk, null si c'est un block simple sans
-     * données particulières
-     *
-     * Les trois tableaux correspondent aux trois axes data[1][2][3] correspond
-     * au données du block à x: 1, y: 2, z: 3
-     */
-    private BlockData[][][] data;
-
-    /**
-     * Un chunk (Portion d'un monde)
-     *
-     * @param world Le monde qui contient ce chunk
-     * @param position La position du Chunk, en nombre de Chunk, sur la grille
-     *        de Chunk du monde.
-     */
-    public Chunk(@NotNull World world, @NotNull Positionable2D position) throws IllegalArgumentException
+    public Chunk(@NotNull World world, @NotNull Vector2i position) throws IllegalArgumentException
     {
         Assert.notNull(world, "world cannot be null");
         Assert.notNull(position, "position cannot be null");
 
         this.world = world;
         this.position = position;
-        this.size = new Size3D(CHUNK_SIZE_X, CHUNK_SIZE_Y, CHUNK_SIZE_Z);
-        this.blocks = new int[size.getSizeX()][size.getSizeY()][size.getSizeZ()];
-        this.data = new BlockData[size.getSizeX()][size.getSizeY()][size.getSizeZ()];
+        this.blockIds = new short[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
+        this.blocks = new TShortObjectHashMap<>(64);
     }
 
-    /**
-     * Change les données bloc à la position donnée. Peut être null si c'est un
-     * block non particulier.
-     *
-     * Si le type est différent de celui actuel, il sera changé.
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relative au chunk et donc ni être plus basse que zéro, ni plus haute que
-     * la taille du Chunk.
-     *
-     * @param position La position X du bloc
-     * @param block Le données à définir (peut être null)
-     */
-    public void setBlock(@NotNull Positionable3D position, @Nullable BlockData block)
+    public void setBlock(int x, int y, int z, @Nullable Block block)
     {
-        this.setBlock(position.getX(), position.getY(), position.getZ(), block);
-    }
-
-    /**
-     * Change les données bloc à la position donnée. Peut être null si c'est un
-     * block non particulier.
-     *
-     * Si le type est différent de celui actuel, il sera changé.
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relative au chunk et donc ni être plus basse que zéro, ni plus haute que
-     * la taille du Chunk.
-     *
-     * @param x La position X du bloc
-     * @param y La position Y du bloc
-     * @param z La position Z du block
-     * @param block Le données à définir (peut être null)
-     */
-    public void setBlock(int x, int y, int z, @Nullable BlockData block)
-    {
-        data[x][y][z] = block;
-
-        if (block != null && blocks[x][y][z] != block.getType().getId())
+        short pos = posInChunkToShort(x, y, z);
+        Block previous = blocks.get(pos);
+        
+        if (previous != null)
         {
-            blocks[x][y][z] = block.getType().getId();
+            synchronized (previous)
+            {
+                if (block != null)
+                {
+                    blocks.put(pos, block);
+                }
+                else
+                {
+                    blocks.remove(pos);
+                }
+            }
+        }
+        else
+        {
+            if (block != null)
+            {
+                blocks.put(pos, block);
+            }
+            else
+            {
+                blocks.remove(pos);
+            }
         }
 
-        // TODO: BlockData change event
+        if (block != null)
+        {
+            blockIds[x][y][z] = (short) block.getTypeId();
+        }
+        else
+        {
+            blockIds[x][y][z] = (short) 0;
+        }
     }
 
-    /**
-     * Change le type de bloc à la position donnée.
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relative au chunk et donc ni être plus basse que zéro, ni plus haute que
-     * la taille du Chunk.
-     *
-     * @param position La position X du bloc
-     * @param type Le type de bloc à définir
-     */
-    public void setBlock(@NotNull Positionable3D position, @NotNull BlockType type)
+    public void setBlockId(int x, int y, int z, short id)
     {
-        this.setBlock(position.getX(), position.getY(), position.getZ(), type);
+        short pos = posInChunkToShort(x, y, z);
+        Block previous = blocks.get(id);
+        
+        if (previous != null)
+        {
+            synchronized (previous)
+            {
+                blocks.remove(pos);
+            }
+        }
+        
+        blockIds[x][y][z] = id;
     }
 
-    /**
-     * Change le bloc à la position donnée.
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relativ&
-     *
-     * @param x La position X du bloc
-     * @param y La position Y du bloc
-     * @param z La position Z du block
-     * @param type Le bloc à définir
-     */
-    public void setBlock(int x, int y, int z, @NotNull BlockType type)
+    public short getBlockId(int x, int y, int z)
     {
-        blocks[x][y][z] = type.getId();
-        // TODO: BlockType change event
+        return blockIds[x][y][z];
     }
 
-    /**
-     * Retourne le block à la position donnée, ou null si il n'y en a pas
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relative au chunk et donc ni être plus basse que zéro, ni plus haute que
-     * la taille du Chunk.
-     *
-     * @param pos La position du block à retourner
-     *
-     * @return Le block à la position donnée (null si il n'y en a pas)
-     */
-    @Nullable
-    public BlockType getBlock(@NotNull Positionable3D pos)
+    @NotNull
+    public Block getBlock(int x, int y, int z)
     {
-        return BlockType.getByID(getBlockId(pos));
+        short pos = posInChunkToShort(x, y, z);
+        Block block = blocks.get(pos);
+        
+        if (block == null)
+        {
+            block = new Block(getBlockId(x, y, z), new BlockPos(x() * CHUNK_SIZE_X + x, y, z() * CHUNK_SIZE_Z + z));
+            blocks.put(pos, block);
+        }
+        
+        return block;
     }
 
-    /**
-     * Retourne l'id du block à la position donnée
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relative au chunk et donc ni être plus basse que zéro, ni plus haute que
-     * la taille du Chunk.
-     *
-     * @param pos La position du block en question
-     *
-     * @return L'id du type de block (0 si pas de block)
-     */
-    public int getBlockId(@NotNull Positionable3D pos)
-    {
-        return blocks[pos.getX()][pos.getY()][pos.getZ()];
-    }
-
-    /**
-     * Retourne les données du block à la position donnée
-     *
-     * La position doit être exprimée en bloc, et surtout, elle doit être
-     * relative au chunk et donc ni être plus basse que zéro, ni plus haute que
-     * la taille du Chunk.
-     *
-     * @param pos La position du block en question
-     *
-     * @return Les données (null si block non partuculier)
-     */
-    @Nullable
-    public BlockData getBlockData(@NotNull Positionable3D pos)
-    {
-        return data[pos.getX()][pos.getY()][pos.getZ()];
-    }
-
-    /**
-     * @return Le monde qui contient ce chunk
-     */
     @NotNull
     public World getWorld()
     {
         return world;
     }
-
-    /**
-     * @return Les id des types de blocks du chunk
-     *
-     *         Les trois tableaux correspondent aux trois axes
-     *         getBlocks()[1][2][3] correspond au block à x: 1, y: 2, z: 3
-     */
-    @NotNull
-    public int[][][] getBlocks()
+    
+    public int x()
     {
-        return blocks;
+        return position.x();
     }
-
-    /**
-     * @return Les données des blocks du chunk, null si c'est un block simple
-     *         sans données particulières
-     *
-     *         Les trois tableaux correspondent aux trois axes
-     *         getBlocksData()[1][2][3] correspond au données du block à x: 1,
-     *         y: 2, z: 3
-     */
-    @NotNull
-    public BlockData[][][] getBlocksData()
+    
+    public int z()
     {
-        return data;
-    }
-
-    /**
-     * @return La taille du Chunk
-     */
-    @NotNull
-    public Sizeable3D getSize()
-    {
-        return size;
-    }
-
-    /**
-     * @return La position du Chunk
-     */
-    @NotNull
-    public Positionable2D getPosition()
-    {
-        return position;
-    }
-
-    @Override
-    public int getX()
-    {
-        return position.getX();
-    }
-
-    @Override
-    public int getY()
-    {
-        return position.getY();
+        return position.y();
     }
 
     @Override
     public int getSizeX()
     {
-        return getSize().getSizeX();
+        return CHUNK_SIZE_X;
     }
 
     @Override
     public int getSizeY()
     {
-        return getSize().getSizeY();
+        return CHUNK_SIZE_Y;
     }
 
     @Override
     public int getSizeZ()
     {
-        return getSize().getSizeZ();
+        return CHUNK_SIZE_Z;
+    }
+    
+    public void clearBlocksCache()
+    {
+        TShortObjectIterator<Block> iterator = blocks.iterator();
+        
+        while (iterator.hasNext())
+        {
+            if (iterator.value().canBeUncached())
+            {
+                iterator.remove();
+            }
+        }
+    }
+
+    private static final int NUM_X_BITS = 4;
+    private static final int NUM_Z_BITS = NUM_X_BITS;
+    private static final int NUM_Y_BITS = 16 - NUM_X_BITS - NUM_Z_BITS;
+    private static final int Y_SHIFT = 0 + NUM_Z_BITS;
+    private static final int X_SHIFT = Y_SHIFT + NUM_Y_BITS;
+    private static final long X_MASK = (1L << NUM_X_BITS) - 1L;
+    private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
+    private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
+    
+    public static short posInChunkToShort(int x, int y, int z)
+    {
+        return (short) (((long) x & X_MASK) << X_SHIFT | ((long) y & Y_MASK) << Y_SHIFT | ((long) z & Z_MASK) << 0);
     }
 }

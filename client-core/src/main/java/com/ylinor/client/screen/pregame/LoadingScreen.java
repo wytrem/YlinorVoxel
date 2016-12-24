@@ -29,7 +29,7 @@ public class LoadingScreen extends YlinorScreen
 
     /* Logger */
     private Logger logger = LoggerFactory.getLogger(getClass());
-
+    
     /* Appele lors de la création du screen */
     @Override
     public void show()

@@ -2,8 +2,8 @@ package com.ylinor.library.api.block;
 
 import org.jetbrains.annotations.Nullable;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.map.TShortObjectMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
 
 
 /**
@@ -19,7 +19,7 @@ public class BlockType
     /**
      * Les BlockType enregistrés
      */
-    private static final TIntObjectMap<BlockType> types = new TIntObjectHashMap<>();
+    private static final TShortObjectMap<BlockType> types = new TShortObjectHashMap<>();
     public static final BlockType air = new BlockType(0);
     public static final BlockType dirt = new BlockType(1);
     public static final BlockType stone = new BlockType(2);
@@ -27,26 +27,26 @@ public class BlockType
     /**
      * L'id de ce BlockType
      */
-    private final int id;
+    private final short id;
 
     /**
      * Un BlockType simple
      */
     public BlockType(int id)
     {
-        if (types.containsKey(id))
+        if (types.containsKey((short) id))
         {
             throw new IllegalArgumentException("Slot " + id + " already used.");
         }
 
-        this.id = id;
-        types.put(id, this);
+        this.id = (short) id;
+        types.put(this.id, this);
     }
 
     /**
      * @return L'id de ce BlockType
      */
-    public int getId()
+    public short getId()
     {
         return id;
     }
@@ -61,11 +61,11 @@ public class BlockType
     @Nullable
     public static BlockType getByID(int id)
     {
-        if (!types.containsKey(id))
+        if (!types.containsKey((short) id))
         {
             return air;
         }
 
-        return types.get(id);
+        return types.get((short) id);
     }
 }

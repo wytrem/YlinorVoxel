@@ -2,20 +2,37 @@ package com.ylinor.library.api.world.provider;
 
 import java.util.Random;
 
-import com.ylinor.library.api.block.BlockType;
+import org.joml.Vector2i;
+
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.World;
-import com.ylinor.library.util.math.Positionable2D;
+
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 
 public class RandomChunkProvider implements IChunkProvider
 {
     private Random random = new Random();
 
+    private TLongObjectMap<Chunk> chunkMap = new TLongObjectHashMap<>();
+
     @Override
-    public Chunk provide(World world, Positionable2D pos)
+    public Chunk provide(World world, int x, int z)
     {
-        Chunk chunk = new Chunk(world, pos); // TODO: FIX SIZE PARAMETER
+        long id = chunkXZ2Long(x, z);
+        Chunk chunk = chunkMap.get(id);
+        if (chunk == null)
+        {
+            chunk = generateAt(world, x, z);
+            chunkMap.put(id, chunk);
+        }
+        return chunk;
+    }
+
+    private Chunk generateAt(World world, int chunkX, int chunkZ)
+    {
+        Chunk chunk = new Chunk(world, new Vector2i(chunkX, chunkZ));
 
         for (int x = 0; x < chunk.getSizeX(); x++)
         {
@@ -23,8 +40,7 @@ public class RandomChunkProvider implements IChunkProvider
             {
                 for (int z = 0; z < chunk.getSizeZ(); z++)
                 {
-                    // TODO: Fix NPE
-                    chunk.setBlock(x, y, z, BlockType.getByID(random.nextInt(1)));
+                    chunk.setBlockId(x, y, z, (short) random.nextInt(1));
                 }
             }
         }
@@ -32,8 +48,9 @@ public class RandomChunkProvider implements IChunkProvider
         return chunk;
     }
 
-    @Override
-    public void unload(World world, Positionable2D pos)
+    /** * converts a chunk coordinate pair to a long (suitable for hashing) */
+    public static long chunkXZ2Long(int chunkX, int chunkZ)
     {
+        return chunkX & 4294967295L | (chunkZ & 4294967295L) << 32;
     }
 }

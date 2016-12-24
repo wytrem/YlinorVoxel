@@ -10,6 +10,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
+import com.ylinor.client.screen.pregame.MainMenuScreen;
 
 
 
@@ -42,12 +43,12 @@ public class YlinorClient extends Game
      * Si le preloading (chargement des assets utilisés avant/pendant le
      * chargement) a été fait
      */
-    private boolean preload = false;
+    private boolean preloaded = false;
 
     /**
      * Si le loading a été fait (chargement des assets)
      */
-    private boolean load = false;
+    private boolean loaded = false;
 
     /**
      * Le temps actuel (System.currentTimeMillis())
@@ -86,16 +87,16 @@ public class YlinorClient extends Game
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Assets loading
-        if (assets.update() && !load)
+        if (assets.update() && !loaded)
         {
-            if (!preload)
+            if (!preloaded)
             {
                 logger.info("Pre-assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = System.currentTimeMillis();
                 assets.load();
 
-                preload = true;
+                preloaded = true;
 
                 setScreen(new LoadingScreen());
             }
@@ -104,9 +105,9 @@ public class YlinorClient extends Game
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = 0;
-                load = true;
+                loaded = true;
 
-                // setScreen(new MainMenuScreen());
+                setScreen(new MainMenuScreen());
             }
         }
 

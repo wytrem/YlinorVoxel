@@ -68,7 +68,7 @@ public class Assets implements Disposable
      */
     public void preload()
     {
-        logger.info("Loading pre-assets (includes VisUI)...");
+        logger.info("Loading pre-assets (including VisUI)...");
 
         VisUI.load();
         screen.preload();

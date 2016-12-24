@@ -1,14 +1,11 @@
 package com.ylinor.library.api.world;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
-import com.ylinor.library.api.block.BlockType;
+import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.api.world.provider.IChunkProvider;
-import com.ylinor.library.util.math.Position2D;
-import com.ylinor.library.util.math.Position3D;
-import com.ylinor.library.util.math.Positionable2D;
-import com.ylinor.library.util.math.Positionable3D;
+import com.ylinor.library.util.math.PositionableObject2D;
 
 
 /**
@@ -19,6 +16,7 @@ import com.ylinor.library.util.math.Positionable3D;
  * sont puissances de deux). Chaque chunk est rempli de blocs.
  *
  * @author Litarvan
+ * @author wytrem
  * @since 1.0.0
  */
 public class World
@@ -26,11 +24,11 @@ public class World
     /**
      * La taille maximum d'un monde
      */
-    public static final int MAX_HEIGHT = 256;
+    public static final int MAX_HEIGHT = Chunk.CHUNK_SIZE_Y;
 
     /**
      * Le {@link IChunkProvider} qui sera appelé dans le cas d'utilisation de
-     * {@link #getChunk(Positionable2D)} sur un chunk non-chargé, ou dans le cas
+     * {@link #getChunk(PositionableObject2D)} sur un chunk non-chargé, ou dans le cas
      * du déchargement d'un chunk.
      */
     @NotNull
@@ -45,106 +43,47 @@ public class World
     {
         this.provider = provider;
     }
-
-    /**
-     * Retourne le chunk contenant la position en block donnée
-     *
-     * @param pos La position du monde en block à trouver
-     *
-     * @return Le chunk contenant la position donnée, null si il est vide et
-     *         qu'il n'y a pas de {@link IChunkProvider} ou que celui-ci a
-     *         renvoyé null
-     */
-    @Nullable
-    public Chunk getChunkOfBlock(@NotNull Positionable3D pos)
+    
+    public Chunk getChunkFromBlockCoords(BlockPos pos)
     {
-        return getChunk(getChunkPosOfBlock(pos));
+        return getChunkFromBlockCoords(pos.x, pos.y, pos.z);
+    }    
+    
+    public Chunk getChunkFromBlockCoords(int x, int y, int z)
+    {
+        return provider.provide(this, x >> 4, z >> 4);
+    }
+    
+    public Chunk getChunkFromChunkCoords(Vector2i pos)
+    {
+        return getChunkFromChunkCoords(pos.x, pos.y);
     }
 
-    /**
-     * Retourne la position du chunk contenant la position en block donnée
-     *
-     * @param pos La position du monde en block à trouver
-     *
-     * @return La position chunk contenant la position donnée
-     */
-    @NotNull
-    public Position2D getChunkPosOfBlock(@NotNull Positionable3D pos)
+    public Chunk getChunkFromChunkCoords(int x, int z)
     {
-        return new Position2D(pos.getX() >> 4, pos.getY() >> 4);
+        return provider.provide(this, x, z);
     }
-
-    /**
-     * Retourne la position relative au chunk de la position en block donnée
-     *
-     * @param pos La position d'un block, en block
-     *
-     * @return La même position que donnée, mais relative à son chunk
-     */
-    @NotNull
-    public Positionable3D shift(@NotNull Positionable3D pos)
+    
+    public Block getBlock(BlockPos pos)
     {
-        return new Position3D(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+        return getChunkFromBlockCoords(pos.x, pos.y, pos.z).getBlock(pos.x & 15, pos.y, pos.z & 15);
     }
-
-    /**
-     * Retourne le type de block à la position NON relative à son chunk, donnée
-     *
-     * @param pos La position du block en question NON relative à son chunk.
-     *
-     * @return Le block trouvé ou null si il n'y a pas de block
-     */
-    @Nullable
-    public BlockType getBlock(@NotNull Positionable3D pos)
+    
+    public short getBlockId(BlockPos pos)
     {
-        Chunk chunk = getChunkOfBlock(pos);
-        return chunk == null ? null : chunk.getBlock(shift(pos));
+        return getChunkFromBlockCoords(pos.x, pos.y, pos.z).getBlockId(pos.x & 15, pos.y, pos.z & 15);
     }
-
-    /**
-     * Retourne l'id du type de block à la position NON relative à son chunk,
-     * donnée
-     *
-     * @param pos La position du block en question NON relative à son chunk.
-     *
-     * @return L'id du type de block
-     */
-    public int getBlockId(@NotNull Positionable3D pos)
+    
+    public Block getBlock(int x, int y, int z)
     {
-        Chunk chunk = getChunkOfBlock(pos);
-        return chunk == null ? 0 : chunk.getBlockId(shift(pos));
+        return getChunkFromBlockCoords(x, y, z).getBlock(x & 15, y, z & 15);
     }
-
-    /**
-     * Retourne les données du block à la position NON relative à son chunk,
-     * donnée
-     *
-     * @param pos La position du block en question NON relative à son chunk.
-     *
-     * @return Le block trouvé ou null si il n'y a pas de block ou que c'est un
-     *         block non particulier
-     */
-    @Nullable
-    public BlockData getBlockData(@NotNull Positionable3D pos)
+    
+    public short getBlockId(int x, int y, int z)
     {
-        Chunk chunk = getChunkOfBlock(pos);
-        return chunk == null ? null : chunk.getBlockData(shift(pos));
+        return getChunkFromBlockCoords(x, y, z).getBlockId(x & 15, y, z & 15);
     }
-
-    /**
-     * Retourne le chunk à la position donnée
-     *
-     * @param pos La position du chunk à retourner
-     *
-     * @return Le chunk, null si il est vide et qu'il n'y a pas de
-     *         {@link IChunkProvider} ou que celui-ci a renvoyé null
-     */
-    @Nullable
-    public Chunk getChunk(@NotNull Positionable2D pos)
-    {
-        return provider.provide(this, pos);
-    }
-
+    
     /**
      * @return Le chunk provider actuel (null si non donné au constructeur)
      */
