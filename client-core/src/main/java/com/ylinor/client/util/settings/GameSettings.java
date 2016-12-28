@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class GameSettings
 {
@@ -38,7 +39,7 @@ public class GameSettings
         if(!settingsFile.exists())
         {
             settingsFile.createNewFile();
-            Files.write(settingsFile.toPath(), Arrays.asList("{ }"));
+            Files.write(settingsFile.toPath(), Collections.singletonList("{ }"));
             settings = new GameSettings();
             settings.save(settingsFile);
         }

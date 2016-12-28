@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/eclipse,java,intellij,gradle
 
+### Game ###
+client-core/assets/settings.json
+
 ### Eclipse ###
 
 .metadata
