@@ -24,6 +24,9 @@ public class KeyMap
     @JsonProperty("CANCEL")
     public int CANCEL;
 
+    @JsonProperty("SNICK")
+    public int SNICK;
+
     public KeyMap()
     {
     }
@@ -36,5 +39,6 @@ public class KeyMap
         STRAFE_RIGHT = Input.Keys.D;
         JUMP = Input.Keys.SPACE;
         CANCEL = Input.Keys.ESCAPE;
+        SNICK = Input.Keys.SHIFT_LEFT;
     }
 }

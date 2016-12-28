@@ -14,6 +14,6 @@ public class VisualSettings
     
     public void resetDefaults()
     {
-        useVsync = false;
+        useVsync = true;
     }
 }

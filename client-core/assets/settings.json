@@ -1,1 +1,1 @@
-{"i2":4,"keyMapping":{"FORWARD":0,"BACKWARD":0,"STRAFE_LEFT":0,"STRAFE_RIGHT":0,"JUMP":0,"CANCEL":0},"visualSettings":{"useVsync":true}}
+{"key_mapping":{"FORWARD":54,"BACKWARD":47,"STRAFE_LEFT":45,"STRAFE_RIGHT":32,"JUMP":62,"CANCEL":131,"SNICK":59},"visual_settings":{"use_vsync":true}}

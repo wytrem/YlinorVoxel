@@ -31,6 +31,12 @@ public class YlinorClient extends Game
      */
     public static final String VERSION = "0.0.1";
 
+
+    /**
+     * YlinorClient instance
+     */
+    private static YlinorClient ylinor;
+
     /**
      * Un logger Wylog
      */
@@ -71,6 +77,12 @@ public class YlinorClient extends Game
 //     * Protocl de redirection de packet
 //     */
 //    private IProtocol<ServerEntity> protocol;
+
+
+    public YlinorClient()
+    {
+        ylinor = this;
+    }
 
     @Override
     public void create()
@@ -163,5 +175,15 @@ public class YlinorClient extends Game
 //        clientNetwork.end();
 
         logger.info("Bye");
+    }
+
+    public static YlinorClient getYlinor()
+    {
+        return ylinor;
+    }
+
+    public GameSettings getSettings()
+    {
+        return settings;
     }
 }

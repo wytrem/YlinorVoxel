@@ -10,8 +10,6 @@ import java.util.Collections;
 
 public class GameSettings
 {
-    @JsonProperty
-    private int i2 = 4;
 
     @JsonProperty("key_mapping")
     private KeyMap keyMapping = new KeyMap();
@@ -38,6 +36,7 @@ public class GameSettings
             settingsFile.createNewFile();
             Files.write(settingsFile.toPath(), Collections.singletonList("{ }"));
             settings = new GameSettings();
+            settings.resetDefaults();
             settings.save(settingsFile);
         }
         settings = mapper.readValue(settingsFile, GameSettings.class);
@@ -59,15 +58,6 @@ public class GameSettings
         mapper.writeValue(settingsFile, this);
     }
 
-    public int getI2()
-    {
-        return i2;
-    }
-
-    public void setI2(int i2)
-    {
-        this.i2 = i2;
-    }
 
     public KeyMap getKeyMapping()
     {

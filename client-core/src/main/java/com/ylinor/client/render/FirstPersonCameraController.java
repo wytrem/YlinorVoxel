@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.IntIntMap;
+import com.ylinor.client.YlinorClient;
 
 
 /**
@@ -18,12 +19,6 @@ public class FirstPersonCameraController extends InputAdapter
 {
     private final Camera cam;
     private final IntIntMap keys = new IntIntMap();
-    private int STRAFE_LEFT = Keys.Q;
-    private int STRAFE_RIGHT = Keys.D;
-    private int FORWARD = Keys.Z;
-    private int BACKWARD = Keys.S;
-    private int UP = Keys.SPACE;
-    private int DOWN = Keys.SHIFT_LEFT;
     private float velocity = 5;
     private float degreesPerPixel = 0.5f;
     private final Vector3 tmp = new Vector3();
@@ -94,32 +89,32 @@ public class FirstPersonCameraController extends InputAdapter
 
     public void update(float deltaTime)
     {
-        if (keys.containsKey(FORWARD))
+        if (keys.containsKey(YlinorClient.getYlinor().getSettings().getKeyMapping().FORWARD))
         {
             tmp.set(cam.direction).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(BACKWARD))
+        if (keys.containsKey(YlinorClient.getYlinor().getSettings().getKeyMapping().BACKWARD))
         {
             tmp.set(cam.direction).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(STRAFE_LEFT))
+        if (keys.containsKey(YlinorClient.getYlinor().getSettings().getKeyMapping().STRAFE_LEFT))
         {
             tmp.set(cam.direction).crs(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(STRAFE_RIGHT))
+        if (keys.containsKey(YlinorClient.getYlinor().getSettings().getKeyMapping().STRAFE_RIGHT))
         {
             tmp.set(cam.direction).crs(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(UP))
+        if (keys.containsKey(YlinorClient.getYlinor().getSettings().getKeyMapping().JUMP))
         {
             tmp.set(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(DOWN))
+        if (keys.containsKey(YlinorClient.getYlinor().getSettings().getKeyMapping().SNICK))
         {
             tmp.set(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
