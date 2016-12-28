@@ -6,7 +6,7 @@ public class VisualSettings
 {
 
     @JsonProperty("use_vsync")
-    public boolean useVsync = true;
+    public boolean useVsync;
 
     public VisualSettings()
     {
@@ -14,5 +14,6 @@ public class VisualSettings
     
     public void resetDefaults()
     {
+        useVsync = false;
     }
 }
