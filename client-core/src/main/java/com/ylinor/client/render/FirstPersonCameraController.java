@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.IntIntMap;
-import com.ylinor.client.YlinorClient;
 import com.ylinor.client.util.settings.KeyMap;
 
 
@@ -92,32 +91,32 @@ public class FirstPersonCameraController extends InputAdapter
 
     public void update(float deltaTime)
     {
-        if (keys.containsKey(keyMap.FORWARD))
+        if (keys.containsKey(keyMap.forward))
         {
             tmp.set(cam.direction).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.BACKWARD))
+        if (keys.containsKey(keyMap.backward))
         {
             tmp.set(cam.direction).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.STRAFE_LEFT))
+        if (keys.containsKey(keyMap.strafeLeft))
         {
             tmp.set(cam.direction).crs(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.STRAFE_RIGHT))
+        if (keys.containsKey(keyMap.strafeRight))
         {
             tmp.set(cam.direction).crs(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.JUMP))
+        if (keys.containsKey(keyMap.jump))
         {
             tmp.set(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.SNICK))
+        if (keys.containsKey(keyMap.snick))
         {
             tmp.set(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);

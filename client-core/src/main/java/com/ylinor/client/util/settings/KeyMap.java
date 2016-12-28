@@ -6,26 +6,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class KeyMap
 {
 
-    @JsonProperty("FORWARD")
-    public int FORWARD;
+    @JsonProperty("forward")
+    public int forward;
 
-    @JsonProperty("BACKWARD")
-    public int BACKWARD;
+    @JsonProperty("backward")
+    public int backward;
 
-    @JsonProperty("STRAFE_LEFT")
-    public int STRAFE_LEFT;
+    @JsonProperty("strafeLeft")
+    public int strafeLeft;
 
-    @JsonProperty("STRAFE_RIGHT")
-    public int STRAFE_RIGHT;
+    @JsonProperty("strafeRight")
+    public int strafeRight;
 
-    @JsonProperty("JUMP")
-    public int JUMP;
+    @JsonProperty("jump")
+    public int jump;
 
-    @JsonProperty("CANCEL")
-    public int CANCEL;
+    @JsonProperty("cancel")
+    public int cancel;
 
-    @JsonProperty("SNICK")
-    public int SNICK;
+    @JsonProperty("snick")
+    public int snick;
 
     public KeyMap()
     {
@@ -33,12 +33,12 @@ public class KeyMap
 
     public void resetDefaults()
     {
-        FORWARD = Input.Keys.Z;
-        BACKWARD = Input.Keys.S;
-        STRAFE_LEFT = Input.Keys.Q;
-        STRAFE_RIGHT = Input.Keys.D;
-        JUMP = Input.Keys.SPACE;
-        CANCEL = Input.Keys.ESCAPE;
-        SNICK = Input.Keys.SHIFT_LEFT;
+        forward = Input.Keys.Z;
+        backward = Input.Keys.S;
+        strafeLeft = Input.Keys.Q;
+        strafeRight = Input.Keys.D;
+        jump = Input.Keys.SPACE;
+        cancel = Input.Keys.ESCAPE;
+        snick = Input.Keys.SHIFT_LEFT;
     }
 }
