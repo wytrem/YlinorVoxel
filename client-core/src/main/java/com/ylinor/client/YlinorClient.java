@@ -24,7 +24,7 @@ import com.ylinor.client.screen.pregame.MainMenuScreen;
  */
 public class YlinorClient extends Game {
     /**
-     * La verision du client
+     * La version du client
      */
     public static final String VERSION = "0.0.1";
 
