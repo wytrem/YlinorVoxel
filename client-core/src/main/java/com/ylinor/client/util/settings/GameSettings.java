@@ -31,4 +31,19 @@ public class GameSettings
         return mapper.readValue(settingsFile, GameSettings.class);
     }
 
+    public void save(File settingsFile) throws IOException
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(settingsFile, this);
+    }
+
+    public int getI2()
+    {
+        return i2;
+    }
+
+    public void setI2(int i2)
+    {
+        this.i2 = i2;
+    }
 }

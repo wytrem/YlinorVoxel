@@ -87,7 +87,6 @@ public class YlinorClient extends Game
         {
             e.printStackTrace();
         }
-        System.out.println(settings.keyMapping.FORWARD);
 
 
 //        protocol = new HandlerProtocol<>();
