@@ -1,5 +1,6 @@
 package com.ylinor.client;
 
+import com.ylinor.client.util.settings.GameSettings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
 
+import java.io.IOException;
 
 
 /**
@@ -55,6 +57,11 @@ public class YlinorClient extends Game
      */
     private long assetsTime;
 
+    /**
+     * User settings of the game
+     */
+    private GameSettings settings;
+
 //    /**
 //     * Instance du système reseau client
 //     */
@@ -72,6 +79,16 @@ public class YlinorClient extends Game
 
         assetsTime = System.currentTimeMillis();
         assets.preload();
+
+        try
+        {
+            settings = GameSettings.get(Gdx.files.internal("settings.json").file());
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        System.out.println(settings.keyMapping.FORWARD);
+
 
 //        protocol = new HandlerProtocol<>();
 
