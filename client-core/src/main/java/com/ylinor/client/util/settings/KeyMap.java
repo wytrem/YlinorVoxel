@@ -26,4 +26,9 @@ public class KeyMap
     public KeyMap()
     {
     }
+
+    public void resetDefaults()
+    {
+        
+    }
 }

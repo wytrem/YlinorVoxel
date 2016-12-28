@@ -10,18 +10,17 @@ import java.util.Collections;
 
 public class GameSettings
 {
-
     @JsonProperty
     private int i2 = 4;
 
-    @JsonProperty
+    @JsonProperty("key_mapping")
     private KeyMap keyMapping = new KeyMap();
 
-    @JsonProperty
+    @JsonProperty("visual_settings")
     private VisualSettings visualSettings = new VisualSettings();
 
     /**
-     * Empty constructor for json serialization
+     * Empty constructor for json serialization.
      */
     public GameSettings()
     {
@@ -43,6 +42,12 @@ public class GameSettings
         }
         settings = mapper.readValue(settingsFile, GameSettings.class);
         return settings;
+    }
+    
+    public void resetDefaults()
+    {
+        keyMapping.resetDefaults();
+        visualSettings.resetDefaults();
     }
 
     /**

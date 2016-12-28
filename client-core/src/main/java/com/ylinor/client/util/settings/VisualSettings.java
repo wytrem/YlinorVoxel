@@ -5,10 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class VisualSettings
 {
 
-    @JsonProperty
+    @JsonProperty("use_vsync")
     public boolean useVsync = true;
 
     public VisualSettings()
+    {
+    }
+    
+    public void resetDefaults()
     {
     }
 }
