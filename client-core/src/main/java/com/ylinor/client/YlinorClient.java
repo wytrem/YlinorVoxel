@@ -1,5 +1,6 @@
 package com.ylinor.client;
 
+import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -13,12 +14,13 @@ import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
 
+import java.io.File;
 import java.io.IOException;
 
 
 /**
  * Le client Ylinor
- *
+ * <p>
  * Le jeu principal, fait les actions de base, gère les screens, etc...
  *
  * @author Litarvan
@@ -94,16 +96,9 @@ public class YlinorClient extends Game
 
         try
         {
-            settings = GameSettings.get(Gdx.files.internal("settings.json").file());
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            settings.save(Gdx.files.internal("settings.json").file());
-        } catch (IOException e)
+            settings = GameSettings.get(new File(YlinorFiles.getGameFolder(), "settings.json"));
+            settings.save(new File(YlinorFiles.getGameFolder(), "settings.json"));
+        } catch(IOException e)
         {
             e.printStackTrace();
         }
@@ -123,9 +118,9 @@ public class YlinorClient extends Game
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Assets loading
-        if (assets.update() && !loaded)
+        if(assets.update() && !loaded)
         {
-            if (!preloaded)
+            if(!preloaded)
             {
                 logger.info("Pre-assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
@@ -135,8 +130,7 @@ public class YlinorClient extends Game
                 preloaded = true;
 
                 setScreen(new LoadingScreen());
-            }
-            else
+            } else
             {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
