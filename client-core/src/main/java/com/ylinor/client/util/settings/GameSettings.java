@@ -2,9 +2,12 @@ package com.ylinor.client.util.settings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
 
 public class GameSettings
 {
@@ -13,7 +16,10 @@ public class GameSettings
     private int i2 = 4;
 
     @JsonProperty
-    private KeyMap keyMapping;
+    private KeyMap keyMapping = new KeyMap();
+
+    @JsonProperty
+    private VisualSettings visualSettings = new VisualSettings();
 
     /**
      * Empty constructor for json serialization
@@ -23,14 +29,26 @@ public class GameSettings
     }
 
     /**
-     * Used to create an instance of GameSettings
+     * Used to create an instance of GameSettings with @param settingsFile
      */
     public static GameSettings get(File settingsFile) throws IOException
     {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(settingsFile, GameSettings.class);
+        GameSettings settings;
+        if(!settingsFile.exists())
+        {
+            settingsFile.createNewFile();
+            Files.write(settingsFile.toPath(), Arrays.asList("{ }"));
+            settings = new GameSettings();
+            settings.save(settingsFile);
+        }
+        settings = mapper.readValue(settingsFile, GameSettings.class);
+        return settings;
     }
 
+    /**
+     * Used to save the configuration in @param settingsFile
+     */
     public void save(File settingsFile) throws IOException
     {
         ObjectMapper mapper = new ObjectMapper();
@@ -50,5 +68,10 @@ public class GameSettings
     public KeyMap getKeyMapping()
     {
         return keyMapping;
+    }
+
+    public VisualSettings getVisualSettings()
+    {
+        return visualSettings;
     }
 }
