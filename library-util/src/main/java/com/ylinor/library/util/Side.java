@@ -1,7 +1,6 @@
 package com.ylinor.library.util;
 
-public enum Side
-{
+public enum Side {
     TOP,
     BOTTOM,
     EAST,

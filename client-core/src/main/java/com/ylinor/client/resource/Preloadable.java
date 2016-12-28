@@ -8,8 +8,7 @@ package com.ylinor.client.resource;
  * @since 1.0.0
  */
 @FunctionalInterface
-public interface Preloadable
-{
+public interface Preloadable {
     /**
      * Preload les assets de cette classe
      */

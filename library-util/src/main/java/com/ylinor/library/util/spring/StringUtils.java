@@ -55,8 +55,7 @@ import java.util.TimeZone;
  * @author Sam Brannen
  * @since 16 April 2001
  */
-public abstract class StringUtils
-{
+public abstract class StringUtils {
 
     private static final String FOLDER_SEPARATOR = "/";
 
@@ -86,8 +85,7 @@ public abstract class StringUtils
      * @param str the candidate String
      * @since 3.2.1
      */
-    public static boolean isEmpty(Object str)
-    {
+    public static boolean isEmpty(Object str) {
         return (str == null || "".equals(str));
     }
 
@@ -111,8 +109,7 @@ public abstract class StringUtils
      *         has length
      * @see #hasText(String)
      */
-    public static boolean hasLength(CharSequence str)
-    {
+    public static boolean hasLength(CharSequence str) {
         return (str != null && str.length() > 0);
     }
 
@@ -129,8 +126,7 @@ public abstract class StringUtils
      * @see #hasLength(CharSequence)
      * @see #hasText(String)
      */
-    public static boolean hasLength(String str)
-    {
+    public static boolean hasLength(String str) {
         return hasLength((CharSequence) str);
     }
 
@@ -156,17 +152,13 @@ public abstract class StringUtils
      *         length is greater than 0, and it does not contain whitespace only
      * @see Character#isWhitespace
      */
-    public static boolean hasText(CharSequence str)
-    {
-        if (!hasLength(str))
-        {
+    public static boolean hasText(CharSequence str) {
+        if (!hasLength(str)) {
             return false;
         }
         int strLen = str.length();
-        for (int i = 0; i < strLen; i++)
-        {
-            if (!Character.isWhitespace(str.charAt(i)))
-            {
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(str.charAt(i))) {
                 return true;
             }
         }
@@ -185,8 +177,7 @@ public abstract class StringUtils
      *         length is greater than 0, and it does not contain whitespace only
      * @see #hasText(CharSequence)
      */
-    public static boolean hasText(String str)
-    {
+    public static boolean hasText(String str) {
         return hasText((CharSequence) str);
     }
 
@@ -199,17 +190,13 @@ public abstract class StringUtils
      *         contains at least 1 whitespace character
      * @see Character#isWhitespace
      */
-    public static boolean containsWhitespace(CharSequence str)
-    {
-        if (!hasLength(str))
-        {
+    public static boolean containsWhitespace(CharSequence str) {
+        if (!hasLength(str)) {
             return false;
         }
         int strLen = str.length();
-        for (int i = 0; i < strLen; i++)
-        {
-            if (Character.isWhitespace(str.charAt(i)))
-            {
+        for (int i = 0; i < strLen; i++) {
+            if (Character.isWhitespace(str.charAt(i))) {
                 return true;
             }
         }
@@ -225,8 +212,7 @@ public abstract class StringUtils
      *         least 1 whitespace character
      * @see #containsWhitespace(CharSequence)
      */
-    public static boolean containsWhitespace(String str)
-    {
+    public static boolean containsWhitespace(String str) {
         return containsWhitespace((CharSequence) str);
     }
 
@@ -237,19 +223,15 @@ public abstract class StringUtils
      * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
-    public static String trimWhitespace(String str)
-    {
-        if (!hasLength(str))
-        {
+    public static String trimWhitespace(String str) {
+        if (!hasLength(str)) {
             return str;
         }
         StringBuilder sb = new StringBuilder(str);
-        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0)))
-        {
+        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
             sb.deleteCharAt(0);
         }
-        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(sb.length() - 1)))
-        {
+        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(sb.length() - 1))) {
             sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
@@ -263,19 +245,15 @@ public abstract class StringUtils
      * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
-    public static String trimAllWhitespace(String str)
-    {
-        if (!hasLength(str))
-        {
+    public static String trimAllWhitespace(String str) {
+        if (!hasLength(str)) {
             return str;
         }
         int len = str.length();
         StringBuilder sb = new StringBuilder(str.length());
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             char c = str.charAt(i);
-            if (!Character.isWhitespace(c))
-            {
+            if (!Character.isWhitespace(c)) {
                 sb.append(c);
             }
         }
@@ -289,15 +267,12 @@ public abstract class StringUtils
      * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
-    public static String trimLeadingWhitespace(String str)
-    {
-        if (!hasLength(str))
-        {
+    public static String trimLeadingWhitespace(String str) {
+        if (!hasLength(str)) {
             return str;
         }
         StringBuilder sb = new StringBuilder(str);
-        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0)))
-        {
+        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
             sb.deleteCharAt(0);
         }
         return sb.toString();
@@ -310,15 +285,12 @@ public abstract class StringUtils
      * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
-    public static String trimTrailingWhitespace(String str)
-    {
-        if (!hasLength(str))
-        {
+    public static String trimTrailingWhitespace(String str) {
+        if (!hasLength(str)) {
             return str;
         }
         StringBuilder sb = new StringBuilder(str);
-        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(sb.length() - 1)))
-        {
+        while (sb.length() > 0 && Character.isWhitespace(sb.charAt(sb.length() - 1))) {
             sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
@@ -332,15 +304,12 @@ public abstract class StringUtils
      * @param leadingCharacter the leading character to be trimmed
      * @return the trimmed {@code String}
      */
-    public static String trimLeadingCharacter(String str, char leadingCharacter)
-    {
-        if (!hasLength(str))
-        {
+    public static String trimLeadingCharacter(String str, char leadingCharacter) {
+        if (!hasLength(str)) {
             return str;
         }
         StringBuilder sb = new StringBuilder(str);
-        while (sb.length() > 0 && sb.charAt(0) == leadingCharacter)
-        {
+        while (sb.length() > 0 && sb.charAt(0) == leadingCharacter) {
             sb.deleteCharAt(0);
         }
         return sb.toString();
@@ -354,15 +323,12 @@ public abstract class StringUtils
      * @param trailingCharacter the trailing character to be trimmed
      * @return the trimmed {@code String}
      */
-    public static String trimTrailingCharacter(String str, char trailingCharacter)
-    {
-        if (!hasLength(str))
-        {
+    public static String trimTrailingCharacter(String str, char trailingCharacter) {
+        if (!hasLength(str)) {
             return str;
         }
         StringBuilder sb = new StringBuilder(str);
-        while (sb.length() > 0 && sb.charAt(sb.length() - 1) == trailingCharacter)
-        {
+        while (sb.length() > 0 && sb.charAt(sb.length() - 1) == trailingCharacter) {
             sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
@@ -376,18 +342,14 @@ public abstract class StringUtils
      * @param prefix the prefix to look for
      * @see java.lang.String#startsWith
      */
-    public static boolean startsWithIgnoreCase(String str, String prefix)
-    {
-        if (str == null || prefix == null)
-        {
+    public static boolean startsWithIgnoreCase(String str, String prefix) {
+        if (str == null || prefix == null) {
             return false;
         }
-        if (str.startsWith(prefix))
-        {
+        if (str.startsWith(prefix)) {
             return true;
         }
-        if (str.length() < prefix.length())
-        {
+        if (str.length() < prefix.length()) {
             return false;
         }
         String lcStr = str.substring(0, prefix.length()).toLowerCase();
@@ -403,22 +365,19 @@ public abstract class StringUtils
      * @param suffix the suffix to look for
      * @see java.lang.String#endsWith
      */
-    public static boolean endsWithIgnoreCase(String str, String suffix)
-    {
-        if (str == null || suffix == null)
-        {
+    public static boolean endsWithIgnoreCase(String str, String suffix) {
+        if (str == null || suffix == null) {
             return false;
         }
-        if (str.endsWith(suffix))
-        {
+        if (str.endsWith(suffix)) {
             return true;
         }
-        if (str.length() < suffix.length())
-        {
+        if (str.length() < suffix.length()) {
             return false;
         }
 
-        String lcStr = str.substring(str.length() - suffix.length()).toLowerCase();
+        String lcStr = str.substring(str.length() - suffix.length())
+                          .toLowerCase();
         String lcSuffix = suffix.toLowerCase();
         return lcStr.equals(lcSuffix);
     }
@@ -431,13 +390,10 @@ public abstract class StringUtils
      * @param index the index in the original string to start matching against
      * @param substring the substring to match at the given index
      */
-    public static boolean substringMatch(CharSequence str, int index, CharSequence substring)
-    {
-        for (int j = 0; j < substring.length(); j++)
-        {
+    public static boolean substringMatch(CharSequence str, int index, CharSequence substring) {
+        for (int j = 0; j < substring.length(); j++) {
             int i = index + j;
-            if (i >= str.length() || str.charAt(i) != substring.charAt(j))
-            {
+            if (i >= str.length() || str.charAt(i) != substring.charAt(j)) {
                 return false;
             }
         }
@@ -450,17 +406,14 @@ public abstract class StringUtils
      * @param str string to search in. Return 0 if this is {@code null}.
      * @param sub string to search for. Return 0 if this is {@code null}.
      */
-    public static int countOccurrencesOf(String str, String sub)
-    {
-        if (str == null || sub == null || str.length() == 0 || sub.length() == 0)
-        {
+    public static int countOccurrencesOf(String str, String sub) {
+        if (str == null || sub == null || str.length() == 0 || sub.length() == 0) {
             return 0;
         }
         int count = 0;
         int pos = 0;
         int idx;
-        while ((idx = str.indexOf(sub, pos)) != -1)
-        {
+        while ((idx = str.indexOf(sub, pos)) != -1) {
             ++count;
             pos = idx + sub.length();
         }
@@ -476,10 +429,8 @@ public abstract class StringUtils
      * @param newPattern {@code String} to insert
      * @return a {@code String} with the replacements
      */
-    public static String replace(String inString, String oldPattern, String newPattern)
-    {
-        if (!hasLength(inString) || !hasLength(oldPattern) || newPattern == null)
-        {
+    public static String replace(String inString, String oldPattern, String newPattern) {
+        if (!hasLength(inString) || !hasLength(oldPattern) || newPattern == null) {
             return inString;
         }
         StringBuilder sb = new StringBuilder();
@@ -487,8 +438,7 @@ public abstract class StringUtils
         int index = inString.indexOf(oldPattern);
         // the index of an occurrence we've found, or -1
         int patLen = oldPattern.length();
-        while (index >= 0)
-        {
+        while (index >= 0) {
             sb.append(inString.substring(pos, index));
             sb.append(newPattern);
             pos = index + patLen;
@@ -506,8 +456,7 @@ public abstract class StringUtils
      * @param pattern the pattern to delete all occurrences of
      * @return the resulting {@code String}
      */
-    public static String delete(String inString, String pattern)
-    {
+    public static String delete(String inString, String pattern) {
         return replace(inString, pattern, "");
     }
 
@@ -519,18 +468,14 @@ public abstract class StringUtils
      *        delete 'a's, 'z's and new lines.
      * @return the resulting {@code String}
      */
-    public static String deleteAny(String inString, String charsToDelete)
-    {
-        if (!hasLength(inString) || !hasLength(charsToDelete))
-        {
+    public static String deleteAny(String inString, String charsToDelete) {
+        if (!hasLength(inString) || !hasLength(charsToDelete)) {
             return inString;
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < inString.length(); i++)
-        {
+        for (int i = 0; i < inString.length(); i++) {
             char c = inString.charAt(i);
-            if (charsToDelete.indexOf(c) == -1)
-            {
+            if (charsToDelete.indexOf(c) == -1) {
                 sb.append(c);
             }
         }
@@ -548,8 +493,7 @@ public abstract class StringUtils
      * @return the quoted {@code String} (e.g. "'myString'"), or {@code null} if
      *         the input was {@code null}
      */
-    public static String quote(String str)
-    {
+    public static String quote(String str) {
         return (str != null ? "'" + str + "'" : null);
     }
 
@@ -561,8 +505,7 @@ public abstract class StringUtils
      * @return the quoted {@code String} (e.g. "'myString'"), or the input
      *         object as-is if not a {@code String}
      */
-    public static Object quoteIfString(Object obj)
-    {
+    public static Object quoteIfString(Object obj) {
         return (obj instanceof String ? quote((String) obj) : obj);
     }
 
@@ -572,8 +515,7 @@ public abstract class StringUtils
      * 
      * @param qualifiedName the qualified name
      */
-    public static String unqualify(String qualifiedName)
-    {
+    public static String unqualify(String qualifiedName) {
         return unqualify(qualifiedName, '.');
     }
 
@@ -584,8 +526,7 @@ public abstract class StringUtils
      * @param qualifiedName the qualified name
      * @param separator the separator
      */
-    public static String unqualify(String qualifiedName, char separator)
-    {
+    public static String unqualify(String qualifiedName, char separator) {
         return qualifiedName.substring(qualifiedName.lastIndexOf(separator) + 1);
     }
 
@@ -597,8 +538,7 @@ public abstract class StringUtils
      * @return the capitalized {@code String}, or {@code null} if the supplied
      *         string is {@code null}
      */
-    public static String capitalize(String str)
-    {
+    public static String capitalize(String str) {
         return changeFirstCharacterCase(str, true);
     }
 
@@ -610,24 +550,19 @@ public abstract class StringUtils
      * @return the uncapitalized {@code String}, or {@code null} if the supplied
      *         string is {@code null}
      */
-    public static String uncapitalize(String str)
-    {
+    public static String uncapitalize(String str) {
         return changeFirstCharacterCase(str, false);
     }
 
-    private static String changeFirstCharacterCase(String str, boolean capitalize)
-    {
-        if (str == null || str.length() == 0)
-        {
+    private static String changeFirstCharacterCase(String str, boolean capitalize) {
+        if (str == null || str.length() == 0) {
             return str;
         }
         StringBuilder sb = new StringBuilder(str.length());
-        if (capitalize)
-        {
+        if (capitalize) {
             sb.append(Character.toUpperCase(str.charAt(0)));
         }
-        else
-        {
+        else {
             sb.append(Character.toLowerCase(str.charAt(0)));
         }
         sb.append(str.substring(1));
@@ -641,10 +576,8 @@ public abstract class StringUtils
      * @param path the file path (may be {@code null})
      * @return the extracted filename, or {@code null} if none
      */
-    public static String getFilename(String path)
-    {
-        if (path == null)
-        {
+    public static String getFilename(String path) {
+        if (path == null) {
             return null;
         }
         int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
@@ -658,20 +591,16 @@ public abstract class StringUtils
      * @param path the file path (may be {@code null})
      * @return the extracted filename extension, or {@code null} if none
      */
-    public static String getFilenameExtension(String path)
-    {
-        if (path == null)
-        {
+    public static String getFilenameExtension(String path) {
+        if (path == null) {
             return null;
         }
         int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
-        if (extIndex == -1)
-        {
+        if (extIndex == -1) {
             return null;
         }
         int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
-        if (folderIndex > extIndex)
-        {
+        if (folderIndex > extIndex) {
             return null;
         }
         return path.substring(extIndex + 1);
@@ -685,20 +614,16 @@ public abstract class StringUtils
      * @return the path with stripped filename extension, or {@code null} if
      *         none
      */
-    public static String stripFilenameExtension(String path)
-    {
-        if (path == null)
-        {
+    public static String stripFilenameExtension(String path) {
+        if (path == null) {
             return null;
         }
         int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
-        if (extIndex == -1)
-        {
+        if (extIndex == -1) {
             return path;
         }
         int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
-        if (folderIndex > extIndex)
-        {
+        if (folderIndex > extIndex) {
             return path;
         }
         return path.substring(0, extIndex);
@@ -713,20 +638,16 @@ public abstract class StringUtils
      *        path above)
      * @return the full file path that results from applying the relative path
      */
-    public static String applyRelativePath(String path, String relativePath)
-    {
+    public static String applyRelativePath(String path, String relativePath) {
         int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
-        if (separatorIndex != -1)
-        {
+        if (separatorIndex != -1) {
             String newPath = path.substring(0, separatorIndex);
-            if (!relativePath.startsWith(FOLDER_SEPARATOR))
-            {
+            if (!relativePath.startsWith(FOLDER_SEPARATOR)) {
                 newPath += FOLDER_SEPARATOR;
             }
             return newPath + relativePath;
         }
-        else
-        {
+        else {
             return relativePath;
         }
     }
@@ -741,10 +662,8 @@ public abstract class StringUtils
      * @param path the original path
      * @return the normalized path
      */
-    public static String cleanPath(String path)
-    {
-        if (path == null)
-        {
+    public static String cleanPath(String path) {
+        if (path == null) {
             return null;
         }
         String pathToUse = replace(path, WINDOWS_FOLDER_SEPARATOR, FOLDER_SEPARATOR);
@@ -755,20 +674,16 @@ public abstract class StringUtils
         // strip the first "core" directory while keeping the "file:" prefix.
         int prefixIndex = pathToUse.indexOf(":");
         String prefix = "";
-        if (prefixIndex != -1)
-        {
+        if (prefixIndex != -1) {
             prefix = pathToUse.substring(0, prefixIndex + 1);
-            if (prefix.contains("/"))
-            {
+            if (prefix.contains("/")) {
                 prefix = "";
             }
-            else
-            {
+            else {
                 pathToUse = pathToUse.substring(prefixIndex + 1);
             }
         }
-        if (pathToUse.startsWith(FOLDER_SEPARATOR))
-        {
+        if (pathToUse.startsWith(FOLDER_SEPARATOR)) {
             prefix = prefix + FOLDER_SEPARATOR;
             pathToUse = pathToUse.substring(1);
         }
@@ -777,27 +692,21 @@ public abstract class StringUtils
         List<String> pathElements = new LinkedList<String>();
         int tops = 0;
 
-        for (int i = pathArray.length - 1; i >= 0; i--)
-        {
+        for (int i = pathArray.length - 1; i >= 0; i--) {
             String element = pathArray[i];
-            if (CURRENT_PATH.equals(element))
-            {
+            if (CURRENT_PATH.equals(element)) {
                 // Points to current directory - drop it.
             }
-            else if (TOP_PATH.equals(element))
-            {
+            else if (TOP_PATH.equals(element)) {
                 // Registering top path found.
                 tops++;
             }
-            else
-            {
-                if (tops > 0)
-                {
+            else {
+                if (tops > 0) {
                     // Merging path element with element corresponding to top path.
                     tops--;
                 }
-                else
-                {
+                else {
                     // Normal path element found.
                     pathElements.add(0, element);
                 }
@@ -805,8 +714,7 @@ public abstract class StringUtils
         }
 
         // Remaining top paths need to be retained.
-        for (int i = 0; i < tops; i++)
-        {
+        for (int i = 0; i < tops; i++) {
             pathElements.add(0, TOP_PATH);
         }
 
@@ -820,8 +728,7 @@ public abstract class StringUtils
      * @param path2 second path for comparison
      * @return whether the two paths are equivalent after normalization
      */
-    public static boolean pathEquals(String path1, String path2)
-    {
+    public static boolean pathEquals(String path1, String path2) {
         return cleanPath(path1).equals(cleanPath(path2));
     }
 
@@ -838,36 +745,30 @@ public abstract class StringUtils
      * @throws IllegalArgumentException in case of an invalid locale
      *         specification
      */
-    public static Locale parseLocaleString(String localeString)
-    {
+    public static Locale parseLocaleString(String localeString) {
         String[] parts = tokenizeToStringArray(localeString, "_ ", false, false);
         String language = (parts.length > 0 ? parts[0] : "");
         String country = (parts.length > 1 ? parts[1] : "");
         validateLocalePart(language);
         validateLocalePart(country);
         String variant = "";
-        if (parts.length > 2)
-        {
+        if (parts.length > 2) {
             // There is definitely a variant, and it is everything after the country
             // code sans the separator between the country code and the variant.
             int endIndexOfCountryCode = localeString.indexOf(country, language.length()) + country.length();
             // Strip off any leading '_' and whitespace, what's left is the variant.
             variant = trimLeadingWhitespace(localeString.substring(endIndexOfCountryCode));
-            if (variant.startsWith("_"))
-            {
+            if (variant.startsWith("_")) {
                 variant = trimLeadingCharacter(variant, '_');
             }
         }
         return (language.length() > 0 ? new Locale(language, country, variant) : null);
     }
 
-    private static void validateLocalePart(String localePart)
-    {
-        for (int i = 0; i < localePart.length(); i++)
-        {
+    private static void validateLocalePart(String localePart) {
+        for (int i = 0; i < localePart.length(); i++) {
             char ch = localePart.charAt(i);
-            if (ch != '_' && ch != ' ' && !Character.isLetterOrDigit(ch))
-            {
+            if (ch != '_' && ch != ' ' && !Character.isLetterOrDigit(ch)) {
                 throw new IllegalArgumentException("Locale part \"" + localePart + "\" contains invalid characters");
             }
         }
@@ -880,8 +781,7 @@ public abstract class StringUtils
      * @param locale the Locale to transform to a language tag
      * @return the RFC 3066 compliant language tag as {@code String}
      */
-    public static String toLanguageTag(Locale locale)
-    {
+    public static String toLanguageTag(Locale locale) {
         return locale.getLanguage() + (hasText(locale.getCountry()) ? "-" + locale.getCountry() : "");
     }
 
@@ -896,11 +796,9 @@ public abstract class StringUtils
      * @throws IllegalArgumentException in case of an invalid time zone
      *         specification
      */
-    public static TimeZone parseTimeZoneString(String timeZoneString)
-    {
+    public static TimeZone parseTimeZoneString(String timeZoneString) {
         TimeZone timeZone = TimeZone.getTimeZone(timeZoneString);
-        if ("GMT".equals(timeZone.getID()) && !timeZoneString.startsWith("GMT"))
-        {
+        if ("GMT".equals(timeZone.getID()) && !timeZoneString.startsWith("GMT")) {
             // We don't want that GMT fallback...
             throw new IllegalArgumentException("Invalid time zone specification '" + timeZoneString + "'");
         }
@@ -920,10 +818,8 @@ public abstract class StringUtils
      * @param str the {@code String} to append
      * @return the new array (never {@code null})
      */
-    public static String[] addStringToArray(String[] array, String str)
-    {
-        if (ObjectUtils.isEmpty(array))
-        {
+    public static String[] addStringToArray(String[] array, String str) {
+        if (ObjectUtils.isEmpty(array)) {
             return new String[] {str};
         }
         String[] newArr = new String[array.length + 1];
@@ -943,14 +839,11 @@ public abstract class StringUtils
      * @return the new array ({@code null} if both given arrays were
      *         {@code null})
      */
-    public static String[] concatenateStringArrays(String[] array1, String[] array2)
-    {
-        if (ObjectUtils.isEmpty(array1))
-        {
+    public static String[] concatenateStringArrays(String[] array1, String[] array2) {
+        if (ObjectUtils.isEmpty(array1)) {
             return array2;
         }
-        if (ObjectUtils.isEmpty(array2))
-        {
+        if (ObjectUtils.isEmpty(array2)) {
             return array1;
         }
         String[] newArr = new String[array1.length + array2.length];
@@ -972,22 +865,17 @@ public abstract class StringUtils
      * @return the new array ({@code null} if both given arrays were
      *         {@code null})
      */
-    public static String[] mergeStringArrays(String[] array1, String[] array2)
-    {
-        if (ObjectUtils.isEmpty(array1))
-        {
+    public static String[] mergeStringArrays(String[] array1, String[] array2) {
+        if (ObjectUtils.isEmpty(array1)) {
             return array2;
         }
-        if (ObjectUtils.isEmpty(array2))
-        {
+        if (ObjectUtils.isEmpty(array2)) {
             return array1;
         }
         List<String> result = new ArrayList<String>();
         result.addAll(Arrays.asList(array1));
-        for (String str : array2)
-        {
-            if (!result.contains(str))
-            {
+        for (String str : array2) {
+            if (!result.contains(str)) {
                 result.add(str);
             }
         }
@@ -1000,10 +888,8 @@ public abstract class StringUtils
      * @param array the source array
      * @return the sorted array (never {@code null})
      */
-    public static String[] sortStringArray(String[] array)
-    {
-        if (ObjectUtils.isEmpty(array))
-        {
+    public static String[] sortStringArray(String[] array) {
+        if (ObjectUtils.isEmpty(array)) {
             return new String[0];
         }
         Arrays.sort(array);
@@ -1019,10 +905,8 @@ public abstract class StringUtils
      * @return the {@code String} array ({@code null} if the supplied
      *         {@code Collection} was {@code null})
      */
-    public static String[] toStringArray(Collection<String> collection)
-    {
-        if (collection == null)
-        {
+    public static String[] toStringArray(Collection<String> collection) {
+        if (collection == null) {
             return null;
         }
         return collection.toArray(new String[collection.size()]);
@@ -1036,10 +920,8 @@ public abstract class StringUtils
      * @return the {@code String} array ({@code null} if the passed-in
      *         Enumeration was {@code null})
      */
-    public static String[] toStringArray(Enumeration<String> enumeration)
-    {
-        if (enumeration == null)
-        {
+    public static String[] toStringArray(Enumeration<String> enumeration) {
+        if (enumeration == null) {
             return null;
         }
         List<String> list = Collections.list(enumeration);
@@ -1053,15 +935,12 @@ public abstract class StringUtils
      * @param array the original {@code String} array
      * @return the resulting array (of the same size) with trimmed elements
      */
-    public static String[] trimArrayElements(String[] array)
-    {
-        if (ObjectUtils.isEmpty(array))
-        {
+    public static String[] trimArrayElements(String[] array) {
+        if (ObjectUtils.isEmpty(array)) {
             return new String[0];
         }
         String[] result = new String[array.length];
-        for (int i = 0; i < array.length; i++)
-        {
+        for (int i = 0; i < array.length; i++) {
             String element = array[i];
             result[i] = (element != null ? element.trim() : null);
         }
@@ -1077,15 +956,12 @@ public abstract class StringUtils
      * @param array the {@code String} array
      * @return an array without duplicates, in natural sort order
      */
-    public static String[] removeDuplicateStrings(String[] array)
-    {
-        if (ObjectUtils.isEmpty(array))
-        {
+    public static String[] removeDuplicateStrings(String[] array) {
+        if (ObjectUtils.isEmpty(array)) {
             return array;
         }
         Set<String> set = new LinkedHashSet<String>();
-        for (String element : array)
-        {
+        for (String element : array) {
             set.add(element);
         }
         return toStringArray(set);
@@ -1102,15 +978,12 @@ public abstract class StringUtils
      *         delimiter); or {@code null} if the delimiter wasn't found in the
      *         given input {@code String}
      */
-    public static String[] split(String toSplit, String delimiter)
-    {
-        if (!hasLength(toSplit) || !hasLength(delimiter))
-        {
+    public static String[] split(String toSplit, String delimiter) {
+        if (!hasLength(toSplit) || !hasLength(delimiter)) {
             return null;
         }
         int offset = toSplit.indexOf(delimiter);
-        if (offset < 0)
-        {
+        if (offset < 0) {
             return null;
         }
         String beforeDelimiter = toSplit.substring(0, offset);
@@ -1133,8 +1006,7 @@ public abstract class StringUtils
      * @return a {@code Properties} instance representing the array contents, or
      *         {@code null} if the array to process was {@code null} or empty
      */
-    public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter)
-    {
+    public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter) {
         return splitArrayElementsIntoProperties(array, delimiter, null);
     }
 
@@ -1156,23 +1028,18 @@ public abstract class StringUtils
      * @return a {@code Properties} instance representing the array contents, or
      *         {@code null} if the array to process was {@code null} or empty
      */
-    public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter, String charsToDelete)
-    {
+    public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter, String charsToDelete) {
 
-        if (ObjectUtils.isEmpty(array))
-        {
+        if (ObjectUtils.isEmpty(array)) {
             return null;
         }
         Properties result = new Properties();
-        for (String element : array)
-        {
-            if (charsToDelete != null)
-            {
+        for (String element : array) {
+            if (charsToDelete != null) {
                 element = deleteAny(element, charsToDelete);
             }
             String[] splittedElement = split(element, delimiter);
-            if (splittedElement == null)
-            {
+            if (splittedElement == null) {
                 continue;
             }
             result.setProperty(splittedElement[0].trim(), splittedElement[1].trim());
@@ -1199,8 +1066,7 @@ public abstract class StringUtils
      * @see String#trim()
      * @see #delimitedListToStringArray
      */
-    public static String[] tokenizeToStringArray(String str, String delimiters)
-    {
+    public static String[] tokenizeToStringArray(String str, String delimiters) {
         return tokenizeToStringArray(str, delimiters, true, true);
     }
 
@@ -1227,24 +1093,19 @@ public abstract class StringUtils
      * @see String#trim()
      * @see #delimitedListToStringArray
      */
-    public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens)
-    {
+    public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens) {
 
-        if (str == null)
-        {
+        if (str == null) {
             return null;
         }
         StringTokenizer st = new StringTokenizer(str, delimiters);
         List<String> tokens = new ArrayList<String>();
-        while (st.hasMoreTokens())
-        {
+        while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            if (trimTokens)
-            {
+            if (trimTokens) {
                 token = token.trim();
             }
-            if (!ignoreEmptyTokens || token.length() > 0)
-            {
+            if (!ignoreEmptyTokens || token.length() > 0) {
                 tokens.add(token);
             }
         }
@@ -1266,8 +1127,7 @@ public abstract class StringUtils
      * @return an array of the tokens in the list
      * @see #tokenizeToStringArray
      */
-    public static String[] delimitedListToStringArray(String str, String delimiter)
-    {
+    public static String[] delimitedListToStringArray(String str, String delimiter) {
         return delimitedListToStringArray(str, delimiter, null);
     }
 
@@ -1289,35 +1149,27 @@ public abstract class StringUtils
      * @return an array of the tokens in the list
      * @see #tokenizeToStringArray
      */
-    public static String[] delimitedListToStringArray(String str, String delimiter, String charsToDelete)
-    {
-        if (str == null)
-        {
+    public static String[] delimitedListToStringArray(String str, String delimiter, String charsToDelete) {
+        if (str == null) {
             return new String[0];
         }
-        if (delimiter == null)
-        {
+        if (delimiter == null) {
             return new String[] {str};
         }
         List<String> result = new ArrayList<String>();
-        if ("".equals(delimiter))
-        {
-            for (int i = 0; i < str.length(); i++)
-            {
+        if ("".equals(delimiter)) {
+            for (int i = 0; i < str.length(); i++) {
                 result.add(deleteAny(str.substring(i, i + 1), charsToDelete));
             }
         }
-        else
-        {
+        else {
             int pos = 0;
             int delPos;
-            while ((delPos = str.indexOf(delimiter, pos)) != -1)
-            {
+            while ((delPos = str.indexOf(delimiter, pos)) != -1) {
                 result.add(deleteAny(str.substring(pos, delPos), charsToDelete));
                 pos = delPos + delimiter.length();
             }
-            if (str.length() > 0 && pos <= str.length())
-            {
+            if (str.length() > 0 && pos <= str.length()) {
                 // Add rest of String, but not in case of empty input.
                 result.add(deleteAny(str.substring(pos), charsToDelete));
             }
@@ -1332,8 +1184,7 @@ public abstract class StringUtils
      * @param str the input {@code String}
      * @return an array of strings, or the empty array in case of empty input
      */
-    public static String[] commaDelimitedListToStringArray(String str)
-    {
+    public static String[] commaDelimitedListToStringArray(String str) {
         return delimitedListToStringArray(str, ",");
     }
 
@@ -1348,12 +1199,10 @@ public abstract class StringUtils
      * @return a set of {@code String} entries in the list
      * @see #removeDuplicateStrings(String[])
      */
-    public static Set<String> commaDelimitedListToSet(String str)
-    {
+    public static Set<String> commaDelimitedListToSet(String str) {
         Set<String> set = new LinkedHashSet<String>();
         String[] tokens = commaDelimitedListToStringArray(str);
-        for (String token : tokens)
-        {
+        for (String token : tokens) {
             set.add(token);
         }
         return set;
@@ -1370,19 +1219,15 @@ public abstract class StringUtils
      * @param suffix the {@code String} to end each element with
      * @return the delimited {@code String}
      */
-    public static String collectionToDelimitedString(Collection<?> coll, String delim, String prefix, String suffix)
-    {
-        if (CollectionUtils.isEmpty(coll))
-        {
+    public static String collectionToDelimitedString(Collection<?> coll, String delim, String prefix, String suffix) {
+        if (CollectionUtils.isEmpty(coll)) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
         Iterator<?> it = coll.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             sb.append(prefix).append(it.next()).append(suffix);
-            if (it.hasNext())
-            {
+            if (it.hasNext()) {
                 sb.append(delim);
             }
         }
@@ -1398,8 +1243,7 @@ public abstract class StringUtils
      * @param delim the delimiter to use (typically a ",")
      * @return the delimited {@code String}
      */
-    public static String collectionToDelimitedString(Collection<?> coll, String delim)
-    {
+    public static String collectionToDelimitedString(Collection<?> coll, String delim) {
         return collectionToDelimitedString(coll, delim, "", "");
     }
 
@@ -1411,8 +1255,7 @@ public abstract class StringUtils
      * @param coll the {@code Collection} to convert
      * @return the delimited {@code String}
      */
-    public static String collectionToCommaDelimitedString(Collection<?> coll)
-    {
+    public static String collectionToCommaDelimitedString(Collection<?> coll) {
         return collectionToDelimitedString(coll, ",");
     }
 
@@ -1426,21 +1269,16 @@ public abstract class StringUtils
      * @param delim the delimiter to use (typically a ",")
      * @return the delimited {@code String}
      */
-    public static String arrayToDelimitedString(Object[] arr, String delim)
-    {
-        if (ObjectUtils.isEmpty(arr))
-        {
+    public static String arrayToDelimitedString(Object[] arr, String delim) {
+        if (ObjectUtils.isEmpty(arr)) {
             return "";
         }
-        if (arr.length == 1)
-        {
+        if (arr.length == 1) {
             return ObjectUtils.nullSafeToString(arr[0]);
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < arr.length; i++)
-        {
-            if (i > 0)
-            {
+        for (int i = 0; i < arr.length; i++) {
+            if (i > 0) {
                 sb.append(delim);
             }
             sb.append(arr[i]);
@@ -1457,8 +1295,7 @@ public abstract class StringUtils
      * @param arr the array to display
      * @return the delimited {@code String}
      */
-    public static String arrayToCommaDelimitedString(Object[] arr)
-    {
+    public static String arrayToCommaDelimitedString(Object[] arr) {
         return arrayToDelimitedString(arr, ",");
     }
 

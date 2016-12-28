@@ -6,11 +6,10 @@ package com.ylinor.library.util.math;
  * @author Litarvan
  * @since 1.0.0
  */
-public interface PositionableObject3D
-{
+public interface PositionableObject3D {
     int x();
-    
+
     int y();
-    
+
     int z();
 }

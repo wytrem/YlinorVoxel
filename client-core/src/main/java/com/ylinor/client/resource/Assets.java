@@ -25,10 +25,9 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Litarvan
  * @since 1.0.0
  */
-public class Assets implements Disposable
-{
+public class Assets implements Disposable {
     private static final Logger logger = LoggerFactory.getLogger(Assets.class);
-    
+
     /**
      * Le dossiers des polices
      */
@@ -54,8 +53,7 @@ public class Assets implements Disposable
      */
     public final ScreenAssets screen;
 
-    private Assets()
-    {
+    private Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());
         assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assets.getFileHandleResolver()));
 
@@ -66,8 +64,7 @@ public class Assets implements Disposable
      * Charge les pré-assets, càd les assets utilisés avant ou pendant l'écran
      * de chargement
      */
-    public void preload()
-    {
+    public void preload() {
         logger.info("Loading pre-assets (including VisUI)...");
 
         VisUI.load();
@@ -79,24 +76,21 @@ public class Assets implements Disposable
      *
      * @return Si les assets sont entièrement chargés
      */
-    public boolean update()
-    {
+    public boolean update() {
         return assets.update();
     }
 
     /**
      * Charge les assets
      */
-    public void load()
-    {
+    public void load() {
         logger.info("Loading assets...");
 
         screen.load();
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         logger.info("Disposing assets...");
 
         assets.dispose();
@@ -108,16 +102,14 @@ public class Assets implements Disposable
     /**
      * @return Le nombre d'assets chargés
      */
-    public int assetsLoaded()
-    {
+    public int assetsLoaded() {
         return assets.getLoadedAssets();
     }
 
     /**
      * @return Le nombre d'assets encore à charger
      */
-    public int assetsToLoad()
-    {
+    public int assetsToLoad() {
         return assets.getQueuedAssets();
     }
 
@@ -126,8 +118,7 @@ public class Assets implements Disposable
      *
      * @param file Le fichier de la texture
      */
-    public void loadTexture(String file)
-    {
+    public void loadTexture(String file) {
         load(file, Texture.class);
     }
 
@@ -136,8 +127,7 @@ public class Assets implements Disposable
      *
      * @param file Le fichier de la police
      */
-    public void loadFont(String file)
-    {
+    public void loadFont(String file) {
         load(file, FreeTypeFontGenerator.class);
     }
 
@@ -147,8 +137,7 @@ public class Assets implements Disposable
      * @param file Le fichier de l'asset
      * @param type L'asset à charger
      */
-    public void load(String file, Class<?> type)
-    {
+    public void load(String file, Class<?> type) {
         assets.load(file, type);
     }
 
@@ -160,16 +149,14 @@ public class Assets implements Disposable
      *
      * @return L'asset en question
      */
-    public <T> T get(String file)
-    {
+    public <T> T get(String file) {
         return assets.get(file);
     }
 
     /**
      * @return L'instance de cette classe
      */
-    public static Assets get()
-    {
+    public static Assets get() {
         return instance;
     }
 }

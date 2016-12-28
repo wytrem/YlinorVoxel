@@ -14,19 +14,16 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  * @author pierre
  * @since 1.0.0
  */
-public class KryoDecoder extends ByteToMessageDecoder
-{
+public class KryoDecoder extends ByteToMessageDecoder {
 
     private final Kryo kryo;
 
-    public KryoDecoder(Kryo kryo)
-    {
+    public KryoDecoder(Kryo kryo) {
         this.kryo = kryo;
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception
-    {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
         if (in.readableBytes() < 2)
             return;
@@ -35,8 +32,7 @@ public class KryoDecoder extends ByteToMessageDecoder
 
         int len = in.readUnsignedShort();
 
-        if (in.readableBytes() < len)
-        {
+        if (in.readableBytes() < len) {
             in.resetReaderIndex();
             return;
         }

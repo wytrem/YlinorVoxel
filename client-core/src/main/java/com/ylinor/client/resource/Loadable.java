@@ -8,7 +8,6 @@ package com.ylinor.client.resource;
  * @since 1.0.0
  */
 @FunctionalInterface
-public interface Loadable
-{
+public interface Loadable {
     void load();
 }

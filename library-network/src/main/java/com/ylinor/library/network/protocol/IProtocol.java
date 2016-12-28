@@ -9,7 +9,6 @@ import com.ylinor.library.network.packet.Packet;
  * @author pierre
  * @since 1.0.0
  */
-public interface IProtocol<E extends INetworkEntity>
-{
+public interface IProtocol<E extends INetworkEntity> {
     void handlePacket(Packet packet, E sender, AbstractNetwork<? super E> receiver);
 }

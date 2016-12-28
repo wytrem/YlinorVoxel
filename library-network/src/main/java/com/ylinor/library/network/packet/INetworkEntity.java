@@ -7,7 +7,6 @@ import java.net.SocketAddress;
  * @author pierre
  * @since 1.0.0
  */
-public interface INetworkEntity
-{
+public interface INetworkEntity {
     SocketAddress getRemoteAddress();
 }

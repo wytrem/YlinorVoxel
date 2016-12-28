@@ -16,15 +16,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * @author Litarvan
  * @since 1.0.0
  */
-public class YlinorScreen extends Stage implements Screen
-{
+public class YlinorScreen extends Stage implements Screen {
 
     /*
      * Constructeur auto, redirige vers l'autre constructeur en générant un
      * ScreenViewport
      */
-    public YlinorScreen()
-    {
+    public YlinorScreen() {
         this(new ScreenViewport());
     }
 
@@ -32,42 +30,35 @@ public class YlinorScreen extends Stage implements Screen
      * Constructeur appelant simplement le constructeur super de Stage demandant
      * aussi un viewport
      */
-    public YlinorScreen(Viewport viewport)
-    {
+    public YlinorScreen(Viewport viewport) {
         super(viewport);
     }
 
     @Override
-    public void show()
-    {
+    public void show() {
         Gdx.input.setInputProcessor(this);
     }
 
     @Override
-    public void render(float delta)
-    {
+    public void render(float delta) {
         act(delta);
         draw();
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         getViewport().update(width, height, true);
     }
 
     @Override
-    public void pause()
-    {
+    public void pause() {
     }
 
     @Override
-    public void resume()
-    {
+    public void resume() {
     }
 
     @Override
-    public void hide()
-    {
+    public void hide() {
     }
 }

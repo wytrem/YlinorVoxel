@@ -13,12 +13,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
  * @author Litarvan
  * @since 1.0.0
  */
-public class ScreenAssets implements Loadable, Preloadable
-{
+public class ScreenAssets implements Loadable, Preloadable {
     private final Assets assets;
 
-    ScreenAssets(Assets assets)
-    {
+    ScreenAssets(Assets assets) {
         this.assets = assets;
     }
 
@@ -29,36 +27,30 @@ public class ScreenAssets implements Loadable, Preloadable
     public final String augustus = FONTS_FOLDER + "AUGUSTUS.TTF";
     public final String liberation = FONTS_FOLDER + "LiberationSerif-Regular.ttf";
 
-    public void preload()
-    {
+    public void preload() {
         assets.loadTexture(splash);
     }
 
-    public void load()
-    {
+    public void load() {
         //assets.loadTexture(logo);
         assets.loadFont(augustus);
         assets.loadFont(liberation);
     }
 
     @Preloaded
-    public Texture splash()
-    {
+    public Texture splash() {
         return assets.get(splash);
     }
 
-    public Texture logo()
-    {
+    public Texture logo() {
         return assets.get(logo);
     }
 
-    public FreeTypeFontGenerator augustus()
-    {
+    public FreeTypeFontGenerator augustus() {
         return assets.get(augustus);
     }
 
-    public FreeTypeFontGenerator liberation()
-    {
+    public FreeTypeFontGenerator liberation() {
         return assets.get(liberation);
     }
 }

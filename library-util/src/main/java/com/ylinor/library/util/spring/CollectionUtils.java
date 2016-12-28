@@ -35,8 +35,7 @@ import java.util.Properties;
  * @author Arjen Poutsma
  * @since 1.1.3
  */
-public abstract class CollectionUtils
-{
+public abstract class CollectionUtils {
 
     /**
      * Return {@code true} if the supplied Collection is {@code null} or empty.
@@ -45,8 +44,7 @@ public abstract class CollectionUtils
      * @param collection the Collection to check
      * @return whether the given Collection is empty
      */
-    public static boolean isEmpty(Collection<?> collection)
-    {
+    public static boolean isEmpty(Collection<?> collection) {
         return (collection == null || collection.isEmpty());
     }
 
@@ -57,8 +55,7 @@ public abstract class CollectionUtils
      * @param map the Map to check
      * @return whether the given Map is empty
      */
-    public static boolean isEmpty(Map<?, ?> map)
-    {
+    public static boolean isEmpty(Map<?, ?> map) {
         return (map == null || map.isEmpty());
     }
 
@@ -79,8 +76,7 @@ public abstract class CollectionUtils
      * @see Arrays#asList(Object[])
      */
     @SuppressWarnings("rawtypes")
-    public static List arrayToList(Object source)
-    {
+    public static List arrayToList(Object source) {
         return Arrays.asList(ObjectUtils.toObjectArray(source));
     }
 
@@ -91,15 +87,12 @@ public abstract class CollectionUtils
      * @param collection the target Collection to merge the array into
      */
     @SuppressWarnings("unchecked")
-    public static <E> void mergeArrayIntoCollection(Object array, Collection<E> collection)
-    {
-        if (collection == null)
-        {
+    public static <E> void mergeArrayIntoCollection(Object array, Collection<E> collection) {
+        if (collection == null) {
             throw new IllegalArgumentException("Collection must not be null");
         }
         Object[] arr = ObjectUtils.toObjectArray(array);
-        for (Object elem : arr)
-        {
+        for (Object elem : arr) {
             collection.add((E) elem);
         }
     }
@@ -115,20 +108,15 @@ public abstract class CollectionUtils
      * @param map the target Map to merge the properties into
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> void mergePropertiesIntoMap(Properties props, Map<K, V> map)
-    {
-        if (map == null)
-        {
+    public static <K, V> void mergePropertiesIntoMap(Properties props, Map<K, V> map) {
+        if (map == null) {
             throw new IllegalArgumentException("Map must not be null");
         }
-        if (props != null)
-        {
-            for (Enumeration<?> en = props.propertyNames(); en.hasMoreElements();)
-            {
+        if (props != null) {
+            for (Enumeration<?> en = props.propertyNames(); en.hasMoreElements();) {
                 String key = (String) en.nextElement();
                 Object value = props.getProperty(key);
-                if (value == null)
-                {
+                if (value == null) {
                     // Potentially a non-String value...
                     value = props.get(key);
                 }
@@ -144,15 +132,11 @@ public abstract class CollectionUtils
      * @param element the element to look for
      * @return {@code true} if found, {@code false} else
      */
-    public static boolean contains(Iterator<?> iterator, Object element)
-    {
-        if (iterator != null)
-        {
-            while (iterator.hasNext())
-            {
+    public static boolean contains(Iterator<?> iterator, Object element) {
+        if (iterator != null) {
+            while (iterator.hasNext()) {
                 Object candidate = iterator.next();
-                if (ObjectUtils.nullSafeEquals(candidate, element))
-                {
+                if (ObjectUtils.nullSafeEquals(candidate, element)) {
                     return true;
                 }
             }
@@ -167,15 +151,11 @@ public abstract class CollectionUtils
      * @param element the element to look for
      * @return {@code true} if found, {@code false} else
      */
-    public static boolean contains(Enumeration<?> enumeration, Object element)
-    {
-        if (enumeration != null)
-        {
-            while (enumeration.hasMoreElements())
-            {
+    public static boolean contains(Enumeration<?> enumeration, Object element) {
+        if (enumeration != null) {
+            while (enumeration.hasMoreElements()) {
                 Object candidate = enumeration.nextElement();
-                if (ObjectUtils.nullSafeEquals(candidate, element))
-                {
+                if (ObjectUtils.nullSafeEquals(candidate, element)) {
                     return true;
                 }
             }
@@ -193,14 +173,10 @@ public abstract class CollectionUtils
      * @param element the element to look for
      * @return {@code true} if found, {@code false} else
      */
-    public static boolean containsInstance(Collection<?> collection, Object element)
-    {
-        if (collection != null)
-        {
-            for (Object candidate : collection)
-            {
-                if (candidate == element)
-                {
+    public static boolean containsInstance(Collection<?> collection, Object element) {
+        if (collection != null) {
+            for (Object candidate : collection) {
+                if (candidate == element) {
                     return true;
                 }
             }
@@ -216,16 +192,12 @@ public abstract class CollectionUtils
      * @param candidates the candidates to search for
      * @return whether any of the candidates has been found
      */
-    public static boolean containsAny(Collection<?> source, Collection<?> candidates)
-    {
-        if (isEmpty(source) || isEmpty(candidates))
-        {
+    public static boolean containsAny(Collection<?> source, Collection<?> candidates) {
+        if (isEmpty(source) || isEmpty(candidates)) {
             return false;
         }
-        for (Object candidate : candidates)
-        {
-            if (source.contains(candidate))
-            {
+        for (Object candidate : candidates) {
+            if (source.contains(candidate)) {
                 return true;
             }
         }
@@ -243,16 +215,12 @@ public abstract class CollectionUtils
      * @return the first present object, or {@code null} if not found
      */
     @SuppressWarnings("unchecked")
-    public static <E> E findFirstMatch(Collection<?> source, Collection<E> candidates)
-    {
-        if (isEmpty(source) || isEmpty(candidates))
-        {
+    public static <E> E findFirstMatch(Collection<?> source, Collection<E> candidates) {
+        if (isEmpty(source) || isEmpty(candidates)) {
             return null;
         }
-        for (Object candidate : candidates)
-        {
-            if (source.contains(candidate))
-            {
+        for (Object candidate : candidates) {
+            if (source.contains(candidate)) {
                 return (E) candidate;
             }
         }
@@ -268,19 +236,14 @@ public abstract class CollectionUtils
      *         {@code null} if none or more than one such value found
      */
     @SuppressWarnings("unchecked")
-    public static <T> T findValueOfType(Collection<?> collection, Class<T> type)
-    {
-        if (isEmpty(collection))
-        {
+    public static <T> T findValueOfType(Collection<?> collection, Class<T> type) {
+        if (isEmpty(collection)) {
             return null;
         }
         T value = null;
-        for (Object element : collection)
-        {
-            if (type == null || type.isInstance(element))
-            {
-                if (value != null)
-                {
+        for (Object element : collection) {
+            if (type == null || type.isInstance(element)) {
+                if (value != null) {
                     // More than one value found... no clear single value.
                     return null;
                 }
@@ -300,17 +263,13 @@ public abstract class CollectionUtils
      * @return a value of one of the given types found if there is a clear
      *         match, or {@code null} if none or more than one such value found
      */
-    public static Object findValueOfType(Collection<?> collection, Class<?>[] types)
-    {
-        if (isEmpty(collection) || ObjectUtils.isEmpty(types))
-        {
+    public static Object findValueOfType(Collection<?> collection, Class<?>[] types) {
+        if (isEmpty(collection) || ObjectUtils.isEmpty(types)) {
             return null;
         }
-        for (Class<?> type : types)
-        {
+        for (Class<?> type : types) {
             Object value = findValueOfType(collection, type);
-            if (value != null)
-            {
+            if (value != null) {
                 return value;
             }
         }
@@ -325,23 +284,18 @@ public abstract class CollectionUtils
      * @return {@code true} if the collection contains a single reference or
      *         multiple references to the same instance, {@code false} else
      */
-    public static boolean hasUniqueObject(Collection<?> collection)
-    {
-        if (isEmpty(collection))
-        {
+    public static boolean hasUniqueObject(Collection<?> collection) {
+        if (isEmpty(collection)) {
             return false;
         }
         boolean hasCandidate = false;
         Object candidate = null;
-        for (Object elem : collection)
-        {
-            if (!hasCandidate)
-            {
+        for (Object elem : collection) {
+            if (!hasCandidate) {
                 hasCandidate = true;
                 candidate = elem;
             }
-            else if (candidate != elem)
-            {
+            else if (candidate != elem) {
                 return false;
             }
         }
@@ -355,23 +309,17 @@ public abstract class CollectionUtils
      * @return the common element type, or {@code null} if no clear common type
      *         has been found (or the collection was empty)
      */
-    public static Class<?> findCommonElementType(Collection<?> collection)
-    {
-        if (isEmpty(collection))
-        {
+    public static Class<?> findCommonElementType(Collection<?> collection) {
+        if (isEmpty(collection)) {
             return null;
         }
         Class<?> candidate = null;
-        for (Object val : collection)
-        {
-            if (val != null)
-            {
-                if (candidate == null)
-                {
+        for (Object val : collection) {
+            if (val != null) {
+                if (candidate == null) {
                     candidate = val.getClass();
                 }
-                else if (candidate != val.getClass())
-                {
+                else if (candidate != val.getClass()) {
                     return null;
                 }
             }
@@ -385,11 +333,9 @@ public abstract class CollectionUtils
      * given array. The array returned will be a different instance than the
      * array given.
      */
-    public static <A, E extends A> A[] toArray(Enumeration<E> enumeration, A[] array)
-    {
+    public static <A, E extends A> A[] toArray(Enumeration<E> enumeration, A[] array) {
         ArrayList<A> elements = new ArrayList<A>();
-        while (enumeration.hasMoreElements())
-        {
+        while (enumeration.hasMoreElements()) {
             elements.add(enumeration.nextElement());
         }
         return elements.toArray(array);
@@ -401,39 +347,33 @@ public abstract class CollectionUtils
      * @param enumeration the enumeration
      * @return the iterator
      */
-    public static <E> Iterator<E> toIterator(Enumeration<E> enumeration)
-    {
+    public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
         return new EnumerationIterator<E>(enumeration);
     }
 
     /**
      * Iterator wrapping an Enumeration.
      */
-    private static class EnumerationIterator<E> implements Iterator<E>
-    {
+    private static class EnumerationIterator<E> implements Iterator<E> {
 
         private final Enumeration<E> enumeration;
 
-        public EnumerationIterator(Enumeration<E> enumeration)
-        {
+        public EnumerationIterator(Enumeration<E> enumeration) {
             this.enumeration = enumeration;
         }
 
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext() {
             return this.enumeration.hasMoreElements();
         }
 
         @Override
-        public E next()
-        {
+        public E next() {
             return this.enumeration.nextElement();
         }
 
         @Override
-        public void remove() throws UnsupportedOperationException
-        {
+        public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException("Not supported");
         }
     }

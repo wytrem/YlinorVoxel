@@ -9,13 +9,11 @@ import com.ylinor.library.network.packet.Packet;
  * @author pierre
  * @since 1.0.0
  */
-public interface IPacketHandler<T extends Packet, U extends INetworkEntity>
-{
+public interface IPacketHandler<T extends Packet, U extends INetworkEntity> {
     void handle(T packet, U networkEntity, AbstractNetwork<? super U> receiver);
 
     @SuppressWarnings("unchecked")
-    default void castAndHandle(Packet packet, U entity, AbstractNetwork<? super U> receiver)
-    {
+    default void castAndHandle(Packet packet, U entity, AbstractNetwork<? super U> receiver) {
         handle((T) packet, entity, receiver);
     }
 }

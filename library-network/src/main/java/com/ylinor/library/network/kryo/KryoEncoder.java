@@ -15,19 +15,16 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @since 1.0.0
  */
 
-public class KryoEncoder extends MessageToByteEncoder<Object>
-{
+public class KryoEncoder extends MessageToByteEncoder<Object> {
 
     private final Kryo kryo;
 
-    public KryoEncoder(Kryo kryo)
-    {
+    public KryoEncoder(Kryo kryo) {
         this.kryo = kryo;
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, Object in, ByteBuf out) throws Exception
-    {
+    protected void encode(ChannelHandlerContext ctx, Object in, ByteBuf out) throws Exception {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         Output output = new Output(outStream, 4096);
 

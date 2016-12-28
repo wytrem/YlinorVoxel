@@ -1,6 +1,5 @@
 package com.ylinor.library.api.world;
 
-public interface WorldUniqueId
-{
+public interface WorldUniqueId {
 
 }

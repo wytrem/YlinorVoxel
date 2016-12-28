@@ -14,8 +14,7 @@ import com.ylinor.library.network.util.PairPacket;
  * @author pierre
  * @since 1.0.0
  */
-public abstract class AbstractNetwork<E extends INetworkEntity> extends Thread
-{
+public abstract class AbstractNetwork<E extends INetworkEntity> extends Thread {
     /**
      * Protocol de redirection de packet
      */
@@ -53,8 +52,7 @@ public abstract class AbstractNetwork<E extends INetworkEntity> extends Thread
      */
     protected boolean isStarted;
 
-    public AbstractNetwork(Kryo kryo, String ip, int port, IProtocol<E> protocol)
-    {
+    public AbstractNetwork(Kryo kryo, String ip, int port, IProtocol<E> protocol) {
         this.kryo = kryo;
         this.ip = ip;
         this.port = port;
@@ -69,8 +67,7 @@ public abstract class AbstractNetwork<E extends INetworkEntity> extends Thread
      */
     public abstract void sendPacket(Packet packet, INetworkEntity entity);
 
-    public void end()
-    {
+    public void end() {
         isStarted = false;
     }
 

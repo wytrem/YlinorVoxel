@@ -5,8 +5,7 @@ import java.util.Random;
 import org.joml.Vector3f;
 
 
-public class MathHelper
-{
+public class MathHelper {
     /**
      * Tolérance à zéro : on considère qu'un nombre ayant une valeur absolue <=
      * à ZERO_TOLERANCE est négligeable.
@@ -72,10 +71,8 @@ public class MathHelper
 
     private static final int[] MULTIPLY_DE_BRUIJN_BIT_POSITION;
 
-    static
-    {
-        for (int var0 = 0; var0 < 65536; ++var0)
-        {
+    static {
+        for (int var0 = 0; var0 < 65536; ++var0) {
             SIN_TABLE[var0] = (float) Math.sin((double) var0 * PI * 2.0D / 65536.0D);
         }
 
@@ -83,21 +80,18 @@ public class MathHelper
 
     }
 
-    public static float random()
-    {
+    public static float random() {
         return (float) Math.random();
     }
 
-    public static float abs(float par0)
-    {
+    public static float abs(float par0) {
         return par0 >= 0.0F ? par0 : -par0;
     }
 
     /**
      * Returns the unsigned value of an int.
      */
-    public static int abs_int(int par0)
-    {
+    public static int abs_int(int par0) {
         return par0 >= 0 ? par0 : -par0;
     }
 
@@ -106,25 +100,21 @@ public class MathHelper
      * the line between this vector and the passed in vector, or null if not
      * possible.
      */
-    public static Vector3f getIntermediateWithXValue(Vector3f u, Vector3f v, float par2)
-    {
+    public static Vector3f getIntermediateWithXValue(Vector3f u, Vector3f v, float par2) {
         float var4 = v.x - u.x;
         float var6 = v.y - u.y;
         float var8 = v.z - u.z;
 
-        if (var4 * var4 < 1.0000000116860974E-7D)
-        {
+        if (var4 * var4 < 1.0000000116860974E-7D) {
             return null;
         }
-        else
-        {
+        else {
             float var10 = (par2 - u.x) / var4;
             return var10 >= 0.0D && var10 <= 1.0D ? new Vector3f(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
         }
     }
 
-    public static int roundUpToPowerOfTwo(int value)
-    {
+    public static int roundUpToPowerOfTwo(int value) {
         int i = value - 1;
         i = i | i >> 1;
         i = i | i >> 2;
@@ -134,19 +124,16 @@ public class MathHelper
         return i + 1;
     }
 
-    private static boolean isPowerOfTwo(int value)
-    {
+    private static boolean isPowerOfTwo(int value) {
         return value != 0 && (value & value - 1) == 0;
     }
 
-    public static int calculateLogBaseTwoDeBruijn(int value)
-    {
+    public static int calculateLogBaseTwoDeBruijn(int value) {
         value = isPowerOfTwo(value) ? value : roundUpToPowerOfTwo(value);
         return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int) ((long) value * 125613361L >> 27) & 31];
     }
 
-    public static int calculateLogBaseTwo(int value)
-    {
+    public static int calculateLogBaseTwo(int value) {
         return calculateLogBaseTwoDeBruijn(value) - (isPowerOfTwo(value) ? 0 : 1);
     }
 
@@ -155,18 +142,15 @@ public class MathHelper
      * the line between this vector and the passed in vector, or null if not
      * possible.
      */
-    public static Vector3f getIntermediateWithYValue(Vector3f u, Vector3f v, float par2)
-    {
+    public static Vector3f getIntermediateWithYValue(Vector3f u, Vector3f v, float par2) {
         float var4 = v.x - u.x;
         float var6 = v.y - u.y;
         float var8 = v.z - u.z;
 
-        if (var6 * var6 < 1.0000000116860974E-7D)
-        {
+        if (var6 * var6 < 1.0000000116860974E-7D) {
             return null;
         }
-        else
-        {
+        else {
             float var10 = (par2 - u.y) / var6;
             return var10 >= 0.0D && var10 <= 1.0D ? new Vector3f(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
         }
@@ -177,18 +161,15 @@ public class MathHelper
      * the line between this vector and the passed in vector, or null if not
      * possible.
      */
-    public static Vector3f getIntermediateWithZValue(Vector3f u, Vector3f v, float par2)
-    {
+    public static Vector3f getIntermediateWithZValue(Vector3f u, Vector3f v, float par2) {
         float var4 = v.x - u.x;
         float var6 = v.y - u.y;
         float var8 = v.z - u.z;
 
-        if (var8 * var8 < 1.0000000116860974E-7D)
-        {
+        if (var8 * var8 < 1.0000000116860974E-7D) {
             return null;
         }
-        else
-        {
+        else {
             float var10 = (par2 - u.z) / var8;
             return var10 >= 0.0D && var10 <= 1.0D ? new Vector3f(u.x + var4 * var10, u.y + var6 * var10, u.z + var8 * var10) : null;
         }
@@ -197,33 +178,27 @@ public class MathHelper
     /**
      * Maximum of the absolute value of two numbers.
      */
-    public static float abs_max(float par0, float par2)
-    {
-        if (par0 < 0.0D)
-        {
+    public static float abs_max(float par0, float par2) {
+        if (par0 < 0.0D) {
             par0 = -par0;
         }
 
-        if (par2 < 0.0D)
-        {
+        if (par2 < 0.0D) {
             par2 = -par2;
         }
 
         return par0 > par2 ? par0 : par2;
     }
 
-    public static float acos(float par0)
-    {
+    public static float acos(float par0) {
         return (float) Math.acos(par0);
     }
 
-    public static double average(long[] par0ArrayOfLong)
-    {
+    public static double average(long[] par0ArrayOfLong) {
         long var1 = 0L;
         int var4 = par0ArrayOfLong.length;
 
-        for (int var5 = 0; var5 < var4; ++var5)
-        {
+        for (int var5 = 0; var5 < var4; ++var5) {
             long var6 = par0ArrayOfLong[var5];
             var1 += var6;
         }
@@ -234,19 +209,16 @@ public class MathHelper
     /**
      * Buckets an integer with specifed bucket sizes. Args: i, bucketSize
      */
-    public static int bucketInt(int par0, int par1)
-    {
+    public static int bucketInt(int par0, int par1) {
         return par0 < 0 ? -((-par0 - 1) / par1) - 1 : par0 / par1;
     }
 
-    public static int ceiling_double_int(double par0)
-    {
+    public static int ceiling_double_int(double par0) {
         int var2 = (int) par0;
         return par0 > var2 ? var2 + 1 : var2;
     }
 
-    public static int ceiling_float_int(float par0)
-    {
+    public static int ceiling_float_int(float par0) {
         int var1 = (int) par0;
         return par0 > var1 ? var1 + 1 : var1;
     }
@@ -255,8 +227,7 @@ public class MathHelper
      * Returns the value of the first parameter, clamped to be within the lower
      * and upper limits given by the second and third parameters
      */
-    public static float clamp_float(float par0, float par1, float par2)
-    {
+    public static float clamp_float(float par0, float par1, float par2) {
         return par0 < par1 ? par1 : par0 > par2 ? par2 : par0;
     }
 
@@ -264,24 +235,21 @@ public class MathHelper
      * Returns the value of the first parameter, clamped to be within the lower
      * and upper limits given by the second and third parameters.
      */
-    public static int clamp_int(int par0, int par1, int par2)
-    {
+    public static int clamp_int(int par0, int par1, int par2) {
         return par0 < par1 ? par1 : par0 > par2 ? par2 : par0;
     }
 
     /**
      * cos looked up in the sin table with the appropriate offset
      */
-    public static final float cos(float par0)
-    {
+    public static final float cos(float par0) {
         return SIN_TABLE[(int) (par0 * 10430.378F + 16384.0F) & 65535];
     }
 
     /**
      * Returns the greatest integer less than or equal to the double argument
      */
-    public static int floor_double(double par0)
-    {
+    public static int floor_double(double par0) {
         int var2 = (int) par0;
         return par0 < var2 ? var2 - 1 : var2;
     }
@@ -289,8 +257,7 @@ public class MathHelper
     /**
      * Long version of floor_double
      */
-    public static long floor_double_long(double par0)
-    {
+    public static long floor_double_long(double par0) {
         long var2 = (long) par0;
         return par0 < var2 ? var2 - 1L : var2;
     }
@@ -298,56 +265,46 @@ public class MathHelper
     /**
      * Returns the greatest integer less than or equal to the float argument
      */
-    public static int floor_float(float par0)
-    {
+    public static int floor_float(float par0) {
         int var1 = (int) par0;
         return par0 < var1 ? var1 - 1 : var1;
     }
 
-    public static double func_82713_a(String par0Str, double par1, double par3)
-    {
+    public static double func_82713_a(String par0Str, double par1, double par3) {
         double var5 = par1;
 
-        try
-        {
+        try {
             var5 = Double.parseDouble(par0Str);
         }
-        catch (Throwable var8)
-        {
+        catch (Throwable var8) {
             ;
         }
 
-        if (var5 < par3)
-        {
+        if (var5 < par3) {
             var5 = par3;
         }
 
         return var5;
     }
 
-    public static double getRandomDoubleInRange(Random par0Random, double par1, double par3)
-    {
+    public static double getRandomDoubleInRange(Random par0Random, double par1, double par3) {
         return par1 >= par3 ? par1 : par0Random.nextDouble() * (par3 - par1) + par1;
     }
 
-    public static int getRandomIntegerInRange(Random par0Random, int par1, int par2)
-    {
+    public static int getRandomIntegerInRange(Random par0Random, int par1, int par2) {
         return par1 >= par2 ? par1 : par0Random.nextInt(par2 - par1 + 1) + par1;
     }
 
     /**
      * parses the string as double or returns the second parameter if it fails.
      */
-    public static double parseDoubleWithDefault(String par0Str, double par1)
-    {
+    public static double parseDoubleWithDefault(String par0Str, double par1) {
         double var3 = par1;
 
-        try
-        {
+        try {
             var3 = Double.parseDouble(par0Str);
         }
-        catch (Throwable var6)
-        {
+        catch (Throwable var6) {
             ;
         }
 
@@ -357,16 +314,13 @@ public class MathHelper
     /**
      * parses the string as integer or returns the second parameter if it fails
      */
-    public static int parseIntWithDefault(String par0Str, int par1)
-    {
+    public static int parseIntWithDefault(String par0Str, int par1) {
         int var2 = par1;
 
-        try
-        {
+        try {
             var2 = Integer.parseInt(par0Str);
         }
-        catch (Throwable var4)
-        {
+        catch (Throwable var4) {
             ;
         }
 
@@ -377,63 +331,53 @@ public class MathHelper
      * parses the string as integer or returns the second parameter if it fails.
      * this value is capped to par2
      */
-    public static int parseIntWithDefaultAndMax(String par0Str, int par1, int par2)
-    {
+    public static int parseIntWithDefaultAndMax(String par0Str, int par1, int par2) {
         int var3 = par1;
 
-        try
-        {
+        try {
             var3 = Integer.parseInt(par0Str);
         }
-        catch (Throwable var5)
-        {
+        catch (Throwable var5) {
             ;
         }
 
-        if (var3 < par2)
-        {
+        if (var3 < par2) {
             var3 = par2;
         }
 
         return var3;
     }
 
-    public static float pow(float x, float i)
-    {
+    public static float pow(float x, float i) {
         return (float) Math.pow(x, i);
     }
 
     /**
      * sin looked up in a table
      */
-    public static final float sin(float par0)
-    {
+    public static final float sin(float par0) {
         return SIN_TABLE[(int) (par0 * 10430.378F) & 65535];
     }
 
-    public static final float sqrt_double(double par0)
-    {
+    public static final float sqrt_double(double par0) {
         return (float) Math.sqrt(par0);
     }
 
-    public static final float sqrt(float par0)
-    {
+    public static final float sqrt(float par0) {
         return (float) Math.sqrt(par0);
     }
 
     /**
      * Tests if a string is null or of length zero
      */
-    public static boolean stringNullOrLengthZero(String par0Str)
-    {
+    public static boolean stringNullOrLengthZero(String par0Str) {
         return par0Str == null || par0Str.length() == 0;
     }
 
     /**
      * returns par0 cast as an int, and no greater than Integer.MAX_VALUE-1024
      */
-    public static int truncateDoubleToInt(double par0)
-    {
+    public static int truncateDoubleToInt(double par0) {
         return (int) (par0 + 1024.0D) - 1024;
     }
 
@@ -441,17 +385,14 @@ public class MathHelper
      * the angle is reduced to an angle between -180 and +180 by mod, and a 360
      * check
      */
-    public static double wrapAngleTo180_double(double par0)
-    {
+    public static double wrapAngleTo180_double(double par0) {
         par0 %= 360.0D;
 
-        if (par0 >= 180.0D)
-        {
+        if (par0 >= 180.0D) {
             par0 -= 360.0D;
         }
 
-        if (par0 < -180.0D)
-        {
+        if (par0 < -180.0D) {
             par0 += 360.0D;
         }
 
@@ -462,17 +403,14 @@ public class MathHelper
      * the angle is reduced to an angle between -180 and +180 by mod, and a 360
      * check
      */
-    public static float wrapAngleTo180_float(float par0)
-    {
+    public static float wrapAngleTo180_float(float par0) {
         par0 %= 360.0F;
 
-        if (par0 >= 180.0F)
-        {
+        if (par0 >= 180.0F) {
             par0 -= 360.0F;
         }
 
-        if (par0 < -180.0F)
-        {
+        if (par0 < -180.0F) {
             par0 += 360.0F;
         }
 
