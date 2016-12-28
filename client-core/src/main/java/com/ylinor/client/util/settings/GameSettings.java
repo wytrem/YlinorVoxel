@@ -10,10 +10,10 @@ public class GameSettings
 {
 
     @JsonProperty
-    public int i2 = 4;
+    private int i2 = 4;
 
     @JsonProperty
-    public KeyMap keyMapping;
+    private KeyMap keyMapping;
 
     /**
      * Empty constructor for json serialization
@@ -45,5 +45,10 @@ public class GameSettings
     public void setI2(int i2)
     {
         this.i2 = i2;
+    }
+
+    public KeyMap getKeyMapping()
+    {
+        return keyMapping;
     }
 }

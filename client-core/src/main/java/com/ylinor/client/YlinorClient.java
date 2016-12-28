@@ -88,6 +88,14 @@ public class YlinorClient extends Game
             e.printStackTrace();
         }
 
+        try
+        {
+            settings.save(Gdx.files.internal("settings.json").file());
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
 
 //        protocol = new HandlerProtocol<>();
 
