@@ -2,6 +2,7 @@ package com.ylinor.client;
 
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
+import com.ylinor.library.api.YlinorApplication;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.io.IOException;
  * @author Litarvan
  * @since 1.0.0
  */
-public class YlinorClient extends Game
+public class YlinorClient extends Game implements YlinorApplication<YlinorClient>
 {
     /**
      * La verision du client
@@ -179,5 +180,11 @@ public class YlinorClient extends Game
     public GameSettings getSettings()
     {
         return settings;
+    }
+
+    @Override
+    public YlinorClient getInstance()
+    {
+        return this;
     }
 }
