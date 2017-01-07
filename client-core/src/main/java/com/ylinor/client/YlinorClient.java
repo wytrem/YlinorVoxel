@@ -24,43 +24,42 @@ import com.ylinor.client.screen.pregame.MainMenuScreen;
  */
 public class YlinorClient extends Game {
     /**
-     * La version du client
+     * Client version.
      */
     public static final String VERSION = "0.0.1";
 
     /**
-     * Un logger Wylog
+     * Wylog logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(YlinorClient.class);
 
     /**
-     * L'instance des assets
+     * Assets instances.
      */
     private Assets assets = Assets.get();
 
     /**
-     * Si le preloading (chargement des assets utilisés avant/pendant le
-     * chargement) a été fait
+     * If the preloading (assets's loading used before and during the loading) is done.
      */
     private boolean preloaded = false;
 
     /**
-     * Si le loading a été fait (chargement des assets)
+     * If the loading is done (assets loading)
      */
     private boolean loaded = false;
 
     /**
-     * Le temps actuel (System.currentTimeMillis())
+     * Current time (System.currentTimeMillis() )
      */
     private long assetsTime;
 
     //    /**
-    //     * Instance du système reseau client
+    //     * Network system instance
     //     */
     //    private ClientNetwork<ServerEntity> clientNetwork;
     //
     //    /**
-    //     * Protocl de redirection de packet
+    //     * Packet redirection protocol
     //     */
     //    private IProtocol<ServerEntity> protocol;
 

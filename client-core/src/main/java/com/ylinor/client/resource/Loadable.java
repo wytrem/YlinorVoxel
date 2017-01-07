@@ -1,7 +1,7 @@
 package com.ylinor.client.resource;
 
 /**
- * Représente une classe contenant des assets à charger (hors assets
+ * Class that contains assets to load (except
  * {@link Preloadable})
  *
  * @author Litarvan

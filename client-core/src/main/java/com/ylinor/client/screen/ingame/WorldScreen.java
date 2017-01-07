@@ -5,7 +5,7 @@ import com.ylinor.client.screen.YlinorScreen;
 
 
 /**
- * Screen sur lequel le monde du serveur sera charger et rendu a l'écran
+ * On this screen, the world will be loaded and rendered
  **/
 public class WorldScreen extends YlinorScreen {
     /* Le moteur de rendu de monde (cf WordRenderer et Renderer */
