@@ -30,7 +30,7 @@ public class GameSettings
      */
     public static GameSettings get(File settingsFile) throws IOException
     {
-        ObjectMapper mapper = YlinorClient.getJacksonMapper();
+        ObjectMapper mapper = new ObjectMapper();
         GameSettings settings;
         if(!settingsFile.exists())
         {
