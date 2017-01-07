@@ -10,8 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * An Ylinor screen.
  *
- * = {@link Stage} + {@link Screen} qui se gèrent les uns les autres (update du
- * screen, définition de l'input processor)
+ * = {@link Stage} + {@link Screen} managing each others
  *
  * @author Litarvan
  * @since 1.0.0
