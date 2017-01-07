@@ -2,6 +2,7 @@ package com.ylinor.client.util.settings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ylinor.client.YlinorClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class GameSettings
      */
     public static GameSettings get(File settingsFile) throws IOException
     {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = YlinorClient.getJacksonMapper();
         GameSettings settings;
         if(!settingsFile.exists())
         {

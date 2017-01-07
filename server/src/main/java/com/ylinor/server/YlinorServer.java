@@ -1,6 +1,7 @@
 package com.ylinor.server;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.network.ServerNetwork;
 import com.ylinor.library.network.protocol.HandlerProtocol;
@@ -8,7 +9,7 @@ import com.ylinor.library.packets.MyNetworkEntity;
 import com.ylinor.library.packets.Packet0KeepAlive;
 
 
-public class YlinorServer implements YlinorApplication<YlinorServer>
+public class YlinorServer extends YlinorApplication
 {
     public static void main(String[] args)
     {
@@ -22,9 +23,4 @@ public class YlinorServer implements YlinorApplication<YlinorServer>
         serverNetwork.start();
     }
 
-    @Override
-    public YlinorServer getInstance()
-    {
-        return this;
-    }
 }

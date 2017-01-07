@@ -1,5 +1,7 @@
 package com.ylinor.client;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
@@ -27,7 +29,7 @@ import java.io.IOException;
  * @author Litarvan
  * @since 1.0.0
  */
-public class YlinorClient extends Game implements YlinorApplication<YlinorClient>
+public class YlinorClient extends YlinorApplication implements ApplicationListener
 {
     /**
      * La verision du client
@@ -70,6 +72,12 @@ public class YlinorClient extends Game implements YlinorApplication<YlinorClient
      * User settings of the game
      */
     private GameSettings settings;
+
+    /**
+     * Current screen
+     */
+    private Screen screen;
+
 
 //    /**
 //     * Instance du système reseau client
@@ -143,21 +151,32 @@ public class YlinorClient extends Game implements YlinorApplication<YlinorClient
         }
 
         // Screen updating
-        super.render();
+        if(screen != null)
+        {
+            screen.render(Gdx.graphics.getDeltaTime());
+        }
     }
 
     @Override
     public void resize(int width, int height)
     {
-        super.resize(width, height);
-
+        if(screen != null)
+        {
+            screen.resize(width, height);
+        }
         logger.debug("Window resized : " + width + "x" + height);
     }
 
-    @Override
     public void setScreen(@NotNull Screen screen)
     {
-        super.setScreen(screen);
+        if(this.screen != null)
+        {
+            this.screen.hide();
+        }
+        this.screen = screen;
+        this.screen.show();
+        this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 
         logger.debug("Setting screen : " + screen.getClass().getSimpleName());
     }
@@ -169,12 +188,31 @@ public class YlinorClient extends Game implements YlinorApplication<YlinorClient
         assets.dispose();
 //        clientNetwork.end();
 
+        if(screen != null) screen.hide();
+
         logger.info("Bye");
     }
 
-    public static YlinorClient getYlinor()
+
+    @Override
+    public void pause()
     {
-        return ylinor;
+        if(screen != null) screen.pause();
+    }
+
+    @Override
+    public void resume()
+    {
+        if(screen != null) screen.resume();
+    }
+
+
+    /**
+     * @return the currently active {@link Screen}.
+     */
+    public Screen getScreen()
+    {
+        return screen;
     }
 
     public GameSettings getSettings()
@@ -182,9 +220,4 @@ public class YlinorClient extends Game implements YlinorApplication<YlinorClient
         return settings;
     }
 
-    @Override
-    public YlinorClient getInstance()
-    {
-        return this;
-    }
 }
