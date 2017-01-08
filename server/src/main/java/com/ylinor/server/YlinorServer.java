@@ -11,6 +11,8 @@ import com.ylinor.library.packets.Packet0KeepAlive;
 
 public class YlinorServer extends YlinorApplication
 {
+    private static YlinorServer server;
+
     public static void main(String[] args)
     {
         HandlerProtocol<MyNetworkEntity> protocol = new HandlerProtocol<>();
@@ -23,4 +25,8 @@ public class YlinorServer extends YlinorApplication
         serverNetwork.start();
     }
 
+    public static YlinorServer getServer()
+    {
+        return server;
+    }
 }

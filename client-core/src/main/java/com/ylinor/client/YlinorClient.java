@@ -220,4 +220,8 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
         return settings;
     }
 
+    public static YlinorClient getYlinor()
+    {
+        return ylinor;
+    }
 }
