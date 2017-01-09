@@ -1,7 +1,6 @@
 package com.ylinor.library.util;
 
-public enum Facing
-{
+public enum Facing {
     DOWN(0, 1, 0, -1, 0),
     UP(1, 0, 0, 1, 0),
     NORTH(2, 3, 0, 0, -1),
@@ -12,11 +11,9 @@ public enum Facing
     /** List of all values in EnumFacing. Order is D-U-N-S-E-W. */
     private static final Facing[] faceList = new Facing[6];
 
-    static
-    {
+    static {
         Facing[] var0 = values();
-        for (Facing var3 : var0)
-        {
+        for (Facing var3 : var0) {
             faceList[var3.order_a] = var3;
         }
     }
@@ -30,8 +27,7 @@ public enum Facing
 
     private final int frontOffsetZ;
 
-    Facing(int par3, int par4, int par5, int par6, int par7)
-    {
+    Facing(int par3, int par4, int par5, int par6, int par7) {
         order_a = par3;
         frontOffsetX = par5;
         frontOffsetY = par6;
@@ -41,29 +37,25 @@ public enum Facing
     /**
      * Returns a offset that addresses the block in front of this facing.
      */
-    public int getFrontOffsetX()
-    {
+    public int getFrontOffsetX() {
         return frontOffsetX;
     }
 
-    public int getFrontOffsetY()
-    {
+    public int getFrontOffsetY() {
         return frontOffsetY;
     }
 
     /**
      * Returns a offset that addresses the block in front of this facing.
      */
-    public int getFrontOffsetZ()
-    {
+    public int getFrontOffsetZ() {
         return frontOffsetZ;
     }
 
     /**
      * Returns the facing that represents the block in front of it.
      */
-    public static Facing getFront(int par0)
-    {
+    public static Facing getFront(int par0) {
         return faceList[par0 % faceList.length];
     }
 }

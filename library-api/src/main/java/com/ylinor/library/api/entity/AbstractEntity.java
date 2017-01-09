@@ -2,8 +2,8 @@ package com.ylinor.library.api.entity;
 
 import org.joml.Vector3f;
 
-public abstract class AbstractEntity
-{
+
+public abstract class AbstractEntity {
 
     /**
      * Current position.
@@ -15,12 +15,10 @@ public abstract class AbstractEntity
      */
     private Vector3f speed;
 
-    public AbstractEntity()
-    {
+    public AbstractEntity() {
     }
 
-    public AbstractEntity(Vector3f position, Vector3f speed)
-    {
+    public AbstractEntity(Vector3f position, Vector3f speed) {
         this.position = position;
         this.speed = speed;
     }
@@ -30,104 +28,83 @@ public abstract class AbstractEntity
      */
     private IArtificialIntelligence ai;
 
-
-    public void setSpeedX(float speedX)
-    {
+    public void setSpeedX(float speedX) {
         speed.set(speedX, speed.y, speed.z);
     }
 
-    public void setSpeedY(float speedY)
-    {
+    public void setSpeedY(float speedY) {
         speed.set(speed.x, speedY, speed.z);
     }
 
-    public void setSpeedZ(float speedZ)
-    {
+    public void setSpeedZ(float speedZ) {
         speed.set(speed.x, speed.y, speedZ);
     }
 
-    public void setSpeed(float x, float y, float z)
-    {
+    public void setSpeed(float x, float y, float z) {
         speed.set(x, y, z);
     }
 
-    public float getSpeedX()
-    {
+    public float getSpeedX() {
         return speed.x;
     }
 
-    public float getSpeedY()
-    {
+    public float getSpeedY() {
         return speed.y;
     }
 
-    public float getSpeedZ()
-    {
+    public float getSpeedZ() {
         return speed.z;
     }
 
-    public Vector3f getSpeed()
-    {
+    public Vector3f getSpeed() {
         return speed;
     }
 
-    public void setSpeed(Vector3f speed)
-    {
+    public void setSpeed(Vector3f speed) {
         this.speed = speed;
     }
 
-    public void setPositionX(float positionX)
-    {
+    public void setPositionX(float positionX) {
         position.set(positionX, position.y, position.z);
     }
 
-    public void setPositionY(float positionY)
-    {
+    public void setPositionY(float positionY) {
         position.set(position.x, positionY, position.z);
     }
 
-    public void setPositionZ(float positionZ)
-    {
+    public void setPositionZ(float positionZ) {
         position.set(position.x, position.y, positionZ);
     }
 
-    public void setPosition(float x, float y, float z)
-    {
+    public void setPosition(float x, float y, float z) {
         position.set(x, y, z);
     }
 
-    public float getPositionX()
-    {
+    public float getPositionX() {
         return position.x;
     }
 
-    public float getPositionY()
-    {
+    public float getPositionY() {
         return position.y;
     }
 
-    public float getPositionZ()
-    {
+    public float getPositionZ() {
         return position.z;
     }
 
-    public Vector3f getPosition()
-    {
+    public Vector3f getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3f position)
-    {
+    public void setPosition(Vector3f position) {
         this.position = position;
     }
 
-    public IArtificialIntelligence getAi()
-    {
+    public IArtificialIntelligence getAi() {
         return ai;
     }
 
-    public void setAi(IArtificialIntelligence ai)
-    {
+    public void setAi(IArtificialIntelligence ai) {
         this.ai = ai;
     }
 }

@@ -1,6 +1,12 @@
 package com.ylinor.library.util;
 
-import org.joml.*;
+import org.joml.AxisAngle4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 
 /**
@@ -10,8 +16,7 @@ import org.joml.*;
  * TempVar class ensuring this particular instance is never used elsewhere in
  * the mean time.
  */
-public class TempVars
-{
+public class TempVars {
     /**
      * Allow X instances of TempVars in a single thread.
      */
@@ -23,8 +28,7 @@ public class TempVars
      * index incremented. When TempVars.release() is called, the entry is
      * checked against the current instance and then the index is decremented.
      */
-    private static class TempVarsStack
-    {
+    private static class TempVarsStack {
         int index = 0;
         TempVars[] tempVars = new TempVars[STACK_SIZE];
     }
@@ -37,8 +41,7 @@ public class TempVars
     private static final ThreadLocal<TempVarsStack> varsLocal = new ThreadLocal<TempVarsStack>() {
 
         @Override
-        public TempVarsStack initialValue()
-        {
+        public TempVarsStack initialValue() {
             return new TempVarsStack();
         }
     };
@@ -47,8 +50,7 @@ public class TempVars
      */
     private boolean isUsed = false;
 
-    private TempVars()
-    {
+    private TempVars() {
     }
 
     /**
@@ -59,14 +61,12 @@ public class TempVars
      *
      * @return A TempVar instance
      */
-    public static TempVars get()
-    {
+    public static TempVars get() {
         TempVarsStack stack = varsLocal.get();
 
         TempVars instance = stack.tempVars[stack.index];
 
-        if (instance == null)
-        {
+        if (instance == null) {
             // Create new
             instance = new TempVars();
 
@@ -88,10 +88,8 @@ public class TempVars
      * vars2, vars2 MUST be released first otherwise an exception will be
      * thrown.
      */
-    public void release()
-    {
-        if (!isUsed)
-        {
+    public void release() {
+        if (!isUsed) {
             throw new IllegalStateException("This instance of TempVars was already released!");
         }
 
@@ -103,8 +101,7 @@ public class TempVars
         stack.index--;
 
         // Check if it is actually there
-        if (stack.tempVars[stack.index] != this)
-        {
+        if (stack.tempVars[stack.index] != this) {
             throw new IllegalStateException("An instance of TempVars has not been released in a called method!");
         }
     }
@@ -154,22 +151,21 @@ public class TempVars
      */
 
     /*
-    public final BlockPos blockPos0 = new BlockPos(0, 0, 0);
-    public final BlockPos blockPos1 = new BlockPos(0, 0, 0);
-    public final BlockPos blockPos2 = new BlockPos(0, 0, 0);
-    public final BlockPos blockPos3 = new BlockPos(0, 0, 0);
-    public final BlockPos blockPos4 = new BlockPos(0, 0, 0);
-    public final BlockPos blockPos5 = new BlockPos(0, 0, 0);
-
-    public final Vector3f vector3f(int id)
-    {
-        return id == 0 ? vect0 : (id == 1 ? vect1 : (id == 2 ? vect2 : (id == 3 ? vect3 : (id == 4 ? vect4 : (id == 5 ? vect5 : (id == 6 ? vect6 : (id == 7 ? vect7 : (id == 8 ? vect8 : (id == 9 ? vect9 : (id == 10 ? vect10 : (id == 11 ? vect11 : null)))))))))));
-    }
-
-    public final BlockPos blockPos(int id)
-    {
-        return id == 0 ? blockPos0 : (id == 1 ? blockPos1 : (id == 2 ? blockPos2 : (id == 3 ? blockPos3 : (id == 4 ? blockPos4 : (id == 5 ? blockPos5 : null)))));
-    }
-
-    */
+     * public final BlockPos blockPos0 = new BlockPos(0, 0, 0); public final
+     * BlockPos blockPos1 = new BlockPos(0, 0, 0); public final BlockPos
+     * blockPos2 = new BlockPos(0, 0, 0); public final BlockPos blockPos3 = new
+     * BlockPos(0, 0, 0); public final BlockPos blockPos4 = new BlockPos(0, 0,
+     * 0); public final BlockPos blockPos5 = new BlockPos(0, 0, 0);
+     * 
+     * public final Vector3f vector3f(int id) { return id == 0 ? vect0 : (id ==
+     * 1 ? vect1 : (id == 2 ? vect2 : (id == 3 ? vect3 : (id == 4 ? vect4 : (id
+     * == 5 ? vect5 : (id == 6 ? vect6 : (id == 7 ? vect7 : (id == 8 ? vect8 :
+     * (id == 9 ? vect9 : (id == 10 ? vect10 : (id == 11 ? vect11 :
+     * null))))))))))); }
+     * 
+     * public final BlockPos blockPos(int id) { return id == 0 ? blockPos0 : (id
+     * == 1 ? blockPos1 : (id == 2 ? blockPos2 : (id == 3 ? blockPos3 : (id == 4
+     * ? blockPos4 : (id == 5 ? blockPos5 : null))))); }
+     * 
+     */
 }

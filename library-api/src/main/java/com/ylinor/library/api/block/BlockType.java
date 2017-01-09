@@ -14,8 +14,7 @@ import gnu.trove.map.hash.TShortObjectHashMap;
  * @author Litarvan
  * @since 1.0.0
  */
-public class BlockType
-{
+public class BlockType {
     /**
      * Les BlockType enregistrés
      */
@@ -32,10 +31,8 @@ public class BlockType
     /**
      * Un BlockType simple
      */
-    public BlockType(int id)
-    {
-        if (types.containsKey((short) id))
-        {
+    public BlockType(int id) {
+        if (types.containsKey((short) id)) {
             throw new IllegalArgumentException("Slot " + id + " already used.");
         }
 
@@ -46,8 +43,7 @@ public class BlockType
     /**
      * @return L'id de ce BlockType
      */
-    public short getId()
-    {
+    public short getId() {
         return id;
     }
 
@@ -59,10 +55,8 @@ public class BlockType
      * @return Le block type trouvé ou null si inexistant
      */
     @Nullable
-    public static BlockType getByID(int id)
-    {
-        if (!types.containsKey((short) id))
-        {
+    public static BlockType getByID(int id) {
+        if (!types.containsKey((short) id)) {
             return air;
         }
 

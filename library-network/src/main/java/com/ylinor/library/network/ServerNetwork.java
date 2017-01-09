@@ -37,8 +37,8 @@ import io.netty.util.concurrent.GlobalEventExecutor;
  * @author pierre
  * @since 1.0.0
  */
-public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
-{
+public class ServerNetwork<E extends INetworkEntity>
+                extends AbstractNetwork<E> {
     /**
      * Objet bootstrap netty, utilisé pour la création de la connection
      */
@@ -82,18 +82,15 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
     private Function<SocketAddress, E> entitySupplier;
     private CopyOnWriteArrayList<E> clients = new CopyOnWriteArrayList<>();
 
-    public ServerNetwork(Kryo kryo, String ip, int port, IProtocol<E> protocol, Function<SocketAddress, E> entitySupplier)
-    {
+    public ServerNetwork(Kryo kryo, String ip, int port, IProtocol<E> protocol, Function<SocketAddress, E> entitySupplier) {
         super(kryo, ip, port, protocol);
         this.entitySupplier = entitySupplier;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         logger.info("Starting network service");
-        try
-        {
+        try {
             this.bossGroup = new NioEventLoopGroup(1);
             this.workerGroup = new NioEventLoopGroup(THREAD_LIMIT, threadPool);
             this.bootstrap = new ServerBootstrap();
@@ -102,8 +99,7 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
             bootstrap.handler(new LoggingHandler(LogLevel.INFO));
             bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
-                protected void initChannel(SocketChannel ch) throws Exception
-                {
+                protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new KryoDecoder(kryo));
                     ch.pipeline().addLast(new KryoEncoder(kryo));
                     E client = entitySupplier.apply(ch.remoteAddress());
@@ -115,17 +111,16 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
             isStarted = true;
             logger.info("Network service is ready");
 
-            while (isStarted)
-            {
-                if (channels.size() > 0 && packetQueue.size() > 0)
-                {
-                    for (PairPacket<?, ?> pair : packetQueue)
-                    {
-                        for (Channel channel : channels)
-                        {
-                            if (channel.remoteAddress().equals(pair.getSender().getRemoteAddress()))
-                            {
-                                logger.debug("Sending " + pair.getPacket().getClass().getSimpleName() + " packet");
+            while (isStarted) {
+                if (channels.size() > 0 && packetQueue.size() > 0) {
+                    for (PairPacket<?, ?> pair : packetQueue) {
+                        for (Channel channel : channels) {
+                            if (channel.remoteAddress()
+                                       .equals(pair.getSender()
+                                                   .getRemoteAddress())) {
+                                logger.debug("Sending " + pair.getPacket()
+                                                              .getClass()
+                                                              .getSimpleName() + " packet");
                                 channel.writeAndFlush(pair.getPacket());
                                 packetQueue.remove(pair);
                             }
@@ -137,53 +132,44 @@ public class ServerNetwork<E extends INetworkEntity> extends AbstractNetwork<E>
             logger.info("closing network service");
             channel.closeFuture().sync();
         }
-        catch (InterruptedException e)
-        {
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
-        finally
-        {
+        finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
     }
 
     @Override
-    public void sendPacket(Packet packet, INetworkEntity entity)
-    {
+    public void sendPacket(Packet packet, INetworkEntity entity) {
         packetQueue.add(new PairPacket<>(packet, entity));
     }
 
-    private class ServerNetworkHandler extends ChannelInboundHandlerAdapter
-    {
+    private class ServerNetworkHandler extends ChannelInboundHandlerAdapter {
         private E client;
 
-        public ServerNetworkHandler(E client)
-        {
+        public ServerNetworkHandler(E client) {
             this.client = client;
         }
 
         @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
-        {
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             protocol.handlePacket((Packet) msg, client, ServerNetwork.this);
         }
 
         @Override
-        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception
-        {
+        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
             super.channelReadComplete(ctx);
         }
 
         @Override
-        public void channelActive(ChannelHandlerContext ctx) throws Exception
-        {
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
             channels.add(ctx.channel());
         }
 
         @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
-        {
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             cause.printStackTrace();
             ctx.close();
         }

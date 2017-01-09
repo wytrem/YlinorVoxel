@@ -6,8 +6,7 @@ package com.ylinor.library.util.math;
  * @author Litarvan
  * @since 1.0.0
  */
-public interface Sizeable3D extends Sizeable2D
-{
+public interface Sizeable3D extends Sizeable2D {
     /**
      * @return La longueur de l'objet sur l'axe Z
      */

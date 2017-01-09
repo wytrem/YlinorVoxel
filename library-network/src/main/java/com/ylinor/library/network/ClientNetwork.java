@@ -32,8 +32,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  * @author pierre
  * @since 1.0.0
  */
-public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S>
-{
+public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S> {
     /**
      * Objet bootstrap netty, utilisé pour la création de la connection
      */
@@ -61,33 +60,26 @@ public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S>
 
     private S serverEntity;
 
-    /**
-     * Logger
-     */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(ClientNetwork.class);
 
     private Function<SocketAddress, S> entitySupplier;
 
-    public ClientNetwork(Kryo kryo, String ip, int port, IProtocol<S> protocol, Function<SocketAddress, S> entitySupplier)
-    {
+    public ClientNetwork(Kryo kryo, String ip, int port, IProtocol<S> protocol, Function<SocketAddress, S> entitySupplier) {
         super(kryo, ip, port, protocol);
         this.entitySupplier = entitySupplier;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         logger.info("Starting network service...");
-        try
-        {
+        try {
             this.group = new NioEventLoopGroup(THREAD_LIMIT, threadPool);
             this.bootstrap = new Bootstrap();
             bootstrap.group(group);
             bootstrap.channel(NioSocketChannel.class);
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
-                protected void initChannel(SocketChannel ch) throws Exception
-                {
+                protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new KryoDecoder(kryo));
                     ch.pipeline().addLast(new KryoEncoder(kryo));
                     ch.pipeline().addLast(new ClientNetworkHandler());
@@ -98,16 +90,15 @@ public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S>
 
             isStarted = true;
             logger.info("Network service is ready, waiting for packet...");
-            while (isStarted)
-            {
-                if (packetQueue.size() == 0)
-                {
+            while (isStarted) {
+                if (packetQueue.size() == 0) {
                     continue;
                 }
 
-                for (PairPacket<?, ?> pair : packetQueue)
-                {
-                    logger.debug("Sending " + pair.getPacket().getClass().getSimpleName() + " packet");
+                for (PairPacket<?, ?> pair : packetQueue) {
+                    logger.debug("Sending " + pair.getPacket()
+                                                  .getClass()
+                                                  .getSimpleName() + " packet");
                     channel.writeAndFlush(pair.getPacket());
                     packetQueue.remove(pair);
                 }
@@ -116,45 +107,37 @@ public class ClientNetwork<S extends ServerEntity> extends AbstractNetwork<S>
             logger.info("Stopping network service");
             channel.closeFuture().sync();
         }
-        catch (InterruptedException e)
-        {
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
-        finally
-        {
+        finally {
             group.shutdownGracefully();
             logger.info("Network service has successfully been stopped");
         }
     }
 
-    public void sendPacket(Packet packet)
-    {
+    public void sendPacket(Packet packet) {
         sendPacket(packet, serverEntity);
     }
 
     @Override
-    public void sendPacket(Packet packet, INetworkEntity entity)
-    {
+    public void sendPacket(Packet packet, INetworkEntity entity) {
         packetQueue.add(new PairPacket<>(packet, entity));
     }
 
-    private class ClientNetworkHandler extends ChannelInboundHandlerAdapter
-    {
+    private class ClientNetworkHandler extends ChannelInboundHandlerAdapter {
         @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
-        {
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             protocol.handlePacket((Packet) msg, serverEntity, ClientNetwork.this);
         }
 
         @Override
-        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception
-        {
+        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
             super.channelReadComplete(ctx);
         }
 
         @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception
-        {
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             super.exceptionCaught(ctx, cause);
         }
     }

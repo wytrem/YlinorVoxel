@@ -6,30 +6,25 @@ import com.badlogic.gdx.utils.Pool;
 import com.ylinor.library.api.world.World;
 
 
-public class WorldRenderer implements Renderer<World>
-{
+public class WorldRenderer implements Renderer<World> {
     private World world;
 
-    public WorldRenderer(World world)
-    {
+    public WorldRenderer(World world) {
         this.world = world;
     }
 
     @Override
-    public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool)
-    {
+    public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool) {
 
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
 
     }
 
     @Override
-    public World getObject()
-    {
+    public World getObject() {
         return world;
     }
 }

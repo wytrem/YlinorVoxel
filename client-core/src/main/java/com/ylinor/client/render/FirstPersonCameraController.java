@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.IntIntMap;
-import com.ylinor.client.util.settings.KeyMap;
 
 
 /**
@@ -15,35 +14,34 @@ import com.ylinor.client.util.settings.KeyMap;
  * 
  * @author badlogic
  */
-public class FirstPersonCameraController extends InputAdapter
-{
+public class FirstPersonCameraController extends InputAdapter {
     private final Camera cam;
     private final IntIntMap keys = new IntIntMap();
-    private KeyMap keyMap;
+    private int STRAFE_LEFT = Keys.Q;
+    private int STRAFE_RIGHT = Keys.D;
+    private int FORWARD = Keys.Z;
+    private int BACKWARD = Keys.S;
+    private int UP = Keys.SPACE;
+    private int DOWN = Keys.SHIFT_LEFT;
     private float velocity = 5;
     private float degreesPerPixel = 0.5f;
     private final Vector3 tmp = new Vector3();
 
-    public FirstPersonCameraController(Camera camera, KeyMap keyMap)
-    {
+    public FirstPersonCameraController(Camera camera) {
         this.cam = camera;
-        this.keyMap = keyMap;
     }
 
     @Override
-    public boolean keyDown(int keycode)
-    {
+    public boolean keyDown(int keycode) {
         keys.put(keycode, keycode);
         return true;
     }
 
     @Override
-    public boolean keyUp(int keycode)
-    {
+    public boolean keyUp(int keycode) {
         keys.remove(keycode, 0);
 
-        if (keycode == Keys.ESCAPE)
-        {
+        if (keycode == Keys.ESCAPE) {
             Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
             Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
@@ -57,8 +55,7 @@ public class FirstPersonCameraController extends InputAdapter
      * 
      * @param velocity the velocity in units per second
      */
-    public void setVelocity(float velocity)
-    {
+    public void setVelocity(float velocity) {
         this.velocity = velocity;
     }
 
@@ -67,14 +64,12 @@ public class FirstPersonCameraController extends InputAdapter
      * 
      * @param degreesPerPixel
      */
-    public void setDegreesPerPixel(float degreesPerPixel)
-    {
+    public void setDegreesPerPixel(float degreesPerPixel) {
         this.degreesPerPixel = degreesPerPixel;
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer)
-    {
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
         float deltaX = -Gdx.input.getDeltaX() * degreesPerPixel;
         float deltaY = -Gdx.input.getDeltaY() * degreesPerPixel;
         cam.direction.rotate(cam.up, deltaX);
@@ -84,40 +79,32 @@ public class FirstPersonCameraController extends InputAdapter
         return true;
     }
 
-    public void update()
-    {
+    public void update() {
         update(Gdx.graphics.getDeltaTime());
     }
 
-    public void update(float deltaTime)
-    {
-        if (keys.containsKey(keyMap.forward))
-        {
+    public void update(float deltaTime) {
+        if (keys.containsKey(FORWARD)) {
             tmp.set(cam.direction).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.backward))
-        {
+        if (keys.containsKey(BACKWARD)) {
             tmp.set(cam.direction).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.strafeLeft))
-        {
+        if (keys.containsKey(STRAFE_LEFT)) {
             tmp.set(cam.direction).crs(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.strafeRight))
-        {
+        if (keys.containsKey(STRAFE_RIGHT)) {
             tmp.set(cam.direction).crs(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.jump))
-        {
+        if (keys.containsKey(UP)) {
             tmp.set(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(keyMap.snick))
-        {
+        if (keys.containsKey(DOWN)) {
             tmp.set(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
@@ -129,40 +116,36 @@ public class FirstPersonCameraController extends InputAdapter
     private float rotSpeed = 0.2f;
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY)
-    {
-        if (!Gdx.input.isCursorCatched())
-        {
+    public boolean mouseMoved(int screenX, int screenY) {
+        if (!Gdx.input.isCursorCatched()) {
             return false;
         }
 
         int magX = Math.abs(mouseX - screenX);
         int magY = Math.abs(mouseY - screenY);
 
-        if (mouseX > screenX)
-        {
+        if (mouseX > screenX) {
             cam.rotate(Vector3.Y, 1 * magX * rotSpeed);
             cam.update();
         }
 
-        if (mouseX < screenX)
-        {
+        if (mouseX < screenX) {
             cam.rotate(Vector3.Y, -1 * magX * rotSpeed);
             cam.update();
         }
 
-        if (mouseY < screenY)
-        {
+        if (mouseY < screenY) {
             if (cam.direction.y > -0.965)
-                cam.rotate(cam.direction.cpy().crs(Vector3.Y), -1 * magY * rotSpeed);
+                cam.rotate(cam.direction.cpy()
+                                        .crs(Vector3.Y), -1 * magY * rotSpeed);
             cam.update();
         }
 
-        if (mouseY > screenY)
-        {
+        if (mouseY > screenY) {
 
             if (cam.direction.y < 0.965)
-                cam.rotate(cam.direction.cpy().crs(Vector3.Y), 1 * magY * rotSpeed);
+                cam.rotate(cam.direction.cpy()
+                                        .crs(Vector3.Y), 1 * magY * rotSpeed);
             cam.update();
         }
 

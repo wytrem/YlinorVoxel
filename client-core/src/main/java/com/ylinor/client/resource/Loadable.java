@@ -1,14 +1,13 @@
 package com.ylinor.client.resource;
 
 /**
- * Représente une classe contenant des assets à charger (hors assets
+ * Class that contains assets to load (except
  * {@link Preloadable})
  *
  * @author Litarvan
  * @since 1.0.0
  */
 @FunctionalInterface
-public interface Loadable
-{
+public interface Loadable {
     void load();
 }

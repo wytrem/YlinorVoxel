@@ -18,8 +18,7 @@ import com.ylinor.library.util.math.PositionableObject3D;
  * @author Litarvan
  * @since 1.0.0
  */
-public class Block implements PositionableObject3D
-{
+public class Block implements PositionableObject3D {
     /**
      * Le type du block (ex: Block de dirt)
      */
@@ -30,50 +29,42 @@ public class Block implements PositionableObject3D
      */
     @NotNull
     private BlockPos pos;
-    
+
     private boolean canBeUncached;
 
-    public Block(short type, @NotNull BlockPos pos)
-    {
+    public Block(short type, @NotNull BlockPos pos) {
         this.blockType = type;
         this.pos = pos;
     }
-    
-    public boolean canBeUncached()
-    {
+
+    public boolean canBeUncached() {
         return canBeUncached;
     }
-    
-    public void setCanBeUncached(boolean canBeUncached)
-    {
+
+    public void setCanBeUncached(boolean canBeUncached) {
         this.canBeUncached = canBeUncached;
     }
 
     /**
      * @return Le type de block (ex: Block de dirt)
      */
-    public short getTypeId()
-    {
+    public short getTypeId() {
         return blockType;
     }
 
-    public int x()
-    {
+    public int x() {
         return pos.x();
     }
 
-    public int y()
-    {
+    public int y() {
         return pos.y();
     }
 
-    public int z()
-    {
+    public int z() {
         return pos.z();
     }
-    
-    public BlockPos getPos()
-    {
+
+    public BlockPos getPos() {
         return pos;
     }
 }

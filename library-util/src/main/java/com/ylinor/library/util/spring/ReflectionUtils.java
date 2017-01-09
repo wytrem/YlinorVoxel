@@ -45,8 +45,7 @@ import java.util.Map;
  * @author Chris Beams
  * @since 1.2.2
  */
-public abstract class ReflectionUtils
-{
+public abstract class ReflectionUtils {
 
     /**
      * Naming prefix for CGLIB-renamed methods.
@@ -79,8 +78,7 @@ public abstract class ReflectionUtils
      * @param name the name of the field
      * @return the corresponding Field object, or {@code null} if not found
      */
-    public static Field findField(Class<?> clazz, String name)
-    {
+    public static Field findField(Class<?> clazz, String name) {
         return findField(clazz, name, null);
     }
 
@@ -96,18 +94,14 @@ public abstract class ReflectionUtils
      *        specified)
      * @return the corresponding Field object, or {@code null} if not found
      */
-    public static Field findField(Class<?> clazz, String name, Class<?> type)
-    {
+    public static Field findField(Class<?> clazz, String name, Class<?> type) {
         Assert.notNull(clazz, "Class must not be null");
         Assert.isTrue(name != null || type != null, "Either name or type of the field must be specified");
         Class<?> searchType = clazz;
-        while (Object.class != searchType && searchType != null)
-        {
+        while (Object.class != searchType && searchType != null) {
             Field[] fields = getDeclaredFields(searchType);
-            for (Field field : fields)
-            {
-                if ((name == null || name.equals(field.getName())) && (type == null || type.equals(field.getType())))
-                {
+            for (Field field : fields) {
+                if ((name == null || name.equals(field.getName())) && (type == null || type.equals(field.getType()))) {
                     return field;
                 }
             }
@@ -130,16 +124,14 @@ public abstract class ReflectionUtils
      * @param target the target object on which to set the field
      * @param value the value to set (may be {@code null})
      */
-    public static void setField(Field field, Object target, Object value)
-    {
-        try
-        {
+    public static void setField(Field field, Object target, Object value) {
+        try {
             field.set(target, value);
         }
-        catch (IllegalAccessException ex)
-        {
+        catch (IllegalAccessException ex) {
             handleReflectionException(ex);
-            throw new IllegalStateException("Unexpected reflection exception - " + ex.getClass().getName() + ": " + ex.getMessage());
+            throw new IllegalStateException("Unexpected reflection exception - " + ex.getClass()
+                                                                                     .getName() + ": " + ex.getMessage());
         }
     }
 
@@ -156,16 +148,14 @@ public abstract class ReflectionUtils
      * @param target the target object from which to get the field
      * @return the field's current value
      */
-    public static Object getField(Field field, Object target)
-    {
-        try
-        {
+    public static Object getField(Field field, Object target) {
+        try {
             return field.get(target);
         }
-        catch (IllegalAccessException ex)
-        {
+        catch (IllegalAccessException ex) {
             handleReflectionException(ex);
-            throw new IllegalStateException("Unexpected reflection exception - " + ex.getClass().getName() + ": " + ex.getMessage());
+            throw new IllegalStateException("Unexpected reflection exception - " + ex.getClass()
+                                                                                     .getName() + ": " + ex.getMessage());
         }
     }
 
@@ -179,8 +169,7 @@ public abstract class ReflectionUtils
      * @param name the name of the method
      * @return the Method object, or {@code null} if none found
      */
-    public static Method findMethod(Class<?> clazz, String name)
-    {
+    public static Method findMethod(Class<?> clazz, String name) {
         return findMethod(clazz, name, new Class<?>[0]);
     }
 
@@ -196,18 +185,14 @@ public abstract class ReflectionUtils
      *        to indicate any signature)
      * @return the Method object, or {@code null} if none found
      */
-    public static Method findMethod(Class<?> clazz, String name, Class<?>... paramTypes)
-    {
+    public static Method findMethod(Class<?> clazz, String name, Class<?>... paramTypes) {
         Assert.notNull(clazz, "Class must not be null");
         Assert.notNull(name, "Method name must not be null");
         Class<?> searchType = clazz;
-        while (searchType != null)
-        {
+        while (searchType != null) {
             Method[] methods = (searchType.isInterface() ? searchType.getMethods() : getDeclaredMethods(searchType));
-            for (Method method : methods)
-            {
-                if (name.equals(method.getName()) && (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes())))
-                {
+            for (Method method : methods) {
+                if (name.equals(method.getName()) && (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
                     return method;
                 }
             }
@@ -229,8 +214,7 @@ public abstract class ReflectionUtils
      * @return the invocation result, if any
      * @see #invokeMethod(java.lang.reflect.Method, Object, Object[])
      */
-    public static Object invokeMethod(Method method, Object target)
-    {
+    public static Object invokeMethod(Method method, Object target) {
         return invokeMethod(method, target, new Object[0]);
     }
 
@@ -247,14 +231,11 @@ public abstract class ReflectionUtils
      * @param args the invocation arguments (may be {@code null})
      * @return the invocation result, if any
      */
-    public static Object invokeMethod(Method method, Object target, Object... args)
-    {
-        try
-        {
+    public static Object invokeMethod(Method method, Object target, Object... args) {
+        try {
             return method.invoke(target, args);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             handleReflectionException(ex);
         }
         throw new IllegalStateException("Should never get here");
@@ -270,8 +251,7 @@ public abstract class ReflectionUtils
      * @throws SQLException the JDBC API SQLException to rethrow (if any)
      * @see #invokeJdbcMethod(java.lang.reflect.Method, Object, Object[])
      */
-    public static Object invokeJdbcMethod(Method method, Object target) throws SQLException
-    {
+    public static Object invokeJdbcMethod(Method method, Object target) throws SQLException {
         return invokeJdbcMethod(method, target, new Object[0]);
     }
 
@@ -286,20 +266,15 @@ public abstract class ReflectionUtils
      * @throws SQLException the JDBC API SQLException to rethrow (if any)
      * @see #invokeMethod(java.lang.reflect.Method, Object, Object[])
      */
-    public static Object invokeJdbcMethod(Method method, Object target, Object... args) throws SQLException
-    {
-        try
-        {
+    public static Object invokeJdbcMethod(Method method, Object target, Object... args) throws SQLException {
+        try {
             return method.invoke(target, args);
         }
-        catch (IllegalAccessException ex)
-        {
+        catch (IllegalAccessException ex) {
             handleReflectionException(ex);
         }
-        catch (InvocationTargetException ex)
-        {
-            if (ex.getTargetException() instanceof SQLException)
-            {
+        catch (InvocationTargetException ex) {
+            if (ex.getTargetException() instanceof SQLException) {
                 throw (SQLException) ex.getTargetException();
             }
             handleInvocationTargetException(ex);
@@ -318,22 +293,17 @@ public abstract class ReflectionUtils
      * 
      * @param ex the reflection exception to handle
      */
-    public static void handleReflectionException(Exception ex)
-    {
-        if (ex instanceof NoSuchMethodException)
-        {
+    public static void handleReflectionException(Exception ex) {
+        if (ex instanceof NoSuchMethodException) {
             throw new IllegalStateException("Method not found: " + ex.getMessage());
         }
-        if (ex instanceof IllegalAccessException)
-        {
+        if (ex instanceof IllegalAccessException) {
             throw new IllegalStateException("Could not access method: " + ex.getMessage());
         }
-        if (ex instanceof InvocationTargetException)
-        {
+        if (ex instanceof InvocationTargetException) {
             handleInvocationTargetException((InvocationTargetException) ex);
         }
-        if (ex instanceof RuntimeException)
-        {
+        if (ex instanceof RuntimeException) {
             throw (RuntimeException) ex;
         }
         throw new UndeclaredThrowableException(ex);
@@ -348,8 +318,7 @@ public abstract class ReflectionUtils
      * 
      * @param ex the invocation target exception to handle
      */
-    public static void handleInvocationTargetException(InvocationTargetException ex)
-    {
+    public static void handleInvocationTargetException(InvocationTargetException ex) {
         rethrowRuntimeException(ex.getTargetException());
     }
 
@@ -366,14 +335,11 @@ public abstract class ReflectionUtils
      * @param ex the exception to rethrow
      * @throws RuntimeException the rethrown exception
      */
-    public static void rethrowRuntimeException(Throwable ex)
-    {
-        if (ex instanceof RuntimeException)
-        {
+    public static void rethrowRuntimeException(Throwable ex) {
+        if (ex instanceof RuntimeException) {
             throw (RuntimeException) ex;
         }
-        if (ex instanceof Error)
-        {
+        if (ex instanceof Error) {
             throw (Error) ex;
         }
         throw new UndeclaredThrowableException(ex);
@@ -392,14 +358,11 @@ public abstract class ReflectionUtils
      * @param ex the exception to rethrow
      * @throws Exception the rethrown exception (in case of a checked exception)
      */
-    public static void rethrowException(Throwable ex) throws Exception
-    {
-        if (ex instanceof Exception)
-        {
+    public static void rethrowException(Throwable ex) throws Exception {
+        if (ex instanceof Exception) {
             throw (Exception) ex;
         }
-        if (ex instanceof Error)
-        {
+        if (ex instanceof Error) {
             throw (Error) ex;
         }
         throw new UndeclaredThrowableException(ex);
@@ -415,14 +378,11 @@ public abstract class ReflectionUtils
      * @return {@code true} if the exception can be thrown as-is; {@code false}
      *         if it needs to be wrapped
      */
-    public static boolean declaresException(Method method, Class<?> exceptionType)
-    {
+    public static boolean declaresException(Method method, Class<?> exceptionType) {
         Assert.notNull(method, "Method must not be null");
         Class<?>[] declaredExceptions = method.getExceptionTypes();
-        for (Class<?> declaredException : declaredExceptions)
-        {
-            if (declaredException.isAssignableFrom(exceptionType))
-            {
+        for (Class<?> declaredException : declaredExceptions) {
+            if (declaredException.isAssignableFrom(exceptionType)) {
                 return true;
             }
         }
@@ -434,8 +394,7 @@ public abstract class ReflectionUtils
      * 
      * @param field the field to check
      */
-    public static boolean isPublicStaticFinal(Field field)
-    {
+    public static boolean isPublicStaticFinal(Field field) {
         int modifiers = field.getModifiers();
         return (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers));
     }
@@ -445,10 +404,8 @@ public abstract class ReflectionUtils
      * 
      * @see java.lang.Object#equals(Object)
      */
-    public static boolean isEqualsMethod(Method method)
-    {
-        if (method == null || !method.getName().equals("equals"))
-        {
+    public static boolean isEqualsMethod(Method method) {
+        if (method == null || !method.getName().equals("equals")) {
             return false;
         }
         Class<?>[] paramTypes = method.getParameterTypes();
@@ -460,9 +417,9 @@ public abstract class ReflectionUtils
      * 
      * @see java.lang.Object#hashCode()
      */
-    public static boolean isHashCodeMethod(Method method)
-    {
-        return (method != null && method.getName().equals("hashCode") && method.getParameterTypes().length == 0);
+    public static boolean isHashCodeMethod(Method method) {
+        return (method != null && method.getName()
+                                        .equals("hashCode") && method.getParameterTypes().length == 0);
     }
 
     /**
@@ -470,28 +427,24 @@ public abstract class ReflectionUtils
      * 
      * @see java.lang.Object#toString()
      */
-    public static boolean isToStringMethod(Method method)
-    {
-        return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
+    public static boolean isToStringMethod(Method method) {
+        return (method != null && method.getName()
+                                        .equals("toString") && method.getParameterTypes().length == 0);
     }
 
     /**
      * Determine whether the given method is originally declared by
      * {@link java.lang.Object}.
      */
-    public static boolean isObjectMethod(Method method)
-    {
-        if (method == null)
-        {
+    public static boolean isObjectMethod(Method method) {
+        if (method == null) {
             return false;
         }
-        try
-        {
+        try {
             Object.class.getDeclaredMethod(method.getName(), method.getParameterTypes());
             return true;
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             return false;
         }
     }
@@ -503,14 +456,11 @@ public abstract class ReflectionUtils
      * @param renamedMethod the method to check
      * @see org.springframework.cglib.proxy.Enhancer#rename
      */
-    public static boolean isCglibRenamedMethod(Method renamedMethod)
-    {
+    public static boolean isCglibRenamedMethod(Method renamedMethod) {
         String name = renamedMethod.getName();
-        if (name.startsWith(CGLIB_RENAMED_METHOD_PREFIX))
-        {
+        if (name.startsWith(CGLIB_RENAMED_METHOD_PREFIX)) {
             int i = name.length() - 1;
-            while (i >= 0 && Character.isDigit(name.charAt(i)))
-            {
+            while (i >= 0 && Character.isDigit(name.charAt(i))) {
                 i--;
             }
             return ((i > CGLIB_RENAMED_METHOD_PREFIX.length()) && (i < name.length() - 1) && name.charAt(i) == '$');
@@ -527,10 +477,9 @@ public abstract class ReflectionUtils
      * @param field the field to make accessible
      * @see java.lang.reflect.Field#setAccessible
      */
-    public static void makeAccessible(Field field)
-    {
-        if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible())
-        {
+    public static void makeAccessible(Field field) {
+        if ((!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass()
+                                                                                 .getModifiers()) || Modifier.isFinal(field.getModifiers())) && !field.isAccessible()) {
             field.setAccessible(true);
         }
     }
@@ -544,10 +493,9 @@ public abstract class ReflectionUtils
      * @param method the method to make accessible
      * @see java.lang.reflect.Method#setAccessible
      */
-    public static void makeAccessible(Method method)
-    {
-        if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) && !method.isAccessible())
-        {
+    public static void makeAccessible(Method method) {
+        if ((!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass()
+                                                                                   .getModifiers())) && !method.isAccessible()) {
             method.setAccessible(true);
         }
     }
@@ -561,10 +509,9 @@ public abstract class ReflectionUtils
      * @param ctor the constructor to make accessible
      * @see java.lang.reflect.Constructor#setAccessible
      */
-    public static void makeAccessible(Constructor<?> ctor)
-    {
-        if ((!Modifier.isPublic(ctor.getModifiers()) || !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible())
-        {
+    public static void makeAccessible(Constructor<?> ctor) {
+        if ((!Modifier.isPublic(ctor.getModifiers()) || !Modifier.isPublic(ctor.getDeclaringClass()
+                                                                               .getModifiers())) && !ctor.isAccessible()) {
             ctor.setAccessible(true);
         }
     }
@@ -579,17 +526,13 @@ public abstract class ReflectionUtils
      * @since 4.2
      * @see #doWithMethods
      */
-    public static void doWithLocalMethods(Class<?> clazz, MethodCallback mc)
-    {
+    public static void doWithLocalMethods(Class<?> clazz, MethodCallback mc) {
         Method[] methods = getDeclaredMethods(clazz);
-        for (Method method : methods)
-        {
-            try
-            {
+        for (Method method : methods) {
+            try {
                 mc.doWith(method);
             }
-            catch (IllegalAccessException ex)
-            {
+            catch (IllegalAccessException ex) {
                 throw new IllegalStateException("Not allowed to access method '" + method.getName() + "': " + ex);
             }
         }
@@ -606,8 +549,7 @@ public abstract class ReflectionUtils
      * @param mc the callback to invoke for each method
      * @see #doWithMethods(Class, MethodCallback, MethodFilter)
      */
-    public static void doWithMethods(Class<?> clazz, MethodCallback mc)
-    {
+    public static void doWithMethods(Class<?> clazz, MethodCallback mc) {
         doWithMethods(clazz, mc, null);
     }
 
@@ -622,33 +564,25 @@ public abstract class ReflectionUtils
      * @param mc the callback to invoke for each method
      * @param mf the filter that determines the methods to apply the callback to
      */
-    public static void doWithMethods(Class<?> clazz, MethodCallback mc, MethodFilter mf)
-    {
+    public static void doWithMethods(Class<?> clazz, MethodCallback mc, MethodFilter mf) {
         // Keep backing up the inheritance hierarchy.
         Method[] methods = getDeclaredMethods(clazz);
-        for (Method method : methods)
-        {
-            if (mf != null && !mf.matches(method))
-            {
+        for (Method method : methods) {
+            if (mf != null && !mf.matches(method)) {
                 continue;
             }
-            try
-            {
+            try {
                 mc.doWith(method);
             }
-            catch (IllegalAccessException ex)
-            {
+            catch (IllegalAccessException ex) {
                 throw new IllegalStateException("Not allowed to access method '" + method.getName() + "': " + ex);
             }
         }
-        if (clazz.getSuperclass() != null)
-        {
+        if (clazz.getSuperclass() != null) {
             doWithMethods(clazz.getSuperclass(), mc, mf);
         }
-        else if (clazz.isInterface())
-        {
-            for (Class<?> superIfc : clazz.getInterfaces())
-            {
+        else if (clazz.isInterface()) {
+            for (Class<?> superIfc : clazz.getInterfaces()) {
                 doWithMethods(superIfc, mc, mf);
             }
         }
@@ -660,13 +594,11 @@ public abstract class ReflectionUtils
      * 
      * @param leafClass the class to introspect
      */
-    public static Method[] getAllDeclaredMethods(Class<?> leafClass)
-    {
+    public static Method[] getAllDeclaredMethods(Class<?> leafClass) {
         final List<Method> methods = new ArrayList<Method>(32);
         doWithMethods(leafClass, new MethodCallback() {
             @Override
-            public void doWith(Method method)
-            {
+            public void doWith(Method method) {
                 methods.add(method);
             }
         });
@@ -681,37 +613,31 @@ public abstract class ReflectionUtils
      * 
      * @param leafClass the class to introspect
      */
-    public static Method[] getUniqueDeclaredMethods(Class<?> leafClass)
-    {
+    public static Method[] getUniqueDeclaredMethods(Class<?> leafClass) {
         final List<Method> methods = new ArrayList<Method>(32);
         doWithMethods(leafClass, new MethodCallback() {
             @Override
-            public void doWith(Method method)
-            {
+            public void doWith(Method method) {
                 boolean knownSignature = false;
                 Method methodBeingOverriddenWithCovariantReturnType = null;
-                for (Method existingMethod : methods)
-                {
-                    if (method.getName().equals(existingMethod.getName()) && Arrays.equals(method.getParameterTypes(), existingMethod.getParameterTypes()))
-                    {
+                for (Method existingMethod : methods) {
+                    if (method.getName()
+                              .equals(existingMethod.getName()) && Arrays.equals(method.getParameterTypes(), existingMethod.getParameterTypes())) {
                         // Is this a covariant return type situation?
-                        if (existingMethod.getReturnType() != method.getReturnType() && existingMethod.getReturnType().isAssignableFrom(method.getReturnType()))
-                        {
+                        if (existingMethod.getReturnType() != method.getReturnType() && existingMethod.getReturnType()
+                                                                                                      .isAssignableFrom(method.getReturnType())) {
                             methodBeingOverriddenWithCovariantReturnType = existingMethod;
                         }
-                        else
-                        {
+                        else {
                             knownSignature = true;
                         }
                         break;
                     }
                 }
-                if (methodBeingOverriddenWithCovariantReturnType != null)
-                {
+                if (methodBeingOverriddenWithCovariantReturnType != null) {
                     methods.remove(methodBeingOverriddenWithCovariantReturnType);
                 }
-                if (!knownSignature && !isCglibRenamedMethod(method))
-                {
+                if (!knownSignature && !isCglibRenamedMethod(method)) {
                     methods.add(method);
                 }
             }
@@ -730,26 +656,21 @@ public abstract class ReflectionUtils
      * @return the cached array of methods
      * @see Class#getDeclaredMethods()
      */
-    private static Method[] getDeclaredMethods(Class<?> clazz)
-    {
+    private static Method[] getDeclaredMethods(Class<?> clazz) {
         Method[] result = declaredMethodsCache.get(clazz);
-        if (result == null)
-        {
+        if (result == null) {
             Method[] declaredMethods = clazz.getDeclaredMethods();
             List<Method> defaultMethods = findConcreteMethodsOnInterfaces(clazz);
-            if (defaultMethods != null)
-            {
+            if (defaultMethods != null) {
                 result = new Method[declaredMethods.length + defaultMethods.size()];
                 System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
                 int index = declaredMethods.length;
-                for (Method defaultMethod : defaultMethods)
-                {
+                for (Method defaultMethod : defaultMethods) {
                     result[index] = defaultMethod;
                     index++;
                 }
             }
-            else
-            {
+            else {
                 result = declaredMethods;
             }
             declaredMethodsCache.put(clazz, (result.length == 0 ? NO_METHODS : result));
@@ -757,17 +678,12 @@ public abstract class ReflectionUtils
         return result;
     }
 
-    private static List<Method> findConcreteMethodsOnInterfaces(Class<?> clazz)
-    {
+    private static List<Method> findConcreteMethodsOnInterfaces(Class<?> clazz) {
         List<Method> result = null;
-        for (Class<?> ifc : clazz.getInterfaces())
-        {
-            for (Method ifcMethod : ifc.getMethods())
-            {
-                if (!Modifier.isAbstract(ifcMethod.getModifiers()))
-                {
-                    if (result == null)
-                    {
+        for (Class<?> ifc : clazz.getInterfaces()) {
+            for (Method ifcMethod : ifc.getMethods()) {
+                if (!Modifier.isAbstract(ifcMethod.getModifiers())) {
+                    if (result == null) {
                         result = new LinkedList<Method>();
                     }
                     result.add(ifcMethod);
@@ -786,16 +702,12 @@ public abstract class ReflectionUtils
      * @since 4.2
      * @see #doWithFields
      */
-    public static void doWithLocalFields(Class<?> clazz, FieldCallback fc)
-    {
-        for (Field field : getDeclaredFields(clazz))
-        {
-            try
-            {
+    public static void doWithLocalFields(Class<?> clazz, FieldCallback fc) {
+        for (Field field : getDeclaredFields(clazz)) {
+            try {
                 fc.doWith(field);
             }
-            catch (IllegalAccessException ex)
-            {
+            catch (IllegalAccessException ex) {
                 throw new IllegalStateException("Not allowed to access field '" + field.getName() + "': " + ex);
             }
         }
@@ -808,8 +720,7 @@ public abstract class ReflectionUtils
      * @param clazz the target class to analyze
      * @param fc the callback to invoke for each field
      */
-    public static void doWithFields(Class<?> clazz, FieldCallback fc)
-    {
+    public static void doWithFields(Class<?> clazz, FieldCallback fc) {
         doWithFields(clazz, fc, null);
     }
 
@@ -821,25 +732,19 @@ public abstract class ReflectionUtils
      * @param fc the callback to invoke for each field
      * @param ff the filter that determines the fields to apply the callback to
      */
-    public static void doWithFields(Class<?> clazz, FieldCallback fc, FieldFilter ff)
-    {
+    public static void doWithFields(Class<?> clazz, FieldCallback fc, FieldFilter ff) {
         // Keep backing up the inheritance hierarchy.
         Class<?> targetClass = clazz;
-        do
-        {
+        do {
             Field[] fields = getDeclaredFields(targetClass);
-            for (Field field : fields)
-            {
-                if (ff != null && !ff.matches(field))
-                {
+            for (Field field : fields) {
+                if (ff != null && !ff.matches(field)) {
                     continue;
                 }
-                try
-                {
+                try {
                     fc.doWith(field);
                 }
-                catch (IllegalAccessException ex)
-                {
+                catch (IllegalAccessException ex) {
                     throw new IllegalStateException("Not allowed to access field '" + field.getName() + "': " + ex);
                 }
             }
@@ -856,11 +761,9 @@ public abstract class ReflectionUtils
      * @return the cached array of fields
      * @see Class#getDeclaredFields()
      */
-    private static Field[] getDeclaredFields(Class<?> clazz)
-    {
+    private static Field[] getDeclaredFields(Class<?> clazz) {
         Field[] result = declaredFieldsCache.get(clazz);
-        if (result == null)
-        {
+        if (result == null) {
             result = clazz.getDeclaredFields();
             declaredFieldsCache.put(clazz, (result.length == 0 ? NO_FIELDS : result));
         }
@@ -872,24 +775,21 @@ public abstract class ReflectionUtils
      * or a subclass, copy all fields, including inherited fields. Designed to
      * work on objects with public no-arg constructors.
      */
-    public static void shallowCopyFieldState(final Object src, final Object dest)
-    {
-        if (src == null)
-        {
+    public static void shallowCopyFieldState(final Object src, final Object dest) {
+        if (src == null) {
             throw new IllegalArgumentException("Source for field copy cannot be null");
         }
-        if (dest == null)
-        {
+        if (dest == null) {
             throw new IllegalArgumentException("Destination for field copy cannot be null");
         }
-        if (!src.getClass().isAssignableFrom(dest.getClass()))
-        {
-            throw new IllegalArgumentException("Destination class [" + dest.getClass().getName() + "] must be same or subclass as source class [" + src.getClass().getName() + "]");
+        if (!src.getClass().isAssignableFrom(dest.getClass())) {
+            throw new IllegalArgumentException("Destination class [" + dest.getClass()
+                                                                           .getName() + "] must be same or subclass as source class [" + src.getClass()
+                                                                                                                                            .getName() + "]");
         }
         doWithFields(src.getClass(), new FieldCallback() {
             @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException
-            {
+            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 makeAccessible(field);
                 Object srcValue = field.get(src);
                 field.set(dest, srcValue);
@@ -902,8 +802,7 @@ public abstract class ReflectionUtils
      * 
      * @since 4.2.4
      */
-    public static void clearCache()
-    {
+    public static void clearCache() {
         declaredMethodsCache.clear();
         declaredFieldsCache.clear();
     }
@@ -911,8 +810,7 @@ public abstract class ReflectionUtils
     /**
      * Action to take on each method.
      */
-    public interface MethodCallback
-    {
+    public interface MethodCallback {
 
         /**
          * Perform an operation using the given method.
@@ -926,8 +824,7 @@ public abstract class ReflectionUtils
      * Callback optionally used to filter methods to be operated on by a method
      * callback.
      */
-    public interface MethodFilter
-    {
+    public interface MethodFilter {
 
         /**
          * Determine whether the given method matches.
@@ -940,8 +837,7 @@ public abstract class ReflectionUtils
     /**
      * Callback interface invoked on each field in the hierarchy.
      */
-    public interface FieldCallback
-    {
+    public interface FieldCallback {
 
         /**
          * Perform an operation using the given field.
@@ -955,8 +851,7 @@ public abstract class ReflectionUtils
      * Callback optionally used to filter fields to be operated on by a field
      * callback.
      */
-    public interface FieldFilter
-    {
+    public interface FieldFilter {
 
         /**
          * Determine whether the given field matches.
@@ -972,8 +867,7 @@ public abstract class ReflectionUtils
     public static final FieldFilter COPYABLE_FIELDS = new FieldFilter() {
 
         @Override
-        public boolean matches(Field field)
-        {
+        public boolean matches(Field field) {
             return !(Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers()));
         }
     };
@@ -984,8 +878,7 @@ public abstract class ReflectionUtils
     public static final MethodFilter NON_BRIDGED_METHODS = new MethodFilter() {
 
         @Override
-        public boolean matches(Method method)
-        {
+        public boolean matches(Method method) {
             return !method.isBridge();
         }
     };
@@ -997,8 +890,7 @@ public abstract class ReflectionUtils
     public static final MethodFilter USER_DECLARED_METHODS = new MethodFilter() {
 
         @Override
-        public boolean matches(Method method)
-        {
+        public boolean matches(Method method) {
             return (!method.isBridge() && method.getDeclaringClass() != Object.class);
         }
     };

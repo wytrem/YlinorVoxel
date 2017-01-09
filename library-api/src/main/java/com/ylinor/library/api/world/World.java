@@ -19,8 +19,7 @@ import com.ylinor.library.util.math.PositionableObject2D;
  * @author wytrem
  * @since 1.0.0
  */
-public class World
-{
+public class World {
     /**
      * La taille maximum d'un monde
      */
@@ -28,8 +27,8 @@ public class World
 
     /**
      * Le {@link IChunkProvider} qui sera appelé dans le cas d'utilisation de
-     * {@link #getChunk(PositionableObject2D)} sur un chunk non-chargé, ou dans le cas
-     * du déchargement d'un chunk.
+     * {@link #getChunk(PositionableObject2D)} sur un chunk non-chargé, ou dans
+     * le cas du déchargement d'un chunk.
      */
     @NotNull
     private IChunkProvider provider;
@@ -39,57 +38,47 @@ public class World
      *
      * @param provider Le chunk provider fournissant les Chunks du monde
      */
-    public World(@NotNull IChunkProvider provider) throws IllegalArgumentException
-    {
+    public World(@NotNull IChunkProvider provider) throws IllegalArgumentException {
         this.provider = provider;
     }
-    
-    public Chunk getChunkFromBlockCoords(BlockPos pos)
-    {
+
+    public Chunk getChunkFromBlockCoords(BlockPos pos) {
         return getChunkFromBlockCoords(pos.x, pos.y, pos.z);
-    }    
-    
-    public Chunk getChunkFromBlockCoords(int x, int y, int z)
-    {
+    }
+
+    public Chunk getChunkFromBlockCoords(int x, int y, int z) {
         return provider.provide(this, x >> 4, z >> 4);
     }
-    
-    public Chunk getChunkFromChunkCoords(Vector2i pos)
-    {
+
+    public Chunk getChunkFromChunkCoords(Vector2i pos) {
         return getChunkFromChunkCoords(pos.x, pos.y);
     }
 
-    public Chunk getChunkFromChunkCoords(int x, int z)
-    {
+    public Chunk getChunkFromChunkCoords(int x, int z) {
         return provider.provide(this, x, z);
     }
-    
-    public Block getBlock(BlockPos pos)
-    {
+
+    public Block getBlock(BlockPos pos) {
         return getChunkFromBlockCoords(pos.x, pos.y, pos.z).getBlock(pos.x & 15, pos.y, pos.z & 15);
     }
-    
-    public short getBlockId(BlockPos pos)
-    {
+
+    public short getBlockId(BlockPos pos) {
         return getChunkFromBlockCoords(pos.x, pos.y, pos.z).getBlockId(pos.x & 15, pos.y, pos.z & 15);
     }
-    
-    public Block getBlock(int x, int y, int z)
-    {
+
+    public Block getBlock(int x, int y, int z) {
         return getChunkFromBlockCoords(x, y, z).getBlock(x & 15, y, z & 15);
     }
-    
-    public short getBlockId(int x, int y, int z)
-    {
+
+    public short getBlockId(int x, int y, int z) {
         return getChunkFromBlockCoords(x, y, z).getBlockId(x & 15, y, z & 15);
     }
-    
+
     /**
      * @return Le chunk provider actuel (null si non donné au constructeur)
      */
     @NotNull
-    public IChunkProvider getChunkProvider()
-    {
+    public IChunkProvider getChunkProvider() {
         return provider;
     }
 }

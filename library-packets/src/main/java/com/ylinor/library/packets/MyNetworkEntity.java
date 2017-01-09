@@ -9,18 +9,15 @@ import com.ylinor.library.network.packet.INetworkEntity;
  * @author pierre
  * @since 1.0.0
  */
-public class MyNetworkEntity implements INetworkEntity
-{
+public class MyNetworkEntity implements INetworkEntity {
     private SocketAddress address;
 
-    public MyNetworkEntity(SocketAddress address)
-    {
+    public MyNetworkEntity(SocketAddress address) {
         this.address = address;
     }
 
     @Override
-    public SocketAddress getRemoteAddress()
-    {
+    public SocketAddress getRemoteAddress() {
         return address;
     }
 }

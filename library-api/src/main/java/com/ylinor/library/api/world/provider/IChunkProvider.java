@@ -16,8 +16,7 @@ import com.ylinor.library.api.world.World;
  * @author Litarvan
  * @since 1.0.0
  */
-public interface IChunkProvider
-{
+public interface IChunkProvider {
     /**
      * Fournit le chunk à la position donnée
      *

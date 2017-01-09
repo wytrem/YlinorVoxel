@@ -1,7 +1,5 @@
 package com.ylinor.client.screen.pregame;
 
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +11,12 @@ import com.ylinor.client.screen.YlinorScreen;
 
 
 /**
- * L'écran de chargement, lancé après le preloading des assets, affiche le
- * chargement des assets.
+ * Loading screen, launch after the assets's preloading, display the assets's loading
  *
  * @author Litarvan
  * @since 1.0.0
  */
-public class LoadingScreen extends YlinorScreen
-{
+public class LoadingScreen extends YlinorScreen {
     /* Logo affiché au milieu de l'écran */
     private Image logo;
 
@@ -29,11 +25,10 @@ public class LoadingScreen extends YlinorScreen
 
     /* Logger */
     private Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     /* Appele lors de la création du screen */
     @Override
-    public void show()
-    {
+    public void show() {
         /* Définie l'InputProcessor (cf YlinorScreen) */
         super.show();
 
@@ -52,8 +47,7 @@ public class LoadingScreen extends YlinorScreen
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         /* Appeler la méthode super, voire YlinorClient */
         super.resize(width, height);
 
@@ -71,8 +65,7 @@ public class LoadingScreen extends YlinorScreen
     }
 
     @Override
-    public void render(float delta)
-    {
+    public void render(float delta) {
         /* Appeller la méthode super (cf YlinorClient) */
         super.render(delta);
 

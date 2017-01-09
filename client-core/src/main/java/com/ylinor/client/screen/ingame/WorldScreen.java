@@ -5,21 +5,18 @@ import com.ylinor.client.screen.YlinorScreen;
 
 
 /**
- * Screen sur lequel le monde du serveur sera charger et rendu a l'écran
+ * On this screen, the world will be loaded and rendered
  **/
-public class WorldScreen extends YlinorScreen
-{
+public class WorldScreen extends YlinorScreen {
     /* Le moteur de rendu de monde (cf WordRenderer et Renderer */
     private WorldRenderer renderer;
 
-    public WorldScreen(WorldRenderer renderer)
-    {
+    public WorldScreen(WorldRenderer renderer) {
         super();
         this.renderer = renderer;
     }
 
-    public WorldRenderer getRenderer()
-    {
+    public WorldRenderer getRenderer() {
         return renderer;
     }
 }
