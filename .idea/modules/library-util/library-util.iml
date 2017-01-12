@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":library-util" external.linked.project.path="$MODULE_DIR$/../../../library-util" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.ylinor" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/../../../library-util/build/classes/main" />
+    <output-test url="file://$MODULE_DIR$/../../../library-util/build/classes/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../library-util">
+      <sourceFolder url="file://$MODULE_DIR$/../../../library-util/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../library-util/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../library-util/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../library-util/src/test/resources" type="java-test-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../library-util/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../library-util/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:15.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.joml:joml:1.9.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.sf.trove4j:trove4j:3.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-log4j12:1.7.22" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.22" level="project" />
+    <orderEntry type="library" name="Gradle: log4j:log4j:1.2.17" level="project" />
+  </component>
+</module>

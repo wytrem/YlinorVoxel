@@ -95,6 +95,23 @@ public class MathHelper {
         return par0 >= 0 ? par0 : -par0;
     }
 
+    public static int roundUp(int number, int interval) {
+        if (interval == 0) {
+            return 0;
+        }
+        else if (number == 0) {
+            return interval;
+        }
+        else {
+            if (number < 0) {
+                interval *= -1;
+            }
+
+            int i = number % interval;
+            return i == 0 ? number : number + interval - i;
+        }
+    }
+
     /**
      * Returns a new vector with x value equal to the second parameter, along
      * the line between this vector and the passed in vector, or null if not

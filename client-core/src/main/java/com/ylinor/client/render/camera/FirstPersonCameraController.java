@@ -1,4 +1,4 @@
-package com.ylinor.client.render;
+package com.ylinor.client.render.camera;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;

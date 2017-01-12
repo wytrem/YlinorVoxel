@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Ylinor.iml" filepath="$PROJECT_DIR$/.idea/modules/Ylinor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client-core/client-core.iml" filepath="$PROJECT_DIR$/.idea/modules/client-core/client-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client-desktop/client-desktop.iml" filepath="$PROJECT_DIR$/.idea/modules/client-desktop/client-desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-api/library-api.iml" filepath="$PROJECT_DIR$/.idea/modules/library-api/library-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-network/library-network.iml" filepath="$PROJECT_DIR$/.idea/modules/library-network/library-network.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-packets/library-packets.iml" filepath="$PROJECT_DIR$/.idea/modules/library-packets/library-packets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-util/library-util.iml" filepath="$PROJECT_DIR$/.idea/modules/library-util/library-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server.iml" />
+    </modules>
+  </component>
+</project>
