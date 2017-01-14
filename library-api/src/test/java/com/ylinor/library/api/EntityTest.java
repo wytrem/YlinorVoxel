@@ -16,5 +16,4 @@ public class EntityTest
             Thread.sleep(1000 / 30);
         }
     }
-
 }
