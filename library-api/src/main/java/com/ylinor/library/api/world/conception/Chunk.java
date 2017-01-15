@@ -30,13 +30,27 @@ public class Chunk implements IBlockContainer, Sizeable3D
     @Override
     public Block getOrCreate(BlockPos pos)
     {
-        return null;
+        Block block = getBlock(pos);
+
+        if (block.getData() == null)
+        {
+            block = block.getData().provide(block.getType(), block.getPos());
+        }
+
+        return block;
     }
 
     @Override
     public Block getOrCreate(int x, int y, int z)
     {
-        return null;
+        Block block = getBlock(x, y, z);
+
+        if (block.getData() == null)
+        {
+            block = block.getData().provide(block.getType(), block.getPos());
+        }
+
+        return block;
     }
 
     @Override
