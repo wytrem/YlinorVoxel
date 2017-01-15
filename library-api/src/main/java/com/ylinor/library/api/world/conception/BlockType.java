@@ -1,12 +1,10 @@
 package com.ylinor.library.api.world.conception;
 
-public enum BlockType
+public class BlockType
 {
-    ;
+    private short id;
 
-    private int id;
-
-    public int getId()
+    public short getId()
     {
         return id;
     }
