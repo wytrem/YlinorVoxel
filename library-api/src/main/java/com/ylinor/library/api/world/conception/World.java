@@ -110,9 +110,10 @@ public class World implements IChunkContainer, IBlockContainer
     @Override
     public void setBlock(Block block)
     {
-        // TODO: MERDE FAUT DECALER LA POSITION
-        throw new RuntimeException("Merde...");
-        // getChunkOf(block.getPos()).setBlock(block);
+        Chunk chunk = getChunkOf(block.getPos());
+
+        chunk.setBlockType(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getType());
+        chunk.setBlockData(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getData());
     }
 
     @Override
