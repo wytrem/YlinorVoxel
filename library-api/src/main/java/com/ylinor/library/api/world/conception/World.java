@@ -15,21 +15,6 @@ public class World implements IChunkContainer, IBlockContainer
         this.storage = storage;
     }
 
-    public Region getRegionOf(Block block)
-    {
-        return null;
-    }
-
-    public Region getRegionOf(BlockPos pos)
-    {
-        return null;
-    }
-
-    public Region getRegionOf(int x, int y, int z)
-    {
-        return null;
-    }
-
     public Chunk getChunkOf(Block block)
     {
         return getChunkOf(block.getPos());
@@ -87,6 +72,18 @@ public class World implements IChunkContainer, IBlockContainer
     }
 
     @Override
+    public Block getOrCreate(BlockPos pos)
+    {
+        return getChunkOf(pos).getOrCreate(pos.x & 15, pos.y, pos.z & 15);
+    }
+
+    @Override
+    public Block getOrCreate(int x, int y, int z)
+    {
+        return getChunkOf(x, y, z).getOrCreate(x & 15, y, z & 15);
+    }
+
+    @Override
     public BlockType getBlockType(BlockPos pos)
     {
         return getChunkOf(pos).getBlockType(pos.x & 15, pos.y, pos.z & 15);
@@ -111,15 +108,23 @@ public class World implements IChunkContainer, IBlockContainer
     }
 
     @Override
-    public void setBlock(BlockPos pos, Block block)
+    public void setBlock(Block block)
     {
-        getChunkOf(pos).setBlock(pos.x & 15, pos.y, pos.z & 15, block);
+        // TODO: MERDE FAUT DECALER LA POSITION
+        throw new RuntimeException("Merde...");
+        // getChunkOf(block.getPos()).setBlock(block);
     }
 
     @Override
-    public void setBlock(int x, int y, int z, Block block)
+    public void setBlockType(BlockPos pos, BlockType type)
     {
-        getChunkOf(x, y, z).setBlock(x & 15, y, z & 15, block);
+        getChunkOf(pos).setBlockType(pos.x & 15, pos.y, pos.z & 15, type);
+    }
+
+    @Override
+    public void setBlockType(int x, int y, int z, BlockType type)
+    {
+        getChunkOf(x, y, z).setBlockType(x & 15, y, z & 15, type);
     }
 
     @Override

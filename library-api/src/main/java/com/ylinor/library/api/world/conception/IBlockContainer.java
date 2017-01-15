@@ -7,6 +7,9 @@ public interface IBlockContainer
     Block getBlock(BlockPos pos);
     Block getBlock(int x, int y, int z);
 
+    Block getOrCreate(BlockPos pos);
+    Block getOrCreate(int x, int y, int z);
+
     BlockType getBlockType(BlockPos pos);
     BlockType getBlockType(int x, int y, int z);
 
@@ -23,11 +26,10 @@ public interface IBlockContainer
         return getBlockData(pos) != null;
     }
 
-    void setBlock(BlockPos pos, Block block);
-    void setBlock(int x, int y, int z, Block block);
+    void setBlock(Block block);
 
-    void setBlockType(BlockPos pos, BlockType block);
-    void setBlockType(int x, int y, int z, BlockType block);
+    void setBlockType(BlockPos pos, BlockType type);
+    void setBlockType(int x, int y, int z, BlockType type);
 
     void setBlockData(BlockPos pos, BlockExtraData data);
     void setBlockData(int x, int y, int z, BlockExtraData data);
