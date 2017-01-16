@@ -6,8 +6,35 @@ import com.ylinor.library.util.math.PositionableObject2D;
 
 public abstract class WorldStorage implements IChunkContainer
 {
-    public abstract void saveChunk(PositionableObject2D pos, Chunk chunk);
-    public abstract void saveChunk(int x, int z, Chunk chunk);
+    private boolean writable;
 
-    public abstract void saveWorld();
+    public WorldStorage(boolean writable)
+    {
+        this.writable = writable;
+    }
+
+    @Override
+    public void setChunk(PositionableObject2D pos, Chunk chunk)
+    {
+        checkForWriting();
+    }
+
+    @Override
+    public void setChunk(int x, int z, Chunk chunk)
+    {
+        checkForWriting();
+    }
+
+    private void checkForWriting()
+    {
+        if (!writable)
+        {
+            throw new IllegalStateException("Read-only world being edited");
+        }
+    }
+
+    public boolean isWritable()
+    {
+        return writable;
+    }
 }

@@ -1,77 +1,85 @@
 package com.ylinor.library.api.world.storage;
 
 import com.ylinor.library.api.world.Chunk;
+import com.ylinor.library.util.Serializer;
 import com.ylinor.library.util.math.PositionableObject2D;
 import java.io.File;
+import java.io.IOException;
 
 public class CacheWorldStorage extends WorldStorage
 {
     private File folder;
-    private boolean writable;
 
     public CacheWorldStorage(File folder, boolean writable)
     {
+        super(writable);
         this.folder = folder;
-        this.writable = writable;
     }
 
     @Override
     public Chunk getChunk(PositionableObject2D pos)
     {
-        return null;
+        try
+        {
+            return Serializer.read(getFileFor(pos));
+        }
+        catch (IOException | ClassNotFoundException e)
+        {
+            throw new IllegalStateException("Corrupted World ! (Can't load chunk from cache)", e);
+        }
     }
 
     @Override
     public Chunk getChunk(int x, int z)
     {
-        return null;
+        try
+        {
+            return Serializer.read(getFileFor(x, z));
+        }
+        catch (IOException | ClassNotFoundException e)
+        {
+            throw new IllegalStateException("Corrupted World ! (Can't load chunk from cache)", e);
+        }
     }
 
     @Override
     public void setChunk(PositionableObject2D pos, Chunk chunk)
     {
-        checkForWriting();
+        try
+        {
+            Serializer.write(getFileFor(pos), chunk);
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException("World writing error ! (Can't save chunk to cache)", e);
+        }
     }
 
     @Override
     public void setChunk(int x, int z, Chunk chunk)
     {
-        checkForWriting();
-    }
-
-    @Override
-    public void saveChunk(PositionableObject2D pos, Chunk chunk)
-    {
-        checkForWriting();
-    }
-
-    private void checkForWriting()
-    {
-        if (!writable)
+        try
         {
-            throw new IllegalStateException("Read-only world being edited");
+            Serializer.write(getFileFor(x, z), chunk);
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException("World writing error ! (Can't save chunk to cache)", e);
         }
     }
 
-    @Override
-    public void saveChunk(int x, int z, Chunk chunk)
+    private File getFileFor(int x, int z)
     {
-        checkForWriting();
+        return new File(folder, "c_" + x + "-" + z);
     }
 
-    @Override
-    public void saveWorld()
+    private File getFileFor(PositionableObject2D pos)
     {
-        checkForWriting();
+        return new File(folder, "c_" + pos.x() + "-" + pos.y());
     }
 
     public File getFolder()
     {
         return folder;
-    }
-
-    public boolean isWritable()
-    {
-        return writable;
     }
 }
