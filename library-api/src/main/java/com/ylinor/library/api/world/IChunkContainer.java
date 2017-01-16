@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world.conception;
+package com.ylinor.library.api.world;
 
 import com.ylinor.library.util.math.PositionableObject2D;
 
@@ -9,4 +9,14 @@ public interface IChunkContainer
 
     void setChunk(PositionableObject2D pos, Chunk chunk);
     void setChunk(int x, int z, Chunk chunk);
+
+    default boolean hasChunk(int x, int z)
+    {
+        return getChunk(x, z) != null;
+    }
+
+    default boolean hasChunk(PositionableObject2D pos)
+    {
+        return getChunk(pos) != null;
+    }
 }

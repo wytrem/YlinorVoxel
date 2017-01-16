@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world.conception;
+package com.ylinor.library.api.world;
 
 import com.ylinor.library.api.block.BlockPos;
 

@@ -1,84 +1,142 @@
 package com.ylinor.library.api.world;
 
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector2i;
-
 import com.ylinor.library.api.block.BlockPos;
-import com.ylinor.library.api.world.provider.IChunkProvider;
+import com.ylinor.library.api.world.storage.StorageManager;
 import com.ylinor.library.util.math.PositionableObject2D;
 
+public class World implements IChunkContainer, IBlockContainer
+{
+    public static final short SIZE_Y = Chunk.SIZE_Y;
 
-/**
- * Un monde Ylinor.
- *
- * Un monde est une grille de {@link Chunk}. Chaque Chunk fait la hauteur du
- * monde, et est un pavé droit à base carrée (dont normalement les dimensions
- * sont puissances de deux). Chaque chunk est rempli de blocs.
- *
- * @author Litarvan
- * @author wytrem
- * @since 1.0.0
- */
-public class World {
-    /**
-     * La taille maximum d'un monde
-     */
-    public static final int MAX_HEIGHT = Chunk.CHUNK_SIZE_Y;
+    private StorageManager storage;
 
-    /**
-     * Le {@link IChunkProvider} qui sera appelé dans le cas d'utilisation de
-     * {@link #getChunk(PositionableObject2D)} sur un chunk non-chargé, ou dans
-     * le cas du déchargement d'un chunk.
-     */
-    @NotNull
-    private IChunkProvider provider;
-
-    /**
-     * Un monde Ylinor
-     *
-     * @param provider Le chunk provider fournissant les Chunks du monde
-     */
-    public World(@NotNull IChunkProvider provider) throws IllegalArgumentException {
-        this.provider = provider;
+    public World(StorageManager storage)
+    {
+        this.storage = storage;
     }
 
-    public Chunk getChunkFromBlockCoords(BlockPos pos) {
-        return getChunkFromBlockCoords(pos.x, pos.y, pos.z);
+    public Chunk getChunkOf(Block block)
+    {
+        return getChunkOf(block.getPos());
     }
 
-    public Chunk getChunkFromBlockCoords(int x, int y, int z) {
-        return provider.provide(this, x >> 4, z >> 4);
+    public Chunk getChunkOf(BlockPos pos)
+    {
+        return getChunk(pos.x >> 4, pos.z >> 4);
     }
 
-    public Chunk getChunkFromChunkCoords(Vector2i pos) {
-        return getChunkFromChunkCoords(pos.x, pos.y);
+    public Chunk getChunkOf(int x, int y, int z)
+    {
+        return getChunk(x >> 4, z >> 4);
     }
 
-    public Chunk getChunkFromChunkCoords(int x, int z) {
-        return provider.provide(this, x, z);
+    @Override
+    public Chunk getChunk(PositionableObject2D pos)
+    {
+        return storage.getChunk(pos);
     }
 
-    public Block getBlock(BlockPos pos) {
-        return getChunkFromBlockCoords(pos.x, pos.y, pos.z).getBlock(pos.x & 15, pos.y, pos.z & 15);
+    @Override
+    public Chunk getChunk(int x, int z)
+    {
+        return storage.getChunk(x, z);
     }
 
-    public short getBlockId(BlockPos pos) {
-        return getChunkFromBlockCoords(pos.x, pos.y, pos.z).getBlockId(pos.x & 15, pos.y, pos.z & 15);
+    @Override
+    public void setChunk(PositionableObject2D pos, Chunk chunk)
+    {
+        storage.setChunk(pos, chunk);
     }
 
-    public Block getBlock(int x, int y, int z) {
-        return getChunkFromBlockCoords(x, y, z).getBlock(x & 15, y, z & 15);
+    @Override
+    public void setChunk(int x, int z, Chunk chunk)
+    {
+        storage.setChunk(x, z, chunk);
     }
 
-    public short getBlockId(int x, int y, int z) {
-        return getChunkFromBlockCoords(x, y, z).getBlockId(x & 15, y, z & 15);
+    public StorageManager getStorage()
+    {
+        return storage;
     }
 
-    /**
-     * @return Le chunk provider actuel (null si non donné au constructeur)
-     */
-    @NotNull
-    public IChunkProvider getChunkProvider() {
-        return provider;
+    @Override
+    public Block getBlock(BlockPos pos)
+    {
+        return getChunkOf(pos).getBlock(pos.x & 15, pos.y, pos.z & 15);
+    }
+
+    @Override
+    public Block getBlock(int x, int y, int z)
+    {
+        return getChunkOf(x, y, z).getBlock(x & 15, y, z & 15);
+    }
+
+    @Override
+    public Block getOrCreate(BlockPos pos)
+    {
+        return getChunkOf(pos).getOrCreate(pos.x & 15, pos.y, pos.z & 15);
+    }
+
+    @Override
+    public Block getOrCreate(int x, int y, int z)
+    {
+        return getChunkOf(x, y, z).getOrCreate(x & 15, y, z & 15);
+    }
+
+    @Override
+    public BlockType getBlockType(BlockPos pos)
+    {
+        return getChunkOf(pos).getBlockType(pos.x & 15, pos.y, pos.z & 15);
+    }
+
+    @Override
+    public BlockType getBlockType(int x, int y, int z)
+    {
+        return getChunkOf(x, y, z).getBlockType(x & 15, y, z & 15);
+    }
+
+    @Override
+    public BlockExtraData getBlockData(BlockPos pos)
+    {
+        return getChunkOf(pos).getBlockData(pos.x & 15, pos.y, pos.z & 15);
+    }
+
+    @Override
+    public BlockExtraData getBlockData(int x, int y, int z)
+    {
+        return getChunkOf(x, y, z).getBlockData(x & 15, y, z & 15);
+    }
+
+    @Override
+    public void setBlock(Block block)
+    {
+        Chunk chunk = getChunkOf(block.getPos());
+
+        chunk.setBlockType(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getType());
+        chunk.setBlockData(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getData());
+    }
+
+    @Override
+    public void setBlockType(BlockPos pos, BlockType type)
+    {
+        getChunkOf(pos).setBlockType(pos.x & 15, pos.y, pos.z & 15, type);
+    }
+
+    @Override
+    public void setBlockType(int x, int y, int z, BlockType type)
+    {
+        getChunkOf(x, y, z).setBlockType(x & 15, y, z & 15, type);
+    }
+
+    @Override
+    public void setBlockData(BlockPos pos, BlockExtraData data)
+    {
+        getChunkOf(pos).setBlockData(pos.x & 15, pos.y, pos.z & 15, data);
+    }
+
+    @Override
+    public void setBlockData(int x, int y, int z, BlockExtraData data)
+    {
+        getChunkOf(x, y, z).setBlockData(x & 15, y, z & 15, data);
     }
 }

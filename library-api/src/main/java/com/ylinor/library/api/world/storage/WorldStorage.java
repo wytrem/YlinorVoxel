@@ -1,7 +1,7 @@
-package com.ylinor.library.api.world.conception.storage;
+package com.ylinor.library.api.world.storage;
 
-import com.ylinor.library.api.world.conception.Chunk;
-import com.ylinor.library.api.world.conception.IChunkContainer;
+import com.ylinor.library.api.world.Chunk;
+import com.ylinor.library.api.world.IChunkContainer;
 import com.ylinor.library.util.math.PositionableObject2D;
 
 public abstract class WorldStorage implements IChunkContainer
