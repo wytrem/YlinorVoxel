@@ -29,7 +29,7 @@ public abstract class WorldStorage implements IChunkContainer
     {
     }
 
-    private void checkForWriting()
+    protected void checkForWriting()
     {
         if (!writable)
         {
