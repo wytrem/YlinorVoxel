@@ -1,4 +1,4 @@
-package com.ylinor.library.util;
+package com.ylinor.library.util.io;
 
 import de.ruedigermoeller.serialization.FSTObjectInput;
 import de.ruedigermoeller.serialization.FSTObjectOutput;

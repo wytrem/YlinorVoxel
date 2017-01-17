@@ -12,4 +12,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.4'
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.5'
     compile 'de.ruedigermoeller:fst:1.63'
+    compile 'com.github.luben:zstd-jni:1.1.2'
 }
