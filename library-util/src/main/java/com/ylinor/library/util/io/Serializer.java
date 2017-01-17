@@ -2,7 +2,6 @@ package com.ylinor.library.util.io;
 
 import de.ruedigermoeller.serialization.FSTObjectInput;
 import de.ruedigermoeller.serialization.FSTObjectOutput;
-import de.ruedigermoeller.serialization.util.FSTInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
