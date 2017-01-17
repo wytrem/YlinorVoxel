@@ -47,7 +47,7 @@ public class Chunk implements IBlockContainer, Sizeable3D
 
         if (block.getData() == null)
         {
-            block = block.getData().provide(block.getType(), block.getPos());
+            block = block.getType().createData(block.getPos()).provide(block.getType(), block.getPos());
         }
 
         return block;
