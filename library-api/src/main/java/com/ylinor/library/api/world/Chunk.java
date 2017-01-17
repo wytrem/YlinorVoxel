@@ -12,7 +12,7 @@ public class Chunk implements IBlockContainer, Sizeable3D
     public static final short SIZE_Y = 256;
     public static final short SIZE_Z = 16;
 
-    private TIntShortHashMap blocks = new TIntShortHashMap();
+    private short[] blocks = new short[SIZE_X * SIZE_Y * SIZE_Z];
     private TIntObjectHashMap<BlockExtraData> datas = new TIntObjectHashMap<>();
 
     @Override
@@ -56,13 +56,13 @@ public class Chunk implements IBlockContainer, Sizeable3D
     @Override
     public BlockType getBlockType(BlockPos pos)
     {
-        return BlockType.REGISTRY.get(blocks.get(StorageUtil.posToInt(pos)));
+        return BlockType.REGISTRY.get(blocks[StorageUtil.posToInt(pos)]);
     }
 
     @Override
     public BlockType getBlockType(int x, int y, int z)
     {
-        return BlockType.REGISTRY.get(blocks.get(StorageUtil.posToInt((byte) x, (short) y, (byte) z)));
+        return BlockType.REGISTRY.get(blocks[StorageUtil.posToInt((byte) x, (short) y, (byte) z)]);
     }
 
     @Override
@@ -87,14 +87,14 @@ public class Chunk implements IBlockContainer, Sizeable3D
     @Override
     public void setBlockType(BlockPos pos, BlockType type)
     {
-        blocks.put(StorageUtil.posToInt(pos), type.getId());
+        blocks[StorageUtil.posToInt(pos)] =  type.getId();
         setBlockData(pos, null);
     }
 
     @Override
     public void setBlockType(int x, int y, int z, BlockType type)
     {
-        blocks.put(StorageUtil.posToInt((byte) x, (byte) y, (byte) z), type.getId());
+        blocks[StorageUtil.posToInt((byte) x, (byte) y, (byte) z)] = type.getId();
         setBlockData(x, y, z, null);
     }
 
