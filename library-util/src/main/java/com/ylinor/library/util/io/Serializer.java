@@ -2,6 +2,8 @@ package com.ylinor.library.util.io;
 
 import de.ruedigermoeller.serialization.FSTObjectInput;
 import de.ruedigermoeller.serialization.FSTObjectOutput;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,6 +28,11 @@ public final class Serializer
         return read(new FileInputStream(file));
     }
 
+    public static <T> T read(byte[] bytes) throws IOException, ClassNotFoundException
+    {
+        return read(new ByteArrayInputStream(bytes));
+    }
+
     public static <T> void write(OutputStream out, T object) throws IOException
     {
         FSTObjectOutput output = new FSTObjectOutput(out);
@@ -37,5 +44,10 @@ public final class Serializer
     public static <T> void write(File file, T object) throws IOException
     {
         write(new FileOutputStream(file), object);
+    }
+
+    public static <T> void write(int length, T object) throws IOException
+    {
+        write(new ByteArrayOutputStream(length), object);
     }
 }

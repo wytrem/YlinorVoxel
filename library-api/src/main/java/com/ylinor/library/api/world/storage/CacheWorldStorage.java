@@ -1,7 +1,7 @@
 package com.ylinor.library.api.world.storage;
 
 import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.util.Serializer;
+import com.ylinor.library.util.io.Serializer;
 import com.ylinor.library.util.math.PositionableObject2D;
 import java.io.File;
 import java.io.IOException;
@@ -68,12 +68,12 @@ public class CacheWorldStorage extends WorldStorage
         }
     }
 
-    private File getFileFor(int x, int z)
+    protected File getFileFor(int x, int z)
     {
         return new File(folder, "c_" + x + "-" + z);
     }
 
-    private File getFileFor(PositionableObject2D pos)
+    protected File getFileFor(PositionableObject2D pos)
     {
         return new File(folder, "c_" + pos.x() + "-" + pos.y());
     }
