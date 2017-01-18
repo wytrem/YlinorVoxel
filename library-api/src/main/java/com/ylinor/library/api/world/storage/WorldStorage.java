@@ -25,7 +25,11 @@ public abstract class WorldStorage implements IChunkContainer
         checkForWriting();
     }
 
-    public void save()
+    public void unloadChunk(int x, int z, Chunk chunk)
+    {
+    }
+
+    public void unloadChunk(PositionableObject2D pos, Chunk chunk)
     {
     }
 

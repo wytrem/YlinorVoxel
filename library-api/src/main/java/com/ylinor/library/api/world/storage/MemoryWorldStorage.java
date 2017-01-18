@@ -46,4 +46,18 @@ public class MemoryWorldStorage extends WorldStorage
 
         chunks.put(StorageUtil.posToShort(x, z), chunk);
     }
+
+
+
+    @Override
+    public void unloadChunk(PositionableObject2D pos, Chunk chunk)
+    {
+        super.unloadChunk(pos, chunk);
+    }
+
+    @Override
+    public void unloadChunk(int x, int z, Chunk chunk)
+    {
+        super.unloadChunk(x, z, chunk);
+    }
 }
