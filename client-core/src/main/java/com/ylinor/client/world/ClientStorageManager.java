@@ -3,6 +3,7 @@ package com.ylinor.client.world;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.storage.StorageManager;
 import com.ylinor.library.util.math.PositionableObject2D;
+import com.ylinor.library.util.math.PositionableObject3D;
 
 public class ClientStorageManager extends StorageManager
 {
@@ -28,5 +29,11 @@ public class ClientStorageManager extends StorageManager
     public void setChunk(int x, int z, Chunk chunk)
     {
 
+    }
+
+    @Override
+    public void onPlayerMove(PositionableObject3D pos)
+    {
+        super.onPlayerMove(pos);
     }
 }
