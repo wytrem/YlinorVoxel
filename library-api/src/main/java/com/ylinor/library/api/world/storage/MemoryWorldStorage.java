@@ -47,8 +47,6 @@ public class MemoryWorldStorage extends WorldStorage
         chunks.put(StorageUtil.posToShort(x, z), chunk);
     }
 
-
-
     @Override
     public void unloadChunk(PositionableObject2D pos, Chunk chunk)
     {

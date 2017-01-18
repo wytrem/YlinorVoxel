@@ -21,30 +21,54 @@ public class ClientStorageManager extends StorageManager
     @Override
     public Chunk getChunk(PositionableObject2D pos)
     {
-        return null;
+        return memory.getChunk(pos);
     }
 
     @Override
     public Chunk getChunk(int x, int z)
     {
-        return null;
+        return memory.getChunk(x, z);
     }
 
     @Override
     public void setChunk(PositionableObject2D pos, Chunk chunk)
     {
-
+        throw new UnsupportedOperationException("Client world tried to be edited");
     }
 
     @Override
     public void setChunk(int x, int z, Chunk chunk)
     {
-
+        throw new UnsupportedOperationException("Client world tried to be edited");
     }
 
     @Override
     public void onPlayerMove(PositionableObject3D pos)
     {
         super.onPlayerMove(pos);
+
+        int x = pos.x() >> 4;
+        int z = pos.z() >> 4;
+
+        if (!hardCache.hasChunk(x, z))
+        {
+            throw new UnsupportedOperationException("Not implemented : Should block the player, this is not supposed to happen");
+        }
+
+        if (!memory.hasChunk(x, z))
+        {
+            Chunk chunk;
+
+            if (!cache.hasChunk(x, z))
+            {
+                chunk = cache.getChunk(x, z);
+            }
+            else
+            {
+                // TODO: Update cache
+            }
+
+            // TODO: Update memory
+        }
     }
 }

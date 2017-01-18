@@ -68,6 +68,18 @@ public class CacheWorldStorage extends WorldStorage
         }
     }
 
+    @Override
+    public boolean hasChunk(PositionableObject2D pos)
+    {
+        return getFileFor(pos).exists();
+    }
+
+    @Override
+    public boolean hasChunk(int x, int z)
+    {
+        return getFileFor(x, z).exists();
+    }
+
     protected File getFileFor(int x, int z)
     {
         return new File(folder, "c_" + x + "-" + z);
