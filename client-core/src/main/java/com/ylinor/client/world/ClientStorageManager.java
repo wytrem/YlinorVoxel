@@ -18,6 +18,9 @@ public class ClientStorageManager extends StorageManager
     private CacheWorldStorage cache = new CacheWorldStorage(new File(folder, "cache"), false);
     private HardCacheWorldStorage hardCache = new HardCacheWorldStorage(new File(folder, "hard-cache"), false);
 
+    private int currentChunkX = -1;
+    private int currentChunkZ = -1;
+
     @Override
     public Chunk getChunk(PositionableObject2D pos)
     {
@@ -50,25 +53,41 @@ public class ClientStorageManager extends StorageManager
         int x = pos.x() >> 4;
         int z = pos.z() >> 4;
 
+        if (x == currentChunkX && z == currentChunkZ)
+        {
+            return;
+        }
+
         if (!hardCache.hasChunk(x, z))
         {
             throw new UnsupportedOperationException("Not implemented : Should block the player, this is not supposed to happen");
         }
 
-        if (!memory.hasChunk(x, z))
-        {
-            Chunk chunk;
+        PositionableObject2D[] chunks = getMemoryChunks();
 
-            if (!cache.hasChunk(x, z))
+        for (PositionableObject2D p : chunks)
+        {
+            if (memory.hasChunk(p))
             {
-                chunk = cache.getChunk(x, z);
+                continue;
+            }
+
+            if (cache.hasChunk(p))
+            {
+                memory.setChunk(p, cache.getChunk(p));
             }
             else
             {
-                // TODO: Update cache
+                // TODO: Charger la région qu'il faut dans le cache
             }
-
-            // TODO: Update memory
         }
+
+        // TODO: Si le joueur est a plus de <render distance> d'une région adjacente chargée dans le cache, supprimer cette dernière du cache
+        // TODO: Supprimer de la mémoire les chunks qui ne doivent plus y être :/
+    }
+
+    private PositionableObject2D[] getMemoryChunks()
+    {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }
