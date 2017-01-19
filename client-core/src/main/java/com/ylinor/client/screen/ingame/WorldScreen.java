@@ -1,6 +1,6 @@
 package com.ylinor.client.screen.ingame;
 
-import com.ylinor.client.render.WorldRenderer;
+import com.ylinor.client.render.TerrainRenderer;
 import com.ylinor.client.screen.YlinorScreen;
 
 
@@ -9,14 +9,14 @@ import com.ylinor.client.screen.YlinorScreen;
  **/
 public class WorldScreen extends YlinorScreen {
     /* Le moteur de rendu de monde (cf WordRenderer et Renderer */
-    private WorldRenderer renderer;
+    private TerrainRenderer renderer;
 
-    public WorldScreen(WorldRenderer renderer) {
+    public WorldScreen(TerrainRenderer renderer) {
         super();
         this.renderer = renderer;
     }
 
-    public WorldRenderer getRenderer() {
+    public TerrainRenderer getRenderer() {
         return renderer;
     }
 }
