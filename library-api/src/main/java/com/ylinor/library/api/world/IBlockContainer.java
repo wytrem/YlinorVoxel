@@ -4,23 +4,34 @@ import com.ylinor.library.api.block.BlockPos;
 
 public interface IBlockContainer
 {
-    Block getBlock(BlockPos pos);
+    default Block getBlock(BlockPos pos)
+    {
+        return getBlock(pos.x(), pos.y(), pos.z());
+    }
     Block getBlock(int x, int y, int z);
 
-    Block getOrCreate(BlockPos pos);
+    default Block getOrCreate(BlockPos pos)
+    {
+        return getOrCreate(pos.x(), pos.y(), pos.z());
+    }
     Block getOrCreate(int x, int y, int z);
 
-    BlockType getBlockType(BlockPos pos);
+    default BlockType getBlockType(BlockPos pos)
+    {
+        return getBlockType(pos.x(), pos.y(), pos.z());
+    }
     BlockType getBlockType(int x, int y, int z);
 
-    BlockExtraData getBlockData(BlockPos pos);
+    default BlockExtraData getBlockData(BlockPos pos)
+    {
+        return getBlockData(pos.x(), pos.y(), pos.z());
+    }
     BlockExtraData getBlockData(int x, int y, int z);
 
     default boolean hasData(int x, int y, int z)
     {
         return getBlockData(x, y, z) != null;
     }
-
     default boolean hasData(BlockPos pos)
     {
         return getBlockData(pos) != null;
@@ -28,9 +39,15 @@ public interface IBlockContainer
 
     void setBlock(Block block);
 
-    void setBlockType(BlockPos pos, BlockType type);
+    default void setBlockType(BlockPos pos, BlockType type)
+    {
+        setBlockType(pos.x(), pos.y(), pos.z(), type);
+    }
     void setBlockType(int x, int y, int z, BlockType type);
 
-    void setBlockData(BlockPos pos, BlockExtraData data);
+    default void setBlockData(BlockPos pos, BlockExtraData data)
+    {
+        setBlockData(pos.x(), pos.y(), pos.z(), data);
+    }
     void setBlockData(int x, int y, int z, BlockExtraData data);
 }
