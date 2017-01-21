@@ -29,7 +29,7 @@ public class LoadingScreen extends YlinorScreen {
     /* Appele lors de la création du screen */
     @Override
     public void show() {
-        /* Définie l'InputProcessor (cf YlinorScreen) */
+        /* Définit l'InputProcessor (cf YlinorScreen) */
         super.show();
 
         /* Prend un objet local d'assets */

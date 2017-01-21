@@ -1,24 +1,22 @@
 package com.ylinor.client;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ylinor.client.util.YlinorFiles;
-import com.ylinor.client.util.settings.GameSettings;
-import com.ylinor.library.api.YlinorApplication;
+import java.io.File;
+import java.io.IOException;
+
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
-
-import java.io.File;
-import java.io.IOException;
+import com.ylinor.client.util.YlinorFiles;
+import com.ylinor.client.util.settings.GameSettings;
+import com.ylinor.library.api.YlinorApplication;
 
 
 /**
@@ -29,13 +27,12 @@ import java.io.IOException;
  * @author Litarvan
  * @since 1.0.0
  */
-public class YlinorClient extends YlinorApplication implements ApplicationListener
-{
+public class YlinorClient extends YlinorApplication
+                implements ApplicationListener {
     /**
      * La verision du client
      */
     public static final String VERSION = "0.0.1";
-
 
     /**
      * YlinorClient instance
@@ -78,59 +75,51 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
      */
     private Screen screen;
 
+    //    /**
+    //     * Instance du système reseau client
+    //     */
+    //    private ClientNetwork<ServerEntity> clientNetwork;
+    //
+    //    /**
+    //     * Protocl de redirection de packet
+    //     */
+    //    private IProtocol<ServerEntity> protocol;
 
-//    /**
-//     * Instance du système reseau client
-//     */
-//    private ClientNetwork<ServerEntity> clientNetwork;
-//
-//    /**
-//     * Protocl de redirection de packet
-//     */
-//    private IProtocol<ServerEntity> protocol;
-
-
-    public YlinorClient()
-    {
+    public YlinorClient() {
+        instance = this;
         ylinor = this;
     }
 
     @Override
-    public void create()
-    {
+    public void create() {
         logger.info("Loading Ylinor Client v" + VERSION);
 
         assetsTime = System.currentTimeMillis();
         assets.preload();
 
-        try
-        {
+        try {
             settings = GameSettings.get(new File(YlinorFiles.getGameFolder(), "settings.json"));
             settings.save(new File(YlinorFiles.getGameFolder(), "settings.json"));
-        } catch(IOException e)
-        {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
 
+        //        protocol = new HandlerProtocol<>();
 
-//        protocol = new HandlerProtocol<>();
-
-//        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
-//        clientNetwork.start();
+        //        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
+        //        clientNetwork.start();
     }
 
     @Override
-    public void render()
-    {
+    public void render() {
         // Clearing screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Assets loading
-        if(assets.update() && !loaded)
-        {
-            if(!preloaded)
-            {
+        if (assets.update() && !loaded) {
+            if (!preloaded) {
                 logger.info("Pre-assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = System.currentTimeMillis();
@@ -139,8 +128,8 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
                 preloaded = true;
 
                 setScreen(new LoadingScreen());
-            } else
-            {
+            }
+            else {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = 0;
@@ -151,77 +140,66 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
         }
 
         // Screen updating
-        if(screen != null)
-        {
+        if (screen != null) {
             screen.render(Gdx.graphics.getDeltaTime());
         }
     }
 
     @Override
-    public void resize(int width, int height)
-    {
-        if(screen != null)
-        {
+    public void resize(int width, int height) {
+        if (screen != null) {
             screen.resize(width, height);
         }
         logger.debug("Window resized : " + width + "x" + height);
     }
 
-    public void setScreen(@NotNull Screen screen)
-    {
-        if(this.screen != null)
-        {
+    public void setScreen(@NotNull Screen screen) {
+        if (this.screen != null) {
             this.screen.hide();
         }
         this.screen = screen;
         this.screen.show();
         this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-
         logger.debug("Setting screen : " + screen.getClass().getSimpleName());
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         logger.info("Closing !");
         assets.dispose();
-//        clientNetwork.end();
+        //        clientNetwork.end();
 
-        if(screen != null) screen.hide();
+        if (screen != null)
+            screen.hide();
 
         logger.info("Bye");
     }
 
-
     @Override
-    public void pause()
-    {
-        if(screen != null) screen.pause();
+    public void pause() {
+        if (screen != null)
+            screen.pause();
     }
 
     @Override
-    public void resume()
-    {
-        if(screen != null) screen.resume();
+    public void resume() {
+        if (screen != null)
+            screen.resume();
     }
-
 
     /**
      * @return the currently active {@link Screen}.
      */
-    public Screen getScreen()
-    {
+    public Screen getScreen() {
         return screen;
     }
 
-    public GameSettings getSettings()
-    {
+    public GameSettings getSettings() {
         return settings;
     }
 
-    public static YlinorClient getYlinor()
-    {
+    public static YlinorClient client() {
         return ylinor;
     }
 }

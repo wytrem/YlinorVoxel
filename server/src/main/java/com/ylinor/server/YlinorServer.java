@@ -1,7 +1,6 @@
 package com.ylinor.server;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.network.ServerNetwork;
 import com.ylinor.library.network.protocol.HandlerProtocol;
@@ -9,15 +8,19 @@ import com.ylinor.library.packets.MyNetworkEntity;
 import com.ylinor.library.packets.Packet0KeepAlive;
 
 
-public class YlinorServer extends YlinorApplication
-{
+public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
 
-    public static void main(String[] args)
-    {
+    public YlinorServer() {
+        instance = this;
+        server = this;
+    }
+
+    public static void main(String[] args) {
         HandlerProtocol<MyNetworkEntity> protocol = new HandlerProtocol<>();
         protocol.registerPacket(Packet0KeepAlive.class, (packet, sender, receiver) -> {
-            System.out.println("J'ai reçu un packet " + packet.getRandomID() + " de l'ip " + sender.getRemoteAddress().toString() + " par le manager " + receiver);
+            System.out.println("J'ai reçu un packet " + packet.getRandomID() + " de l'ip " + sender.getRemoteAddress()
+                                                                                                   .toString() + " par le manager " + receiver);
             receiver.sendPacket(new Packet0KeepAlive(3), sender);
         });
 
@@ -25,8 +28,7 @@ public class YlinorServer extends YlinorApplication
         serverNetwork.start();
     }
 
-    public static YlinorServer getServer()
-    {
+    public static YlinorServer server() {
         return server;
     }
 }
