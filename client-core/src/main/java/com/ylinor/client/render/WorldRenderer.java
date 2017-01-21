@@ -1,11 +1,15 @@
 package com.ylinor.client.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.RenderableProvider;
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
@@ -25,17 +29,20 @@ public class WorldRenderer implements RenderableProvider, Disposable {
     Material standardBlockMaterial;
     TextureRegion[][] tiles;
     Texture texture;
-    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 2;
+    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 3;
 
     public WorldRenderer(World world, RenderGlobal renderGlobal) {
         this.world = world;
         this.renderGlobal = renderGlobal;
+        texture = new Texture(Gdx.files.internal("img/tiles.png"));
+        this.tiles = TextureRegion.split(texture, 32, 32);
+        standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
     }
     
     public void update()
     {
-        renderChunkX = ((int) renderGlobal.camera.position.x) >> 4;
-        renderChunkZ = ((int) renderGlobal.camera.position.z) >> 4;
+        renderChunkX = ((int) (renderGlobal.camera.position.x) >> 4) - renderChunkSize / 2;
+        renderChunkZ = ((int) (renderGlobal.camera.position.z) >> 4) - renderChunkSize / 2;
     }
 
     @Override
@@ -55,13 +62,13 @@ public class WorldRenderer implements RenderableProvider, Disposable {
         
         if (infos == null)
         {
-            infos = new ChunkRenderInfos();
+            infos = new ChunkRenderInfos(this);
             chunkRenderInfos.put(chunk.id, infos);
         }
 
         if (chunk.needsRenderUpdate)
         {
-            infos.update(chunk, new ChunkCache(chunk, world), tiles);
+            infos.update(chunk, new ChunkCache(chunk, world));
 
             chunk.needsRenderUpdate = false;
         }
@@ -75,7 +82,7 @@ public class WorldRenderer implements RenderableProvider, Disposable {
         renderables.add(renderable);
     }
     
-    private BoundingBox bb;
+    private BoundingBox bb = new BoundingBox();
     
     private BoundingBox getBoudingBox(Chunk chunk)
     {

@@ -12,12 +12,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.render.RenderGlobal;
+import com.ylinor.client.render.Test;
+import com.ylinor.client.render.VertexFormats;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
+import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.world.storage.StorageManager;
 
 
 /**
@@ -108,8 +112,15 @@ public class YlinorClient extends YlinorApplication
             e.printStackTrace();
         }
 
-        renderGlobal = new RenderGlobal();
-        
+        Test test = new Test();
+
+        World world = new World(test);
+        test.setWorld(world);
+
+        renderGlobal = new RenderGlobal(world);
+        System.out.println(VertexFormats.BLOCKS.toGdx());
+
+
         //        protocol = new HandlerProtocol<>();
 
         //        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
@@ -148,8 +159,10 @@ public class YlinorClient extends YlinorApplication
         if (screen != null) {
             screen.render(Gdx.graphics.getDeltaTime());
         }
-        
-        renderGlobal.render();
+        else {
+            if (loaded)
+                renderGlobal.render();
+        }
     }
 
     @Override
@@ -175,7 +188,7 @@ public class YlinorClient extends YlinorApplication
             Gdx.input.setInputProcessor(renderGlobal.getCameraController());
         }
 
-        logger.debug("Setting screen : " + screen.getClass().getSimpleName());
+        logger.debug("Setting screen : " + (screen == null ? "null" : screen.getClass().getSimpleName()));
     }
 
     @Override

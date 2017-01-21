@@ -7,6 +7,7 @@ public class BlockType
 {
     public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
     public static final BlockType air = new BlockType((short) 0);
+    public static final BlockType dirt = new BlockType((short) 1);
 
     private short id;
 

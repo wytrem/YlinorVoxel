@@ -1,17 +1,17 @@
 package com.ylinor.client.render;
 
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.library.api.world.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
+import com.ylinor.library.util.DebugUtils;
 
 
 public class ChunkRenderInfos implements Disposable {
-    private static final VertexBuffer vertexBuffer = new VertexBuffer(1024);
+    private static final VertexBuffer vertexBuffer = new VertexBuffer(2097152);
 
     public static final int VERTEX_SIZE = VertexFormats.BLOCKS.getStride();
     static final int MAX_VERTICES = Chunk.SIZE_X * Chunk.SIZE_Y * Chunk.SIZE_Z * 6 * 4;
@@ -29,13 +29,17 @@ public class ChunkRenderInfos implements Disposable {
     public void update(Chunk chunk, IBlockContainer neighbours) {
         Vector3 offset = new Vector3(chunk.x * Chunk.SIZE_X, 0, chunk.z * Chunk.SIZE_Z);
 
+        vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
+        
+        DebugUtils.timeStart();
+        
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
                     BlockType tile = neighbours.getBlockType(x, y, z);
 
                     if (tile != BlockType.air) {
-                        TextureRegion region = renderer.tiles[0][0];
+                        TextureRegion region = renderer.tiles[1][1];
 
                         if (y == Chunk.SIZE_Y - 1 || !neighbours.getBlockType(x, y + 1, z)
                                                                 .isOpaque()) {
@@ -66,13 +70,16 @@ public class ChunkRenderInfos implements Disposable {
                 }
             }
         }
+        
+        DebugUtils.printTime("build vertices");
+        
+        vertexBuffer.finishDrawing();
 
-        mesh.setVertices(vertices, 0, vertexOffset);
-        numIndices = indicesIn(vertexOffset);
+        numIndices = Uploader.upload(vertexBuffer, mesh);
 
         chunk.needsRenderUpdate = false;
     }
-
+    
     public static int indicesIn(int numComponents) {
         return numComponents * 6 / 4;
     }

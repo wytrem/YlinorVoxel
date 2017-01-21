@@ -1,5 +1,7 @@
 package com.ylinor.client.screen.pregame;
 
+import static com.ylinor.client.YlinorClient.client;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -16,6 +18,7 @@ public class MainMenuScreen extends YlinorScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                client().setScreen(null);
             }
         });
         table.add(play);

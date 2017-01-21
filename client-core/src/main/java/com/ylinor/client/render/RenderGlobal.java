@@ -3,14 +3,19 @@ package com.ylinor.client.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
+import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.render.camera.FirstPersonCameraController;
-
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
+import com.ylinor.library.api.world.World;
 
 
 public class RenderGlobal implements Disposable {
@@ -20,9 +25,15 @@ public class RenderGlobal implements Disposable {
     Camera camera;
     FirstPersonCameraController cameraController;
     Frustum cameraFrustum;
+    Environment environment;
+    WorldRenderer terrainRenderer;
 
-    public RenderGlobal() {
-        modelBatch = new ModelBatch();
+    public RenderGlobal(World world) {
+        DefaultShader.Config shaderConfig = new Config();
+
+        shaderConfig.defaultCullFace = GL20.GL_FRONT;
+
+        modelBatch = new ModelBatch(new DefaultShaderProvider(shaderConfig));
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(10f, 10f, 10f);
         camera.lookAt(0, 0, 0);
@@ -30,12 +41,26 @@ public class RenderGlobal implements Disposable {
         camera.far = 45f;
         camera.update();
         cameraController = new FirstPersonCameraController(camera);
+
+        camera.position.set(0, 258, 0);
+
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+        environment.set(new ColorAttribute(ColorAttribute.Fog, 0.13f, 0.13f, 0.13f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        terrainRenderer = new WorldRenderer(world, this);
+
+        cameraFrustum = new Frustum();
     }
 
     public void render() {
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClearColor(0.5f, 0.7f, 0.9f, 1.0f);
         update();
 
         modelBatch.begin(camera);
+        modelBatch.render(terrainRenderer, environment);
 
         // Render terrain
 
@@ -45,13 +70,14 @@ public class RenderGlobal implements Disposable {
     }
 
     private void onChunkChanged() {
-        
+
     }
 
     private void update() {
         cameraController.update();
         camera.update();
         cameraFrustum.update(camera.invProjectionView);
+        terrainRenderer.update();
     }
 
     public InputAdapter getCameraController() {
