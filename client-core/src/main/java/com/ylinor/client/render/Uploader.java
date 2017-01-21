@@ -1,12 +1,49 @@
 package com.ylinor.client.render;
 
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
 import com.badlogic.gdx.graphics.Mesh;
 
 
 public class Uploader {
-    public static void upload(VertexBuffer buffer, Mesh mesh) {
-        mesh.setIndices(buffer.getIndicesBuffer().asShortBuffer().array(), 0, buffer.getIndicesCount());
-        mesh.setVertices(buffer.getVertexBuffer().asFloatBuffer().array(), 0, buffer.getVertexCount());
+    private static short[] indices = new short[2048];
+    private static float[] vertexes = new float[1024];
+    
+    private static int size;
+
+    public synchronized static int upload(VertexBuffer buffer, Mesh mesh) {
+        {
+            FloatBuffer vertexesBuffer = buffer.getVertexBuffer().asFloatBuffer();
+            
+            size = vertexesBuffer.remaining();
+            
+            if (vertexes.length < size) {
+                vertexes = new float[size];
+            }
+            
+            vertexesBuffer.get(vertexes, 0, size);
+            
+            mesh.setVertices(vertexes, 0, size);
+        }
+        
+        {
+            ShortBuffer indicesBuffer = buffer.getIndicesBuffer().asShortBuffer();
+            
+            size = indicesBuffer.remaining();
+
+            if (indices.length < size) {
+                indices = new short[size];
+            }
+            
+            indicesBuffer.get(indices, 0, size);
+            
+            mesh.setIndices(indices, 0, size);
+        }
+
+        
         buffer.reset();
+        
+        return size;
     }
 }

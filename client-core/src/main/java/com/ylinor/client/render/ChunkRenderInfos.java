@@ -10,82 +10,57 @@ import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
 
 
-public class ChunkRenderInfos implements Disposable
-{
-    public static final int VERTEX_SIZE = /* Position */ 3 + /* Normal */ 3 + /* UV */ 2;
-    static final int maxVertices = Chunk.SIZE_X * Chunk.SIZE_Y * Chunk.SIZE_Z * 6 * 4 * VERTEX_SIZE;
+public class ChunkRenderInfos implements Disposable {
+    private static final VertexBuffer vertexBuffer = new VertexBuffer(1024);
 
-    static final short[] indices = new short[indicesIn(maxVertices)];
-    public static final float[] vertices = new float[maxVertices];
-
-    static
-    {
-        short j = 0;
-        for (int i = 0; i < indices.length; i += 6, j += 4)
-        {
-            indices[i + 0] = (short) (j + 0);
-            indices[i + 1] = (short) (j + 1);
-            indices[i + 2] = (short) (j + 2);
-            indices[i + 3] = (short) (j + 2);
-            indices[i + 4] = (short) (j + 3);
-            indices[i + 5] = (short) (j + 0);
-        }
-    }
+    public static final int VERTEX_SIZE = VertexFormats.BLOCKS.getStride();
+    static final int MAX_VERTICES = Chunk.SIZE_X * Chunk.SIZE_Y * Chunk.SIZE_Z * 6 * 4;
 
     public final Mesh mesh;
     public int numIndices;
 
-    public ChunkRenderInfos()
-    {
-        mesh = new Mesh(true, maxVertices, indices.length, VertexAttribute.Position(), VertexAttribute.Normal(), VertexAttribute.TexCoords(0));
-        mesh.setIndices(indices);
+    WorldRenderer renderer;
+
+    public ChunkRenderInfos(WorldRenderer renderer) {
+        this.renderer = renderer;
+        mesh = new Mesh(true, MAX_VERTICES, MAX_VERTICES * 2, VertexFormats.BLOCKS.toGdx());
     }
 
-    public void update(Chunk chunk, IBlockContainer neighbours, TextureRegion[][] tiles)
-    {
+    public void update(Chunk chunk, IBlockContainer neighbours) {
         Vector3 offset = new Vector3(chunk.x * Chunk.SIZE_X, 0, chunk.z * Chunk.SIZE_Z);
-        int vertexOffset = 0;
 
-        for (int x = 0; x < Chunk.SIZE_X; x++)
-        {
-            for (int y = 0; y < Chunk.SIZE_Y; y++)
-            {
-                for (int z = 0; z < Chunk.SIZE_Z; z++)
-                {
+        for (int x = 0; x < Chunk.SIZE_X; x++) {
+            for (int y = 0; y < Chunk.SIZE_Y; y++) {
+                for (int z = 0; z < Chunk.SIZE_Z; z++) {
                     BlockType tile = neighbours.getBlockType(x, y, z);
 
-                    if (tile != BlockType.air)
-                    {
-                        TextureRegion region = tiles[tile.getTextureIndex() / 16][tile.getTextureIndex() % 16];
+                    if (tile != BlockType.air) {
+                        TextureRegion region = renderer.tiles[0][0];
 
-                        if (y == Chunk.SIZE_Y - 1 || !neighbours.getBlockType(x, y + 1, z).isOpaque())
-                        {
-                            vertexOffset = createTop(offset, x, y, z, vertexOffset, region);
-                        }
-
-                        if (y == 0 || !neighbours.getBlockType(x, y - 1, z).isOpaque())
-                        {
-                            vertexOffset = createBottom(offset, x, y, z, vertexOffset, region);
+                        if (y == Chunk.SIZE_Y - 1 || !neighbours.getBlockType(x, y + 1, z)
+                                                                .isOpaque()) {
+                            createTop(vertexBuffer, offset, x, y, z, region);
                         }
 
-                        if (!neighbours.getBlockType(x + 1, y, z).isOpaque())
-                        {
-                            vertexOffset = createRight(offset, x, y, z, vertexOffset, region);
+                        if (y == 0 || !neighbours.getBlockType(x, y - 1, z)
+                                                 .isOpaque()) {
+                            createBottom(vertexBuffer, offset, x, y, z, region);
                         }
-                        
-                        if (!neighbours.getBlockType(x - 1, y, z).isOpaque())
-                        {
-                            vertexOffset = createLeft(offset, x, y, z, vertexOffset, region);
+
+                        if (!neighbours.getBlockType(x + 1, y, z).isOpaque()) {
+                            createRight(vertexBuffer, offset, x, y, z, region);
                         }
-                        
-                        if (!neighbours.getBlockType(x, y, z + 1).isOpaque())
-                        {
-                            vertexOffset = createBack(offset, x, y, z, vertexOffset, region);
+
+                        if (!neighbours.getBlockType(x - 1, y, z).isOpaque()) {
+                            createLeft(vertexBuffer, offset, x, y, z, region);
                         }
-                        
-                        if (!neighbours.getBlockType(x, y, z - 1).isOpaque())
-                        {
-                            vertexOffset = createFront(offset, x, y, z, vertexOffset, region);
+
+                        if (!neighbours.getBlockType(x, y, z + 1).isOpaque()) {
+                            createBack(vertexBuffer, offset, x, y, z, region);
+                        }
+
+                        if (!neighbours.getBlockType(x, y, z - 1).isOpaque()) {
+                            createFront(vertexBuffer, offset, x, y, z, region);
                         }
                     }
                 }
@@ -97,384 +72,130 @@ public class ChunkRenderInfos implements Disposable
 
         chunk.needsRenderUpdate = false;
     }
-    
-    
-    public static int indicesIn(int numComponents)
-    {
+
+    public static int indicesIn(int numComponents) {
         return numComponents * 6 / 4;
     }
 
-    public static int createTop(Vector3 offset, int x, int y, int z, int vertexOffset, TextureRegion region)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV2();
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV2();
-
-        return vertexOffset;
+    public static void createTop(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {
+        buffer.pos(offset.x + x, offset.y + y + 1, offset.z + z)
+              .normal(0, 1, 0)
+              .texCoords(region.getU(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y + 1, offset.z + z)
+              .normal(0, 1, 0)
+              .texCoords(region.getU2(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y + 1, offset.z + z + 1)
+              .normal(0, 1, 0)
+              .texCoords(region.getU2(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y + 1, offset.z + z + 1)
+              .normal(0, 1, 0)
+              .texCoords(region.getU(), region.getV2())
+              .endVertex();
     }
 
-    public static int createBottom(Vector3 offset, int x, int y, int z, int vertexOffset, TextureRegion region)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV2();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV2();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV();
-        return vertexOffset;
+    public static void createBottom(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {
+        buffer.pos(offset.x + x, offset.y + y, offset.z + z)
+              .normal(0, -1, 0)
+              .texCoords(region.getU(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y, offset.z + z + 1)
+              .normal(0, -1, 0)
+              .texCoords(region.getU(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y, offset.z + z + 1)
+              .normal(0, -1, 0)
+              .texCoords(region.getU2(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y, offset.z + z)
+              .normal(0, -1, 0)
+              .texCoords(region.getU2(), region.getV())
+              .endVertex();
     }
 
-    public static int createLeft(Vector3 offset, int x, int y, int z, int vertexOffset, TextureRegion region)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV2();
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV2();
-
-        return vertexOffset;
+    public static void createLeft(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {
+        buffer.pos(offset.x + x, offset.y + y, offset.z + z)
+              .normal(-1, 0, 0)
+              .texCoords(region.getU(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y + 1, offset.z + z)
+              .normal(-1, 0, 0)
+              .texCoords(region.getU(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y + 1, offset.z + z + 1)
+              .normal(-1, 0, 0)
+              .texCoords(region.getU2(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y, offset.z + z + 1)
+              .normal(-1, 0, 0)
+              .texCoords(region.getU2(), region.getV2())
+              .endVertex();
     }
 
-    public static int createRight(Vector3 offset, int x, int y, int z, int vertexOffset, TextureRegion region)
-    {
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV2();
+    public static void createRight(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {
 
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV2();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV();
-        return vertexOffset;
+        buffer.pos(offset.x + x + 1, offset.y + y, offset.z + z)
+              .normal(1, 0, 0)
+              .texCoords(region.getU(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y, offset.z + z + 1)
+              .normal(1, 0, 0)
+              .texCoords(region.getU2(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y + 1, offset.z + z + 1)
+              .normal(1, 0, 0)
+              .texCoords(region.getU2(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y + 1, offset.z + z)
+              .normal(1, 0, 0)
+              .texCoords(region.getU(), region.getV())
+              .endVertex();
     }
 
-    public static int createFront(Vector3 offset, int x, int y, int z, int vertexOffset, TextureRegion region)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV2();
+    public static void createFront(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {
 
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV2();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 1;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV();
-
-        return vertexOffset;
+        buffer.pos(offset.x + x, offset.y + y, offset.z + z)
+              .normal(0, 0, 1)
+              .texCoords(region.getU2(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y, offset.z + z)
+              .normal(0, 0, 1)
+              .texCoords(region.getU(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y + 1, offset.z + z)
+              .normal(0, 0, 1)
+              .texCoords(region.getU(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y + 1, offset.z + z)
+              .normal(0, 0, 1)
+              .texCoords(region.getU2(), region.getV())
+              .endVertex();
     }
 
-    public static int createBack(Vector3 offset, int x, int y, int z, int vertexOffset, TextureRegion region)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV2();
+    public static void createBack(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {
 
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = region.getU2();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV();
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = 0;
-        vertices[vertexOffset++] = -1;
-        vertices[vertexOffset++] = region.getU();
-        vertices[vertexOffset++] = region.getV2();
-
-        return vertexOffset;
-    }
-    
-    public static int createTop(Vector3 offset, int x, int y, int z, int vertexOffset)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        return vertexOffset;
-    }
-
-    public static int createBottom(Vector3 offset, int x, int y, int z, int vertexOffset)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-        return vertexOffset;
-    }
-
-    public static int createLeft(Vector3 offset, int x, int y, int z, int vertexOffset)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        return vertexOffset;
-    }
-
-    public static int createRight(Vector3 offset, int x, int y, int z, int vertexOffset)
-    {
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-        return vertexOffset;
-    }
-
-    public static int createFront(Vector3 offset, int x, int y, int z, int vertexOffset)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z;
-
-        return vertexOffset;
-    }
-
-    public static int createBack(Vector3 offset, int x, int y, int z, int vertexOffset)
-    {
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y + 1;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        vertices[vertexOffset++] = offset.x + x + 1;
-        vertices[vertexOffset++] = offset.y + y;
-        vertices[vertexOffset++] = offset.z + z + 1;
-
-        return vertexOffset;
+        buffer.pos(offset.x + x, offset.y + y, offset.z + z + 1)
+              .normal(0, 0, -1)
+              .texCoords(region.getU2(), region.getV2())
+              .endVertex();
+        buffer.pos(offset.x + x, offset.y + y + 1, offset.z + z + 1)
+              .normal(0, 0, -1)
+              .texCoords(region.getU2(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y + 1, offset.z + z + 1)
+              .normal(0, 0, -1)
+              .texCoords(region.getU(), region.getV())
+              .endVertex();
+        buffer.pos(offset.x + x + 1, offset.y + y, offset.z + z + 1)
+              .normal(0, 0, -1)
+              .texCoords(region.getU(), region.getV2())
+              .endVertex();
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         mesh.dispose();
     }
 }

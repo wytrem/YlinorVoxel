@@ -1,8 +1,13 @@
 package com.ylinor.client.render;
 
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.RenderableProvider;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
@@ -14,13 +19,23 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 
 
 public class WorldRenderer implements RenderableProvider, Disposable {
-    private World world;
+    World world;
     TLongObjectMap<ChunkRenderInfos> chunkRenderInfos = new TLongObjectHashMap<ChunkRenderInfos>();
     RenderGlobal renderGlobal;
-    
+    Material standardBlockMaterial;
+    TextureRegion[][] tiles;
+    Texture texture;
+    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 2;
+
     public WorldRenderer(World world, RenderGlobal renderGlobal) {
         this.world = world;
         this.renderGlobal = renderGlobal;
+    }
+    
+    public void update()
+    {
+        renderChunkX = ((int) renderGlobal.camera.position.x) >> 4;
+        renderChunkZ = ((int) renderGlobal.camera.position.z) >> 4;
     }
 
     @Override
@@ -31,7 +46,7 @@ public class WorldRenderer implements RenderableProvider, Disposable {
 
     private void renderChunk(Array<Renderable> renderables, Pool<Renderable> pool, Chunk chunk)
     {
-        if (!renderGlobal.cameraFrustum.boundsInFrustum(chunk.bb))
+        if (!renderGlobal.cameraFrustum.boundsInFrustum(getBoudingBox(chunk)))
         {
             return;
         }
@@ -59,6 +74,15 @@ public class WorldRenderer implements RenderableProvider, Disposable {
         renderable.material = standardBlockMaterial;
         renderables.add(renderable);
     }
+    
+    private BoundingBox bb;
+    
+    private BoundingBox getBoudingBox(Chunk chunk)
+    {
+        bb.min.set(chunk.x * Chunk.SIZE_X, 0, chunk.z * Chunk.SIZE_Z);
+        bb.max.set((chunk.x + 1) * Chunk.SIZE_X, Chunk.SIZE_Y, (chunk.z + 1) * Chunk.SIZE_Z);
+        return bb;
+    }
 
     private void getTerrain(Array<Renderable> renderables, Pool<Renderable> pool)
     {
@@ -66,7 +90,7 @@ public class WorldRenderer implements RenderableProvider, Disposable {
         {
             for (int j = renderChunkZ; j < renderChunkZ + renderChunkSize; j++)
             {
-                renderChunk(renderables, pool, world.chunkProvider.getChunkAt(i, j));
+                renderChunk(renderables, pool, world.getChunk(i, j));
             }
         }
     }

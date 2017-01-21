@@ -18,6 +18,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     private World world;
     public final int x, z;
     public final long id;
+    public boolean needsRenderUpdate;
 
     public Chunk(World world, int chunkX, int chunkZ) {
         this.world = world;
