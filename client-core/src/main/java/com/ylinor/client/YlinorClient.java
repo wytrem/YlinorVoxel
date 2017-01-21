@@ -11,6 +11,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.ylinor.client.render.RenderGlobal;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
@@ -75,6 +76,8 @@ public class YlinorClient extends YlinorApplication
      */
     private Screen screen;
 
+    private RenderGlobal renderGlobal;
+
     //    /**
     //     * Instance du système reseau client
     //     */
@@ -105,6 +108,8 @@ public class YlinorClient extends YlinorApplication
             e.printStackTrace();
         }
 
+        renderGlobal = new RenderGlobal();
+        
         //        protocol = new HandlerProtocol<>();
 
         //        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
@@ -143,6 +148,8 @@ public class YlinorClient extends YlinorApplication
         if (screen != null) {
             screen.render(Gdx.graphics.getDeltaTime());
         }
+        
+        renderGlobal.render();
     }
 
     @Override
@@ -158,8 +165,15 @@ public class YlinorClient extends YlinorApplication
             this.screen.hide();
         }
         this.screen = screen;
-        this.screen.show();
-        this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        if (this.screen != null) {
+            this.screen.show();
+            this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
+        else {
+            Gdx.input.setCursorCatched(true);
+            Gdx.input.setInputProcessor(renderGlobal.getCameraController());
+        }
 
         logger.debug("Setting screen : " + screen.getClass().getSimpleName());
     }

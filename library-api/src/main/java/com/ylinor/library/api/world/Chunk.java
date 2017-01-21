@@ -16,7 +16,19 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     private TShortObjectMap<BlockExtraData> blockDatas = new TShortObjectHashMap<>(64);
     private short[][][] blocks;
     private World world;
-    private int chunkX, chunkZ;
+    public final int x, z;
+    public final long id;
+
+    public Chunk(World world, int chunkX, int chunkZ) {
+        this.world = world;
+        this.x = chunkX;
+        this.z = chunkZ;
+        this.id = chunkXZ2Int(chunkX, chunkZ);
+    }
+    
+    public World getWorld() {
+        return world;
+    }
 
     @Override
     public Block getBlock(int x, int y, int z) {
@@ -94,7 +106,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     }
 
     private BlockPos _newBlockPos(int x, int y, int z) {
-        return new BlockPos(chunkX << 4 + x, y, chunkZ << 4 + z);
+        return new BlockPos(x << 4 + x, y, z << 4 + z);
     }
 
     @Override
@@ -180,5 +192,12 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 
     public static short posInChunkToShort(BlockPos worldRelative) {
         return posInChunkToShort(worldRelative.x & 15, worldRelative.y, worldRelative.z & 15);
+    }
+
+    /**
+     * converts a chunk coordinate pair to a long (suitable for hashing)
+     */
+    public static long chunkXZ2Int(int chunkX, int chunkZ) {
+        return chunkX & 4294967295L | (chunkZ & 4294967295L) << 32;
     }
 }

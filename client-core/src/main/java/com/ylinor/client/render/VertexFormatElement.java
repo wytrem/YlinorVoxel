@@ -1,19 +1,24 @@
 package com.ylinor.client.render;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
+
 public class VertexFormatElement {
-    private final Type type;
+    private final PrimitiveType type;
     private final Usage usage;
-    private final int index;
     private final int elementCount;
 
-    public VertexFormatElement(int index, Type type, Usage usage, int count) {
+    public VertexFormatElement(PrimitiveType type, Usage usage, int count) {
         this.type = type;
         this.usage = usage;
-        this.index = index;
         this.elementCount = count;
     }
 
-    public final Type getType() {
+    public final PrimitiveType getType() {
         return this.type;
     }
 
@@ -23,10 +28,6 @@ public class VertexFormatElement {
 
     public final int getElementCount() {
         return this.elementCount;
-    }
-
-    public final int getIndex() {
-        return this.index;
     }
 
     public String toString() {
@@ -41,67 +42,43 @@ public class VertexFormatElement {
         return this.usage == Usage.POSITION;
     }
 
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        else if (other != null && this.getClass() == other.getClass()) {
-            VertexFormatElement vertexformatelement = (VertexFormatElement) other;
-            return this.elementCount != vertexformatelement.elementCount ? false : (this.index != vertexformatelement.index ? false : (this.type != vertexformatelement.type ? false : this.usage == vertexformatelement.usage));
-        }
-        else {
-            return false;
-        }
-    }
-
+    @Override
     public int hashCode() {
-        int i = this.type.hashCode();
-        i = 31 * i + this.usage.hashCode();
-        i = 31 * i + this.index;
-        i = 31 * i + this.elementCount;
-        return i;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + elementCount;
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + ((usage == null) ? 0 : usage.hashCode());
+        return result;
     }
 
-    public static enum Type {
-        FLOAT(Float.BYTES, "Float", 5126),
-        UBYTE(Byte.BYTES, "Unsigned Byte", 5121),
-        BYTE(Byte.BYTES, "Byte", 5120),
-        USHORT(Short.BYTES, "Unsigned Short", 5123),
-        SHORT(Short.BYTES, "Short", 5122),
-        UINT(Integer.BYTES, "Unsigned Int", 5125),
-        INT(Integer.BYTES, "Int", 5124);
-
-        private final int size;
-        private final String displayName;
-        private final int glConstant;
-
-        private Type(int sizeIn, String displayNameIn, int glConstantIn) {
-            this.size = sizeIn;
-            this.displayName = displayNameIn;
-            this.glConstant = glConstantIn;
-        }
-
-        public int getSize() {
-            return this.size;
-        }
-
-        public String getDisplayName() {
-            return this.displayName;
-        }
-
-        public int getGlConstant() {
-            return this.glConstant;
-        }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VertexFormatElement other = (VertexFormatElement) obj;
+        if (elementCount != other.elementCount)
+            return false;
+        if (type != other.type)
+            return false;
+        if (usage != other.usage)
+            return false;
+        return true;
     }
 
     public static enum Usage {
         POSITION("Position"),
         NORMAL("Normal"),
         COLOR("Vertex Color"),
-        UV("UV"),
+        TEX_COORDS("Tex Coords"),
         MATRIX("Bone Matrix"),
         BLEND_WEIGHT("Blend Weight"),
-        PADDING("Padding");
+        PADDING("Padding"),
+        OTHER("Other");
 
         private final String displayName;
 
@@ -111,6 +88,65 @@ public class VertexFormatElement {
 
         public String getDisplayName() {
             return this.displayName;
+        }
+    }
+
+    private int gdxUsage() {
+        switch (this.usage) {
+            case POSITION:
+                return com.badlogic.gdx.graphics.VertexAttributes.Usage.Position;
+            case COLOR:
+                if (type == PrimitiveType.BYTE) {
+                    return com.badlogic.gdx.graphics.VertexAttributes.Usage.ColorPacked;
+                }
+                return com.badlogic.gdx.graphics.VertexAttributes.Usage.ColorUnpacked;
+            case NORMAL:
+                return com.badlogic.gdx.graphics.VertexAttributes.Usage.Normal;
+            case TEX_COORDS:
+                return com.badlogic.gdx.graphics.VertexAttributes.Usage.TextureCoordinates;
+            default:
+                return 0;
+        }
+    }
+
+    private String gdxAlias() {
+        switch (this.usage) {
+            case POSITION:
+                return ShaderProgram.POSITION_ATTRIBUTE;
+            case COLOR:
+                return ShaderProgram.COLOR_ATTRIBUTE;
+            case NORMAL:
+                return ShaderProgram.NORMAL_ATTRIBUTE;
+            case TEX_COORDS:
+                return ShaderProgram.TEXCOORD_ATTRIBUTE + "0";
+            default:
+                return "unknown";
+        }
+    }
+
+    public VertexAttribute toGdx() {
+        try {
+            return gdxAttribute.newInstance(gdxUsage(), elementCount, type.getGlConstant(), false, gdxAlias());
+        }
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
+    private static Constructor<VertexAttribute> gdxAttribute;
+
+    static {
+        try {
+            gdxAttribute = VertexAttribute.class.getDeclaredConstructor(int.class, int.class, int.class, boolean.class, String.class);
+            gdxAttribute.setAccessible(true);
+        }
+        catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 }

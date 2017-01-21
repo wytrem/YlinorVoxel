@@ -33,6 +33,7 @@ public class YlinorScreen extends Stage implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setCursorCatched(false);
         Gdx.input.setInputProcessor(this);
     }
 
