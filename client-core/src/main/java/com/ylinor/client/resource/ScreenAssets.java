@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 
 /**
- * Contient tous les assets des screens
+ * Contains all screens's assets
  *
  * @author Litarvan
  * @since 1.0.0

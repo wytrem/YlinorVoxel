@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * Marque un asset/getter d'asset, comme étant préchargé, c'est à dire chargé
- * avant l'affiche du screen de loading, car utilisé avant/pendant celui-ci.
+ * Use for assets/assets's getter as preloaded (loaded before displaying the loading screen)
  *
  * @author Litarvan
  * @since 1.0.0

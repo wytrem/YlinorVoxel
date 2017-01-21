@@ -1,8 +1,8 @@
 package com.ylinor.client.resource;
 
 /**
- * Représente une classe d'assets (ex: {@link ScreenAssets}) contenant des
- * assets preloadable via la fonction {@link #preload()}
+ * Representing an assets's class (ex: {@link ScreenAssets}) that contains
+ * preloadable assets through the function {@link #preload()}
  *
  * @author Litarvan
  * @since 1.0.0

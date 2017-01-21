@@ -1,148 +1,168 @@
 package com.ylinor.library.api.world;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector2i;
-
 import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.util.math.Sizeable3D;
-import com.ylinor.library.util.spring.Assert;
 
-import gnu.trove.iterator.TShortObjectIterator;
 import gnu.trove.map.TShortObjectMap;
 import gnu.trove.map.hash.TShortObjectHashMap;
 
 
-/**
- * A world chunk.
- * 
- * @author Litarvam
- * @author wytrem
- * @since 1.0.0
- */
-public class Chunk implements Sizeable3D {
-    public static final int CHUNK_SIZE_X = 16;
-    public static final int CHUNK_SIZE_Y = 256;
-    public static final int CHUNK_SIZE_Z = 16;
+public class Chunk implements IBlockContainer, Sizeable3D {
+    public static final short SIZE_X = 16;
+    public static final short SIZE_Y = 256;
+    public static final short SIZE_Z = 16;
 
-    @NotNull
+    private TShortObjectMap<Block> blockCache = new TShortObjectHashMap<>(64);
+    private TShortObjectMap<BlockExtraData> blockDatas = new TShortObjectHashMap<>(64);
+    private short[][][] blocks;
     private World world;
+    private int chunkX, chunkZ;
 
-    @NotNull
-    private Vector2i position;
-
-    @NotNull
-    private short[][][] blockIds;
-
-    private TShortObjectMap<Block> blocks;
-
-    public Chunk(@NotNull World world, @NotNull Vector2i position) throws IllegalArgumentException {
-        Assert.notNull(world, "world cannot be null");
-        Assert.notNull(position, "position cannot be null");
-
-        this.world = world;
-        this.position = position;
-        this.blockIds = new short[CHUNK_SIZE_X][CHUNK_SIZE_Y][CHUNK_SIZE_Z];
-        this.blocks = new TShortObjectHashMap<>(64);
+    @Override
+    public Block getBlock(int x, int y, int z) {
+        return _blockAt(posInChunkToShort(x, y, z));
     }
 
-    public void setBlock(int x, int y, int z, @Nullable Block block) {
-        short pos = posInChunkToShort(x, y, z);
-        Block previous = blocks.get(pos);
-
-        if (previous != null) {
-            synchronized (previous) {
-                if (block != null) {
-                    blocks.put(pos, block);
-                }
-                else {
-                    blocks.remove(pos);
-                }
-            }
-        }
-        else {
-            if (block != null) {
-                blocks.put(pos, block);
-            }
-            else {
-                blocks.remove(pos);
-            }
-        }
+    private void _uncacheBlock(short pos) {
+        Block block = _blockAt(pos);
 
         if (block != null) {
-            blockIds[x][y][z] = (short) block.getTypeId();
-        }
-        else {
-            blockIds[x][y][z] = (short) 0;
-        }
-    }
-
-    public void setBlockId(int x, int y, int z, short id) {
-        short pos = posInChunkToShort(x, y, z);
-        Block previous = blocks.get(id);
-
-        if (previous != null) {
-            synchronized (previous) {
-                blocks.remove(pos);
+            synchronized (block) {
+                synchronized (blockCache) {
+                    blockCache.remove(pos);
+                }
             }
         }
-
-        blockIds[x][y][z] = id;
-    }
-
-    public short getBlockId(int x, int y, int z) {
-        return blockIds[x][y][z];
-    }
-
-    @NotNull
-    public Block getBlock(int x, int y, int z) {
-        short pos = posInChunkToShort(x, y, z);
-        Block block = blocks.get(pos);
-
-        if (block == null) {
-            block = new Block(getBlockId(x, y, z), new BlockPos(x() * CHUNK_SIZE_X + x, y, z() * CHUNK_SIZE_Z + z));
-            blocks.put(pos, block);
+        else {
+            synchronized (blockCache) {
+                blockCache.remove(pos);
+            }
         }
+    }
 
+    private void _cacheBlock(short pos, Block block) {
+        Block previousBlock = _blockAt(pos);
+
+        if (previousBlock != null) {
+            synchronized (previousBlock) {
+                synchronized (blockCache) {
+                    blockCache.put(pos, block);
+                }
+            }
+        }
+        else {
+            synchronized (blockCache) {
+                blockCache.put(pos, block);
+            }
+        }
+    }
+
+    private Block _blockAt(short pos) {
+        synchronized (blockCache) {
+            return blockCache.get(pos);
+        }
+    }
+
+    private short _typeAt(int x, int y, int z) {
+        synchronized (blocks) {
+            return blocks[x][y][z];
+        }
+    }
+
+    private void _setTypeAt(int x, int y, int z, short type) {
+        synchronized (blocks) {
+            blocks[x][y][z] = type;
+        }
+    }
+
+    private BlockExtraData _dataAt(short pos) {
+        synchronized (blockDatas) {
+            return blockDatas.get(pos);
+        }
+    }
+
+    private void _unsetData(short pos) {
+        synchronized (blockDatas) {
+            blockDatas.remove(pos);
+        }
+    }
+
+    private void _setData(short pos, BlockExtraData data) {
+        synchronized (blockDatas) {
+            blockDatas.put(pos, data);
+        }
+    }
+
+    private BlockPos _newBlockPos(int x, int y, int z) {
+        return new BlockPos(chunkX << 4 + x, y, chunkZ << 4 + z);
+    }
+
+    @Override
+    public Block getOrCreate(int x, int y, int z) {
+        short pos = posInChunkToShort(x, y, z);
+        Block block = _blockAt(pos);
+        if (block == null) {
+            BlockExtraData data = _dataAt(pos);
+            if (data == null) {
+                block = new Block(_newBlockPos(x, y, z), null, world.getBlockType(_typeAt(x, y, z)));
+            }
+            else {
+                block = data.provide(world.getBlockType(_typeAt(x, y, z)), _newBlockPos(x, y, z), world);
+            }
+            _cacheBlock(pos, block);
+        }
         return block;
     }
 
-    @NotNull
-    public World getWorld() {
-        return world;
+    @Override
+    public BlockType getBlockType(int x, int y, int z) {
+        return world.getBlockType(_typeAt(x, y, z));
     }
 
-    public int x() {
-        return position.x();
+    @Override
+    public BlockExtraData getBlockData(int x, int y, int z) {
+        return _dataAt(posInChunkToShort(x, y, z));
     }
 
-    public int z() {
-        return position.y();
+    @Override
+    public void setBlock(Block block) {
+        setBlockType(block.getPos(), block.getType());
+        setBlockData(block.getPos(), block.getData());
+        _cacheBlock(posInChunkToShort(block.getPos()), block);
+    }
+
+    @Override
+    public void setBlockType(int x, int y, int z, BlockType type) {
+        short pos = posInChunkToShort(x, y, z);
+        _uncacheBlock(pos);
+        _setTypeAt(x, y, z, type.getId());
+        _unsetData(pos);
+    }
+
+    @Override
+    public void setBlockData(int x, int y, int z, BlockExtraData data) {
+        if (data != null && !data.isApplicableFor(getBlockType(x, y, z))) {
+            throw new IllegalArgumentException("Invalid data type.");
+        }
+
+        short pos = posInChunkToShort(x, y, z);
+        _uncacheBlock(pos);
+        _setData(pos, data);
     }
 
     @Override
     public int getSizeX() {
-        return CHUNK_SIZE_X;
+        return SIZE_X;
     }
 
     @Override
     public int getSizeY() {
-        return CHUNK_SIZE_Y;
+        return SIZE_Y;
     }
 
     @Override
     public int getSizeZ() {
-        return CHUNK_SIZE_Z;
-    }
-
-    public void clearBlocksCache() {
-        TShortObjectIterator<Block> iterator = blocks.iterator();
-
-        while (iterator.hasNext()) {
-            if (iterator.value().canBeUncached()) {
-                iterator.remove();
-            }
-        }
+        return SIZE_Z;
     }
 
     private static final int NUM_X_BITS = 4;
@@ -156,5 +176,9 @@ public class Chunk implements Sizeable3D {
 
     public static short posInChunkToShort(int x, int y, int z) {
         return (short) (((long) x & X_MASK) << X_SHIFT | ((long) y & Y_MASK) << Y_SHIFT | ((long) z & Z_MASK) << 0);
+    }
+
+    public static short posInChunkToShort(BlockPos worldRelative) {
+        return posInChunkToShort(worldRelative.x & 15, worldRelative.y, worldRelative.z & 15);
     }
 }

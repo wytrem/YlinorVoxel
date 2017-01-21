@@ -1,13 +1,21 @@
 package com.ylinor.server;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.network.ServerNetwork;
 import com.ylinor.library.network.protocol.HandlerProtocol;
 import com.ylinor.library.packets.MyNetworkEntity;
 import com.ylinor.library.packets.Packet0KeepAlive;
 
 
-public class YlinorServer {
+public class YlinorServer extends YlinorApplication {
+    private static YlinorServer server;
+
+    public YlinorServer() {
+        instance = this;
+        server = this;
+    }
+
     public static void main(String[] args) {
         HandlerProtocol<MyNetworkEntity> protocol = new HandlerProtocol<>();
         protocol.registerPacket(Packet0KeepAlive.class, (packet, sender, receiver) -> {
@@ -18,5 +26,9 @@ public class YlinorServer {
 
         ServerNetwork<MyNetworkEntity> serverNetwork = new ServerNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, MyNetworkEntity::new);
         serverNetwork.start();
+    }
+
+    public static YlinorServer server() {
+        return server;
     }
 }

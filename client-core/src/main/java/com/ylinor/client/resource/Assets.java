@@ -13,14 +13,13 @@ import com.kotcrab.vis.ui.VisUI;
 
 
 /**
- * Les Assets du jeux (Singleton)
+ * Game's assets (Singleton)
  *
- * Cette classe contient les constantes des dossiers d'assets,
- * l'{@link AssetManager}, et les différentes classes d'assets en public comme
+ * This class contains all constants of assets's folder
+ * The {@link AssetManager}, and the other public assets class as
  * {@link ScreenAssets}.
  *
- * Elle contient aussi les fonctions load et preload pour charger ou precharger
- * les assets.
+ * It contains load and preload function to precharge assets
  *
  * @author Litarvan
  * @since 1.0.0
@@ -29,27 +28,27 @@ public class Assets implements Disposable {
     private static final Logger logger = LoggerFactory.getLogger(Assets.class);
 
     /**
-     * Le dossiers des polices
+     * Font folder
      */
     public static final String FONTS_FOLDER = "fonts/";
 
     /**
-     * Le dossier des images
+     * Images folder
      */
     public static final String IMAGES_FOLDER = "img/";
 
     /**
-     * L'instance de la classe
+     * Class instance
      */
     private static Assets instance = new Assets();
 
     /**
-     * L'assets manager LibGDX
+     * LibGDX's assets manager
      */
     private final AssetManager assets;
 
     /**
-     * Les assets des Screens
+     * Screens's assets
      */
     public final ScreenAssets screen;
 
@@ -61,8 +60,7 @@ public class Assets implements Disposable {
     }
 
     /**
-     * Charge les pré-assets, càd les assets utilisés avant ou pendant l'écran
-     * de chargement
+     * Load pre-assets (used before or during the loading screen)
      */
     public void preload() {
         logger.info("Loading pre-assets (including VisUI)...");
@@ -72,16 +70,16 @@ public class Assets implements Disposable {
     }
 
     /**
-     * Charge les assets
+     * Load assets.
      *
-     * @return Si les assets sont entièrement chargés
+     * @return if assets are completely loaded
      */
     public boolean update() {
         return assets.update();
     }
 
     /**
-     * Charge les assets
+     * Load assets
      */
     public void load() {
         logger.info("Loading assets...");
@@ -100,61 +98,59 @@ public class Assets implements Disposable {
     }
 
     /**
-     * @return Le nombre d'assets chargés
+     * @return the number of loaded assets
      */
     public int assetsLoaded() {
         return assets.getLoadedAssets();
     }
 
     /**
-     * @return Le nombre d'assets encore à charger
+     * @return The number of assets to load
      */
     public int assetsToLoad() {
         return assets.getQueuedAssets();
     }
 
     /**
-     * Charge une texture
+     * Load a texture
      *
-     * @param file Le fichier de la texture
+     * @param file the texture's file
      */
     public void loadTexture(String file) {
         load(file, Texture.class);
     }
 
     /**
-     * Charge la police
+     * Load the police
      *
-     * @param file Le fichier de la police
+     * @param file the police's file
      */
     public void loadFont(String file) {
         load(file, FreeTypeFontGenerator.class);
     }
 
     /**
-     * Charge un asset
+     * Load an assets
      *
-     * @param file Le fichier de l'asset
-     * @param type L'asset à charger
+     * @param file the asset's file
+     * @param type the asset to load
      */
     public void load(String file, Class<?> type) {
         assets.load(file, type);
     }
 
     /**
-     * Retourne un des assets chargés
+     * @param file The file of the asset
+     * @param <T> the asset type
      *
-     * @param file Le fichier correspondant à l'asset
-     * @param <T> Le type d'asset
-     *
-     * @return L'asset en question
+     * @return the asset
      */
     public <T> T get(String file) {
         return assets.get(file);
     }
 
     /**
-     * @return L'instance de cette classe
+     * @return the class instance
      */
     public static Assets get() {
         return instance;
