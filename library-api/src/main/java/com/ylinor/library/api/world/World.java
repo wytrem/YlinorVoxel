@@ -139,4 +139,9 @@ public class World implements IChunkContainer, IBlockContainer
     {
         getChunkOf(x, y, z).setBlockData(x & 15, y, z & 15, data);
     }
+
+    public BlockType getBlockType(short id)
+    {
+        return BlockType.REGISTRY.get(id);
+    }
 }

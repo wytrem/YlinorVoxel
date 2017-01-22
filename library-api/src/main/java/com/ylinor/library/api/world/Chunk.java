@@ -1,130 +1,184 @@
 package com.ylinor.library.api.world;
 
 import com.ylinor.library.api.block.BlockPos;
-import com.ylinor.library.api.world.storage.StorageUtil;
 import com.ylinor.library.util.math.Sizeable3D;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.map.hash.TIntShortHashMap;
 
-public class Chunk implements IBlockContainer, Sizeable3D
-{
+import gnu.trove.map.TShortObjectMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
+
+
+public class Chunk implements IBlockContainer, Sizeable3D {
     public static final short SIZE_X = 16;
     public static final short SIZE_Y = 256;
     public static final short SIZE_Z = 16;
 
-    private short[] blocks = new short[SIZE_X * SIZE_Y * SIZE_Z];
-    private TIntObjectHashMap<BlockExtraData> datas = new TIntObjectHashMap<>();
+    private TShortObjectMap<Block> blockCache = new TShortObjectHashMap<>(64);
+    private TShortObjectMap<BlockExtraData> blockDatas = new TShortObjectHashMap<>(64);
+    private short[][][] blocks;
+    private World world;
+    private int chunkX, chunkZ;
 
     @Override
-    public Block getBlock(BlockPos pos)
-    {
-        return new Block(pos, getBlockData(pos), getBlockType(pos));
+    public Block getBlock(int x, int y, int z) {
+        return _blockAt(posInChunkToShort(x, y, z));
     }
 
-    @Override
-    public Block getBlock(int x, int y, int z)
-    {
-        return new Block(new BlockPos(x, y, z), getBlockData(x, y, z), getBlockType(x, y, z));
-    }
+    private void _uncacheBlock(short pos) {
+        Block block = _blockAt(pos);
 
-    @Override
-    public Block getOrCreate(BlockPos pos)
-    {
-        Block block = getBlock(pos);
-
-        if (block.getData() == null)
-        {
-            block = block.getType().createData(block.getPos()).provide(block.getType(), block.getPos());
+        if (block != null) {
+            synchronized (block) {
+                synchronized (blockCache) {
+                    blockCache.remove(pos);
+                }
+            }
         }
+        else {
+            synchronized (blockCache) {
+                blockCache.remove(pos);
+            }
+        }
+    }
 
+    private void _cacheBlock(short pos, Block block) {
+        Block previousBlock = _blockAt(pos);
+
+        if (previousBlock != null) {
+            synchronized (previousBlock) {
+                synchronized (blockCache) {
+                    blockCache.put(pos, block);
+                }
+            }
+        }
+        else {
+            synchronized (blockCache) {
+                blockCache.put(pos, block);
+            }
+        }
+    }
+
+    private Block _blockAt(short pos) {
+        synchronized (blockCache) {
+            return blockCache.get(pos);
+        }
+    }
+
+    private short _typeAt(int x, int y, int z) {
+        synchronized (blocks) {
+            return blocks[x][y][z];
+        }
+    }
+
+    private void _setTypeAt(int x, int y, int z, short type) {
+        synchronized (blocks) {
+            blocks[x][y][z] = type;
+        }
+    }
+
+    private BlockExtraData _dataAt(short pos) {
+        synchronized (blockDatas) {
+            return blockDatas.get(pos);
+        }
+    }
+
+    private void _unsetData(short pos) {
+        synchronized (blockDatas) {
+            blockDatas.remove(pos);
+        }
+    }
+
+    private void _setData(short pos, BlockExtraData data) {
+        synchronized (blockDatas) {
+            blockDatas.put(pos, data);
+        }
+    }
+
+    private BlockPos _newBlockPos(int x, int y, int z) {
+        return new BlockPos(chunkX << 4 + x, y, chunkZ << 4 + z);
+    }
+
+    @Override
+    public Block getOrCreate(int x, int y, int z) {
+        short pos = posInChunkToShort(x, y, z);
+        Block block = _blockAt(pos);
+        if (block == null) {
+            BlockExtraData data = _dataAt(pos);
+            if (data == null) {
+                block = new Block(_newBlockPos(x, y, z), null, world.getBlockType(_typeAt(x, y, z)));
+            }
+            else {
+                block = data.provide(world.getBlockType(_typeAt(x, y, z)), _newBlockPos(x, y, z), world);
+            }
+            _cacheBlock(pos, block);
+        }
         return block;
     }
 
     @Override
-    public Block getOrCreate(int x, int y, int z)
-    {
-        Block block = getBlock(x, y, z);
-
-        if (block.getData() == null)
-        {
-            block = block.getType().createData(block.getPos()).provide(block.getType(), block.getPos());
-        }
-
-        return block;
+    public BlockType getBlockType(int x, int y, int z) {
+        return world.getBlockType(_typeAt(x, y, z));
     }
 
     @Override
-    public BlockType getBlockType(BlockPos pos)
-    {
-        return BlockType.REGISTRY.get(blocks[StorageUtil.posToInt(pos)]);
+    public BlockExtraData getBlockData(int x, int y, int z) {
+        return _dataAt(posInChunkToShort(x, y, z));
     }
 
     @Override
-    public BlockType getBlockType(int x, int y, int z)
-    {
-        return BlockType.REGISTRY.get(blocks[StorageUtil.posToInt((byte) x, (short) y, (byte) z)]);
-    }
-
-    @Override
-    public BlockExtraData getBlockData(BlockPos pos)
-    {
-        return datas.get(StorageUtil.posToInt(pos));
-    }
-
-    @Override
-    public BlockExtraData getBlockData(int x, int y, int z)
-    {
-        return datas.get(StorageUtil.posToInt((byte) x, (short) y, (byte) z));
-    }
-
-    @Override
-    public void setBlock(Block block)
-    {
+    public void setBlock(Block block) {
         setBlockType(block.getPos(), block.getType());
         setBlockData(block.getPos(), block.getData());
+        _cacheBlock(posInChunkToShort(block.getPos()), block);
     }
 
     @Override
-    public void setBlockType(BlockPos pos, BlockType type)
-    {
-        blocks[StorageUtil.posToInt(pos)] =  type.getId();
-        setBlockData(pos, null);
+    public void setBlockType(int x, int y, int z, BlockType type) {
+        short pos = posInChunkToShort(x, y, z);
+        _uncacheBlock(pos);
+        _setTypeAt(x, y, z, type.getId());
+        _unsetData(pos);
     }
 
     @Override
-    public void setBlockType(int x, int y, int z, BlockType type)
-    {
-        blocks[StorageUtil.posToInt((byte) x, (byte) y, (byte) z)] = type.getId();
-        setBlockData(x, y, z, null);
+    public void setBlockData(int x, int y, int z, BlockExtraData data) {
+        if (data != null && !data.isApplicableFor(getBlockType(x, y, z))) {
+            throw new IllegalArgumentException("Invalid data type.");
+        }
+
+        short pos = posInChunkToShort(x, y, z);
+        _uncacheBlock(pos);
+        _setData(pos, data);
     }
 
     @Override
-    public void setBlockData(BlockPos pos, BlockExtraData data)
-    {
-        datas.put(StorageUtil.posToInt(pos), data);
-    }
-
-    @Override
-    public void setBlockData(int x, int y, int z, BlockExtraData data)
-    {
-        datas.put(StorageUtil.posToInt((byte) x, (byte) y, (byte) z), data);
-    }
-
-    @Override
-    public int getSizeX()
-    {
+    public int getSizeX() {
         return SIZE_X;
     }
 
     @Override
-    public int getSizeY()
-    {
+    public int getSizeY() {
         return SIZE_Y;
     }
 
     @Override
-    public int getSizeZ()
-    {
+    public int getSizeZ() {
         return SIZE_Z;
+    }
+
+    private static final int NUM_X_BITS = 4;
+    private static final int NUM_Z_BITS = NUM_X_BITS;
+    private static final int NUM_Y_BITS = 16 - NUM_X_BITS - NUM_Z_BITS;
+    private static final int Y_SHIFT = 0 + NUM_Z_BITS;
+    private static final int X_SHIFT = Y_SHIFT + NUM_Y_BITS;
+    private static final long X_MASK = (1L << NUM_X_BITS) - 1L;
+    private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
+    private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
+
+    public static short posInChunkToShort(int x, int y, int z) {
+        return (short) (((long) x & X_MASK) << X_SHIFT | ((long) y & Y_MASK) << Y_SHIFT | ((long) z & Z_MASK) << 0);
+    }
+
+    public static short posInChunkToShort(BlockPos worldRelative) {
+        return posInChunkToShort(worldRelative.x & 15, worldRelative.y, worldRelative.z & 15);
     }
 }

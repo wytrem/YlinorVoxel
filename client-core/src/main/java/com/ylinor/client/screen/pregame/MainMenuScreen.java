@@ -1,21 +1,26 @@
 package com.ylinor.client.screen.pregame;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.ylinor.client.screen.YlinorScreen;
 
 
 public class MainMenuScreen extends YlinorScreen {
-    @Override
-    public void show() {
+    public MainMenuScreen() {
+        VisTable table = new VisTable();
 
-    }
+        VisTextButton play = new VisTextButton("Jouer");
+        play.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+            }
+        });
+        table.add(play);
+        table.setFillParent(true);
 
-    @Override
-    public void render(float delta) {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
+        addActor(table);
     }
 }
