@@ -5,7 +5,6 @@ import java.nio.ShortBuffer;
 
 import com.badlogic.gdx.graphics.Mesh;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
-import com.ylinor.library.util.DebugUtils;
 
 
 public class Uploader {
@@ -15,8 +14,6 @@ public class Uploader {
     private static int size;
 
     public synchronized static int upload(VertexBuffer buffer, Mesh mesh) {
-        DebugUtils.timeStart();
-
         {
             FloatBuffer vertexesBuffer = buffer.getVertexBuffer()
                                                .asFloatBuffer();
@@ -48,8 +45,6 @@ public class Uploader {
         }
 
         buffer.reset();
-
-        DebugUtils.printTime("upload " + size + " indices");
 
         return size;
     }

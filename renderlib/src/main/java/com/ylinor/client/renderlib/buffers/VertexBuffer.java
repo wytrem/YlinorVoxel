@@ -3,6 +3,7 @@ package com.ylinor.client.renderlib.buffers;
 import java.nio.ByteBuffer;
 
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ylinor.client.renderlib.PrimitiveType;
 import com.ylinor.client.renderlib.format.VertexFormat;
@@ -44,12 +45,21 @@ public class VertexBuffer {
     private VertexFormat vertexFormat;
     private PrimitiveType indicesType;
     private int indicesCount;
+    public final Vector3 offset;
+    
+    public VertexBuffer(int capacity)
+    {
+        this(capacity, capacity);
+    }
+    
+    
 
-    public VertexBuffer(int size) {
-        vertexBuffer = BufferUtils.newByteBuffer(size);
-        indicesBuffer = BufferUtils.newByteBuffer(size);
+    public VertexBuffer(int verticesSize, int indicesSize) {
+        vertexBuffer = BufferUtils.newByteBuffer(verticesSize);
+        indicesBuffer = BufferUtils.newByteBuffer(indicesSize);
         indicesType = PrimitiveType.USHORT;
         reset();
+        offset = new Vector3();
     }
 
     /**
@@ -87,7 +97,7 @@ public class VertexBuffer {
      * @return This {@link VertexBuffer} for chaining
      */
     public VertexBuffer pos(float x, float y) {
-        vertexBuffer.putFloat(x).putFloat(y);
+        vertexBuffer.putFloat(x + offset.x).putFloat(y + offset.y);
         return this;
     }
 
@@ -100,7 +110,7 @@ public class VertexBuffer {
      * @return This {@link VertexBuffer} for chaining
      */
     public VertexBuffer pos(float x, float y, float z) {
-        vertexBuffer.putFloat(x).putFloat(y).putFloat(z);
+        vertexBuffer.putFloat(x + offset.x).putFloat(y + offset.y).putFloat(z + offset.z);
         return this;
     }
     

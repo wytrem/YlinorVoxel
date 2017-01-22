@@ -26,7 +26,7 @@ import gnu.trove.procedure.TObjectIntProcedure;
 
 public class TerrainRenderer implements RenderableProvider, Disposable {
     World world;
-    TLongObjectMap<ChunkRenderer> chunkRenderInfos = new TLongObjectHashMap<ChunkRenderer>();
+    TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
     TextureRegion[][] tiles;
@@ -64,11 +64,11 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
             return;
         }
 
-        ChunkRenderer infos = chunkRenderInfos.get(chunk.id);
+        ChunkRenderer infos = chunkRenderers.get(chunk.id);
 
         if (infos == null) {
             infos = new ChunkRenderer(this);
-            chunkRenderInfos.put(chunk.id, infos);
+            chunkRenderers.put(chunk.id, infos);
         }
 
         if (chunk.needsRenderUpdate) {

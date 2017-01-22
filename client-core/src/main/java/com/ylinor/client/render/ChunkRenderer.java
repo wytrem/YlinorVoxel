@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.renderlib.GdxTempVars;
+import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.client.renderlib.format.VertexFormats;
 import com.ylinor.library.api.world.BlockType;
@@ -17,10 +18,9 @@ import gnu.trove.procedure.TObjectProcedure;
 
 public class ChunkRenderer implements Disposable {
     // Allocate 2MB ram for vertices buffering
-    private static final VertexBuffer vertexBuffer = new VertexBuffer(2097152);
+    private static final VertexBuffer vertexBuffer = new VertexBuffer(RenderConstants.MAX_QUADS_VERTICES, RenderConstants.MAX_INDICES_PER_MESH);
 
     public static final int VERTEX_SIZE = VertexFormats.BLOCKS.getStride();
-    static final int MAX_INDICES = 65536;
 
     TerrainRenderer renderer;
     
@@ -32,12 +32,11 @@ public class ChunkRenderer implements Disposable {
     }
 
     public void update(Chunk chunk, IBlockContainer neighbours) {
-        
         meshes.forEach(new TObjectProcedure<Mesh>() {
             @Override
             public boolean execute(Mesh mesh) {
                 mesh.dispose();
-                return false;
+                return true;
             }
         });
         
@@ -60,7 +59,7 @@ public class ChunkRenderer implements Disposable {
                         region = renderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16];
                         
                         
-                        if (vertexBuffer.getIndicesCount() > MAX_INDICES - 36)
+                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36)
                         {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
@@ -82,14 +81,9 @@ public class ChunkRenderer implements Disposable {
         gdxTempVars.release();
     }
     
-    private Mesh newMesh()
-    {
-        return new Mesh(true, MAX_INDICES, MAX_INDICES, VertexFormats.BLOCKS.toGdx());
-    }
-    
     private void pushMesh(VertexBuffer vertexBuffer)
     {
-        Mesh mesh = newMesh();
+        Mesh mesh = RenderConstants.newBiggestQuadsMesh();
         
         int amount = Uploader.upload(vertexBuffer, mesh);
         meshes.put(mesh, amount);
