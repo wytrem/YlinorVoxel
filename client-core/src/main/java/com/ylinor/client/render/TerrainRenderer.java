@@ -57,7 +57,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
 
     private void renderChunk(Array<Renderable> renderables, Pool<Renderable> pool, Chunk chunk) {
         GdxTempVars gdxTempVars = GdxTempVars.get();
-        getBoudingBox(chunk, gdxTempVars.bb1);
+        getBoundingBox(chunk, gdxTempVars.bb1);
 
         if (!renderGlobal.cameraFrustum.boundsInFrustum(gdxTempVars.bb1)) {
             gdxTempVars.release();
@@ -97,7 +97,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
         gdxTempVars.release();
     }
 
-    private void getBoudingBox(Chunk chunk, BoundingBox bb) {
+    private void getBoundingBox(Chunk chunk, BoundingBox bb) {
         bb.min.set(chunk.x * Chunk.SIZE_X, 0, chunk.z * Chunk.SIZE_Z);
         bb.max.set((chunk.x + 1) * Chunk.SIZE_X, Chunk.SIZE_Y, (chunk.z + 1) * Chunk.SIZE_Z);
     }

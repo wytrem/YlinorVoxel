@@ -173,7 +173,7 @@ public class YlinorClient extends YlinorApplication
         logger.debug("Window resized : " + width + "x" + height);
     }
 
-    public void setScreen(@NotNull Screen screen) {
+    public void setScreen(Screen screen) {
         if (this.screen != null) {
             this.screen.hide();
         }
