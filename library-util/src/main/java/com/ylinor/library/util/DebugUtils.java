@@ -9,6 +9,6 @@ public class DebugUtils {
     }
 
     public static void printTime(String process) {
-        System.out.println((System.currentTimeMillis() - start) + " ms elapsed for " + process);
+        System.out.println(process + " took " + (System.currentTimeMillis() - start) + "ms");
     }
 }

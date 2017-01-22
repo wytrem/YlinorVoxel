@@ -5,6 +5,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -22,11 +24,14 @@ public class RenderGlobal implements Disposable {
     int renderEngineVersion = 1;
 
     ModelBatch modelBatch;
-    Camera camera;
+    PerspectiveCamera camera;
     FirstPersonCameraController cameraController;
     Frustum cameraFrustum;
     Environment environment;
-    WorldRenderer terrainRenderer;
+    TerrainRenderer terrainRenderer;
+    
+    SpriteBatch spriteBatch;
+    BitmapFont font;
 
     public RenderGlobal(World world) {
         DefaultShader.Config shaderConfig = new Config();
@@ -35,7 +40,6 @@ public class RenderGlobal implements Disposable {
 
         modelBatch = new ModelBatch(new DefaultShaderProvider(shaderConfig));
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(10f, 10f, 10f);
         camera.lookAt(0, 0, 0);
         camera.near = 0.1f;
         camera.far = 45f;
@@ -48,9 +52,12 @@ public class RenderGlobal implements Disposable {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.set(new ColorAttribute(ColorAttribute.Fog, 0.13f, 0.13f, 0.13f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-        terrainRenderer = new WorldRenderer(world, this);
+        terrainRenderer = new TerrainRenderer(world, this);
 
         cameraFrustum = new Frustum();
+        
+        spriteBatch = new SpriteBatch();
+        font = new BitmapFont();
     }
 
     public void render() {
@@ -60,13 +67,17 @@ public class RenderGlobal implements Disposable {
         update();
 
         modelBatch.begin(camera);
+        
+        // Render terrain
         modelBatch.render(terrainRenderer, environment);
 
-        // Render terrain
-
         // Render entities
-
         modelBatch.end();
+        
+        spriteBatch.begin();
+        font.draw(spriteBatch, "fps : " + Gdx.graphics.getFramesPerSecond(), 0, 60);
+        font.draw(spriteBatch, "pos : " + camera.position.toString(), 0, 40);
+        spriteBatch.end();
     }
 
     private void onChunkChanged() {
@@ -75,7 +86,6 @@ public class RenderGlobal implements Disposable {
 
     private void update() {
         cameraController.update();
-        camera.update();
         cameraFrustum.update(camera.invProjectionView);
         terrainRenderer.update();
     }

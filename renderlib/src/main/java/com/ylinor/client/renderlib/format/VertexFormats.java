@@ -1,6 +1,7 @@
-package com.ylinor.client.render;
+package com.ylinor.client.renderlib.format;
 
-import com.ylinor.client.render.VertexFormatElement.Usage;
+import com.ylinor.client.renderlib.PrimitiveType;
+import com.ylinor.client.renderlib.format.VertexFormatElement.Usage;
 
 
 public class VertexFormats

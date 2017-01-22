@@ -1,6 +1,7 @@
 package com.ylinor.client.render;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.ylinor.library.api.world.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.World;
 import com.ylinor.library.api.world.storage.StorageManager;
@@ -41,17 +42,22 @@ public class Test  extends StorageManager {
     private Chunk generateAt(int chunkX, int chunkZ)
     {
         Chunk chunk = new Chunk(world, chunkX, chunkZ);
-
+        
+//        short id = (short) (Math.abs(chunkX % 3 + (chunkZ % 3) * 3) + 1);
+        
         for (int x = 0; x < Chunk.SIZE_X; x++)
         {
             for (int y = 0; y < Chunk.SIZE_Y; y++)
             {
                 for (int z = 0; z < Chunk.SIZE_Z; z++)
                 {
-                    chunk.setBlockType(x, y, z, world.getBlockType((short) (MathUtils.random(20) == 0 ? 1 : 0)));
+                    chunk.setBlockType(x, y, z, world.getBlockType((short) (MathUtils.random(BlockType.REGISTRY.size() - 1))));
+//                    chunk.setBlockType(x, y, z, world.getBlockType(id));
                 }
             }
         }
+        
+        
 
         return chunk;
     }

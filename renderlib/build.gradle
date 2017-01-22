@@ -1,0 +1,8 @@
+eclipse.project {
+    name = 'render-lib'
+}
+
+dependencies {
+    compile project(':library-util')
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+}

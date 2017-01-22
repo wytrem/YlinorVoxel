@@ -7,6 +7,7 @@ dependencies {
     compile project(':library-util')
     compile project(':library-network')
     compile project(':library-packets')
+    compile project(':renderlib')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "com.kotcrab.vis:vis-ui:$visuiVersion"
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

@@ -13,7 +13,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.render.RenderGlobal;
 import com.ylinor.client.render.Test;
-import com.ylinor.client.render.VertexFormats;
+import com.ylinor.client.renderlib.format.VertexFormats;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;

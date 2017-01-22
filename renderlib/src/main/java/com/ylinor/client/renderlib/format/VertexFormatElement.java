@@ -1,10 +1,11 @@
-package com.ylinor.client.render;
+package com.ylinor.client.renderlib.format;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.ylinor.client.renderlib.PrimitiveType;
 
 
 public class VertexFormatElement {

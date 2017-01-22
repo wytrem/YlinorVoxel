@@ -1,4 +1,4 @@
-package com.ylinor.client.render;
+package com.ylinor.client.renderlib;
 
 import com.badlogic.gdx.graphics.GL20;
 

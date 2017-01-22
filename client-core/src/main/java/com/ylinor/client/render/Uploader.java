@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import com.badlogic.gdx.graphics.Mesh;
+import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.util.DebugUtils;
 
 

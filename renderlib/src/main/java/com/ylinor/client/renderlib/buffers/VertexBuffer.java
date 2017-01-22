@@ -1,9 +1,11 @@
-package com.ylinor.client.render;
+package com.ylinor.client.renderlib.buffers;
 
 import java.nio.ByteBuffer;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.BufferUtils;
+import com.ylinor.client.renderlib.PrimitiveType;
+import com.ylinor.client.renderlib.format.VertexFormat;
 
 
 /**

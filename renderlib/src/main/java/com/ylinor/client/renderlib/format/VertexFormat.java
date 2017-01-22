@@ -1,4 +1,4 @@
-package com.ylinor.client.render;
+package com.ylinor.client.renderlib.format;
 
 import java.util.ArrayList;
 import java.util.Collections;
