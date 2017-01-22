@@ -5,6 +5,16 @@ import com.ylinor.library.util.math.PositionableObject2D;
 
 public final class StorageUtil
 {
+    public static short chunkXZToLong(PositionableObject2D pos)
+    {
+        return 0;
+    }
+
+    public static short chunkXZToLong(int x, int z)
+    {
+        return 0;
+    }
+    
     public static short posToShort(PositionableObject2D pos)
     {
         return 0;

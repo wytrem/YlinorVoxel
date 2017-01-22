@@ -1,5 +1,12 @@
 package com.ylinor.client;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -12,11 +19,6 @@ import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.world.World;
 import com.ylinor.library.api.world.storage.StorageManager;
-import java.io.File;
-import java.io.IOException;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -109,7 +111,8 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
             e.printStackTrace();
         }
 
-        world = new World(new StorageManager(new File(YlinorFiles.getGameFolder(), "world")));
+        world = new World(null);
+        world.setStorage(new StorageManager(world, new File(YlinorFiles.getGameFolder(), "world")));
 
         //        protocol = new HandlerProtocol<>();
 

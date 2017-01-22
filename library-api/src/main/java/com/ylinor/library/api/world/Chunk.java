@@ -16,7 +16,14 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     private TShortObjectMap<BlockExtraData> blockDatas = new TShortObjectHashMap<>(64);
     private short[][][] blocks;
     private World world;
-    private int chunkX, chunkZ;
+    public final int chunkX, chunkZ;
+    
+    public Chunk(World world, int x, int z) {
+        this.world = world;
+        this.chunkX = x;
+        this.chunkZ = z;
+        this.blocks = new short[SIZE_X][SIZE_Y][SIZE_Z];
+    }
 
     @Override
     public Block getBlock(int x, int y, int z) {
