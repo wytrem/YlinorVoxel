@@ -5,43 +5,23 @@ import com.ylinor.library.util.math.PositionableObject2D;
 
 public final class StorageUtil
 {
-    public static short chunkXZToLong(PositionableObject2D pos)
+    public static long chunkXZToLong(PositionableObject2D pos)
     {
-        return 0;
+        return pos.x() & 4294967295L | (pos.y() & 4294967295L) << 32;
     }
 
-    public static short chunkXZToLong(int x, int z)
+    public static long chunkXZToLong(int chunkX, int chunkZ)
     {
-        return 0;
-    }
-    
-    public static short posToShort(PositionableObject2D pos)
-    {
-        return 0;
+        return chunkX & 4294967295L | (chunkZ & 4294967295L) << 32;
     }
 
-    public static short posToShort(int x, int z)
+    public static long posToLong(BlockPos pos)
     {
-        return 0;
+        return pos.toLong();
     }
 
-    public static short posToInt(BlockPos pos)
+    public static long posToLong(int x, int y, int z)
     {
-        return 0;
-    }
-
-    public static short posToInt(byte x, short y, byte z)
-    {
-        return 0;
-    }
-
-    public static short posToLong(BlockPos pos)
-    {
-        return 0;
-    }
-
-    public static short posToLong(int x, int y, int z)
-    {
-        return 0;
+        return BlockPos.toLong(x, y, z);
     }
 }
