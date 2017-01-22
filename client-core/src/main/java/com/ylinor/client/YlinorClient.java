@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
+import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.world.storage.StorageManager;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +80,10 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
      */
     private Screen screen;
 
+    /**
+     * Current world
+     */
+    private World world;
 
 //    /**
 //     * Instance du système reseau client
@@ -107,11 +113,13 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
         {
             settings = GameSettings.get(new File(YlinorFiles.getGameFolder(), "settings.json"));
             settings.save(new File(YlinorFiles.getGameFolder(), "settings.json"));
-        } catch(IOException e)
+        }
+        catch(IOException e)
         {
             e.printStackTrace();
         }
 
+        world = new World(new StorageManager(new File(YlinorFiles.getGameFolder(), "world")));
 
 //        protocol = new HandlerProtocol<>();
 
