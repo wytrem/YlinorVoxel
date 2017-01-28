@@ -4,7 +4,7 @@ import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.api.world.storage.StorageManager;
 import com.ylinor.library.util.math.PositionableObject2D;
 
-public class World implements IChunkContainer, IBlockContainer
+public class World implements IChunkProvider, IBlockContainer
 {
     public static final short SIZE_Y = Chunk.SIZE_Y;
 
@@ -12,6 +12,10 @@ public class World implements IChunkContainer, IBlockContainer
 
     public World(StorageManager storage)
     {
+        this.storage = storage;
+    }
+    
+    public void setStorage(StorageManager storage) {
         this.storage = storage;
     }
 
@@ -40,18 +44,6 @@ public class World implements IChunkContainer, IBlockContainer
     public Chunk getChunk(int x, int z)
     {
         return storage.getChunk(x, z);
-    }
-
-    @Override
-    public void setChunk(PositionableObject2D pos, Chunk chunk)
-    {
-        storage.setChunk(pos, chunk);
-    }
-
-    @Override
-    public void setChunk(int x, int z, Chunk chunk)
-    {
-        storage.setChunk(x, z, chunk);
     }
 
     public StorageManager getStorage()

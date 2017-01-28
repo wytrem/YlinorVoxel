@@ -8,8 +8,7 @@ import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.math.MathHelper;
 
 
-public class BlockPos extends Vector3i implements WorldUniqueId
-{
+public class BlockPos extends Vector3i implements WorldUniqueId {
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0);
     private static final int NUM_X_BITS = 1 + MathHelper.calculateLogBaseTwo(MathHelper.roundUpToPowerOfTwo(30000000));
     private static final int NUM_Z_BITS = NUM_X_BITS;
@@ -81,7 +80,11 @@ public class BlockPos extends Vector3i implements WorldUniqueId
     }
 
     public long toLong() {
-        return ((long) this.x() & X_MASK) << X_SHIFT | ((long) this.y() & Y_MASK) << Y_SHIFT | ((long) this.z() & Z_MASK) << 0;
+        return toLong(x, y, z);
+    }
+
+    public static long toLong(int x, int y, int z) {
+        return ((long) x & X_MASK) << X_SHIFT | ((long) y & Y_MASK) << Y_SHIFT | ((long) z & Z_MASK) << 0;
     }
 
     public static BlockPos fromLong(long serialized) {

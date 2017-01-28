@@ -10,9 +10,6 @@ import com.ylinor.client.renderlib.buffers.VertexBuffer;
 
 public class BlockModel implements Renderable {
     @Nullable
-    private BlockModel parent;
-    
-    @Nullable
     private String name;
     
     @NotNull
