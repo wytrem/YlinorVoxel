@@ -5,9 +5,10 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.ylinor.client.render.Renderable;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 
-public class BlockModel {
+public class BlockModel implements Renderable {
     @Nullable
     private BlockModel parent;
     
@@ -20,8 +21,8 @@ public class BlockModel {
     
     
     
-    public void renderAt(VertexBuffer vertexBuffer, int x, int y, int z) {
-        cubes.forEach(cube -> cube.renderAt(vertexBuffer, x, y, z));
+    public void render(VertexBuffer vertexBuffer) {
+        cubes.forEach(cube -> cube.render(vertexBuffer));
     }
     
     public int neededIndices(){
