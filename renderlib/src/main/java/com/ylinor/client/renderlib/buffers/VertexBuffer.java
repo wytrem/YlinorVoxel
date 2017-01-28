@@ -6,7 +6,6 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.ylinor.client.renderlib.PrimitiveType;
 import com.ylinor.client.renderlib.format.VertexFormat;
@@ -48,7 +47,7 @@ public class VertexBuffer {
     private VertexFormat vertexFormat;
     private PrimitiveType indicesType;
     private int indicesCount;
-    public final Vector3 offset;
+    public final Vector3f offset;
     
     public VertexBuffer(int capacity)
     {
@@ -60,7 +59,7 @@ public class VertexBuffer {
         indicesBuffer = BufferUtils.newByteBuffer(indicesSize);
         indicesType = PrimitiveType.USHORT;
         reset();
-        offset = new Vector3();
+        offset = new Vector3f();
     }
 
     /**

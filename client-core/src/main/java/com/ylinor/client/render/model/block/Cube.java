@@ -1,5 +1,6 @@
 package com.ylinor.client.render.model.block;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
 import com.ylinor.client.render.Renderable;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.util.Facing;
@@ -15,10 +15,10 @@ import com.ylinor.library.util.TempVars;
 
 
 public class Cube implements Renderable {
-    private String id;
-    private Vector3f position, size;
-    private Quaternionf rotation;
-    private List<Cube> children;
+    private String id = null;
+    private Vector3f position = new Vector3f(), size = new Vector3f(1);
+    private Quaternionf rotation = new Quaternionf();
+    private List<Cube> children = new ArrayList<>();
     private Map<Facing, TexturedFace> textures;
 
     public void render(VertexBuffer vertexBuffer) {
@@ -38,6 +38,11 @@ public class Cube implements Renderable {
 
     private void putFace(Facing face, VertexBuffer vertexBuffer, TempVars tempVars) {
 
+    }
+    
+    public void toto(TempVars tempVars)
+    {
+        tempVars.tempMat4.setTranslation(position).rotate(rotation).scale(size);
     }
 
     public void createTop(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.ylinor.client.render.model.block.Cube;
 import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
@@ -11,6 +12,7 @@ import com.ylinor.client.renderlib.format.VertexFormats;
 import com.ylinor.library.api.world.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
+import com.ylinor.library.util.TempVars;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.procedure.TObjectProcedure;
@@ -23,7 +25,7 @@ public class ChunkRenderer implements Disposable {
     public static final int VERTEX_SIZE = VertexFormats.BLOCKS.getStride();
 
     TerrainRenderer renderer;
-    
+
     public final TObjectIntHashMap<Mesh> meshes;
 
     public ChunkRenderer(TerrainRenderer renderer) {
@@ -39,7 +41,7 @@ public class ChunkRenderer implements Disposable {
                 return true;
             }
         });
-        
+
         meshes.clear();
         GdxTempVars gdxTempVars = GdxTempVars.get();
 
@@ -57,15 +59,13 @@ public class ChunkRenderer implements Disposable {
 
                     if (tile != BlockType.air) {
                         region = renderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16];
-                        
-                        
-                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36)
-                        {
+
+                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
                         }
-                        
+
                         renderCube(neighbours, gdxTempVars.vect0, x, y, z, region);
                     }
                 }
@@ -73,47 +73,59 @@ public class ChunkRenderer implements Disposable {
         }
 
         vertexBuffer.finishDrawing();
-        
+
         pushMesh(vertexBuffer);
 
         chunk.needsRenderUpdate = false;
 
         gdxTempVars.release();
     }
-    
-    private void pushMesh(VertexBuffer vertexBuffer)
-    {
+
+    private void pushMesh(VertexBuffer vertexBuffer) {
         Mesh mesh = RenderConstants.newBiggestQuadsMesh();
-        
+
         int amount = Uploader.upload(vertexBuffer, mesh);
         meshes.put(mesh, amount);
     }
 
+    private Cube cube = new Cube();
+
     private void renderCube(IBlockContainer neighbours, Vector3 offset, int x, int y, int z, TextureRegion region) {
+
+        TempVars tempVars = TempVars.get();
+
+        cube.toto(tempVars);
+
+        vertexBuffer.offset.set(offset.x + x, offset.y + y, offset.z + z);
+
         if (y == Chunk.SIZE_Y - 1 || !neighbours.getBlockType(x, y + 1, z)
                                                 .isOpaque()) {
-            createTop(vertexBuffer, offset, x, y, z, region);
+            cube.createTop(vertexBuffer, region, tempVars);
         }
 
         if (y == 0 || !neighbours.getBlockType(x, y - 1, z).isOpaque()) {
-            createBottom(vertexBuffer, offset, x, y, z, region);
+            cube.createBottom(vertexBuffer, region, tempVars);
         }
 
         if (!neighbours.getBlockType(x + 1, y, z).isOpaque()) {
-            createRight(vertexBuffer, offset, x, y, z, region);
+            cube.createRight(vertexBuffer, region, tempVars);
         }
 
         if (!neighbours.getBlockType(x - 1, y, z).isOpaque()) {
-            createLeft(vertexBuffer, offset, x, y, z, region);
+            cube.createLeft(vertexBuffer, region, tempVars);
         }
 
         if (!neighbours.getBlockType(x, y, z + 1).isOpaque()) {
-            createBack(vertexBuffer, offset, x, y, z, region);
+            cube.createBack(vertexBuffer, region, tempVars);
         }
 
         if (!neighbours.getBlockType(x, y, z - 1).isOpaque()) {
-            createFront(vertexBuffer, offset, x, y, z, region);
+            cube.createFront(vertexBuffer, region, tempVars);
         }
+
+        vertexBuffer.offset.zero();
+
+        tempVars.release();
     }
 
     public static int indicesIn(int numComponents) {
