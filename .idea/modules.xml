@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-network/library-network.iml" filepath="$PROJECT_DIR$/.idea/modules/library-network/library-network.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-packets/library-packets.iml" filepath="$PROJECT_DIR$/.idea/modules/library-packets/library-packets.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/library-util/library-util.iml" filepath="$PROJECT_DIR$/.idea/modules/library-util/library-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/renderlib/renderlib.iml" filepath="$PROJECT_DIR$/.idea/modules/renderlib/renderlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server.iml" />
     </modules>
   </component>
