@@ -1,8 +1,10 @@
 package com.ylinor.client.render;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -29,6 +31,7 @@ public class RenderGlobal implements Disposable {
     Frustum cameraFrustum;
     Environment environment;
     TerrainRenderer terrainRenderer;
+    Skybox skybox;
     
     SpriteBatch spriteBatch;
     BitmapFont font;
@@ -58,6 +61,15 @@ public class RenderGlobal implements Disposable {
         
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
+
+        Cubemap skyboxCubemap = new Cubemap(
+                Gdx.files.getFileHandle("skybox/right.jpg", Files.FileType.Internal),
+                Gdx.files.getFileHandle("skybox/left.jpg", Files.FileType.Internal),
+                Gdx.files.getFileHandle("skybox/top.jpg", Files.FileType.Internal),
+                Gdx.files.getFileHandle("skybox/bottom.jpg", Files.FileType.Internal),
+                Gdx.files.getFileHandle("skybox/back.jpg", Files.FileType.Internal),
+                Gdx.files.getFileHandle("skybox/front.jpg", Files.FileType.Internal));
+        skybox = new Skybox(skyboxCubemap);
     }
 
     public void render() {
@@ -73,7 +85,9 @@ public class RenderGlobal implements Disposable {
 
         // Render entities
         modelBatch.end();
-        
+
+        skybox.render(camera);
+
         spriteBatch.begin();
         font.draw(spriteBatch, "fps : " + Gdx.graphics.getFramesPerSecond(), 0, 60);
         font.draw(spriteBatch, "pos : " + camera.position.toString(), 0, 40);
@@ -96,6 +110,6 @@ public class RenderGlobal implements Disposable {
 
     @Override
     public void dispose() {
-
+        skybox.dispose();
     }
 }
