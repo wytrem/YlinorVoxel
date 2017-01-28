@@ -1,48 +1,76 @@
 package com.ylinor.library.api.world.storage;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.api.world.IChunkContainer;
+import com.ylinor.library.api.world.IChunkProvider;
+import com.ylinor.library.api.world.World;
+import com.ylinor.library.util.io.Compresser;
+import com.ylinor.library.util.io.Serializer;
 import com.ylinor.library.util.math.PositionableObject2D;
 
-public abstract class WorldStorage implements IChunkContainer
+public class WorldStorage implements IChunkProvider
 {
-    private boolean writable;
+    private static final Logger logger = LoggerFactory.getLogger(WorldStorage.class);
+    
+    private File folder;
+    private World world;
+    private Chunk dummyChunk;
 
-    public WorldStorage(boolean writable)
+    public WorldStorage(World world, File folder)
     {
-        this.writable = writable;
+        this.folder = folder;
+        this.world = world;
+        this.dummyChunk = new Chunk(world, 0, 0);
     }
 
-    @Override
-    public void setChunk(PositionableObject2D pos, Chunk chunk)
+    public File getFileOf(int x, int z)
     {
-        checkForWriting();
+        return new File(folder, "c-" + x + "-" + z + ".bin.zst");
     }
 
-    @Override
-    public void setChunk(int x, int z, Chunk chunk)
+    public File getFileOf(PositionableObject2D pos)
     {
-        checkForWriting();
+        return new File(folder, "c-" + pos.x() + "-" + pos.y() + ".bin.zst");
     }
 
-    public void unloadChunk(int x, int z, Chunk chunk)
+    public @NotNull Chunk load(File file)
     {
-    }
-
-    public void unloadChunk(PositionableObject2D pos, Chunk chunk)
-    {
-    }
-
-    protected void checkForWriting()
-    {
-        if (!writable)
+        try
         {
-            throw new IllegalStateException("Read-only world being edited");
+            return Serializer.read(Compresser.decompress(FileUtils.readFileToByteArray(file)));
+        }
+        catch (IOException e)
+        {
+            logger.error("I/O error while reading ", e);
+            return dummyChunk;
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException("FATAL: Chunk class not found while un-serializing a chunk", e);
         }
     }
 
-    public boolean isWritable()
+    public File getFolder()
     {
-        return writable;
+        return folder;
+    }
+
+    @Override
+    public @NotNull Chunk getChunk(PositionableObject2D pos)
+    {
+        return load(getFileOf(pos));
+    }
+
+    @Override
+    public @NotNull Chunk getChunk(int x, int z)
+    {
+        return load(getFileOf(x, z));
     }
 }
