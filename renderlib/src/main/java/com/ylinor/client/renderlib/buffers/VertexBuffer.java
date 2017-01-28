@@ -51,8 +51,6 @@ public class VertexBuffer {
     {
         this(capacity, capacity);
     }
-    
-    
 
     public VertexBuffer(int verticesSize, int indicesSize) {
         vertexBuffer = BufferUtils.newByteBuffer(verticesSize);
