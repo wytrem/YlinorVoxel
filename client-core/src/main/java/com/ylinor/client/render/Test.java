@@ -3,15 +3,15 @@ package com.ylinor.client.render;
 import com.badlogic.gdx.math.MathUtils;
 import com.ylinor.library.api.world.BlockType;
 import com.ylinor.library.api.world.Chunk;
+import com.ylinor.library.api.world.IChunkProvider;
 import com.ylinor.library.api.world.World;
-import com.ylinor.library.api.world.storage.StorageManager;
 import com.ylinor.library.util.math.PositionableObject2D;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
 
-public class Test extends StorageManager {
+public class Test implements IChunkProvider {
 
     private World world;
 
@@ -64,15 +64,5 @@ public class Test extends StorageManager {
     @Override
     public Chunk getChunk(PositionableObject2D pos) {
         return getChunk(pos.x(), pos.y());
-    }
-
-    @Override
-    public void setChunk(PositionableObject2D pos, Chunk chunk) {
-
-    }
-
-    @Override
-    public void setChunk(int x, int z, Chunk chunk) {
-
     }
 }

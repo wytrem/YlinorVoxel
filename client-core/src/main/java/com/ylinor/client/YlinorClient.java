@@ -32,8 +32,8 @@ import com.ylinor.library.api.world.storage.StorageManager;
  * @author Litarvan
  * @since 1.0.0
  */
-public class YlinorClient extends YlinorApplication implements ApplicationListener
-{
+public class YlinorClient extends YlinorApplication
+                implements ApplicationListener {
     /**
      * La verision du client
      */
@@ -92,27 +92,23 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
     //     */
     //    private IProtocol<ServerEntity> protocol;
 
-
-    public YlinorClient()
-    {
+    public YlinorClient() {
         instance = this;
+        client = this;
     }
 
     @Override
-    public void create()
-    {
+    public void create() {
         logger.info("Loading Ylinor Client v" + VERSION);
 
         assetsTime = System.currentTimeMillis();
         assets.preload();
 
-        try
-        {
+        try {
             settings = GameSettings.get(new File(YlinorFiles.getGameFolder(), "settings.json"));
             settings.save(new File(YlinorFiles.getGameFolder(), "settings.json"));
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -131,17 +127,14 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
     }
 
     @Override
-    public void render()
-    {
+    public void render() {
         // Clearing screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Assets loading
-        if (assets.update() && !loaded)
-        {
-            if (!preloaded)
-            {
+        if (assets.update() && !loaded) {
+            if (!preloaded) {
                 logger.info("Pre-assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = System.currentTimeMillis();
@@ -151,8 +144,7 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
 
                 setScreen(new LoadingScreen());
             }
-            else
-            {
+            else {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = 0;
@@ -163,8 +155,7 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
         }
 
         // Screen updating
-        if (screen != null)
-        {
+        if (screen != null) {
             screen.render(Gdx.graphics.getDeltaTime());
         }
         else {
@@ -174,10 +165,8 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
     }
 
     @Override
-    public void resize(int width, int height)
-    {
-        if (screen != null)
-        {
+    public void resize(int width, int height) {
+        if (screen != null) {
             screen.resize(width, height);
         }
         logger.debug("Window resized : " + width + "x" + height);
@@ -199,12 +188,12 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
             Gdx.input.setInputProcessor(renderGlobal.getCameraController());
         }
 
-        logger.debug("Setting screen : " + (screen == null ? "null" : screen.getClass().getSimpleName()));
+        logger.debug("Setting screen : " + (screen == null ? "null" : screen.getClass()
+                                                                            .getSimpleName()));
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         logger.info("Closing !");
         assets.dispose();
         //        clientNetwork.end();
@@ -216,19 +205,15 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
     }
 
     @Override
-    public void pause()
-    {
-        if (screen != null)
-        {
+    public void pause() {
+        if (screen != null) {
             screen.pause();
         }
     }
 
     @Override
-    public void resume()
-    {
-        if (screen != null)
-        {
+    public void resume() {
+        if (screen != null) {
             screen.resume();
         }
     }
@@ -236,13 +221,17 @@ public class YlinorClient extends YlinorApplication implements ApplicationListen
     /**
      * @return the currently active {@link Screen}.
      */
-    public Screen getScreen()
-    {
+    public Screen getScreen() {
         return screen;
     }
 
-    public GameSettings getSettings()
-    {
+    public GameSettings getSettings() {
         return settings;
+    }
+
+    private static YlinorClient client;
+
+    public static final YlinorClient client() {
+        return client;
     }
 }
