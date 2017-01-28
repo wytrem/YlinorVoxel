@@ -2,6 +2,9 @@ package com.ylinor.client.renderlib.buffers;
 
 import java.nio.ByteBuffer;
 
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
@@ -123,6 +126,30 @@ public class VertexBuffer {
     public VertexBuffer normal(float x, float y, float z) {
         vertexBuffer.putFloat(x).putFloat(y).putFloat(z);
         return this;
+    }
+    
+    /**
+     * Puts three floats in that buffer.
+     * 
+     * @param x The X coordinate of the vertex
+     * @param y The Y coordinate of the vertex
+     * @param z The Z coordinate of the vertex
+     * @return This {@link VertexBuffer} for chaining
+     */
+    public VertexBuffer pos(Vector3fc pos) {
+        return this.pos(pos.x(), pos.y(), pos.z());
+    }
+    
+    /**
+     * Puts three floats in that buffer.
+     * 
+     * @param x The X normal
+     * @param y The Y normal
+     * @param z The Z normal
+     * @return This {@link VertexBuffer} for chaining
+     */
+    public VertexBuffer normal(Vector3fc normal) {
+        return this.normal(normal.x(), normal.y(), normal.z());
     }
 
     /**

@@ -17,9 +17,6 @@ public class BlockModel implements Renderable {
     
     @NotNull
     private List<Cube> cubes;
-
-    
-    
     
     public void render(VertexBuffer vertexBuffer) {
         cubes.forEach(cube -> cube.render(vertexBuffer));
