@@ -27,7 +27,7 @@ public class WorldStorage implements IChunkProvider
     {
         this.folder = folder;
         this.world = world;
-        this.dummyChunk = new Chunk(world, 0, 0);
+        this.dummyChunk = new Chunk(this.world, 0, 0);
     }
 
     public File getFileOf(int x, int z)

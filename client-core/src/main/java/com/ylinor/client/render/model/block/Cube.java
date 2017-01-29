@@ -20,13 +20,22 @@ public class Cube implements Renderable {
     private Quaternionf rotation = new Quaternionf();
     private List<Cube> children = new ArrayList<>();
     private Map<Facing, TexturedFace> textures;
+    public TextureRegion region;
+    
+    public static Cube from(TextureRegion region)
+    {
+        Cube cube = new Cube();
+        
+        cube.region = region;
+        return cube;
+    }
 
     public void render(VertexBuffer vertexBuffer) {
 
         TempVars tempVars = TempVars.get();
 
         tempVars.tempMat4.setTranslation(position).rotate(rotation).scale(size);
-
+        System.out.println("region = " + region);
         for (Facing face : Facing.values()) {
             putFace(face, vertexBuffer, tempVars);
         }
@@ -40,12 +49,12 @@ public class Cube implements Renderable {
 
     }
     
-    public void toto(TempVars tempVars)
+    public void initRendering(TempVars tempVars)
     {
         tempVars.tempMat4.setTranslation(position).rotate(rotation).scale(size);
     }
 
-    public void createTop(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {
+    public void createTop(VertexBuffer buffer, TempVars tempVars) {
         // normal
         tempVars.vect1.set(0, 1, 0).mulProject(tempVars.tempMat4);
 
@@ -75,7 +84,7 @@ public class Cube implements Renderable {
               .endVertex();
     }
 
-    public void createBottom(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {
+    public void createBottom(VertexBuffer buffer, TempVars tempVars) {
 
         // normal
         tempVars.vect1.set(0, -1, 0).mulProject(tempVars.tempMat4);
@@ -86,11 +95,11 @@ public class Cube implements Renderable {
               .normal(tempVars.vect1)
               .texCoords(region.getU(), region.getV())
               .endVertex();
-
-        tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
+        
+        tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
               .normal(tempVars.vect1)
-              .texCoords(region.getU(), region.getV2())
+              .texCoords(region.getU2(), region.getV())
               .endVertex();
 
         tempVars.vect0.set(1, 0, 1).mulProject(tempVars.tempMat4);
@@ -99,14 +108,14 @@ public class Cube implements Renderable {
               .texCoords(region.getU2(), region.getV2())
               .endVertex();
 
-        tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
+        tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
               .normal(tempVars.vect1)
-              .texCoords(region.getU2(), region.getV())
+              .texCoords(region.getU(), region.getV2())
               .endVertex();
     }
 
-    public void createLeft(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {
+    public void createLeft(VertexBuffer buffer, TempVars tempVars) {
 
         // normal
         tempVars.vect1.set(-1, 0, 0).mulProject(tempVars.tempMat4);
@@ -137,7 +146,7 @@ public class Cube implements Renderable {
               .endVertex();
     }
 
-    public void createRight(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {
+    public void createRight(VertexBuffer buffer, TempVars tempVars) {
         // normal
         tempVars.vect1.set(1, 0, 0).mulProject(tempVars.tempMat4);
 
@@ -167,7 +176,7 @@ public class Cube implements Renderable {
               .endVertex();
     }
 
-    public void createFront(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {
+    public void createFront(VertexBuffer buffer, TempVars tempVars) {
         // normal
         tempVars.vect1.set(0, 0, 1).mulProject(tempVars.tempMat4);
 
@@ -197,7 +206,7 @@ public class Cube implements Renderable {
               .endVertex();
     }
 
-    public void createBack(VertexBuffer buffer, TextureRegion region, TempVars tempVars) {
+    public void createBack(VertexBuffer buffer, TempVars tempVars) {
 
         // normal
         tempVars.vect1.set(0, 0, -1).mulProject(tempVars.tempMat4);

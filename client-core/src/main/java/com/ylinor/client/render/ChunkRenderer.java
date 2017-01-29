@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
-import com.ylinor.client.render.model.block.Cube;
+import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
@@ -12,7 +12,6 @@ import com.ylinor.client.renderlib.format.VertexFormats;
 import com.ylinor.library.api.world.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
-import com.ylinor.library.util.TempVars;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.procedure.TObjectProcedure;
@@ -50,7 +49,7 @@ public class ChunkRenderer implements Disposable {
         vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
 
         BlockType tile;
-        TextureRegion region;
+        BlockModel model;
 
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
@@ -58,15 +57,17 @@ public class ChunkRenderer implements Disposable {
                     tile = neighbours.getBlockType(x, y, z);
 
                     if (tile != BlockType.air) {
-                        region = renderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16];
-
+                        
+                        model = renderer.renderGlobal.blockModels.get(chunk.getWorld(), tile, chunk.getBlockData(x, y, z));
+                        
+                        vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
                         if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
                         }
-
-                        renderCube(neighbours, gdxTempVars.vect0, x, y, z, region);
+                        
+                        model.render(vertexBuffer, neighbours, x, y, z);
                     }
                 }
             }
@@ -87,47 +88,6 @@ public class ChunkRenderer implements Disposable {
         int amount = Uploader.upload(vertexBuffer, mesh);
         meshes.put(mesh, amount);
     }
-
-    private Cube cube = new Cube();
-
-    private void renderCube(IBlockContainer neighbours, Vector3 offset, int x, int y, int z, TextureRegion region) {
-
-        TempVars tempVars = TempVars.get();
-
-        cube.toto(tempVars);
-
-        vertexBuffer.offset.set(offset.x + x, offset.y + y, offset.z + z);
-
-        if (y == Chunk.SIZE_Y - 1 || !neighbours.getBlockType(x, y + 1, z)
-                                                .isOpaque()) {
-            cube.createTop(vertexBuffer, region, tempVars);
-        }
-
-        if (y == 0 || !neighbours.getBlockType(x, y - 1, z).isOpaque()) {
-            cube.createBottom(vertexBuffer, region, tempVars);
-        }
-
-        if (!neighbours.getBlockType(x + 1, y, z).isOpaque()) {
-            cube.createRight(vertexBuffer, region, tempVars);
-        }
-
-        if (!neighbours.getBlockType(x - 1, y, z).isOpaque()) {
-            cube.createLeft(vertexBuffer, region, tempVars);
-        }
-
-        if (!neighbours.getBlockType(x, y, z + 1).isOpaque()) {
-            cube.createBack(vertexBuffer, region, tempVars);
-        }
-
-        if (!neighbours.getBlockType(x, y, z - 1).isOpaque()) {
-            cube.createFront(vertexBuffer, region, tempVars);
-        }
-
-        vertexBuffer.offset.zero();
-
-        tempVars.release();
-    }
-
     public static int indicesIn(int numComponents) {
         return numComponents * 6 / 4;
     }

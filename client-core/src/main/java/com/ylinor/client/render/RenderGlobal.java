@@ -2,7 +2,6 @@ package com.ylinor.client.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,6 +16,10 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.render.camera.FirstPersonCameraController;
+import com.ylinor.client.render.model.block.BlockModel;
+import com.ylinor.client.render.model.block.ModelsRegistry;
+import com.ylinor.client.render.model.block.UniqueVariant;
+import com.ylinor.library.api.world.BlockType;
 import com.ylinor.library.api.world.World;
 
 
@@ -32,6 +35,7 @@ public class RenderGlobal implements Disposable {
     
     SpriteBatch spriteBatch;
     BitmapFont font;
+    ModelsRegistry blockModels;
 
     public RenderGlobal(World world) {
         DefaultShader.Config shaderConfig = new Config();
@@ -58,6 +62,13 @@ public class RenderGlobal implements Disposable {
         
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
+        
+        blockModels = new ModelsRegistry();
+        
+        for (BlockType tile : BlockType.REGISTRY.valueCollection())
+        {
+            blockModels.register(tile, new UniqueVariant(BlockModel.basicCube(terrainRenderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16])));
+        }
     }
 
     public void render() {
@@ -78,10 +89,6 @@ public class RenderGlobal implements Disposable {
         font.draw(spriteBatch, "fps : " + Gdx.graphics.getFramesPerSecond(), 0, 60);
         font.draw(spriteBatch, "pos : " + camera.position.toString(), 0, 40);
         spriteBatch.end();
-    }
-
-    private void onChunkChanged() {
-
     }
 
     private void update() {

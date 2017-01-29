@@ -13,6 +13,7 @@ import java.io.OutputStream;
 
 public final class Serializer
 {
+    @SuppressWarnings("unchecked")
     public static <T> T read(InputStream in) throws IOException, ClassNotFoundException
     {
         FSTObjectInput input = new FSTObjectInput(in);
