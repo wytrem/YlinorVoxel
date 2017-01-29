@@ -13,7 +13,6 @@ import com.ylinor.client.render.model.ModelDeserializer;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.world.IBlockContainer;
 
-@JsonDeserialize(using = ModelDeserializer.class)
 public class BlockModel implements Renderable {
     @Nullable
     private String name;
