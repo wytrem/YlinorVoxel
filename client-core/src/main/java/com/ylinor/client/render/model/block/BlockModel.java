@@ -7,10 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ylinor.client.render.Renderable;
+import com.ylinor.client.render.model.ModelDeserializer;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.world.IBlockContainer;
 
+@JsonDeserialize(using = ModelDeserializer.class)
 public class BlockModel implements Renderable {
     @Nullable
     private String name;
