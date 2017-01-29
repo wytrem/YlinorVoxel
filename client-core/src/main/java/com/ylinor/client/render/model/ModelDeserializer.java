@@ -23,7 +23,7 @@ public class ModelDeserializer extends JsonDeserializer<BlockModel> {
         TreeNode textures = tree.get("textures");
         TreeNode variants = tree.get("variants");
 
-
+        List<Cube> parts = readModel(model, textures);
 
         return null;
     }
@@ -56,6 +56,8 @@ public class ModelDeserializer extends JsonDeserializer<BlockModel> {
 
             parts.add(new Cube());
         });
+
+        return null;
     }
 
     public TreeNode getNode(TreeNode parent, TreeNode tree, String path) {
