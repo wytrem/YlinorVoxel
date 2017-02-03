@@ -19,9 +19,25 @@ public class Cube implements Renderable {
     private Vector3f position = new Vector3f(), size = new Vector3f(1);
     private Quaternionf rotation = new Quaternionf();
     private List<Cube> children = new ArrayList<>();
-    private Map<Facing, TexturedFace> textures;
+    private Map<Facing, UVMapping> textures;
     public TextureRegion region;
-    
+
+
+
+    public Cube()
+    {
+    }
+
+    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation, List<Cube> children, Map<Facing, UVMapping> textures)
+    {
+        this.id = id;
+        this.position = position;
+        this.size = size;
+        this.rotation = rotation;
+        this.children = children;
+        this.textures = textures;
+    }
+
     public static Cube from(TextureRegion region)
     {
         Cube cube = new Cube();
