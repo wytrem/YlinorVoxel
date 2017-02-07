@@ -36,7 +36,7 @@ public class RenderSystem extends BaseSystem {
 
     @Wire
     private AssetsLoadingSystem assetsLoadingSystem;
-    
+
     /**
      * Current screen
      */
@@ -98,12 +98,12 @@ public class RenderSystem extends BaseSystem {
     }
 
     public void dispose() {
-        assets.dispose();
-        //        clientNetwork.end();
-
-        if (screen != null)
+        if (screen != null) {
             screen.hide();
-
+            screen.dispose();
+        }
+        
+        renderGlobal.dispose();
     }
 
     @Subscribe

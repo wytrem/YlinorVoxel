@@ -37,7 +37,7 @@ public class LoadingScreen extends YlinorScreen {
         super.show();
 
         /* Créer le logo a partire de la classe Asset */
-        logo = new Image(assets.screen.splash());
+        logo = new Image(assets.screenAssets.splash());
         this.addActor(logo);
 
         /* Créer la ProgressBar */
@@ -55,7 +55,7 @@ public class LoadingScreen extends YlinorScreen {
         /* Definir la nouvelle taille du logo */
         logo.setSize(450, 450);
 
-        /* Changer sa position en fonction de la taille de la fenet */
+        /* Changer sa position en fonction de la taille de la fenetre. */
         logo.setPosition(width / 2 - logo.getWidth() / 2, height / 2 - logo.getHeight() / 2);
 
         /*

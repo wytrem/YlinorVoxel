@@ -75,6 +75,11 @@ public class AssetsLoadingSystem extends BaseSystem {
         }
     }
     
+    @Override
+    protected void dispose() {
+        assets.dispose();
+    }
+    
     public boolean loaded() {
         return loaded;
     }

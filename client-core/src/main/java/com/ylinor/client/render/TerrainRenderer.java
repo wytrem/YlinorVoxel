@@ -22,6 +22,7 @@ import com.ylinor.library.api.terrain.Terrain;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.procedure.TObjectIntProcedure;
+import gnu.trove.procedure.TObjectProcedure;
 
 
 public class TerrainRenderer implements RenderableProvider, Disposable {
@@ -104,7 +105,15 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
 
     @Override
     public void dispose() {
-
+        chunkRenderers.forEachValue(new TObjectProcedure<ChunkRenderer>() {
+            @Override
+            public boolean execute(ChunkRenderer chunkRenderer) {
+                chunkRenderer.dispose();
+                return true;
+            }
+        });
+        
+        texture.dispose();
     }
 
     public Terrain getWorld() {

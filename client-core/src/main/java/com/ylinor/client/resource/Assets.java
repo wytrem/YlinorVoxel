@@ -3,6 +3,7 @@ package com.ylinor.client.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,13 +46,13 @@ public class Assets implements Disposable {
     /**
      * Screens's assets
      */
-    public final ScreenAssets screen;
+    public final ScreenAssets screenAssets;
 
     public Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());
         assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assets.getFileHandleResolver()));
 
-        screen = new ScreenAssets(this);
+        screenAssets = new ScreenAssets(this);
     }
 
     /**
@@ -61,7 +62,7 @@ public class Assets implements Disposable {
         logger.info("Loading pre-assets (including VisUI)...");
 
         VisUI.load();
-        screen.preload();
+        screenAssets.preload();
     }
 
     /**
@@ -79,7 +80,7 @@ public class Assets implements Disposable {
     public void load() {
         logger.info("Loading assets...");
 
-        screen.load();
+        screenAssets.load();
     }
 
     @Override

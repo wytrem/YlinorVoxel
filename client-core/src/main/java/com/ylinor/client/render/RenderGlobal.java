@@ -103,6 +103,6 @@ public class RenderGlobal implements Disposable {
 
     @Override
     public void dispose() {
-
+        terrainRenderer.dispose();
     }
 }
