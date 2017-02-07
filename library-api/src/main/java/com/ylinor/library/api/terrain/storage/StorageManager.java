@@ -1,12 +1,12 @@
-package com.ylinor.library.api.world.storage;
+package com.ylinor.library.api.terrain.storage;
 
 import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.api.world.IChunkProvider;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.Chunk;
+import com.ylinor.library.api.terrain.IChunkProvider;
+import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.math.PositionableObject2D;
 
 import gnu.trove.map.hash.TLongObjectHashMap;
@@ -16,7 +16,7 @@ public class StorageManager implements IChunkProvider
     private WorldStorage storage;
     private TLongObjectHashMap<Chunk> cache = new TLongObjectHashMap<>();
 
-    public StorageManager(World world, File folder)
+    public StorageManager(Terrain world, File folder)
     {
         this.storage = new WorldStorage(world, folder);
     }

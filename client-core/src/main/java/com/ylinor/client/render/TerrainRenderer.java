@@ -16,8 +16,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.ylinor.client.renderlib.GdxTempVars;
-import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.Chunk;
+import com.ylinor.library.api.terrain.Terrain;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
@@ -25,7 +25,7 @@ import gnu.trove.procedure.TObjectIntProcedure;
 
 
 public class TerrainRenderer implements RenderableProvider, Disposable {
-    World world;
+    Terrain world;
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
@@ -33,7 +33,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     Texture texture;
     int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 6;
 
-    public TerrainRenderer(World world, RenderGlobal renderGlobal) {
+    public TerrainRenderer(Terrain world, RenderGlobal renderGlobal) {
         this.world = world;
         this.renderGlobal = renderGlobal;
         texture = new Texture(Gdx.files.internal("img/tiles.png"));
@@ -107,7 +107,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
 
     }
 
-    public World getWorld() {
+    public Terrain getWorld() {
         return world;
     }
 }

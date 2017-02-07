@@ -1,6 +1,5 @@
 package com.ylinor.library.api.block;
 
-import com.ylinor.library.api.world.WorldUniqueId;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
@@ -8,7 +7,7 @@ import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.math.MathHelper;
 
 
-public class BlockPos extends Vector3i implements WorldUniqueId {
+public class BlockPos extends Vector3i {
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0);
     private static final int NUM_X_BITS = 1 + MathHelper.calculateLogBaseTwo(MathHelper.roundUpToPowerOfTwo(30000000));
     private static final int NUM_Z_BITS = NUM_X_BITS;

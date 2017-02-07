@@ -3,6 +3,7 @@ package com.ylinor.client.screen.pregame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.artemis.annotations.Wire;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
@@ -25,15 +26,15 @@ public class LoadingScreen extends YlinorScreen {
 
     /* Logger */
     private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Wire
+    private Assets assets;
 
     /* Appele lors de la création du screen */
     @Override
     public void show() {
         /* Définit l'InputProcessor (cf YlinorScreen) */
         super.show();
-
-        /* Prend un objet local d'assets */
-        Assets assets = Assets.get();
 
         /* Créer le logo a partire de la classe Asset */
         logo = new Image(assets.screen.splash());
@@ -73,6 +74,6 @@ public class LoadingScreen extends YlinorScreen {
          * Changer la valeur de la progress bar en fonction du nombre d'assets
          * chargés
          */
-        loading.setValue(Assets.get().assetsLoaded());
+        loading.setValue(assets.assetsLoaded());
     }
 }

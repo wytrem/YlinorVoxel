@@ -19,8 +19,8 @@ import com.ylinor.client.render.camera.FirstPersonCameraController;
 import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.ModelsRegistry;
 import com.ylinor.client.render.model.block.UniqueVariant;
-import com.ylinor.library.api.world.BlockType;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.BlockType;
+import com.ylinor.library.api.terrain.Terrain;
 
 
 public class RenderGlobal implements Disposable {
@@ -37,7 +37,7 @@ public class RenderGlobal implements Disposable {
     BitmapFont font;
     ModelsRegistry blockModels;
 
-    public RenderGlobal(World world) {
+    public RenderGlobal(Terrain world) {
         DefaultShader.Config shaderConfig = new Config();
 
         shaderConfig.defaultCullFace = GL20.GL_FRONT;

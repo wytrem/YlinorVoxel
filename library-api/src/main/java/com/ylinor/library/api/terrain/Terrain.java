@@ -1,15 +1,15 @@
-package com.ylinor.library.api.world;
+package com.ylinor.library.api.terrain;
 
 import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.util.math.PositionableObject2D;
 
-public class World implements IChunkProvider, IBlockContainer
+public class Terrain implements IChunkProvider, IBlockContainer
 {
     public static final short SIZE_Y = Chunk.SIZE_Y;
 
     private IChunkProvider storage;
 
-    public World(IChunkProvider storage)
+    public Terrain(IChunkProvider storage)
     {
         this.storage = storage;
     }

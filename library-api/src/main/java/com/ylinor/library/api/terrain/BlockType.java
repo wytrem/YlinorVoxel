@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world;
+package com.ylinor.library.api.terrain;
 
 import com.ylinor.library.api.block.BlockPos;
 import gnu.trove.map.hash.TShortObjectHashMap;
@@ -39,7 +39,7 @@ public class BlockType {
         return id != 0;
     }
 
-    public BlockExtraData createData(BlockPos pos, World world) {
+    public BlockExtraData createData(BlockPos pos, Terrain world) {
         return null;
     }
 

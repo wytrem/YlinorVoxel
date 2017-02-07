@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world;
+package com.ylinor.library.api.terrain;
 
 import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.util.math.Sizeable3D;
@@ -15,12 +15,12 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     private TShortObjectMap<Block> blockCache = new TShortObjectHashMap<>(64);
     private TShortObjectMap<BlockExtraData> blockDatas = new TShortObjectHashMap<>(64);
     private short[][][] blocks;
-    private World world;
+    private Terrain world;
     public final int x, z;
     public final long id;
     public boolean needsRenderUpdate;
 
-    public Chunk(World world, int chunkX, int chunkZ) {
+    public Chunk(Terrain world, int chunkX, int chunkZ) {
         this.world = world;
         this.x = chunkX;
         this.z = chunkZ;
@@ -29,7 +29,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
         needsRenderUpdate = true;
     }
     
-    public World getWorld() {
+    public Terrain getWorld() {
         return world;
     }
 

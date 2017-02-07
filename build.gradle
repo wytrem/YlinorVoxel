@@ -12,20 +12,10 @@ allprojects {
 
     repositories {
         mavenLocal()
-        jcenter()
         mavenCentral()
-
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        }
-
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/releases/'
-        }
-
-        maven {
-            url 'http://wytrem.github.io/maven/'
-        }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        jcenter()
     }
 
 
@@ -36,6 +26,8 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         visuiVersion = '1.2.4'
+        artemisVersion = '2.1.0'
+        artemisContribVersion = '1.2.1'
     }
     
     jar {

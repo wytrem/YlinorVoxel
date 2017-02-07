@@ -1,17 +1,17 @@
 package com.ylinor.client.render;
 
-import com.ylinor.library.api.world.Block;
-import com.ylinor.library.api.world.BlockExtraData;
-import com.ylinor.library.api.world.BlockType;
-import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.api.world.IBlockContainer;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.Block;
+import com.ylinor.library.api.terrain.BlockExtraData;
+import com.ylinor.library.api.terrain.BlockType;
+import com.ylinor.library.api.terrain.Chunk;
+import com.ylinor.library.api.terrain.IBlockContainer;
+import com.ylinor.library.api.terrain.Terrain;
 
 
 public class ChunkCache implements IBlockContainer {
     private Chunk center, xPos, xNeg, zPos, zNeg;
 
-    public ChunkCache(Chunk chunk, World world) {
+    public ChunkCache(Chunk chunk, Terrain world) {
         center = chunk;
         xPos = world.getChunk(chunk.x + 1, chunk.z);
         xNeg = world.getChunk(chunk.x - 1, chunk.z);

@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world.storage;
+package com.ylinor.library.api.terrain.storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.api.world.IChunkProvider;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.Chunk;
+import com.ylinor.library.api.terrain.IChunkProvider;
+import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.io.Compresser;
 import com.ylinor.library.util.io.Serializer;
 import com.ylinor.library.util.math.PositionableObject2D;
@@ -20,10 +20,10 @@ public class WorldStorage implements IChunkProvider
     private static final Logger logger = LoggerFactory.getLogger(WorldStorage.class);
     
     private File folder;
-    private World world;
+    private Terrain world;
     private Chunk dummyChunk;
 
-    public WorldStorage(World world, File folder)
+    public WorldStorage(Terrain world, File folder)
     {
         this.folder = folder;
         this.world = world;

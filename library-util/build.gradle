@@ -15,4 +15,12 @@ dependencies {
     compile 'de.ruedigermoeller:fst:1.63'
     compile 'com.github.luben:zstd-jni:1.1.2'
     compile 'commons-io:commons-io:2.5'
+    
+    // Entity Component System
+    compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+
+    // Artemis-odb bonus functionality (systems, events, components).
+    compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
+    compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
+    compile "net.mostlyoriginal.artemis-odb:contrib-network:$artemisContribVersion"
 }

@@ -1,8 +1,8 @@
 package com.ylinor.client.render.model.block;
 
-import com.ylinor.library.api.world.BlockExtraData;
-import com.ylinor.library.api.world.BlockType;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.BlockExtraData;
+import com.ylinor.library.api.terrain.BlockType;
+import com.ylinor.library.api.terrain.Terrain;
 
 public class UniqueVariant extends Variants {
     private BlockModel model;
@@ -13,7 +13,7 @@ public class UniqueVariant extends Variants {
     }
     
     @Override
-    public BlockModel get(World world, BlockType type, BlockExtraData data) {
+    public BlockModel get(Terrain world, BlockType type, BlockExtraData data) {
         return model;
     }
 }

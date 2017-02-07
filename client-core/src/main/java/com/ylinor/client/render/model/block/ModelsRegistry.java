@@ -1,8 +1,8 @@
 package com.ylinor.client.render.model.block;
 
-import com.ylinor.library.api.world.BlockExtraData;
-import com.ylinor.library.api.world.BlockType;
-import com.ylinor.library.api.world.World;
+import com.ylinor.library.api.terrain.BlockExtraData;
+import com.ylinor.library.api.terrain.BlockType;
+import com.ylinor.library.api.terrain.Terrain;
 
 import gnu.trove.map.TShortObjectMap;
 import gnu.trove.map.hash.TShortObjectHashMap;
@@ -18,7 +18,7 @@ public class ModelsRegistry {
         variantsById.put(type.getId(), variants);
     }
     
-    public BlockModel get(World world, BlockType type, BlockExtraData data) {
+    public BlockModel get(Terrain world, BlockType type, BlockExtraData data) {
         return variantsById.get(type.getId()).get(world, type, data);
     }
 }

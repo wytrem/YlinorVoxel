@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world.storage;
+package com.ylinor.library.api.terrain.storage;
 
 import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.util.math.PositionableObject2D;

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.Cube;
 import com.ylinor.client.render.model.block.UVMapping;
-import com.ylinor.library.api.world.BlockExtraData;
+import com.ylinor.library.api.terrain.BlockExtraData;
 import com.ylinor.library.util.Facing;
 
 

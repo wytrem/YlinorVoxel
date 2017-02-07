@@ -1,8 +1,8 @@
 package com.ylinor.client.render.model.block;
 
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
-import com.ylinor.library.api.world.Chunk;
-import com.ylinor.library.api.world.IBlockContainer;
+import com.ylinor.library.api.terrain.Chunk;
+import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.util.TempVars;
 
 

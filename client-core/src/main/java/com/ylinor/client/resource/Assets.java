@@ -38,11 +38,6 @@ public class Assets implements Disposable {
     public static final String IMAGES_FOLDER = "img/";
 
     /**
-     * Class instance
-     */
-    private static Assets instance = new Assets();
-
-    /**
      * LibGDX's assets manager
      */
     private final AssetManager assets;
@@ -52,7 +47,7 @@ public class Assets implements Disposable {
      */
     public final ScreenAssets screen;
 
-    private Assets() {
+    public Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());
         assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assets.getFileHandleResolver()));
 
@@ -147,12 +142,5 @@ public class Assets implements Disposable {
      */
     public <T> T get(String file) {
         return assets.get(file);
-    }
-
-    /**
-     * @return the class instance
-     */
-    public static Assets get() {
-        return instance;
     }
 }

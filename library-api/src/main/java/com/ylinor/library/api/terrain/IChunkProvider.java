@@ -1,4 +1,4 @@
-package com.ylinor.library.api.world;
+package com.ylinor.library.api.terrain;
 
 import com.ylinor.library.util.math.PositionableObject2D;
 import org.jetbrains.annotations.NotNull;

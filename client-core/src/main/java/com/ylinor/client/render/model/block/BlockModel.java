@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ylinor.client.render.Renderable;
 import com.ylinor.client.render.model.ModelDeserializer;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
-import com.ylinor.library.api.world.IBlockContainer;
+import com.ylinor.library.api.terrain.IBlockContainer;
 
 public class BlockModel implements Renderable {
     @Nullable
