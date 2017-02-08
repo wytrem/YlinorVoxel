@@ -7,7 +7,8 @@ import java.lang.annotation.Target;
 
 
 /**
- * Use for assets/assets's getter as preloaded (loaded before displaying the loading screen)
+ * Use for assets/assets's getter as preloaded (loaded before displaying the
+ * loading screen)
  *
  * @author Litarvan
  * @since 1.0.0

@@ -4,8 +4,9 @@ import org.joml.Vector3f;
 
 import com.artemis.Component;
 
+
 /**
- * Marks a moveable entity. 
+ * Marks a moveable entity.
  *
  * @author wytrem
  */

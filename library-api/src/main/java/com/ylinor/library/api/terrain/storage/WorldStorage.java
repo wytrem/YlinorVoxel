@@ -15,62 +15,52 @@ import com.ylinor.library.util.io.Compresser;
 import com.ylinor.library.util.io.Serializer;
 import com.ylinor.library.util.math.PositionableObject2D;
 
-public class WorldStorage implements IChunkProvider
-{
+
+public class WorldStorage implements IChunkProvider {
     private static final Logger logger = LoggerFactory.getLogger(WorldStorage.class);
-    
+
     private File folder;
     private Terrain world;
     private Chunk dummyChunk;
 
-    public WorldStorage(Terrain world, File folder)
-    {
+    public WorldStorage(Terrain world, File folder) {
         this.folder = folder;
         this.world = world;
         this.dummyChunk = new Chunk(this.world, 0, 0);
     }
 
-    public File getFileOf(int x, int z)
-    {
+    public File getFileOf(int x, int z) {
         return new File(folder, "c-" + x + "-" + z + ".bin.zst");
     }
 
-    public File getFileOf(PositionableObject2D pos)
-    {
+    public File getFileOf(PositionableObject2D pos) {
         return new File(folder, "c-" + pos.x() + "-" + pos.y() + ".bin.zst");
     }
 
-    public @NotNull Chunk load(File file)
-    {
-        try
-        {
+    public @NotNull Chunk load(File file) {
+        try {
             return Serializer.read(Compresser.decompress(FileUtils.readFileToByteArray(file)));
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             logger.error("I/O error while reading ", e);
             return dummyChunk;
         }
-        catch (ClassNotFoundException e)
-        {
+        catch (ClassNotFoundException e) {
             throw new RuntimeException("FATAL: Chunk class not found while un-serializing a chunk", e);
         }
     }
 
-    public File getFolder()
-    {
+    public File getFolder() {
         return folder;
     }
 
     @Override
-    public @NotNull Chunk getChunk(PositionableObject2D pos)
-    {
+    public @NotNull Chunk getChunk(PositionableObject2D pos) {
         return load(getFileOf(pos));
     }
 
     @Override
-    public @NotNull Chunk getChunk(int x, int z)
-    {
+    public @NotNull Chunk getChunk(int x, int z) {
         return load(getFileOf(x, z));
     }
 }

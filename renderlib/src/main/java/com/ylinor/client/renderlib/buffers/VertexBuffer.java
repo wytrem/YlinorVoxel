@@ -48,9 +48,8 @@ public class VertexBuffer {
     private PrimitiveType indicesType;
     private int indicesCount;
     public final Vector3f offset;
-    
-    public VertexBuffer(int capacity)
-    {
+
+    public VertexBuffer(int capacity) {
         this(capacity, capacity);
     }
 
@@ -110,10 +109,12 @@ public class VertexBuffer {
      * @return This {@link VertexBuffer} for chaining
      */
     public VertexBuffer pos(float x, float y, float z) {
-        vertexBuffer.putFloat(x + offset.x).putFloat(y + offset.y).putFloat(z + offset.z);
+        vertexBuffer.putFloat(x + offset.x)
+                    .putFloat(y + offset.y)
+                    .putFloat(z + offset.z);
         return this;
     }
-    
+
     /**
      * Puts three floats in that buffer.
      * 
@@ -126,7 +127,7 @@ public class VertexBuffer {
         vertexBuffer.putFloat(x).putFloat(y).putFloat(z);
         return this;
     }
-    
+
     /**
      * Puts three floats in that buffer.
      * 
@@ -138,7 +139,7 @@ public class VertexBuffer {
     public VertexBuffer pos(Vector3fc pos) {
         return this.pos(pos.x(), pos.y(), pos.z());
     }
-    
+
     /**
      * Puts three floats in that buffer.
      * 
@@ -227,7 +228,7 @@ public class VertexBuffer {
         if (vertexBuffer.remaining() < vertexFormat.getStride()) {
             growVertexBuffer(1024);
         }
-        
+
         if (indicesBuffer.remaining() < 16) {
             growIndicesBuffer(1024);
         }

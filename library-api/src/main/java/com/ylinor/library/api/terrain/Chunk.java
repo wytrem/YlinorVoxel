@@ -28,7 +28,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
         blocks = new short[SIZE_X][SIZE_Y][SIZE_Z];
         needsRenderUpdate = true;
     }
-    
+
     public Terrain getWorld() {
         return world;
     }
@@ -82,7 +82,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
         if (y >= 256 || y < 0 || x > 15 || x < 0 || z > 15 || z < 0) {
             return 0;
         }
-        
+
         synchronized (blocks) {
             return blocks[x][y][z];
         }

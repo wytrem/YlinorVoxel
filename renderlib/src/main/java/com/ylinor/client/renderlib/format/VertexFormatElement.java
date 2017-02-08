@@ -132,7 +132,7 @@ public class VertexFormatElement {
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        
+
         return null;
     }
 

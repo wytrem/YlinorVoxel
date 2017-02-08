@@ -15,8 +15,8 @@ import com.kotcrab.vis.ui.VisUI;
 /**
  * Game's assets (Singleton)
  *
- * This class contains all constants of assets's folder
- * The {@link AssetManager}, and the other public assets class as
+ * This class contains all constants of assets's folder The
+ * {@link AssetManager}, and the other public assets class as
  * {@link ScreenAssets}.
  *
  * It contains load and preload function to precharge assets

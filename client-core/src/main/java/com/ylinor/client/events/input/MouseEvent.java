@@ -2,6 +2,7 @@ package com.ylinor.client.events.input;
 
 import com.ylinor.library.api.ecs.CancellableEvent;
 
+
 public class MouseEvent extends CancellableEvent implements InputEvent {
     public final int mouseX, mouseY, pointer;
 

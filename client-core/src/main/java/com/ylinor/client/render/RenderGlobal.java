@@ -24,12 +24,12 @@ public class RenderGlobal implements Disposable {
     ModelBatch modelBatch;
     Environment environment;
     TerrainRenderer terrainRenderer;
-    
+
     ModelsRegistry blockModels;
 
     @Wire
     CameraSystem cameraSystem;
-    
+
     public RenderGlobal(Terrain world) {
         DefaultShader.Config shaderConfig = new Config();
 
@@ -44,9 +44,8 @@ public class RenderGlobal implements Disposable {
         terrainRenderer = new TerrainRenderer(world, this);
 
         blockModels = new ModelsRegistry();
-        
-        for (BlockType tile : BlockType.REGISTRY.valueCollection())
-        {
+
+        for (BlockType tile : BlockType.REGISTRY.valueCollection()) {
             blockModels.register(tile, new UniqueVariant(BlockModel.basicCube(terrainRenderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16])));
         }
     }
@@ -58,7 +57,7 @@ public class RenderGlobal implements Disposable {
         update();
 
         modelBatch.begin(cameraSystem.getCamera());
-        
+
         // Render terrain
         modelBatch.render(terrainRenderer, environment);
 

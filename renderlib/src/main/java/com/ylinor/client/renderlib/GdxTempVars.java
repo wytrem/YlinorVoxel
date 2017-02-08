@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+
 /**
  * Temporary variables assigned to each thread. Engine classes may access these
  * temp variables with TempVars.get(), all retrieved TempVars instances must be
@@ -138,7 +139,7 @@ public class GdxTempVars {
      */
     public final Quaternion quat1 = new Quaternion();
     public final Quaternion quat2 = new Quaternion();
-    
+
     public final Frustum frustum = new Frustum();
     public final BoundingBox bb1 = new BoundingBox();
     public final BoundingBox bb2 = new BoundingBox();

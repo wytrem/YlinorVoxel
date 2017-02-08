@@ -8,8 +8,8 @@ import java.util.Collections;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class GameSettings
-{
+
+public class GameSettings {
 
     @JsonProperty("key_mapping")
     private KeyMap keyMapping = new KeyMap();
@@ -20,19 +20,16 @@ public class GameSettings
     /**
      * Empty constructor for json serialization.
      */
-    public GameSettings()
-    {
+    public GameSettings() {
     }
 
     /**
      * Used to create an instance of GameSettings with @param settingsFile
      */
-    public static GameSettings get(File settingsFile) throws IOException
-    {
+    public static GameSettings get(File settingsFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         GameSettings settings;
-        if(!settingsFile.exists())
-        {
+        if (!settingsFile.exists()) {
             settingsFile.createNewFile();
             Files.write(settingsFile.toPath(), Collections.singletonList("{ }"));
             settings = new GameSettings();
@@ -42,9 +39,8 @@ public class GameSettings
         settings = mapper.readValue(settingsFile, GameSettings.class);
         return settings;
     }
-    
-    public void resetDefaults()
-    {
+
+    public void resetDefaults() {
         keyMapping.resetDefaults();
         visualSettings.resetDefaults();
     }
@@ -52,20 +48,16 @@ public class GameSettings
     /**
      * Used to save the configuration in @param settingsFile
      */
-    public void save(File settingsFile) throws IOException
-    {
+    public void save(File settingsFile) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(settingsFile, this);
     }
 
-
-    public KeyMap getKeyMapping()
-    {
+    public KeyMap getKeyMapping() {
         return keyMapping;
     }
 
-    public VisualSettings getVisualSettings()
-    {
+    public VisualSettings getVisualSettings() {
         return visualSettings;
     }
 }

@@ -3,8 +3,8 @@ package com.ylinor.client.util.settings;
 import com.badlogic.gdx.Input;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class KeyMap
-{
+
+public class KeyMap {
 
     @JsonProperty("forward")
     public int forward;
@@ -27,12 +27,10 @@ public class KeyMap
     @JsonProperty("snick")
     public int snick;
 
-    public KeyMap()
-    {
+    public KeyMap() {
     }
 
-    public void resetDefaults()
-    {
+    public void resetDefaults() {
         forward = Input.Keys.Z;
         backward = Input.Keys.S;
         strafeLeft = Input.Keys.Q;

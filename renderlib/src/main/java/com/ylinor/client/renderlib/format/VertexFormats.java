@@ -4,8 +4,7 @@ import com.ylinor.client.renderlib.PrimitiveType;
 import com.ylinor.client.renderlib.format.VertexFormatElement.Usage;
 
 
-public class VertexFormats
-{
+public class VertexFormats {
     public static final VertexFormatElement POS_2F = new VertexFormatElement(PrimitiveType.FLOAT, Usage.POSITION, 2);
     public static final VertexFormatElement POS_3F = new VertexFormatElement(PrimitiveType.FLOAT, Usage.POSITION, 3);
     public static final VertexFormatElement NORMAL_3F = new VertexFormatElement(PrimitiveType.FLOAT, Usage.NORMAL, 3);

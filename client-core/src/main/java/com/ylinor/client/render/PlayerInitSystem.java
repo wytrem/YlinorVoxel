@@ -13,6 +13,7 @@ import com.ylinor.client.physics.InputControlledEntity;
 import com.ylinor.client.physics.Motion;
 import com.ylinor.client.physics.Velocity;
 
+
 /**
  * Initializes the player entity in the world. Used only for debugging.
  * 
@@ -25,7 +26,7 @@ public class PlayerInitSystem extends BaseSystem {
 
     @Wire
     private ComponentMapper<EyeHeight> eyeHeightMapper;
-    
+
     @Override
     protected void initialize() {
         Archetype playerArchetype = new ArchetypeBuilder().add(RenderViewEntity.class)
@@ -39,7 +40,7 @@ public class PlayerInitSystem extends BaseSystem {
                                                           .build(world);
 
         Entity player = world.createEntity(playerArchetype);
-        player.getComponent(AABB.class).position.set(0,258,0);
+        player.getComponent(AABB.class).position.set(0, 258, 0);
         player.getComponent(EyeHeight.class).eyePadding.y = 1.6f;
     }
 

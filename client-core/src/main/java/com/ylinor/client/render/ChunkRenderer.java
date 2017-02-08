@@ -57,16 +57,16 @@ public class ChunkRenderer implements Disposable {
                     tile = neighbours.getBlockType(x, y, z);
 
                     if (tile != BlockType.air) {
-                        
+
                         model = renderer.renderGlobal.blockModels.get(chunk.getWorld(), tile, chunk.getBlockData(x, y, z));
-                        
+
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
                         if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
                         }
-                        
+
                         model.render(vertexBuffer, neighbours, x, y, z);
                     }
                 }
@@ -88,6 +88,7 @@ public class ChunkRenderer implements Disposable {
         int amount = Uploader.upload(vertexBuffer, mesh);
         meshes.put(mesh, amount);
     }
+
     public static int indicesIn(int numComponents) {
         return numComponents * 6 / 4;
     }

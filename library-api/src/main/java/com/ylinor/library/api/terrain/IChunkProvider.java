@@ -1,11 +1,14 @@
 package com.ylinor.library.api.terrain;
 
-import com.ylinor.library.util.math.PositionableObject2D;
 import org.jetbrains.annotations.NotNull;
 
-public interface IChunkProvider
-{
-    @NotNull Chunk getChunk(PositionableObject2D pos);
+import com.ylinor.library.util.math.PositionableObject2D;
 
-    @NotNull Chunk getChunk(int x, int z);
+
+public interface IChunkProvider {
+    @NotNull
+    Chunk getChunk(PositionableObject2D pos);
+
+    @NotNull
+    Chunk getChunk(int x, int z);
 }

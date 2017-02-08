@@ -4,6 +4,7 @@ import com.ylinor.library.api.terrain.BlockExtraData;
 import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Terrain;
 
+
 public class UniqueVariant extends Variants {
     private BlockModel model;
 
@@ -11,7 +12,7 @@ public class UniqueVariant extends Variants {
         super();
         this.model = model;
     }
-    
+
     @Override
     public BlockModel get(Terrain world, BlockType type, BlockExtraData data) {
         return model;

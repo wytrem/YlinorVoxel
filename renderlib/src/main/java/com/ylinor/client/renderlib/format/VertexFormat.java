@@ -47,6 +47,9 @@ public class VertexFormat {
     }
 
     public VertexAttributes toGdx() {
-        return new VertexAttributes(elements.stream().map(VertexFormatElement::toGdx).collect(Collectors.toList()).toArray(new VertexAttribute[elements.size()]));
+        return new VertexAttributes(elements.stream()
+                                            .map(VertexFormatElement::toGdx)
+                                            .collect(Collectors.toList())
+                                            .toArray(new VertexAttribute[elements.size()]));
     }
 }

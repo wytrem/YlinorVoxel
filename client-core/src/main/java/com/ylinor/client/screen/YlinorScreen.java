@@ -18,7 +18,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class YlinorScreen extends Stage implements Screen {
 
     /**
-     * Automatic constructor, redirect to the other constructor by generating a ScreenViewport
+     * Automatic constructor, redirect to the other constructor by generating a
+     * ScreenViewport
      **/
     public YlinorScreen() {
         this(new ScreenViewport());

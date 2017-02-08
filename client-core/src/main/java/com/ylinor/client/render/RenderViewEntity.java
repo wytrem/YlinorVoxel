@@ -2,6 +2,7 @@ package com.ylinor.client.render;
 
 import com.artemis.Component;
 
+
 /**
  * Marks the entity holding the camera.
  */

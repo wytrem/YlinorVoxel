@@ -12,7 +12,8 @@ import com.ylinor.client.screen.YlinorScreen;
 
 
 /**
- * Loading screen, launch after the assets's preloading, display the assets's loading
+ * Loading screen, launch after the assets's preloading, display the assets's
+ * loading
  *
  * @author Litarvan
  * @since 1.0.0
@@ -26,7 +27,7 @@ public class LoadingScreen extends YlinorScreen {
 
     /* Logger */
     private Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Wire
     private Assets assets;
 

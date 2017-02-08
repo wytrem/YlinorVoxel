@@ -61,7 +61,7 @@ public class YlinorClient extends YlinorApplication
      * Current world
      */
     private Terrain terrain;
-    
+
     private World world;
 
     public YlinorClient() {
@@ -88,7 +88,7 @@ public class YlinorClient extends YlinorApplication
 
         world = buildWorld();
     }
-    
+
     @Override
     protected void configure(WorldConfiguration configuration) {
         super.configure(configuration);
@@ -97,23 +97,23 @@ public class YlinorClient extends YlinorApplication
         configuration.register(this);
         // Initializing player
         configuration.setSystem(PlayerInitSystem.class);
-        
+
         // Loading assets
         configuration.setSystem(AssetsLoadingSystem.class);
-        
+
         // Input processing
         configuration.setSystem(PlayerInputSystem.class);
-        
+
         // Physics management
         configuration.setSystem(GravitySystem.class);
         configuration.setSystem(PhysicsSystem.class);
-        
+
         // Camera follows player entity
         configuration.setSystem(CameraSystem.class);
-        
+
         // Render the terrain
         configuration.setSystem(TerrainRenderSystem.class);
-        
+
         configuration.setSystem(HudRenderSystem.class);
     }
 
