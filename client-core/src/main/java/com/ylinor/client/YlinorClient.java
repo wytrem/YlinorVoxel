@@ -16,8 +16,14 @@ import com.badlogic.gdx.Screen;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
+import com.ylinor.client.physics.GravitySystem;
+import com.ylinor.client.physics.PhysicsSystem;
+import com.ylinor.client.physics.PlayerInputSystem;
 import com.ylinor.client.render.AssetsLoadingSystem;
-import com.ylinor.client.render.RenderSystem;
+import com.ylinor.client.render.CameraSystem;
+import com.ylinor.client.render.HudRenderSystem;
+import com.ylinor.client.render.PlayerInitSystem;
+import com.ylinor.client.render.TerrainRenderSystem;
 import com.ylinor.client.render.TestChunkProvider;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.util.YlinorFiles;
@@ -89,8 +95,26 @@ public class YlinorClient extends YlinorApplication
         configuration.register(terrain);
         configuration.register(new Assets());
         configuration.register(this);
+        // Initializing player
+        configuration.setSystem(PlayerInitSystem.class);
+        
+        // Loading assets
         configuration.setSystem(AssetsLoadingSystem.class);
-        configuration.setSystem(RenderSystem.class);
+        
+        // Input processing
+        configuration.setSystem(PlayerInputSystem.class);
+        
+        // Physics management
+        configuration.setSystem(GravitySystem.class);
+        configuration.setSystem(PhysicsSystem.class);
+        
+        // Camera follows player entity
+        configuration.setSystem(CameraSystem.class);
+        
+        // Render the terrain
+        configuration.setSystem(TerrainRenderSystem.class);
+        
+        configuration.setSystem(HudRenderSystem.class);
     }
 
     @Override
@@ -105,7 +129,7 @@ public class YlinorClient extends YlinorApplication
     }
 
     public void setScreen(Screen screen) {
-        world.getSystem(RenderSystem.class).setScreen(screen);
+        world.getSystem(TerrainRenderSystem.class).setScreen(screen);
     }
 
     @Override
@@ -129,7 +153,7 @@ public class YlinorClient extends YlinorApplication
      * @return the currently active {@link Screen}.
      */
     public Screen getScreen() {
-        return world.getSystem(RenderSystem.class).getScreen();
+        return world.getSystem(TerrainRenderSystem.class).getScreen();
     }
 
     public GameSettings getSettings() {

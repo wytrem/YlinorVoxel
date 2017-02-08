@@ -46,4 +46,8 @@ public class BlockType {
     public short getId() {
         return id;
     }
+
+    public boolean isCollidable() {
+        return this != air;
+    }
 }

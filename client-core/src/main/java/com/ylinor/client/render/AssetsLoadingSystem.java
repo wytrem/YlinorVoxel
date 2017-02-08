@@ -15,35 +15,33 @@ import net.mostlyoriginal.api.event.common.EventSystem;
 public class AssetsLoadingSystem extends BaseSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(AssetsLoadingSystem.class);
-    
-    /**
-     * L'instance des assets
-     */
+
     @Wire
     private Assets assets;
 
     @Wire
     private EventSystem eventSystem;
-    
+
     @Wire
-    private RenderSystem renderSystem;
+    private TerrainRenderSystem renderSystem;
 
     /**
-     * Si le preloading (chargement des assets utilisés avant/pendant le
-     * chargement) a été fait
+     * If "prelaoding assets" are completely loaded. "Preloading assets" are the
+     * needed assets to process to the standard assets loading (e.g. logo and
+     * progress bar).
      */
     private boolean preloaded = false;
 
     /**
-     * Si le loading a été fait (chargement des assets)
+     * If assets are completely loaded.
      */
     private boolean loaded = false;
 
     /**
-     * Le temps actuel (System.currentTimeMillis())
+     * ???
      */
     private long assetsTime;
-    
+
     @Override
     protected void initialize() {
         assetsTime = System.currentTimeMillis();
@@ -74,16 +72,16 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
         }
     }
-    
+
     @Override
     protected void dispose() {
         assets.dispose();
     }
-    
+
     public boolean loaded() {
         return loaded;
     }
-    
+
     public boolean preloaded() {
         return preloaded;
     }

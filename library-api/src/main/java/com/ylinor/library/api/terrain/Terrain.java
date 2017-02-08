@@ -49,6 +49,10 @@ public class Terrain implements IChunkProvider, IBlockContainer
     {
         return storage;
     }
+    
+    public BlockType getBlockType(float x, float y, float z) {
+        return getBlockType((int) x, (int) y, (int) z);
+    }
 
     @Override
     public Block getBlock(BlockPos pos)

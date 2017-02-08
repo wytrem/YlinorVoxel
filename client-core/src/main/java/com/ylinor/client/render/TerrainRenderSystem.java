@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.artemis.BaseSystem;
+import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,6 +12,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
+import com.ylinor.client.physics.AABB;
+import com.ylinor.client.physics.PlayerInputSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Terrain;
 
@@ -18,9 +21,15 @@ import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 
-public class RenderSystem extends BaseSystem {
+/**
+ * World system that renders the terrain from the {@link CameraSystem} point of
+ * view.
+ *
+ * @author wytrem
+ */
+public class TerrainRenderSystem extends BaseSystem {
 
-    private static final Logger logger = LoggerFactory.getLogger(RenderSystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(TerrainRenderSystem.class);
 
     @Wire
     private Terrain terrain;
@@ -37,6 +46,15 @@ public class RenderSystem extends BaseSystem {
     @Wire
     private AssetsLoadingSystem assetsLoadingSystem;
 
+    @Wire
+    private ComponentMapper<AABB> aabbMapper;
+
+    @Wire
+    private PlayerInputSystem playerInputSystem;
+
+    @Wire
+    private CameraSystem cameraSystem;
+
     /**
      * Current screen
      */
@@ -47,6 +65,8 @@ public class RenderSystem extends BaseSystem {
     @Override
     protected void initialize() {
         renderGlobal = new RenderGlobal(terrain);
+        world.inject(renderGlobal);
+
         eventSystem.registerEvents(this);
     }
 
@@ -91,7 +111,7 @@ public class RenderSystem extends BaseSystem {
         }
         else {
             Gdx.input.setCursorCatched(true);
-            Gdx.input.setInputProcessor(renderGlobal.getCameraController());
+            Gdx.input.setInputProcessor(playerInputSystem);
         }
 
         logger.debug("Setting screen : " + (screen == null ? "null" : screen.getClass()));
@@ -102,7 +122,7 @@ public class RenderSystem extends BaseSystem {
             screen.hide();
             screen.dispose();
         }
-        
+
         renderGlobal.dispose();
     }
 

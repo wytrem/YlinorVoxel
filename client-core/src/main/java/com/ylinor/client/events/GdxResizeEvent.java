@@ -1,5 +1,10 @@
 package com.ylinor.client.events;
 
+/**
+ * Called when the window is resized.
+ *
+ * @author wytrem
+ */
 public class GdxResizeEvent implements ClientEvent {
     public final int width, height;
 

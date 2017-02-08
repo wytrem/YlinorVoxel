@@ -3,7 +3,6 @@ package com.ylinor.client.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;

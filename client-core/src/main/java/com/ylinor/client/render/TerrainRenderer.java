@@ -25,6 +25,11 @@ import gnu.trove.procedure.TObjectIntProcedure;
 import gnu.trove.procedure.TObjectProcedure;
 
 
+/**
+ * Utility class to render the terrain.
+ *
+ * @author wytrem
+ */
 public class TerrainRenderer implements RenderableProvider, Disposable {
     Terrain world;
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
@@ -43,8 +48,8 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     }
 
     public void update() {
-        renderChunkX = ((int) (renderGlobal.camera.position.x) >> 4) - renderChunkSize / 2;
-        renderChunkZ = ((int) (renderGlobal.camera.position.z) >> 4) - renderChunkSize / 2;
+        renderChunkX = ((int) (renderGlobal.cameraSystem.getCamera().position.x) >> 4) - renderChunkSize / 2;
+        renderChunkZ = ((int) (renderGlobal.cameraSystem.getCamera().position.z) >> 4) - renderChunkSize / 2;
     }
 
     @Override
@@ -60,7 +65,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
         GdxTempVars gdxTempVars = GdxTempVars.get();
         getBoundingBox(chunk, gdxTempVars.bb1);
 
-        if (!renderGlobal.cameraFrustum.boundsInFrustum(gdxTempVars.bb1)) {
+        if (!renderGlobal.cameraSystem.getCamera().frustum.boundsInFrustum(gdxTempVars.bb1)) {
             gdxTempVars.release();
             return;
         }
@@ -112,7 +117,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
                 return true;
             }
         });
-        
+
         texture.dispose();
     }
 
