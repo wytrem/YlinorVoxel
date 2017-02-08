@@ -16,9 +16,10 @@ import com.badlogic.gdx.Screen;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
+import com.ylinor.client.input.GdxInputDispatcherSystem;
+import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.physics.GravitySystem;
 import com.ylinor.client.physics.PhysicsSystem;
-import com.ylinor.client.physics.PlayerInputSystem;
 import com.ylinor.client.render.AssetsLoadingSystem;
 import com.ylinor.client.render.CameraSystem;
 import com.ylinor.client.render.HudRenderSystem;
@@ -101,7 +102,10 @@ public class YlinorClient extends YlinorApplication
         // Loading assets
         configuration.setSystem(AssetsLoadingSystem.class);
 
-        // Input processing
+        // Input events dispatcher
+        configuration.setSystem(GdxInputDispatcherSystem.class);
+        
+        // Input impacts the player motion
         configuration.setSystem(PlayerInputSystem.class);
 
         // Physics management

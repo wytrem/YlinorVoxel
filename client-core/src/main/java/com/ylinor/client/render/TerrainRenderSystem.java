@@ -12,12 +12,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
+import com.ylinor.client.input.GdxInputDispatcherSystem;
+import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.physics.AABB;
-import com.ylinor.client.physics.PlayerInputSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Terrain;
 
-import net.mostlyoriginal.api.event.common.EventSystem;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 
@@ -41,9 +41,6 @@ public class TerrainRenderSystem extends BaseSystem {
     private Assets assets;
 
     @Wire
-    private EventSystem eventSystem;
-
-    @Wire
     private AssetsLoadingSystem assetsLoadingSystem;
 
     @Wire
@@ -51,6 +48,9 @@ public class TerrainRenderSystem extends BaseSystem {
 
     @Wire
     private PlayerInputSystem playerInputSystem;
+    
+    @Wire
+    private GdxInputDispatcherSystem inputDispatcherSystem;
 
     @Wire
     private CameraSystem cameraSystem;
@@ -66,8 +66,6 @@ public class TerrainRenderSystem extends BaseSystem {
     protected void initialize() {
         renderGlobal = new RenderGlobal(terrain);
         world.inject(renderGlobal);
-
-        eventSystem.registerEvents(this);
     }
 
     @Override
@@ -111,7 +109,7 @@ public class TerrainRenderSystem extends BaseSystem {
         }
         else {
             Gdx.input.setCursorCatched(true);
-            Gdx.input.setInputProcessor(playerInputSystem);
+            Gdx.input.setInputProcessor(inputDispatcherSystem);
         }
 
         logger.debug("Setting screen : " + (screen == null ? "null" : screen.getClass()));
