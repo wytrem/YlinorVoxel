@@ -11,8 +11,9 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.ylinor.client.physics.AABB;
+import com.ylinor.client.YlinorClient;
 import com.ylinor.client.physics.Heading;
+import com.ylinor.client.physics.Position;
 
 
 /**
@@ -29,18 +30,21 @@ public class CameraSystem extends IteratingSystem {
     private static final Logger logger = LoggerFactory.getLogger(CameraSystem.class);
 
     @Wire
-    private ComponentMapper<AABB> aabbMapper;
+    private ComponentMapper<Position> positionMapper;
 
     @Wire
     private ComponentMapper<Heading> headingMapper;
 
     @Wire
     private ComponentMapper<EyeHeight> eyeHeightMapper;
+    
+    @Wire
+    private YlinorClient client;
 
     private Camera camera;
 
     public CameraSystem() {
-        super(Aspect.all(RenderViewEntity.class, AABB.class, Heading.class));
+        super(Aspect.all(RenderViewEntity.class, Position.class, Heading.class));
     }
 
     @Override
@@ -65,7 +69,7 @@ public class CameraSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        AABB aabb = aabbMapper.get(entityId);
+        Position aabb = positionMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
 
         camera.position.set(aabb.position.x, aabb.position.y, aabb.position.z);
@@ -83,9 +87,13 @@ public class CameraSystem extends IteratingSystem {
 
     @Override
     protected void end() {
-        if (processedEntititesThisTick > 1) {
+        if (processedEntititesThisTick != 1) {
             logger.warn("{} processed this tick, this might cause bugs.", processedEntititesThisTick);
         }
     }
-
+    
+    @Override
+    protected boolean checkProcessing() {
+        return client.isInGame;
+    }
 }

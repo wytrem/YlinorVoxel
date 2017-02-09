@@ -1,7 +1,7 @@
 package com.ylinor.client.events.input.mouse;
 
 import com.ylinor.client.events.input.InputEvent;
-import com.ylinor.library.api.ecs.CancellableEvent;
+import com.ylinor.library.api.ecs.events.CancellableEvent;
 
 /**
  * A mouse event.

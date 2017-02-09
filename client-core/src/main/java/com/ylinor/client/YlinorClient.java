@@ -18,15 +18,17 @@ import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
-import com.ylinor.client.physics.GravitySystem;
-import com.ylinor.client.physics.PhysicsSystem;
+import com.ylinor.client.physics.BulletDynamicsProcessingSystem;
+import com.ylinor.client.physics.BulletEntitiesSystem;
 import com.ylinor.client.render.AssetsLoadingSystem;
 import com.ylinor.client.render.CameraSystem;
+import com.ylinor.client.render.ClearScreenSystem;
 import com.ylinor.client.render.HudRenderSystem;
 import com.ylinor.client.render.PlayerInitSystem;
-import com.ylinor.client.render.TerrainRenderSystem;
-import com.ylinor.client.render.TestChunkProvider;
+import com.ylinor.client.render.ScreenSystem;
+import com.ylinor.client.render.WorldRenderSystem;
 import com.ylinor.client.resource.Assets;
+import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
@@ -64,6 +66,8 @@ public class YlinorClient extends YlinorApplication
     private Terrain terrain;
 
     private World world;
+    
+    public boolean isInGame = false;
 
     public YlinorClient() {
         instance = this;
@@ -82,10 +86,7 @@ public class YlinorClient extends YlinorApplication
             e.printStackTrace();
         }
 
-        TestChunkProvider test = new TestChunkProvider();
-
-        terrain = new Terrain(test);
-        test.setWorld(terrain);
+        terrain = new ClientTerrain();
 
         world = buildWorld();
     }
@@ -93,6 +94,8 @@ public class YlinorClient extends YlinorApplication
     @Override
     protected void configure(WorldConfiguration configuration) {
         super.configure(configuration);
+        // We want to inject any Terrain field with this
+        configuration.register(Terrain.class.getName(), terrain);
         configuration.register(terrain);
         configuration.register(new Assets());
         configuration.register(this);
@@ -109,14 +112,24 @@ public class YlinorClient extends YlinorApplication
         configuration.setSystem(PlayerInputSystem.class);
 
         // Physics management
-        configuration.setSystem(GravitySystem.class);
-        configuration.setSystem(PhysicsSystem.class);
+        configuration.setSystem(BulletDynamicsProcessingSystem.class);
+        configuration.setSystem(BulletEntitiesSystem.class);
+        
+//        configuration.setSystem(GravitySystem.class);
+//        configuration.setSystem(PhysicsSystem.class);
 
         // Camera follows player entity
         configuration.setSystem(CameraSystem.class);
+        
+        
+        // Screen clearing
+        configuration.setSystem(ClearScreenSystem.class);
+        
+        // Screen rendering
+        configuration.setSystem(ScreenSystem.class);
 
         // Render the terrain
-        configuration.setSystem(TerrainRenderSystem.class);
+        configuration.setSystem(WorldRenderSystem.class);
 
         configuration.setSystem(HudRenderSystem.class);
     }
@@ -130,10 +143,6 @@ public class YlinorClient extends YlinorApplication
     @Override
     public void resize(int width, int height) {
         dispatchEvent(world, new GdxResizeEvent(width, height));
-    }
-
-    public void setScreen(Screen screen) {
-        world.getSystem(TerrainRenderSystem.class).setScreen(screen);
     }
 
     @Override
@@ -151,13 +160,6 @@ public class YlinorClient extends YlinorApplication
     @Override
     public void resume() {
         dispatchEvent(world, new GdxResumeEvent());
-    }
-
-    /**
-     * @return the currently active {@link Screen}.
-     */
-    public Screen getScreen() {
-        return world.getSystem(TerrainRenderSystem.class).getScreen();
     }
 
     public GameSettings getSettings() {

@@ -1,4 +1,4 @@
-package com.ylinor.library.api.ecs;
+package com.ylinor.library.api.ecs.events;
 
 import net.mostlyoriginal.api.event.common.Cancellable;
 import net.mostlyoriginal.api.event.common.Event;

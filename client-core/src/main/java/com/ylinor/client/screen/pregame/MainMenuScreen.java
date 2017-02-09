@@ -1,15 +1,23 @@
 package com.ylinor.client.screen.pregame;
 
-import static com.ylinor.client.YlinorClient.client;
-
+import com.artemis.annotations.Wire;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.ylinor.client.YlinorClient;
+import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.screen.YlinorScreen;
 
 
 public class MainMenuScreen extends YlinorScreen {
+    
+    @Wire
+    private ScreenSystem screenSystem;
+    
+    @Wire
+    private YlinorClient client;
+    
     public MainMenuScreen() {
         VisTable table = new VisTable();
 
@@ -18,7 +26,8 @@ public class MainMenuScreen extends YlinorScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                client().setScreen(null);
+                screenSystem.setScreen(null);
+                client.isInGame = true;
             }
         });
         table.add(play);

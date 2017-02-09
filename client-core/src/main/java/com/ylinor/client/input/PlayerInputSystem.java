@@ -11,11 +11,13 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.bulletphysics.dynamics.RigidBody;
+import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.input.keyboard.KeyUpEvent;
 import com.ylinor.client.events.input.mouse.MouseMovedEvent;
+import com.ylinor.client.physics.BulletEntity;
 import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.InputControlledEntity;
-import com.ylinor.client.physics.Motion;
 import com.ylinor.client.physics.Velocity;
 
 import net.mostlyoriginal.api.event.common.Subscribe;
@@ -29,31 +31,36 @@ import net.mostlyoriginal.api.event.common.Subscribe;
  */
 public class PlayerInputSystem extends IteratingSystem {
 
-    private ComponentMapper<Motion> motionMapper;
     private ComponentMapper<Velocity> velocityMapper;
     private ComponentMapper<Heading> headingMapper;
+    private ComponentMapper<BulletEntity> bulletEntityMapper;
 
     private int STRAFE_LEFT = Keys.A;
     private int STRAFE_RIGHT = Keys.D;
     private int FORWARD = Keys.W;
     private int BACKWARD = Keys.S;
     private int UP = Keys.SPACE;
-    private int DOWN = Keys.SHIFT_LEFT;
+//    private int DOWN = Keys.SHIFT_LEFT;
     private final Vector3f tmp = new Vector3f();
     private int mouseX = 0;
     private int mouseY = 0;
     private float rotSpeed = 0.2f;
 
+    @Wire
+    private YlinorClient client;
+
     /**
      * This should stay PRIVATE with NO getter.
      */
     private Camera camera;
-    
+
     @Wire
     private GdxInputDispatcherSystem inputDispatcherSystem;
 
+    @SuppressWarnings("unchecked")
     public PlayerInputSystem() {
-        super(Aspect.all(InputControlledEntity.class, Motion.class, Heading.class, Velocity.class));
+        super(Aspect.all(InputControlledEntity.class)
+                    .one(Heading.class, BulletEntity.class));
     }
 
     @Override
@@ -67,47 +74,71 @@ public class PlayerInputSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        Motion motion = motionMapper.get(entityId);
+        //        Motion motion = motionMapper.get(entityId);
         Velocity velocity = velocityMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
 
         if (inputDispatcherSystem.getPressedKeys().contains(FORWARD)) {
-            tmp.set(camera.direction.x, 0, camera.direction.z)
-               .normalize()
-               .mul(velocity.speed);
-            motion.motion.add(tmp);
+
+            if (bulletEntityMapper.has(entityId)) {
+
+                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
+                tmp.set(camera.direction.x, 0, camera.direction.z)
+                   .normalize()
+                   .mul(velocity.speed * world.delta);
+
+                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
+            }
         }
         if (inputDispatcherSystem.getPressedKeys().contains(BACKWARD)) {
-            tmp.set(camera.direction.x, 0, camera.direction.z)
-               .normalize()
-               .mul(-velocity.speed);
-            motion.motion.add(tmp);
+
+            if (bulletEntityMapper.has(entityId)) {
+
+                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
+                tmp.set(camera.direction.x, 0, camera.direction.z)
+                   .normalize()
+                   .mul(-velocity.speed * world.delta);
+
+                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
+            }
         }
         if (inputDispatcherSystem.getPressedKeys().contains(STRAFE_LEFT)) {
-            tmp.set(camera.direction.x, 0, camera.direction.z)
-               .cross(camera.up.x, camera.up.y, camera.up.z)
-               .normalize()
-               .mul(-velocity.speed);
-            motion.motion.add(tmp);
+
+            if (bulletEntityMapper.has(entityId)) {
+
+                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
+                tmp.set(camera.direction.x, 0, camera.direction.z)
+                   .cross(camera.up.x, camera.up.y, camera.up.z)
+                   .normalize()
+                   .mul(-velocity.speed * world.delta);
+
+                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
+            }
         }
         if (inputDispatcherSystem.getPressedKeys().contains(STRAFE_RIGHT)) {
-            tmp.set(camera.direction.x, 0, camera.direction.z)
-               .cross(camera.up.x, camera.up.y, camera.up.z)
-               .normalize()
-               .mul(velocity.speed);
-            motion.motion.add(tmp);
+
+            if (bulletEntityMapper.has(entityId)) {
+
+                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
+                tmp.set(camera.direction.x, 0, camera.direction.z)
+                   .cross(camera.up.x, camera.up.y, camera.up.z)
+                   .normalize()
+                   .mul(velocity.speed * world.delta);
+
+                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
+            }
         }
         if (inputDispatcherSystem.getPressedKeys().contains(UP)) {
-            tmp.set(camera.up.x, camera.up.y, camera.up.z)
-               .normalize()
-               .mul(velocity.speed);
-            motion.motion.add(tmp);
-        }
-        if (inputDispatcherSystem.getPressedKeys().contains(DOWN)) {
-            tmp.set(camera.up.x, camera.up.y, camera.up.z)
-               .normalize()
-               .mul(-velocity.speed);
-            motion.motion.add(tmp);
+
+            if (bulletEntityMapper.has(entityId)) {
+
+                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
+                tmp.set(camera.up.x, camera.up.y, camera.up.z)
+                   .normalize()
+                   .mul(velocity.speed * world.delta);
+
+                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
+            }
         }
 
         heading.heading.set(camera.direction.x, camera.direction.y, camera.direction.z);
@@ -116,11 +147,10 @@ public class PlayerInputSystem extends IteratingSystem {
 
     @Subscribe
     public void keyUp(KeyUpEvent event) {
-        System.out.println("keyup in playerinput with " + event.keycode);
-        
         if (event.keycode == Keys.ESCAPE) {
             Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
             Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+            event.setCancelled(true);
         }
     }
 
@@ -159,5 +189,11 @@ public class PlayerInputSystem extends IteratingSystem {
 
         mouseX = event.mouseX;
         mouseY = event.mouseY;
+        event.setCancelled(true);
+    }
+
+    @Override
+    protected boolean checkProcessing() {
+        return client.isInGame;
     }
 }

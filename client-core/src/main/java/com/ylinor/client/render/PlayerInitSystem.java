@@ -3,14 +3,15 @@ package com.ylinor.client.render;
 import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.BaseSystem;
-import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
-import com.ylinor.client.physics.AABB;
-import com.ylinor.client.physics.Gravitable;
+import com.bulletphysics.collision.dispatch.CollisionFlags;
+import com.bulletphysics.collision.shapes.BoxShape;
+import com.bulletphysics.dynamics.RigidBody;
+import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
+import com.ylinor.client.physics.BulletEntity;
 import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.InputControlledEntity;
-import com.ylinor.client.physics.Motion;
+import com.ylinor.client.physics.Position;
 import com.ylinor.client.physics.Velocity;
 
 
@@ -21,27 +22,27 @@ import com.ylinor.client.physics.Velocity;
  */
 public class PlayerInitSystem extends BaseSystem {
 
-    @Wire
-    private ComponentMapper<AABB> aabbMapper;
-
-    @Wire
-    private ComponentMapper<EyeHeight> eyeHeightMapper;
-
     @Override
     protected void initialize() {
         Archetype playerArchetype = new ArchetypeBuilder().add(RenderViewEntity.class)
                                                           .add(InputControlledEntity.class)
-                                                          .add(AABB.class)
                                                           .add(Heading.class)
-                                                          .add(Motion.class)
+                                                          .add(Position.class)
                                                           .add(Velocity.class)
                                                           .add(EyeHeight.class)
-                                                          .add(Gravitable.class)
+                                                          .add(BulletEntity.class)
                                                           .build(world);
-
+        
+        RigidBodyConstructionInfo bodyConstructionInfo = new RigidBodyConstructionInfo(100.0f, null, new BoxShape(new javax.vecmath.Vector3f(0.2f,0.8f,0.2f)));
+        
+        bodyConstructionInfo.startWorldTransform.setIdentity();
+        bodyConstructionInfo.startWorldTransform.origin.set(0, 300, 0);
+        RigidBody body = new RigidBody(bodyConstructionInfo);
+        body.setCollisionFlags(body.getCollisionFlags() | CollisionFlags.CUSTOM_MATERIAL_CALLBACK);
+        
         Entity player = world.createEntity(playerArchetype);
-        player.getComponent(AABB.class).position.set(0, 258, 0);
-        player.getComponent(EyeHeight.class).eyePadding.y = 1.6f;
+        player.getComponent(BulletEntity.class).rigidBody = body;
+        player.getComponent(EyeHeight.class).eyePadding.y = 0.7f;
     }
 
     @Override

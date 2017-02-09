@@ -1,5 +1,6 @@
 package com.ylinor.library.api.terrain;
 
+import com.artemis.World;
 import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.util.math.PositionableObject2D;
 
@@ -7,10 +8,14 @@ import com.ylinor.library.util.math.PositionableObject2D;
 public class Terrain implements IChunkProvider, IBlockContainer {
     public static final short SIZE_Y = Chunk.SIZE_Y;
 
-    private IChunkProvider storage;
+    protected IChunkProvider storage;
 
     public Terrain(IChunkProvider storage) {
         this.storage = storage;
+    }
+    
+    public void inject(World world) {
+        world.inject(storage);
     }
 
     public void setStorage(IChunkProvider storage) {

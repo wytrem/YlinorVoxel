@@ -7,6 +7,7 @@ import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.ylinor.client.YlinorClient;
 import com.ylinor.client.physics.OnGround;
 
 
@@ -19,6 +20,9 @@ public class HudRenderSystem extends IteratingSystem {
 
     @Wire
     private ComponentMapper<OnGround> onGroundMapper;
+    
+    @Wire
+    private YlinorClient client;
 
     public HudRenderSystem() {
         super(Aspect.all(RenderViewEntity.class));
@@ -37,14 +41,18 @@ public class HudRenderSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        font.draw(spriteBatch, "onground : " + onGroundMapper.has(entityId), 0, 80);
-        font.draw(spriteBatch, "fps : " + Gdx.graphics.getFramesPerSecond(), 0, 60);
-        font.draw(spriteBatch, "pos : " + cameraSystem.getCamera().position.toString(), 0, 40);
+        font.draw(spriteBatch, "dir : " + cameraSystem.getCamera().direction.toString(), 0, 80);
+        font.draw(spriteBatch, "pos : " + cameraSystem.getCamera().position.toString(), 0, 60);
+        font.draw(spriteBatch, "fps : " + Gdx.graphics.getFramesPerSecond(), 0, 40);
     }
 
     @Override
     protected void end() {
         spriteBatch.end();
     }
-
+    
+    @Override
+    protected boolean checkProcessing() {
+        return client.isInGame;
+    }
 }

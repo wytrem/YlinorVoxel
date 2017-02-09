@@ -23,7 +23,10 @@ public class AssetsLoadingSystem extends BaseSystem {
     private EventSystem eventSystem;
 
     @Wire
-    private TerrainRenderSystem renderSystem;
+    private WorldRenderSystem renderSystem;
+    
+    @Wire
+    private ScreenSystem screenSystem;
 
     /**
      * If "prelaoding assets" are completely loaded. "Preloading assets" are the
@@ -60,7 +63,7 @@ public class AssetsLoadingSystem extends BaseSystem {
 
                 preloaded = true;
 
-                renderSystem.setScreen(new LoadingScreen());
+                screenSystem.setScreen(new LoadingScreen());
             }
             else {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
@@ -68,7 +71,7 @@ public class AssetsLoadingSystem extends BaseSystem {
                 assetsTime = 0;
                 loaded = true;
 
-                renderSystem.setScreen(new MainMenuScreen());
+                screenSystem.setScreen(new MainMenuScreen());
             }
         }
     }

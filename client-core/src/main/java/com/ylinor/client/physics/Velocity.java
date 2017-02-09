@@ -8,5 +8,5 @@ import com.artemis.Component;
  * way).
  */
 public class Velocity extends Component {
-    public float speed = 0.5f;
+    public float speed = 5f;
 }

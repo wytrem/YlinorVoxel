@@ -4,89 +4,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.artemis.BaseSystem;
-import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
-import com.ylinor.client.input.PlayerInputSystem;
-import com.ylinor.client.physics.AABB;
-import com.ylinor.client.resource.Assets;
-import com.ylinor.library.api.terrain.Terrain;
 
 import net.mostlyoriginal.api.event.common.Subscribe;
 
+public class ScreenSystem extends BaseSystem {
 
-/**
- * World system that renders the terrain from the {@link CameraSystem} point of
- * view.
- *
- * @author wytrem
- */
-public class TerrainRenderSystem extends BaseSystem {
-
-    private static final Logger logger = LoggerFactory.getLogger(TerrainRenderSystem.class);
-
-    @Wire
-    private Terrain terrain;
-
+    private static final Logger logger = LoggerFactory.getLogger(ScreenSystem.class);
+    
     /**
-     * L'instance des assets
+     * Current screen.
      */
-    @Wire
-    private Assets assets;
-
-    @Wire
-    private AssetsLoadingSystem assetsLoadingSystem;
-
-    @Wire
-    private ComponentMapper<AABB> aabbMapper;
-
-    @Wire
-    private PlayerInputSystem playerInputSystem;
+    private Screen screen;
     
     @Wire
     private GdxInputDispatcherSystem inputDispatcherSystem;
-
-    @Wire
-    private CameraSystem cameraSystem;
-
-    /**
-     * Current screen
-     */
-    private Screen screen;
-
-    private RenderGlobal renderGlobal;
-
-    @Override
-    protected void initialize() {
-        renderGlobal = new RenderGlobal(terrain);
-        world.inject(renderGlobal);
-    }
-
-    @Override
-    protected void begin() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
-
+    
     @Override
     protected void processSystem() {
         // Screen updating
         if (screen != null) {
             screen.render(Gdx.graphics.getDeltaTime());
         }
-        else {
-            if (assetsLoadingSystem.loaded()) {
-                renderGlobal.render();
-            }
-        }
     }
-
+    
     @Subscribe
     public void resize(GdxResizeEvent event) {
         if (screen != null) {
@@ -120,10 +67,8 @@ public class TerrainRenderSystem extends BaseSystem {
             screen.hide();
             screen.dispose();
         }
-
-        renderGlobal.dispose();
     }
-
+    
     @Subscribe
     public void pause(GdxPauseEvent event) {
         if (screen != null) {

@@ -3,6 +3,7 @@ package com.ylinor.library.api;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ylinor.library.api.ecs.systems.WorldEventsDispatcherSystem;
 
 import net.mostlyoriginal.api.event.common.EventSystem;
 
@@ -19,6 +20,7 @@ public class YlinorApplication {
 
     protected void configure(WorldConfiguration configuration) {
         configuration.setSystem(EventSystem.class);
+        configuration.setSystem(WorldEventsDispatcherSystem.class);
     }
 
     public static YlinorApplication getYlinorApplication() {

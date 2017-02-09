@@ -53,10 +53,7 @@ public class GdxInputDispatcherSystem extends BaseSystem implements InputProcess
 
     @Override
     public boolean keyUp(int keycode) {
-        System.out.println("keyup in dispatcher, map = " + pressedKeys);
         pressedKeys.remove(Integer.valueOf(keycode));
-        System.out.println("After : map = " + pressedKeys);
-        
         eventSystem.dispatch(new KeyUpEvent(keycode));
         return true;
     }
