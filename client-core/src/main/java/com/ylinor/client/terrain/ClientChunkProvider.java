@@ -3,7 +3,6 @@ package com.ylinor.client.terrain;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.MathUtils;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
-import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
 import com.ylinor.library.api.terrain.Terrain;
@@ -15,7 +14,7 @@ import net.mostlyoriginal.api.event.common.EventSystem;
 
 public class ClientChunkProvider implements IChunkProvider {
     @Wire
-    private Terrain world;
+    private Terrain terrain;
     
     @Wire
     private EventSystem eventSystem;
@@ -32,23 +31,23 @@ public class ClientChunkProvider implements IChunkProvider {
 
         if (chunk == null) {
             chunk = generateAt(x, z);
-            eventSystem.dispatch(new ChunkLoadedEvent(chunk));
             chunkMap.put(id, chunk);
+            eventSystem.dispatch(new ChunkLoadedEvent(chunk));
         }
 
         return chunk;
     }
 
     private Chunk generateAt(int chunkX, int chunkZ) {
-        Chunk chunk = new Chunk(world, chunkX, chunkZ);
+        Chunk chunk = new Chunk(terrain, chunkX, chunkZ);
 
-        //        short id = (short) (Math.abs(chunkX % 3 + (chunkZ % 3) * 3) + 1);
+        short id = (short) (Math.abs(chunkX % 3 + (chunkZ % 3) * 3) + 1);
 
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-                    chunk.setBlockType(x, y, z, world.getBlockType((short) (MathUtils.random(1, BlockType.REGISTRY.size() - 1))));
-                    //                    chunk.setBlockType(x, y, z, world.getBlockType(id));
+                    chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.95f) ? id : 0)));
+//                                        chunk.setBlockType(x, y, z, terrain.getBlockType(id));
                 }
             }
         }

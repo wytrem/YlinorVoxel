@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
+import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -26,12 +27,13 @@ import com.ylinor.client.render.ClearScreenSystem;
 import com.ylinor.client.render.HudRenderSystem;
 import com.ylinor.client.render.PlayerInitSystem;
 import com.ylinor.client.render.ScreenSystem;
-import com.ylinor.client.render.WorldRenderSystem;
+import com.ylinor.client.render.TerrainRenderSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
+import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
 
 
@@ -66,7 +68,7 @@ public class YlinorClient extends YlinorApplication
     private Terrain terrain;
 
     private World world;
-    
+
     public boolean isInGame = false;
 
     public YlinorClient() {
@@ -92,6 +94,15 @@ public class YlinorClient extends YlinorApplication
     }
 
     @Override
+    protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
+        super.preConfigure(configurationBuilder);
+
+        configurationBuilder.dependsOn(SystemsPriorities.UPDATE_PRIORITY, PlayerInitSystem.class, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, BulletDynamicsProcessingSystem.class, BulletEntitiesSystem.class);
+
+        configurationBuilder.dependsOn(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
+    }
+
+    @Override
     protected void configure(WorldConfiguration configuration) {
         super.configure(configuration);
         // We want to inject any Terrain field with this
@@ -99,39 +110,6 @@ public class YlinorClient extends YlinorApplication
         configuration.register(terrain);
         configuration.register(new Assets());
         configuration.register(this);
-        // Initializing player
-        configuration.setSystem(PlayerInitSystem.class);
-
-        // Loading assets
-        configuration.setSystem(AssetsLoadingSystem.class);
-
-        // Input events dispatcher
-        configuration.setSystem(GdxInputDispatcherSystem.class);
-        
-        // Input impacts the player motion
-        configuration.setSystem(PlayerInputSystem.class);
-
-        // Physics management
-        configuration.setSystem(BulletDynamicsProcessingSystem.class);
-        configuration.setSystem(BulletEntitiesSystem.class);
-        
-//        configuration.setSystem(GravitySystem.class);
-//        configuration.setSystem(PhysicsSystem.class);
-
-        // Camera follows player entity
-        configuration.setSystem(CameraSystem.class);
-        
-        
-        // Screen clearing
-        configuration.setSystem(ClearScreenSystem.class);
-        
-        // Screen rendering
-        configuration.setSystem(ScreenSystem.class);
-
-        // Render the terrain
-        configuration.setSystem(WorldRenderSystem.class);
-
-        configuration.setSystem(HudRenderSystem.class);
     }
 
     @Override

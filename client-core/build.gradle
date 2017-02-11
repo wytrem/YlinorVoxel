@@ -5,7 +5,6 @@ eclipse.project {
 dependencies {
     compile project(':library-api')
     compile project(':library-util')
-    compile project(':library-network')
     compile project(':library-packets')
     compile project(':renderlib')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"

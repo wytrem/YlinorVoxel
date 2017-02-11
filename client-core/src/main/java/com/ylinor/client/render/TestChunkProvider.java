@@ -1,7 +1,6 @@
 package com.ylinor.client.render;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
 import com.ylinor.library.api.terrain.Terrain;
@@ -13,13 +12,13 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 
 public class TestChunkProvider implements IChunkProvider {
 
-    private Terrain world;
+    private Terrain terrain;
 
     public TestChunkProvider() {
     }
 
     public void setWorld(Terrain w) {
-        this.world = w;
+        this.terrain = w;
     }
 
     private TLongObjectMap<Chunk> chunkMap = new TLongObjectHashMap<Chunk>();
@@ -38,14 +37,14 @@ public class TestChunkProvider implements IChunkProvider {
     }
 
     private Chunk generateAt(int chunkX, int chunkZ) {
-        Chunk chunk = new Chunk(world, chunkX, chunkZ);
+        Chunk chunk = new Chunk(terrain, chunkX, chunkZ);
 
-        //        short id = (short) (Math.abs(chunkX % 3 + (chunkZ % 3) * 3) + 1);
+        short id = (short) (Math.abs(chunkX % 3 + (chunkZ % 3) * 3) + 1);
 
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-                    chunk.setBlockType(x, y, z, world.getBlockType((short) (MathUtils.random(1, BlockType.REGISTRY.size() - 1))));
+                    chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.1f) ? id : 0)));
                     //                    chunk.setBlockType(x, y, z, world.getBlockType(id));
                 }
             }

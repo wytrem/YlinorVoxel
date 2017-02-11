@@ -2,12 +2,11 @@ package com.ylinor.client.render;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.resource.Assets;
+import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 
 
@@ -17,7 +16,7 @@ import com.ylinor.library.api.terrain.Terrain;
  *
  * @author wytrem
  */
-public class WorldRenderSystem extends BaseSystem {
+public class TerrainRenderSystem extends BaseSystem {
 
     @Wire
     private Terrain terrain;
@@ -44,12 +43,17 @@ public class WorldRenderSystem extends BaseSystem {
     private YlinorClient client;
 
     private RenderGlobal renderGlobal;
+    
+    public ChunkRenderer getChunkRenderer(Chunk chunk) {
+        return renderGlobal.getChunkRenderer(chunk);
+    }
 
     @Override
     protected void initialize() {
         renderGlobal = new RenderGlobal(terrain);
         terrain.inject(world);
         world.inject(renderGlobal);
+        renderGlobal.inject(world);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class ChunkRenderer implements Disposable {
                         model = renderer.renderGlobal.blockModels.get(chunk.getWorld(), tile, chunk.getBlockData(x, y, z));
 
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
-                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36) {
+                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - model.neededIndices()) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
@@ -89,8 +89,12 @@ public class ChunkRenderer implements Disposable {
         meshes.put(mesh, amount);
     }
 
-    public static int indicesIn(int numComponents) {
-        return numComponents * 6 / 4;
+    public static int indicesIn(int numVertices) {
+        return numVertices * 6 / 4;
+    }
+    
+    public static int verticesIn(int numIndices) {
+        return numIndices * 4 / 6;
     }
 
     public static void createTop(VertexBuffer buffer, Vector3 offset, int x, int y, int z, TextureRegion region) {

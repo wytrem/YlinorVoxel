@@ -9,6 +9,8 @@ import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.collision.shapes.BoxShape;
+import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
+import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
@@ -16,9 +18,12 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.ylinor.client.YlinorClient;
-import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
+import com.ylinor.client.events.ChunkRendererUpdatedEvent;
+import com.ylinor.client.render.TerrainRenderSystem;
 import com.ylinor.library.api.terrain.Chunk;
 
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
 import net.mostlyoriginal.api.event.common.Subscribe;
 
 
@@ -31,6 +36,9 @@ public class BulletDynamicsProcessingSystem extends BaseSystem {
     @Wire
     private YlinorClient client;
 
+    @Wire
+    private TerrainRenderSystem terrainRenderSystem;
+
     @Override
     protected void initialize() {
         collisionConfig = new DefaultCollisionConfiguration();
@@ -38,7 +46,7 @@ public class BulletDynamicsProcessingSystem extends BaseSystem {
         broadphaseInterface = new DbvtBroadphase();
         constraintSolver = new SequentialImpulseConstraintSolver();
         dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphaseInterface, constraintSolver, collisionConfig);
-        dynamicsWorld.setGravity(new javax.vecmath.Vector3f(0, -8.91f, 0));
+        dynamicsWorld.setGravity(new javax.vecmath.Vector3f(0, -9.81f, 0));
     }
 
     @Override
@@ -46,9 +54,25 @@ public class BulletDynamicsProcessingSystem extends BaseSystem {
         dynamicsWorld.stepSimulation(world.delta, 5, 1f / 60f);
     }
 
+    TLongObjectMap<RigidBody> chunkBodies = new TLongObjectHashMap<RigidBody>();
+
     @Subscribe
-    public void chunkLoaded(ChunkLoadedEvent event) {
-        dynamicsWorld.addRigidBody(buildChunkBody(event.loaded));
+    public void chunkRenderUpdated(ChunkRendererUpdatedEvent event) {
+        
+        RigidBody body;
+        
+        if (!chunkBodies.containsKey(event.chunk.id)) {
+            body = buildChunkBody(event.chunk);
+            chunkBodies.put(event.chunk.id, body);
+            dynamicsWorld.addRigidBody(body);
+        }
+        else {
+            body = chunkBodies.get(event.chunk.id);
+            dynamicsWorld.removeRigidBody(body);
+            body.setCollisionShape(buildChunkCollisionShape(event.chunk));
+            dynamicsWorld.addRigidBody(body);
+        }
+        
     }
 
     RigidBodyConstructionInfo constructionInfo = new RigidBodyConstructionInfo(0.0f, null, new BoxShape(new javax.vecmath.Vector3f(Chunk.SIZE_X / 2, Chunk.SIZE_Y / 2, Chunk.SIZE_Z / 2)));
@@ -57,13 +81,20 @@ public class BulletDynamicsProcessingSystem extends BaseSystem {
 
         constructionInfo.startWorldTransform.setIdentity();
         constructionInfo.startWorldTransform.origin.set(chunk.x * 16 + Chunk.SIZE_X / 2, Chunk.SIZE_Y / 2, chunk.z * 16 + Chunk.SIZE_Z / 2);
-        return new RigidBody(constructionInfo);
+
+        RigidBody body = new RigidBody(0.0f, null, buildChunkCollisionShape(chunk));
+        return body;
+    }
+
+    private CollisionShape buildChunkCollisionShape(Chunk chunk) {
+
+        return new BvhTriangleMeshShape(new ChunkStridingMesh(terrainRenderSystem.getChunkRenderer(chunk)), false);
     }
 
     public DynamicsWorld getDynamicsWorld() {
         return dynamicsWorld;
     }
-    
+
     @Override
     protected boolean checkProcessing() {
         return client.isInGame;

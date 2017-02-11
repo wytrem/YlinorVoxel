@@ -11,12 +11,12 @@ import com.ylinor.library.api.terrain.Terrain;
 public class ChunkCache implements IBlockContainer {
     private Chunk center, xPos, xNeg, zPos, zNeg;
 
-    public ChunkCache(Chunk chunk, Terrain world) {
+    public ChunkCache(Chunk chunk, Terrain terrain) {
         center = chunk;
-        xPos = world.getChunk(chunk.x + 1, chunk.z);
-        xNeg = world.getChunk(chunk.x - 1, chunk.z);
-        zPos = world.getChunk(chunk.x, chunk.z + 1);
-        zNeg = world.getChunk(chunk.x, chunk.z - 1);
+        xPos = terrain.getChunk(chunk.x + 1, chunk.z);
+        xNeg = terrain.getChunk(chunk.x - 1, chunk.z);
+        zPos = terrain.getChunk(chunk.x, chunk.z + 1);
+        zNeg = terrain.getChunk(chunk.x, chunk.z - 1);
     }
 
     @Override

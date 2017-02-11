@@ -4,7 +4,6 @@ eclipse.project {
 
 dependencies {
     compile project(':library-api')
-    compile project(':library-network')
-    compile project(':library-util')
     compile project(':library-packets')
+    compile project(':library-util')
 }

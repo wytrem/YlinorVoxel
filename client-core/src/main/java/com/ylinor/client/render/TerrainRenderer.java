@@ -1,5 +1,6 @@
 package com.ylinor.client.render;
 
+import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
+import com.ylinor.client.events.ChunkRendererUpdatedEvent;
 import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
@@ -23,6 +25,7 @@ import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.procedure.TObjectIntProcedure;
 import gnu.trove.procedure.TObjectProcedure;
+import net.mostlyoriginal.api.event.common.EventSystem;
 
 
 /**
@@ -31,16 +34,22 @@ import gnu.trove.procedure.TObjectProcedure;
  * @author wytrem
  */
 public class TerrainRenderer implements RenderableProvider, Disposable {
-    Terrain world;
+    Terrain terrain;
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
     TextureRegion[][] tiles;
     Texture texture;
     int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 6;
+    
+    @Wire
+    CameraSystem cameraSystem;
+    
+    @Wire
+    EventSystem eventSystem;
 
     public TerrainRenderer(Terrain world, RenderGlobal renderGlobal) {
-        this.world = world;
+        this.terrain = world;
         this.renderGlobal = renderGlobal;
         texture = new Texture(Gdx.files.internal("img/tiles.png"));
         this.tiles = TextureRegion.split(texture, 32, 32);
@@ -48,15 +57,15 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     }
 
     public void update() {
-        renderChunkX = ((int) (renderGlobal.cameraSystem.getCamera().position.x) >> 4) - renderChunkSize / 2;
-        renderChunkZ = ((int) (renderGlobal.cameraSystem.getCamera().position.z) >> 4) - renderChunkSize / 2;
+        renderChunkX = ((int) (cameraSystem.getCamera().position.x) >> 4) - renderChunkSize / 2;
+        renderChunkZ = ((int) (cameraSystem.getCamera().position.z) >> 4) - renderChunkSize / 2;
     }
 
     @Override
     public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool) {
         for (int i = renderChunkX; i < renderChunkX + renderChunkSize; i++) {
             for (int j = renderChunkZ; j < renderChunkZ + renderChunkSize; j++) {
-                renderChunk(renderables, pool, world.getChunk(i, j));
+                renderChunk(renderables, pool, terrain.getChunk(i, j));
             }
         }
     }
@@ -70,20 +79,21 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
             return;
         }
 
-        ChunkRenderer infos = chunkRenderers.get(chunk.id);
+        ChunkRenderer chunkRenderer = chunkRenderers.get(chunk.id);
 
-        if (infos == null) {
-            infos = new ChunkRenderer(this);
-            chunkRenderers.put(chunk.id, infos);
+        if (chunkRenderer == null) {
+            chunkRenderer = new ChunkRenderer(this);
+            chunkRenderers.put(chunk.id, chunkRenderer);
         }
 
         if (chunk.needsRenderUpdate) {
-            infos.update(chunk, new ChunkCache(chunk, world));
+            chunkRenderer.update(chunk, new ChunkCache(chunk, terrain));
 
             chunk.needsRenderUpdate = false;
+            eventSystem.dispatch(new ChunkRendererUpdatedEvent(chunkRenderer, chunk));
         }
 
-        infos.meshes.forEachEntry(new TObjectIntProcedure<Mesh>() {
+        chunkRenderer.meshes.forEachEntry(new TObjectIntProcedure<Mesh>() {
             @Override
             public boolean execute(Mesh mesh, int numIndices) {
 
@@ -122,6 +132,6 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     }
 
     public Terrain getWorld() {
-        return world;
+        return terrain;
     }
 }

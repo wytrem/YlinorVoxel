@@ -1,5 +1,6 @@
 package com.ylinor.client.render;
 
+import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +16,7 @@ import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.ModelsRegistry;
 import com.ylinor.client.render.model.block.UniqueVariant;
 import com.ylinor.library.api.terrain.BlockType;
+import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 
 
@@ -49,6 +51,10 @@ public class RenderGlobal implements Disposable {
             blockModels.register(tile, new UniqueVariant(BlockModel.basicCube(terrainRenderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16])));
         }
     }
+    
+    public void inject(World world) {
+        world.inject(terrainRenderer);
+    }
 
     public void render() {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -67,6 +73,10 @@ public class RenderGlobal implements Disposable {
 
     private void update() {
         terrainRenderer.update();
+    }
+    
+    public ChunkRenderer getChunkRenderer(Chunk chunk) {
+        return terrainRenderer.chunkRenderers.get(chunk.id);
     }
 
     @Override

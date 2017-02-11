@@ -23,7 +23,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     private EventSystem eventSystem;
 
     @Wire
-    private WorldRenderSystem renderSystem;
+    private TerrainRenderSystem renderSystem;
     
     @Wire
     private ScreenSystem screenSystem;
