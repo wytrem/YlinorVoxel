@@ -1,4 +1,4 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.bullet;
 
 import com.bulletphysics.linearmath.MotionState;
 import com.bulletphysics.linearmath.Transform;

@@ -1,4 +1,4 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.bullet;
 
 import java.util.ArrayList;
 import java.util.List;

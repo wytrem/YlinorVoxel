@@ -13,14 +13,15 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
-import com.ylinor.client.physics.BulletDynamicsProcessingSystem;
-import com.ylinor.client.physics.BulletEntitiesSystem;
+import com.ylinor.client.physics.alamano.PhySystem;
+import com.ylinor.client.physics.alamano.Physics;
+import com.ylinor.client.physics.bullet.BulletDynamicsProcessingSystem;
+import com.ylinor.client.physics.bullet.BulletEntitiesSystem;
 import com.ylinor.client.render.AssetsLoadingSystem;
 import com.ylinor.client.render.CameraSystem;
 import com.ylinor.client.render.ClearScreenSystem;
@@ -97,7 +98,7 @@ public class YlinorClient extends YlinorApplication
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         super.preConfigure(configurationBuilder);
 
-        configurationBuilder.dependsOn(SystemsPriorities.UPDATE_PRIORITY, PlayerInitSystem.class, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, BulletDynamicsProcessingSystem.class, BulletEntitiesSystem.class);
+        configurationBuilder.dependsOn(SystemsPriorities.UPDATE_PRIORITY, PlayerInitSystem.class, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
 
         configurationBuilder.dependsOn(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
     }

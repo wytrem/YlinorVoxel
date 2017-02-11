@@ -1,4 +1,4 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.bullet;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -6,6 +6,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.systems.IteratingSystem;
 import com.bulletphysics.linearmath.Transform;
 import com.ylinor.client.YlinorClient;
+import com.ylinor.client.physics.Position;
 
 
 public class BulletEntitiesSystem extends IteratingSystem {

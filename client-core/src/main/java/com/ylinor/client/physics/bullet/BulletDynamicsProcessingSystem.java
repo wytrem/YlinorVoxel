@@ -1,4 +1,4 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.bullet;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;

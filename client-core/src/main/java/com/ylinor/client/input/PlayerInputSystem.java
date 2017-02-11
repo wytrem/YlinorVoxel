@@ -15,10 +15,11 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.input.keyboard.KeyUpEvent;
 import com.ylinor.client.events.input.mouse.MouseMovedEvent;
-import com.ylinor.client.physics.BulletEntity;
 import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.InputControlledEntity;
 import com.ylinor.client.physics.Velocity;
+import com.ylinor.client.physics.alamano.Physics;
+import com.ylinor.client.physics.bullet.BulletEntity;
 
 import net.mostlyoriginal.api.event.common.Subscribe;
 
@@ -33,14 +34,14 @@ public class PlayerInputSystem extends IteratingSystem {
 
     private ComponentMapper<Velocity> velocityMapper;
     private ComponentMapper<Heading> headingMapper;
-    private ComponentMapper<BulletEntity> bulletEntityMapper;
+    private ComponentMapper<Physics> physicsMapper;
 
-    private int STRAFE_LEFT = Keys.A;
-    private int STRAFE_RIGHT = Keys.D;
-    private int FORWARD = Keys.W;
-    private int BACKWARD = Keys.S;
+    private int STRAFE_LEFT = Keys.S;
+    private int STRAFE_RIGHT = Keys.F;
+    private int FORWARD = Keys.E;
+    private int BACKWARD = Keys.D;
     private int UP = Keys.SPACE;
-//    private int DOWN = Keys.SHIFT_LEFT;
+    //    private int DOWN = Keys.SHIFT_LEFT;
     private final Vector3f tmp = new Vector3f();
     private int mouseX = 0;
     private int mouseY = 0;
@@ -77,69 +78,30 @@ public class PlayerInputSystem extends IteratingSystem {
         //        Motion motion = motionMapper.get(entityId);
         Velocity velocity = velocityMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
+        Physics physics = physicsMapper.get(entityId);
+
+        physics.moveStrafing = 0.0F;
+        physics.moveForward = 0.0F;
+
+        float mvt = 5 * world.delta;
 
         if (inputDispatcherSystem.getPressedKeys().contains(FORWARD)) {
 
-            if (bulletEntityMapper.has(entityId)) {
-
-                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
-                tmp.set(camera.direction.x, 0, camera.direction.z)
-                   .normalize()
-                   .mul(velocity.speed * world.delta);
-
-                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
-            }
+            physics.moveForward = mvt;
         }
         if (inputDispatcherSystem.getPressedKeys().contains(BACKWARD)) {
 
-            if (bulletEntityMapper.has(entityId)) {
-
-                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
-                tmp.set(camera.direction.x, 0, camera.direction.z)
-                   .normalize()
-                   .mul(-velocity.speed * world.delta);
-
-                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
-            }
+            physics.moveForward = -mvt;
         }
         if (inputDispatcherSystem.getPressedKeys().contains(STRAFE_LEFT)) {
 
-            if (bulletEntityMapper.has(entityId)) {
-
-                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
-                tmp.set(camera.direction.x, 0, camera.direction.z)
-                   .cross(camera.up.x, camera.up.y, camera.up.z)
-                   .normalize()
-                   .mul(-velocity.speed * world.delta);
-
-                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
-            }
+            physics.moveStrafing = mvt;
         }
         if (inputDispatcherSystem.getPressedKeys().contains(STRAFE_RIGHT)) {
 
-            if (bulletEntityMapper.has(entityId)) {
-
-                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
-                tmp.set(camera.direction.x, 0, camera.direction.z)
-                   .cross(camera.up.x, camera.up.y, camera.up.z)
-                   .normalize()
-                   .mul(velocity.speed * world.delta);
-
-                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
-            }
+            physics.moveStrafing = -mvt;
         }
-        if (inputDispatcherSystem.getPressedKeys().contains(UP)) {
-
-            if (bulletEntityMapper.has(entityId)) {
-
-                RigidBody rigidBody = bulletEntityMapper.get(entityId).rigidBody;
-                tmp.set(camera.up.x, camera.up.y, camera.up.z)
-                   .normalize()
-                   .mul(velocity.speed * world.delta);
-
-                rigidBody.translate(new javax.vecmath.Vector3f(tmp.x, tmp.y, tmp.z));
-            }
-        }
+        physics.isJumping = inputDispatcherSystem.getPressedKeys().contains(UP);
 
         heading.heading.set(camera.direction.x, camera.direction.y, camera.direction.z);
         camera.update(true);

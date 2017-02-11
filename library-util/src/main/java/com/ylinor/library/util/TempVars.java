@@ -8,6 +8,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import com.ylinor.library.util.math.BlockPos;
+
 
 /**
  * Temporary variables assigned to each thread. Engine classes may access these
@@ -150,13 +152,14 @@ public class TempVars {
      * BlockPos
      */
 
+    public final BlockPos blockPos0 = new BlockPos(0, 0, 0);
+    public final BlockPos blockPos1 = new BlockPos(0, 0, 0);
+    public final BlockPos blockPos2 = new BlockPos(0, 0, 0);
+    public final BlockPos blockPos3 = new BlockPos(0, 0, 0);
+    public final BlockPos blockPos4 = new BlockPos(0, 0, 0);
+    public final BlockPos blockPos5 = new BlockPos(0, 0, 0);
+
     /*
-     * public final BlockPos blockPos0 = new BlockPos(0, 0, 0); public final
-     * BlockPos blockPos1 = new BlockPos(0, 0, 0); public final BlockPos
-     * blockPos2 = new BlockPos(0, 0, 0); public final BlockPos blockPos3 = new
-     * BlockPos(0, 0, 0); public final BlockPos blockPos4 = new BlockPos(0, 0,
-     * 0); public final BlockPos blockPos5 = new BlockPos(0, 0, 0);
-     * 
      * public final Vector3f vector3f(int id) { return id == 0 ? vect0 : (id ==
      * 1 ? vect1 : (id == 2 ? vect2 : (id == 3 ? vect3 : (id == 4 ? vect4 : (id
      * == 5 ? vect5 : (id == 6 ? vect6 : (id == 7 ? vect7 : (id == 8 ? vect8 :

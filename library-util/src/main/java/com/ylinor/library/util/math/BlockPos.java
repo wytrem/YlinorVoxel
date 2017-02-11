@@ -1,10 +1,9 @@
-package com.ylinor.library.api.block;
+package com.ylinor.library.util.math;
 
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import com.ylinor.library.util.Facing;
-import com.ylinor.library.util.math.MathHelper;
 
 
 public class BlockPos extends Vector3i {
@@ -109,7 +108,9 @@ public class BlockPos extends Vector3i {
     }
 
     public BlockPos set(int x, int y, int z) {
-        this.set(x, y, z);
+        this.x = x;
+        this.y = y;
+        this.z = z;
         return this;
     }
 

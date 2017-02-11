@@ -87,6 +87,10 @@ public class MathHelper {
     public static float abs(float par0) {
         return par0 >= 0.0F ? par0 : -par0;
     }
+    
+    public static double clamp_double(double num, double min, double max) {
+        return num < min?min:(num > max?max:num);
+     }
 
     /**
      * Returns the unsigned value of an int.

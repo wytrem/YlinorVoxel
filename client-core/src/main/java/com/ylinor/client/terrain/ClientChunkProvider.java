@@ -12,10 +12,11 @@ import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
+
 public class ClientChunkProvider implements IChunkProvider {
     @Wire
     private Terrain terrain;
-    
+
     @Wire
     private EventSystem eventSystem;
 
@@ -46,8 +47,14 @@ public class ClientChunkProvider implements IChunkProvider {
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-                    chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.95f) ? id : 0)));
-//                                        chunk.setBlockType(x, y, z, terrain.getBlockType(id));
+
+                    if (y < 254) {
+                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (id)));
+                    }
+                    else {
+                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.4f) ? id : 0)));
+                    }
+                    //                                        chunk.setBlockType(x, y, z, terrain.getBlockType(id));
                 }
             }
         }
