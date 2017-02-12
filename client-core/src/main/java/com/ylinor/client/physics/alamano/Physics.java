@@ -36,7 +36,7 @@ public class Physics extends Component {
     public boolean noClip;
     public float stepHeight;
     public float fallDistance;
-    private float landMovementFactor = 0.5f;
+    private float landMovementFactor = 0.699999988079071f;
     public boolean isJumping;
     private float jumpTicks;
     public float width;
@@ -57,22 +57,21 @@ public class Physics extends Component {
         this.posX = x;
         this.posY = y;
         this.posZ = z;
-        float f = this.width / 2.0F;
-        float f1 = this.height;
-        this.setEntityBoundingBox(new AxisAlignedBB(x - f, y, z - f, x + f, y + f1, z + f));
+        float halfWidth = this.width / 2.0F;
+        this.setEntityBoundingBox(new AxisAlignedBB(x - halfWidth, y, z - halfWidth, x + halfWidth, y + this.height, z + halfWidth));
      }
 
     public void tick(float delta, Heading heading, Terrain terrain) {
 
-        if (Math.abs(this.motionX) < 0.003f) {
+        if (Math.abs(this.motionX) < 0.001f) {
             this.motionX = 0.0f;
         }
 
-        if (Math.abs(this.motionY) < 0.003f) {
+        if (Math.abs(this.motionY) < 0.001f) {
             this.motionY = 0.0f;
         }
 
-        if (Math.abs(this.motionZ) < 0.003f) {
+        if (Math.abs(this.motionZ) < 0.001f) {
             this.motionZ = 0.0f;
         }
         
@@ -93,13 +92,13 @@ public class Physics extends Component {
 
         this.rotationYaw = (float) Math.atan2(heading.heading.x, heading.heading.z) * -MathHelper.RAD_TO_DEG;
 
-        this.moveStrafing *= 0.98F;
-        this.moveForward *= 0.98F;
-        this.moveEntityWithHeading(terrain, this.moveStrafing, this.moveForward);
+        this.moveStrafing *= toYlinor(0.98f, delta);
+        this.moveForward *= toYlinor(0.98f, delta);
+        this.moveEntityWithHeading(terrain, this.moveStrafing, this.moveForward, delta);
     }
 
     protected float getJumpUpwardsMotion() {
-        return 0.42F;
+        return 0.3F;
     }
 
     protected void jump() {
@@ -108,21 +107,21 @@ public class Physics extends Component {
 
     public List<AxisAlignedBB> getCollisionBoxes(Terrain terrain, AxisAlignedBB aabb) {
         List<AxisAlignedBB> list = new ArrayList<>();
-        int i = MathHelper.floor_double(aabb.minX) - 1;
-        int j = MathHelper.ceiling_double_int(aabb.maxX) + 1;
-        int k = MathHelper.floor_double(aabb.minY) - 1;
-        int l = MathHelper.ceiling_double_int(aabb.maxY) + 1;
-        int i1 = MathHelper.floor_double(aabb.minZ) - 1;
-        int j1 = MathHelper.ceiling_double_int(aabb.maxZ) + 1;
+        int minX = MathHelper.floor_double(aabb.minX) - 1;
+        int maxX = MathHelper.ceiling_double_int(aabb.maxX) + 1;
+        int minY = MathHelper.floor_double(aabb.minY) - 1;
+        int maxY = MathHelper.ceiling_double_int(aabb.maxY) + 1;
+        int minZ = MathHelper.floor_double(aabb.minZ) - 1;
+        int maxZ = MathHelper.ceiling_double_int(aabb.maxZ) + 1;
         TempVars tempVars = TempVars.get();
 
-        for (int k1 = i; k1 < j; ++k1) {
-            for (int l1 = i1; l1 < j1; ++l1) {
-                int i2 = (k1 != i && k1 != j - 1 ? 0 : 1) + (l1 != i1 && l1 != j1 - 1 ? 0 : 1);
+        for (int x = minX; x < maxX; ++x) {
+            for (int z = minZ; z < maxZ; ++z) {
+                int i2 = (x != minX && x != maxX - 1 ? 0 : 1) + (z != minZ && z != maxZ - 1 ? 0 : 1);
                 if (i2 != 2) {
-                    for (int j2 = k; j2 < l; ++j2) {
-                        if (i2 <= 0 || j2 != k && j2 != l - 1) {
-                            tempVars.blockPos0.set(k1, j2, l1);
+                    for (int y = minY; y < maxY; ++y) {
+                        if (i2 <= 0 || y != minY && y != maxY - 1) {
+                            tempVars.blockPos0.set(x, y, z);
 
                             //                       IBlockState iblockstate1 = iblockstate;
                             //                       if(worldborder.contains(blockpos$pooledmutableblockpos) || !flag1) {
@@ -136,7 +135,6 @@ public class Physics extends Component {
 
                                 AxisAlignedBB blockBb = FULL_BLOCK_AABB.offset(tempVars.blockPos0);
                                 if (aabb.intersectsWith(blockBb)) {
-                                    System.out.println(terrain.getBlockType(tempVars.blockPos0).getId());
                                     list.add(blockBb);
                                 }
                             }
@@ -171,7 +169,7 @@ public class Physics extends Component {
         return list;
     }
 
-    public void moveEntity(float x, float y, float z, Terrain terrain) {
+    public void moveEntity(float x, float y, float z, Terrain terrain, float delta) {
         if (this.noClip) {
             this.setEntityBoundingBox(this.getEntityBoundingBox()
                                           .offset(x, y, z));
@@ -246,8 +244,6 @@ public class Physics extends Component {
             List<AxisAlignedBB> list1 = getCollisionBoxes(terrain, this.getEntityBoundingBox()
                                                                        .addCoord(x, y, z));
             
-            System.out.println();
-            System.out.println(list1);
             int i = 0;
 
             for (int j = list1.size(); i < j; ++i) {
@@ -270,101 +266,101 @@ public class Physics extends Component {
                 z = ((AxisAlignedBB) list1.get(j4)).calculateZOffset(this.getEntityBoundingBox(), z);
             }
 
-            //            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
-            //            boolean i_ = this.onGround || d4 != y && d4 < 0.0f;
+                        AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
+                        boolean i_ = this.onGround || d4 != y && d4 < 0.0f;
 
             this.setEntityBoundingBox(this.getEntityBoundingBox()
                                           .offset(0.0f, 0.0f, z));
-            //            if (this.stepHeight > 0.0F && i_ && (d3 != x || d5 != z)) {
-            //                float d11 = x;
-            //                float d7 = y;
-            //                float d8 = z;
-            //                AxisAlignedBB axisalignedbb1 = this.getEntityBoundingBox();
-            //                this.setEntityBoundingBox(axisalignedbb);
-            //                y = (float) this.stepHeight;
-            //                List<AxisAlignedBB> list = getCollisionBoxes(terrain, this.getEntityBoundingBox()
-            //                                                                          .addCoord(d3, y, d5));
-            //                AxisAlignedBB axisalignedbb2 = this.getEntityBoundingBox();
-            //                AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(d3, 0.0f, d5);
-            //                float d9 = y;
-            //                int l = 0;
-            //
-            //                for (int i1 = list.size(); l < i1; ++l) {
-            //                    d9 = ((AxisAlignedBB) list.get(l)).calculateYOffset(axisalignedbb3, d9);
-            //                }
-            //
-            //                axisalignedbb2 = axisalignedbb2.offset(0.0f, d9, 0.0f);
-            //                float d15 = d3;
-            //                int j1 = 0;
-            //
-            //                for (int k1 = list.size(); j1 < k1; ++j1) {
-            //                    d15 = ((AxisAlignedBB) list.get(j1)).calculateXOffset(axisalignedbb2, d15);
-            //                }
-            //
-            //                axisalignedbb2 = axisalignedbb2.offset(d15, 0.0f, 0.0f);
-            //                float d16 = d5;
-            //                int l1 = 0;
-            //
-            //                for (int i2 = list.size(); l1 < i2; ++l1) {
-            //                    d16 = ((AxisAlignedBB) list.get(l1)).calculateZOffset(axisalignedbb2, d16);
-            //                }
-            //
-            //                axisalignedbb2 = axisalignedbb2.offset(0.0f, 0.0f, d16);
-            //                AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
-            //                float d17 = y;
-            //                int j2 = 0;
-            //
-            //                for (int k2 = list.size(); j2 < k2; ++j2) {
-            //                    d17 = ((AxisAlignedBB) list.get(j2)).calculateYOffset(axisalignedbb4, d17);
-            //                }
-            //
-            //                axisalignedbb4 = axisalignedbb4.offset(0.0f, d17, 0.0f);
-            //                float d18 = d3;
-            //                int l2 = 0;
-            //
-            //                for (int i3 = list.size(); l2 < i3; ++l2) {
-            //                    d18 = ((AxisAlignedBB) list.get(l2)).calculateXOffset(axisalignedbb4, d18);
-            //                }
-            //
-            //                axisalignedbb4 = axisalignedbb4.offset(d18, 0.0f, 0.0f);
-            //                float d19 = d5;
-            //                int j3 = 0;
-            //
-            //                for (int k3 = list.size(); j3 < k3; ++j3) {
-            //                    d19 = ((AxisAlignedBB) list.get(j3)).calculateZOffset(axisalignedbb4, d19);
-            //                }
-            //
-            //                axisalignedbb4 = axisalignedbb4.offset(0.0f, 0.0f, d19);
-            //                float d20 = d15 * d15 + d16 * d16;
-            //                float d10 = d18 * d18 + d19 * d19;
-            //                if (d20 > d10) {
-            //                    x = d15;
-            //                    z = d16;
-            //                    y = -d9;
-            //                    this.setEntityBoundingBox(axisalignedbb2);
-            //                }
-            //                else {
-            //                    x = d18;
-            //                    z = d19;
-            //                    y = -d17;
-            //                    this.setEntityBoundingBox(axisalignedbb4);
-            //                }
-            //
-            //                int l3 = 0;
-            //
-            //                for (int i4 = list.size(); l3 < i4; ++l3) {
-            //                    y = ((AxisAlignedBB) list.get(l3)).calculateYOffset(this.getEntityBoundingBox(), y);
-            //                }
-            //
-            //                this.setEntityBoundingBox(this.getEntityBoundingBox()
-            //                                              .offset(0.0f, y, 0.0f));
-            //                if (d11 * d11 + d8 * d8 >= x * x + z * z) {
-            //                    x = d11;
-            //                    y = d7;
-            //                    z = d8;
-            //                    this.setEntityBoundingBox(axisalignedbb1);
-            //                }
-            //            }
+                        if (this.stepHeight > 0.0F && i_ && (d3 != x || d5 != z)) {
+                            float d11 = x;
+                            float d7 = y;
+                            float d8 = z;
+                            AxisAlignedBB axisalignedbb1 = this.getEntityBoundingBox();
+                            this.setEntityBoundingBox(axisalignedbb);
+                            y = (float) this.stepHeight;
+                            List<AxisAlignedBB> list = getCollisionBoxes(terrain, this.getEntityBoundingBox()
+                                                                                      .addCoord(d3, y, d5));
+                            AxisAlignedBB axisalignedbb2 = this.getEntityBoundingBox();
+                            AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(d3, 0.0f, d5);
+                            float d9 = y;
+                            int l = 0;
+            
+                            for (int i1 = list.size(); l < i1; ++l) {
+                                d9 = ((AxisAlignedBB) list.get(l)).calculateYOffset(axisalignedbb3, d9);
+                            }
+            
+                            axisalignedbb2 = axisalignedbb2.offset(0.0f, d9, 0.0f);
+                            float d15 = d3;
+                            int j1 = 0;
+            
+                            for (int k1 = list.size(); j1 < k1; ++j1) {
+                                d15 = ((AxisAlignedBB) list.get(j1)).calculateXOffset(axisalignedbb2, d15);
+                            }
+            
+                            axisalignedbb2 = axisalignedbb2.offset(d15, 0.0f, 0.0f);
+                            float d16 = d5;
+                            int l1 = 0;
+            
+                            for (int i2 = list.size(); l1 < i2; ++l1) {
+                                d16 = ((AxisAlignedBB) list.get(l1)).calculateZOffset(axisalignedbb2, d16);
+                            }
+            
+                            axisalignedbb2 = axisalignedbb2.offset(0.0f, 0.0f, d16);
+                            AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
+                            float d17 = y;
+                            int j2 = 0;
+            
+                            for (int k2 = list.size(); j2 < k2; ++j2) {
+                                d17 = ((AxisAlignedBB) list.get(j2)).calculateYOffset(axisalignedbb4, d17);
+                            }
+            
+                            axisalignedbb4 = axisalignedbb4.offset(0.0f, d17, 0.0f);
+                            float d18 = d3;
+                            int l2 = 0;
+            
+                            for (int i3 = list.size(); l2 < i3; ++l2) {
+                                d18 = ((AxisAlignedBB) list.get(l2)).calculateXOffset(axisalignedbb4, d18);
+                            }
+            
+                            axisalignedbb4 = axisalignedbb4.offset(d18, 0.0f, 0.0f);
+                            float d19 = d5;
+                            int j3 = 0;
+            
+                            for (int k3 = list.size(); j3 < k3; ++j3) {
+                                d19 = ((AxisAlignedBB) list.get(j3)).calculateZOffset(axisalignedbb4, d19);
+                            }
+            
+                            axisalignedbb4 = axisalignedbb4.offset(0.0f, 0.0f, d19);
+                            float d20 = d15 * d15 + d16 * d16;
+                            float d10 = d18 * d18 + d19 * d19;
+                            if (d20 > d10) {
+                                x = d15;
+                                z = d16;
+                                y = -d9;
+                                this.setEntityBoundingBox(axisalignedbb2);
+                            }
+                            else {
+                                x = d18;
+                                z = d19;
+                                y = -d17;
+                                this.setEntityBoundingBox(axisalignedbb4);
+                            }
+            
+                            int l3 = 0;
+            
+                            for (int i4 = list.size(); l3 < i4; ++l3) {
+                                y = ((AxisAlignedBB) list.get(l3)).calculateYOffset(this.getEntityBoundingBox(), y);
+                            }
+            
+                            this.setEntityBoundingBox(this.getEntityBoundingBox()
+                                                          .offset(0.0f, y, 0.0f));
+                            if (d11 * d11 + d8 * d8 >= x * x + z * z) {
+                                x = d11;
+                                y = d7;
+                                z = d8;
+                                this.setEntityBoundingBox(axisalignedbb1);
+                            }
+                        }
 
             this.resetPositionToBB();
             this.isCollidedHorizontally = d3 != x || d5 != z;
@@ -429,7 +425,7 @@ public class Physics extends Component {
             //                }
             //            }
 
-            //            try {/*
+            //            try {
             //                this.doBlockCollisions();
             //            }
             //            catch (Throwable throwable) {
@@ -437,7 +433,7 @@ public class Physics extends Component {
             //                CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being checked for collision");
             //                this.addEntityCrashInfo(crashreportcategory);
             //                throw new ReportedException(crashreport);
-            //            }*/
+            //            }
         }
     }
 
@@ -454,11 +450,11 @@ public class Physics extends Component {
         }
     }
 
-    public void moveEntityWithHeading(Terrain terrain, float strafe, float forward) {
+    public void moveEntityWithHeading(Terrain terrain, float strafe, float forward, float delta) {
 //        double d0 = this.posY;
         float f1 = this.func_189749_co();
         float f2 = 0.02F;
-        float f3 = 3.0F;
+        float f3 = 1;
 
         if (!this.onGround) {
             f3 *= 0.5F;
@@ -468,21 +464,26 @@ public class Physics extends Component {
             f1 += (0.54600006F - f1) * f3 / 3.0F;
             f2 += (this.getAIMoveSpeed() - f2) * f3 / 3.0F;
         }
-
-        this.moveRelative(strafe, forward, f2);
-        this.moveEntity(this.motionX, this.motionY, this.motionZ, terrain);
-        this.motionX *= f1;
-        this.motionY *= 0.800000011920929f;
-        this.motionZ *= f1;
+        
+        this.moveRelative(strafe, forward, f2, delta);
+        this.moveEntity(this.motionX, this.motionY, this.motionZ, terrain, delta);
+        this.motionX *= toYlinor(f1, delta);
+        this.motionY *= toYlinor(0.800000011920929f, delta);
+        this.motionZ *= toYlinor(f1, delta);
         // Gravity
-        this.motionY -= 0.02D;
+        this.motionY -= toYlinor(0.01f, delta);
         
         //        if (this.isCollidedHorizontally && this.isOffsetPositionInLiquid(this.motionX, this.motionY + 0.6000000238418579D - this.posY + d0, this.motionZ)) {
         //            this.motionY = 0.30000001192092896f;
         //        }
     }
+    
+    public static float toYlinor(float x, float delta) {
+//        return x * 20.0f * delta;
+        return x;
+    }
 
-    public void moveRelative(float strafe, float forward, float friction) {
+    public void moveRelative(float strafe, float forward, float friction, float delta) {
         float f = strafe * strafe + forward * forward;
         if (f >= 1.0E-4F) {
             f = (float) Math.sqrt(f);
@@ -495,8 +496,8 @@ public class Physics extends Component {
             forward = forward * f;
             float f1 = MathHelper.sin(this.rotationYaw * MathHelper.DEG_TO_RAD);
             float f2 = MathHelper.cos(this.rotationYaw * MathHelper.DEG_TO_RAD);
-            this.motionX += (strafe * f2 - forward * f1);
-            this.motionZ += (forward * f2 + strafe * f1);
+            this.motionX += toYlinor((strafe * f2 - forward * f1), delta);
+            this.motionZ += toYlinor((forward * f2 + strafe * f1), delta);
         }
     }
 

@@ -74,7 +74,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
         GdxTempVars gdxTempVars = GdxTempVars.get();
         getBoundingBox(chunk, gdxTempVars.bb1);
 
-        if (!renderGlobal.cameraSystem.getCamera().frustum.boundsInFrustum(gdxTempVars.bb1)) {
+        if (!cameraSystem.getCamera().frustum.boundsInFrustum(gdxTempVars.bb1)) {
             gdxTempVars.release();
             return;
         }
