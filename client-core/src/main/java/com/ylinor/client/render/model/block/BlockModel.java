@@ -19,7 +19,18 @@ public class BlockModel implements Renderable {
     
     @NotNull
     protected List<Cube> cubes;
-    
+
+    public BlockModel(@NotNull List<Cube> cubes)
+    {
+        this(null, cubes);
+    }
+
+    public BlockModel(@Nullable String name, @NotNull List<Cube> cubes)
+    {
+        this.name = name;
+        this.cubes = cubes;
+    }
+
     public void render(VertexBuffer vertexBuffer) {
         cubes.forEach(cube -> cube.render(vertexBuffer));
     }

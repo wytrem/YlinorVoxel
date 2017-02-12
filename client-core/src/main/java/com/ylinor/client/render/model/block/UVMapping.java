@@ -33,6 +33,9 @@ public class UVMapping {
             uvMapping.mapping = mapping;
             uvMapping.icon = registeredIcons.apply(texture);
         }
+
+        // TODO: CULLFACE & ROTATION
+
         throw new RuntimeException("Invalid uv node.");
     }
 }
