@@ -252,4 +252,9 @@ public class Cube implements Renderable {
               .texCoords(region.getU(), region.getV2())
               .endVertex();
     }
+
+    public String getId()
+    {
+        return id;
+    }
 }

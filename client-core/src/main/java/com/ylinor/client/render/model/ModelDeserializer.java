@@ -116,6 +116,31 @@ public class ModelDeserializer {
 
     public void deserialize() {
         this.cubes = readPart(model.get("elements"));
+
+        // TODO: VARIANTS
+
+        TreeNode parentNode = model.get("parent");
+
+        if (parentNode.isMissingNode()) {
+            return;
+        }
+
+        walkTree(parentNode, (key, value) -> {
+            if (key.equals("elements")) {
+                List<Cube> cubes = readPart(value);
+
+                cubes.forEach((c) -> {
+                    for (int i = 0; i < this.cubes.size(); i++) {
+                        if (c.getId().equals(this.cubes.get(i).getId())) {
+                            this.cubes.remove(i);
+                            break;
+                        }
+                    }
+
+                    this.cubes.add(c);
+                });
+            }
+        });
     }
 
     public List<Cube> readPart(TreeNode model) {
