@@ -50,4 +50,9 @@ public class BlockModel implements Renderable {
         
         return model;
     }
+
+    public List<Cube> getCubes()
+    {
+        return cubes;
+    }
 }
