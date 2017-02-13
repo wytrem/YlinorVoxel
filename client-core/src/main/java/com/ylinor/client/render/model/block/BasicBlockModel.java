@@ -4,9 +4,22 @@ import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
 import com.ylinor.library.util.TempVars;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class BasicBlockModel extends BlockModel {
+    public BasicBlockModel(@NotNull List<Cube> cubes)
+    {
+        super(cubes);
+    }
+
+    public BasicBlockModel(@Nullable String name, @NotNull List<Cube> cubes)
+    {
+        super(name, cubes);
+    }
+
     @Override
     public void render(VertexBuffer vertexBuffer, IBlockContainer neighbours, int x, int y, int z) {
         TempVars tempVars = TempVars.get();

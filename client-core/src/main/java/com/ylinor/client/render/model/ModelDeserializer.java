@@ -9,9 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import java.util.stream.Stream;
 import org.joml.Quaternionf;
@@ -26,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.Cube;
 import com.ylinor.client.render.model.block.UVMapping;
-import com.ylinor.library.api.world.BlockExtraData;
 import com.ylinor.library.util.Facing;
 
 
@@ -139,9 +135,7 @@ public class ModelDeserializer {
                     position = mapper.treeToValue(cube.get("position"), Vector3f.class);
                     size = mapper.treeToValue(cube.get("size"), Vector3f.class);
                     rotation = mapper.treeToValue(cube.get("rotation"), Quaternionf.class);
-                }
-                catch (JsonProcessingException e)
-                {
+                } catch (JsonProcessingException e) {
                     throw new RuntimeException("Unable to read json model " + name, e);
                 }
             }
