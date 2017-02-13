@@ -1,5 +1,6 @@
 package com.ylinor.client.render.model;
 
+import com.ylinor.client.resource.TextureAtlas;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import java.util.stream.Stream;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -101,15 +103,18 @@ public class ModelDeserializer {
     }*/
 
     private static JsonFactory factory = new JsonFactory();
+
     private ObjectMapper mapper = new ObjectMapper();
+    private TextureAtlas atlas;
 
     private String name;
     private TreeNode model;
     private List<Cube> cubes;
     private List<BlockModel> variants;
 
-    public ModelDeserializer(String name, TreeNode tree) {
+    public ModelDeserializer(String name, TextureAtlas atlas, TreeNode tree) {
         this.name = name;
+        this.atlas = atlas;
         this.model = tree;
     }
 
@@ -121,9 +126,6 @@ public class ModelDeserializer {
         List<Cube> parts = new ArrayList<>();
 
         walkTree(model, (part, cube) -> {
-
-            // TODO: GERER LES EXCEPTIONS
-
             TreeNode children = model.get("children");
             TreeNode faces = model.get("faces");
 
@@ -133,9 +135,15 @@ public class ModelDeserializer {
             Quaternionf rotation = new Quaternionf();
 
             if (children.isMissingNode()) {
-                position = mapper.treeToValue(cube.get("position"), Vector3f.class);
-                size = mapper.treeToValue(cube.get("size"), Vector3f.class);
-                rotation = mapper.treeToValue(cube.get("rotation"), Quaternionf.class);
+                try {
+                    position = mapper.treeToValue(cube.get("position"), Vector3f.class);
+                    size = mapper.treeToValue(cube.get("size"), Vector3f.class);
+                    rotation = mapper.treeToValue(cube.get("rotation"), Quaternionf.class);
+                }
+                catch (JsonProcessingException e)
+                {
+                    throw new RuntimeException("Unable to read json model " + name, e);
+                }
             }
             else {
                 childrenParts = readPart(children);
@@ -145,17 +153,19 @@ public class ModelDeserializer {
 
             if (faces.isObject()) {
                 walkTree(faces, (face, obj) -> {
+                    if (face.equals("allfaces")) {
+                        Stream.of(Facing.values()).filter((f) -> !mapping.containsKey(f)).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(obj.asToken().asString()))));
+                        return;
+                    }
+
                     Facing facing = Facing.valueOf(face);
-                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, (s) -> {
-                        // TODO: Euuuuh faire quelque chose ?
-                        return null;
-                    });
+                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, (s) -> atlas.getUVFor(s));
 
                     mapping.put(facing, uv);
                 });
             } else {
                 String texture = faces.asToken().asString();
-                // TODO: TROUVER SOLUTION
+                Stream.of(Facing.values()).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(texture))));
             }
 
             parts.add(new Cube(part, position, size, rotation, childrenParts, mapping));
@@ -179,8 +189,7 @@ public class ModelDeserializer {
     public static void walkTree(TreeNode tree, BiConsumer<String, TreeNode> consumer) {
         Iterator<String> it = tree.fieldNames();
 
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             String part = it.next();
             TreeNode node = tree.get(part);
 
@@ -188,10 +197,10 @@ public class ModelDeserializer {
         }
     }
 
-    public static ModelDeserializer read(File file) throws IOException {
+    public static ModelDeserializer read(File file, TextureAtlas atlas) throws IOException {
         JsonParser parser = factory.createParser(file);
         String name = file.getName();
 
-        return new ModelDeserializer(name.substring(0, name.lastIndexOf(".json")), parser.readValueAsTree());
+        return new ModelDeserializer(name.substring(0, name.lastIndexOf(".json")), atlas, parser.readValueAsTree());
     }
 }
