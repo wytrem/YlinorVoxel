@@ -1,9 +1,12 @@
 package com.ylinor.client.render.model;
 
+import com.badlogic.gdx.Gdx;
+import com.ylinor.client.resource.Assets;
 import com.ylinor.client.resource.TextureAtlas;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,15 +43,14 @@ public class ModelDeserializer {
         this.registry = registry;
         this.atlas = atlas;
         this.model = tree;
+        this.variants = new ArrayList<>();
     }
 
     public void deserialize() {
-        // TODO: VARIANTS
-
         TreeNode parentNode = model.get("parent");
 
         if (!parentNode.isMissingNode()) {
-            File parentFile = new File((File) null /* TODO: THIS */, parentNode.asToken().asString() + ".json");
+            File parentFile = new File(Assets.get().modelFolder, parentNode.asToken().asString() + ".json");
             TreeNode parent;
 
             try
@@ -64,6 +66,13 @@ public class ModelDeserializer {
         }
 
         this.cubes = readPart(model.get("elements"));
+
+        walkTree(this.model.get("variants"), (name, variant) -> {
+            JsonNode model = merge((JsonNode) this.model, (JsonNode) variant);
+            ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model);
+
+            this.variants.addAll(Arrays.asList(deserializer.getModel()));
+        });
     }
 
     public List<Cube> readPart(TreeNode model) {
