@@ -108,7 +108,7 @@ public class Assets implements Disposable {
         try
         {
             TextureAtlas atlas = new TextureAtlas();
-            atlas.loadFrom(Gdx.files.internal("img/blocks").file(), false);
+            atlas.loadFrom(Gdx.files.internal("img/blocks").file(), false, 32);
             BlockModel[] models = ModelDeserializer.read(new File(modelFolder, "test.json"), new ModelRegistry(), atlas).getModel();
             System.out.println("ON A REUSSSI !!!");
         }
