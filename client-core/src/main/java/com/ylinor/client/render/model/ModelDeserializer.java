@@ -76,7 +76,7 @@ public class ModelDeserializer {
             throw new RuntimeException("Unable to read model textures of model " + name, e);
         }
 
-        this.cubes = readPart(model.get("elements"));
+        this.cubes = readPart(model.get("elements"), null);
 
         walkTree(this.model.get("variants"), (name, variant) -> {
             JsonNode model = merge((JsonNode) this.model, (JsonNode) variant, "variants");
