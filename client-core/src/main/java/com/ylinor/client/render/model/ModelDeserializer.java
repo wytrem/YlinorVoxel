@@ -128,7 +128,7 @@ public class ModelDeserializer {
                     }
 
                     Facing facing = Facing.valueOf(face);
-                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, def, (s) -> atlas.getUVFor(textures.get(s)));
+                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, def, (s) -> atlas.getUVFor(textures.get(s.substring(1))));
 
                     mapping.put(facing, uv);
                 });
