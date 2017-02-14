@@ -5,7 +5,7 @@ package com.ylinor.client.events.input.mouse;
  *
  * @author wytrem
  */
-public class MouseDraggedEvent extends MouseEventWithPos {
+public class MouseDraggedEvent extends MouseMovedEvent {
     public final int pointer;
 
     public MouseDraggedEvent(int mouseX, int mouseY, int pointer) {

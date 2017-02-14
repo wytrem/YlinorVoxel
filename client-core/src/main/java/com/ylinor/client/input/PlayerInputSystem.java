@@ -83,7 +83,7 @@ public class PlayerInputSystem extends IteratingSystem {
         physics.moveStrafing = 0.0F;
         physics.moveForward = 0.0F;
 
-        float mvt = 5 * world.delta;
+        float mvt = 1;
 
         if (inputDispatcherSystem.getPressedKeys().contains(FORWARD)) {
 

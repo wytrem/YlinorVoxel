@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
+import com.artemis.WorldConfigurationBuilder.Priority;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.ylinor.client.events.GdxPauseEvent;
@@ -35,6 +36,7 @@ import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
+import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.library.api.terrain.Terrain;
 
 
@@ -97,8 +99,9 @@ public class YlinorClient extends YlinorApplication
     @Override
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         super.preConfigure(configurationBuilder);
+        configurationBuilder.dependsOn(Priority.HIGHEST, PlayerInitSystem.class);
 
-        configurationBuilder.dependsOn(SystemsPriorities.UPDATE_PRIORITY, PlayerInitSystem.class, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
+        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
 
         configurationBuilder.dependsOn(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
     }

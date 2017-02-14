@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.Position;
+import com.ylinor.client.physics.alamano.Physics;
+import com.ylinor.library.api.ecs.systems.Timer;
 
 
 /**
@@ -37,14 +39,20 @@ public class CameraSystem extends IteratingSystem {
 
     @Wire
     private ComponentMapper<EyeHeight> eyeHeightMapper;
-    
+
     @Wire
     private YlinorClient client;
+    
+    @Wire
+    private ComponentMapper<Physics> physicsMapper;
 
     private Camera camera;
+    
+    @Wire
+    private Timer timer;
 
     public CameraSystem() {
-        super(Aspect.all(RenderViewEntity.class, Position.class, Heading.class));
+        super(Aspect.all(RenderViewEntity.class, Position.class, Heading.class, Physics.class));
     }
 
     @Override
@@ -71,8 +79,12 @@ public class CameraSystem extends IteratingSystem {
     protected void process(int entityId) {
         Position aabb = positionMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
+        Physics physics = physicsMapper.get(entityId);
 
-        camera.position.set(aabb.position.x, aabb.position.y, aabb.position.z);
+        float d0 = physics.prevPosX + (physics.posX - physics.prevPosX) * timer.renderPartialTicks;
+        float d1 = physics.prevPosY + (physics.posY - physics.prevPosY) * timer.renderPartialTicks;
+        float d2 = physics.prevPosZ + (physics.posZ - physics.prevPosZ) * timer.renderPartialTicks;
+        camera.position.set(d0, d1, d2);
 
         if (eyeHeightMapper.has(entityId)) {
             Vector3f eyePadding = eyeHeightMapper.get(entityId).eyePadding;
@@ -91,7 +103,7 @@ public class CameraSystem extends IteratingSystem {
             logger.warn("{} processed this tick, this might cause bugs.", processedEntititesThisTick);
         }
     }
-    
+
     @Override
     protected boolean checkProcessing() {
         return client.isInGame;

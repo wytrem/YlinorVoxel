@@ -1,4 +1,4 @@
-package com.ylinor.client.physics.alamano;
+package com.ylinor.library.api.ecs.systems;
 
 import com.ylinor.library.util.math.MathHelper;
 
