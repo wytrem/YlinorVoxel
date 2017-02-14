@@ -102,14 +102,16 @@ public class ModelDeserializer {
 
     private ObjectMapper mapper = new ObjectMapper();
     private TextureAtlas atlas;
+    private ModelRegistry registry;
 
     private String name;
     private TreeNode model;
     private List<Cube> cubes;
     private List<BlockModel> variants;
 
-    public ModelDeserializer(String name, TextureAtlas atlas, TreeNode tree) {
+    public ModelDeserializer(String name, ModelRegistry registry, TextureAtlas atlas, TreeNode tree) {
         this.name = name;
+        this.registry = registry;
         this.atlas = atlas;
         this.model = tree;
     }
@@ -124,7 +126,17 @@ public class ModelDeserializer {
         } else {
             String parentName = parentNode.asToken().asString();
 
-            BlockModel parent = null; // TODO: ZBEUB
+            if (!registry.isLoaded(parentName)) {
+                try {
+                    // TODO: GET FILE
+                    Stream.of(ModelDeserializer.read(null, registry, atlas).getModel()).forEach((m) -> registry.addModel(m.getName(), m));
+                } catch (IOException e) {
+                    throw new RuntimeException("Unable to read model", e);
+                }
+            }
+
+            BlockModel parent = registry.getModel(parentName);
+
             this.cubes = parent.getCubes();
 
             List<Cube> cubes = readPart(model.get("elements"));
@@ -214,10 +226,10 @@ public class ModelDeserializer {
         }
     }
 
-    public static ModelDeserializer read(File file, TextureAtlas atlas) throws IOException {
+    public static ModelDeserializer read(File file, ModelRegistry registry, TextureAtlas atlas) throws IOException {
         JsonParser parser = factory.createParser(file);
         String name = file.getName();
 
-        return new ModelDeserializer(name.substring(0, name.lastIndexOf(".json")), atlas, parser.readValueAsTree());
+        return new ModelDeserializer(name.substring(0, name.lastIndexOf(".json")), registry, atlas, parser.readValueAsTree());
     }
 }

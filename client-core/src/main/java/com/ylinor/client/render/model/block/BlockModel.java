@@ -51,6 +51,11 @@ public class BlockModel implements Renderable {
         return model;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
     public List<Cube> getCubes()
     {
         return cubes;
