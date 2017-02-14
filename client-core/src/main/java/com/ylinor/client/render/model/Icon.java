@@ -37,6 +37,16 @@ public class Icon {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "Icon{" +
+                "minU=" + minU +
+                ", minV=" + minV +
+                ", maxU=" + maxU +
+                ", maxV=" + maxV +
+                '}';
+    }
+
     public static Icon fromPosSize(float x, float y, float w, float h) {
         return new Icon(x, y, x + w, y + h);
     }
