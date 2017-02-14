@@ -1,7 +1,7 @@
 package com.ylinor.client.render.model.block;
 
-import com.ylinor.library.api.world.BlockExtraData;
-import com.ylinor.library.api.world.BlockType;
+import com.ylinor.library.api.world.blocks.BlockExtraData;
+import com.ylinor.library.api.world.blocks.BlockType;
 import com.ylinor.library.api.world.World;
 
 import gnu.trove.map.TShortObjectMap;

@@ -19,7 +19,7 @@ import com.ylinor.client.render.camera.FirstPersonCameraController;
 import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.ModelsRegistry;
 import com.ylinor.client.render.model.block.UniqueVariant;
-import com.ylinor.library.api.world.BlockType;
+import com.ylinor.library.api.world.blocks.BlockType;
 import com.ylinor.library.api.world.World;
 
 

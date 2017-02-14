@@ -1,6 +1,9 @@
 package com.ylinor.library.api.world;
 
 import com.ylinor.library.api.block.BlockPos;
+import com.ylinor.library.api.world.blocks.Block;
+import com.ylinor.library.api.world.blocks.BlockExtraData;
+import com.ylinor.library.api.world.blocks.BlockType;
 
 public interface IBlockContainer
 {
