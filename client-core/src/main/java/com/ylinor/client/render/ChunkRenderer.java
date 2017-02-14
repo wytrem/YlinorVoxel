@@ -9,7 +9,7 @@ import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.client.renderlib.format.VertexFormats;
-import com.ylinor.library.api.world.BlockType;
+import com.ylinor.library.api.world.blocks.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
 

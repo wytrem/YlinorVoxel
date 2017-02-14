@@ -1,8 +1,8 @@
 package com.ylinor.client.render;
 
-import com.ylinor.library.api.world.Block;
-import com.ylinor.library.api.world.BlockExtraData;
-import com.ylinor.library.api.world.BlockType;
+import com.ylinor.library.api.world.blocks.Block;
+import com.ylinor.library.api.world.blocks.BlockExtraData;
+import com.ylinor.library.api.world.blocks.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
 import com.ylinor.library.api.world.World;

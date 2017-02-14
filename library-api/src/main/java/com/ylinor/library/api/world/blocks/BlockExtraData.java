@@ -1,6 +1,7 @@
-package com.ylinor.library.api.world;
+package com.ylinor.library.api.world.blocks;
 
 import com.ylinor.library.api.block.BlockPos;
+import com.ylinor.library.api.world.World;
 
 public abstract class BlockExtraData
 {
