@@ -2,6 +2,7 @@ package com.ylinor.client.render.model.block;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.ylinor.client.render.model.Icon;
@@ -18,7 +19,7 @@ public class UVMapping {
         this.icon = icon;
     }
 
-    public static UVMapping fromJson(JsonNode node, Function<String, Icon> registeredIcons) {
+    public static UVMapping fromJson(JsonNode node, String defaultTexture, Function<String, Icon> registeredIcons) {
 
         JsonNode uv = node.at("/uv");
 
@@ -28,7 +29,8 @@ public class UVMapping {
 
             ArrayNode uvNode = (ArrayNode) uv;
             int[] mapping ={uvNode.get(0).asInt(), uvNode.get(1).asInt(), uvNode.get(2).asInt(), uvNode.get(3).asInt()};
-            String texture = node.at("/texture").asText();
+            JsonNode tex = node.at("/texture");
+            String texture = tex.isMissingNode() ? defaultTexture : tex.asText();
 
             uvMapping.mapping = mapping;
             uvMapping.icon = registeredIcons.apply(texture);

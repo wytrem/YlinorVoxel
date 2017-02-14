@@ -1,0 +1,19 @@
+{
+  "textures": {
+    "presque_tout": "dirt"
+  },
+  "elements": {
+    "id": "first",
+    "position": {
+      "x": 0.1,
+      "y": 0.2,
+      "z": 0.3
+    },
+    "size": {
+      "x": 0.8,
+      "y": 0.2,
+      "z": 0.1
+    },
+    "faces": "#presque_tout"
+  }
+}
