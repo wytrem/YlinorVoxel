@@ -10,6 +10,11 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class BasicBlockModel extends BlockModel {
+    public BasicBlockModel()
+    {
+        super();
+    }
+
     public BasicBlockModel(@NotNull List<Cube> cubes)
     {
         super(cubes);

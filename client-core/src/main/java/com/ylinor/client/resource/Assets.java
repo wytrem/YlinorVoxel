@@ -1,5 +1,7 @@
 package com.ylinor.client.resource;
 
+import com.badlogic.gdx.Gdx;
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,11 @@ public class Assets implements Disposable {
     public static final String IMAGES_FOLDER = "img/";
 
     /**
+     * Models folder
+     */
+    public static final String MODELS_FOLDER = "models/";
+
+    /**
      * Class instance
      */
     private static Assets instance = new Assets();
@@ -51,6 +58,11 @@ public class Assets implements Disposable {
      * Screens's assets
      */
     public final ScreenAssets screen;
+
+    /**
+     * The folder where the models are
+     */
+    public final File modelFolder = Gdx.files.internal(MODELS_FOLDER).file();
 
     private Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());

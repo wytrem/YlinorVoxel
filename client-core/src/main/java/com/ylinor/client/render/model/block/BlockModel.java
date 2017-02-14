@@ -1,5 +1,6 @@
 package com.ylinor.client.render.model.block;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class BlockModel implements Renderable {
     
     @NotNull
     protected List<Cube> cubes;
+
+    public BlockModel() {
+        this.cubes = new ArrayList<>();
+    }
 
     public BlockModel(@NotNull List<Cube> cubes)
     {
