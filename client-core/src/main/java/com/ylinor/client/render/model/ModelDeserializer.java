@@ -79,8 +79,7 @@ public class ModelDeserializer {
         JsonNode variantsNode = this.model.get("variants");
 
         if (variantsNode != null) {
-            walkTree(variantsNode, (name, variant) ->
-            {
+            walkTree(variantsNode, (name, variant) -> {
                 JsonNode model = merge(this.model, variant, "variants");
                 ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model);
 

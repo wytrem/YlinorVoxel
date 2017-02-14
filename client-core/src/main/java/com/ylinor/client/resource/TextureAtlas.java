@@ -17,7 +17,7 @@ public class TextureAtlas {
     private Pixmap atlas;
 
 
-    public void loadFrom(File folder, boolean recursive, int textureSize) {
+    public void loadFrom(File folder, boolean recursive, int atlasSize) {
         FileHandleResolver resolver = new FileHandleResolver() {
             @Override
             public FileHandle resolve(String fileName) {
@@ -29,7 +29,7 @@ public class TextureAtlas {
 
         addFiles(folder.toPath(), folder, recursive, files);
 
-        load(resolver, files, textureSize);
+        load(resolver, files, atlasSize);
     }
 
     private static final void addFiles(Path relativeTo, File folder, boolean recursive, List<String> files) {
