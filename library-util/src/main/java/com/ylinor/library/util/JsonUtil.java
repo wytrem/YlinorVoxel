@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public final class JsonUtil
@@ -19,11 +21,17 @@ public final class JsonUtil
         return parser.readValueAsTree();
     }
 
-    public static JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+    public static JsonNode merge(JsonNode mainNode, JsonNode updateNode, String... excludes) {
         Iterator<String> fieldNames = updateNode.fieldNames();
+        List<String> excludesList = Arrays.asList(excludes);
 
         while (fieldNames.hasNext()) {
             String fieldName = fieldNames.next();
+
+            if (excludesList.contains(fieldName)) {
+                continue;
+            }
+
             JsonNode jsonNode = mainNode.get(fieldName);
 
             if (jsonNode != null && jsonNode.isObject()) {

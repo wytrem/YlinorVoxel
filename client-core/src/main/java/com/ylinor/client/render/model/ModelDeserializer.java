@@ -3,6 +3,7 @@ package com.ylinor.client.render.model;
 import com.badlogic.gdx.Gdx;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.resource.TextureAtlas;
+import com.ylinor.library.util.JsonUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ModelDeserializer {
     private String name;
     private TreeNode model;
     private List<Cube> cubes;
+    private Map<String, String> textures;
     private List<BlockModel> variants;
 
     public ModelDeserializer(String name, ModelRegistry registry, TextureAtlas atlas, TreeNode tree) {
@@ -65,20 +67,33 @@ public class ModelDeserializer {
             this.model = merge((JsonNode) parent, (JsonNode) this.model);
         }
 
+        try
+        {
+            this.textures = mapper.treeToValue(model.get("textures"), Map.class);
+        }
+        catch (JsonProcessingException e)
+        {
+            throw new RuntimeException("Unable to read model textures of model " + name, e);
+        }
+
         this.cubes = readPart(model.get("elements"));
 
         walkTree(this.model.get("variants"), (name, variant) -> {
-            JsonNode model = merge((JsonNode) this.model, (JsonNode) variant);
+            JsonNode model = merge((JsonNode) this.model, (JsonNode) variant, "variants");
             ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model);
 
             this.variants.addAll(Arrays.asList(deserializer.getModel()));
         });
     }
 
-    public List<Cube> readPart(TreeNode model) {
+    public List<Cube> readPart(TreeNode model, TreeNode parent) {
         List<Cube> parts = new ArrayList<>();
 
         walkTree(model, (part, cube) -> {
+            if (parent != null) {
+                cube = JsonUtil.merge((JsonNode) parent, (JsonNode) cube, "children");
+            }
+
             TreeNode children = model.get("children");
             TreeNode faces = model.get("faces");
 
@@ -97,20 +112,23 @@ public class ModelDeserializer {
                 }
             }
             else {
-                childrenParts = readPart(children);
+                childrenParts = readPart(children, model);
             }
 
             Map<Facing, UVMapping> mapping = new HashMap<>();
 
             if (faces.isObject()) {
+                TreeNode defNode = faces.get("allFaces");
+                String def = defNode.isMissingNode() ? null : defNode.asToken().asString();
+
                 walkTree(faces, (face, obj) -> {
                     if (face.equals("allfaces")) {
-                        Stream.of(Facing.values()).filter((f) -> !mapping.containsKey(f)).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(obj.asToken().asString()))));
+                        //Stream.of(Facing.values()).filter((f) -> !mapping.containsKey(f)).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(obj.asToken().asString()))));
                         return;
                     }
 
                     Facing facing = Facing.valueOf(face);
-                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, (s) -> atlas.getUVFor(s));
+                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, def, (s) -> atlas.getUVFor(textures.get(s)));
 
                     mapping.put(facing, uv);
                 });
