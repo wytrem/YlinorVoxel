@@ -19,7 +19,7 @@ public class TextureAtlas
 
 
 
-    public void loadFrom(File folder, boolean recursive) {
+    public void loadFrom(File folder, boolean recursive, int textureSize) {
         iconMap = new HashMap<>();
 
         Map<String, Pixmap> pixmaps = new HashMap<>(64);
@@ -29,7 +29,7 @@ public class TextureAtlas
         Pixmap onePixmap = pixmaps.values().iterator().next();
         int spriteWidth = onePixmap.getWidth(), spriteHeight = onePixmap.getHeight();
 
-        atlas = new Pixmap(4096, 4096, Pixmap.Format.RGBA8888);
+        atlas = new Pixmap(textureSize, textureSize, Pixmap.Format.RGBA8888);
         int rowLength = atlas.getWidth() / spriteWidth;
 
         Iterator<Map.Entry<String, Pixmap>> entryIterator = pixmaps.entrySet().iterator();
@@ -38,13 +38,13 @@ public class TextureAtlas
         while (entryIterator.hasNext()) {
             Map.Entry<String, Pixmap> entry = entryIterator.next();
 
+            atlas.drawPixmap(entry.getValue(), x, y);
+            iconMap.put(entry.getKey(), Icon.fromPosSize(x, y, spriteWidth, spriteHeight).scale(atlas.getWidth(), atlas.getHeight()));
+
             if ((x += spriteWidth) >= atlas.getWidth()) {
                 x = 0;
                 y += spriteHeight;
             }
-
-            atlas.drawPixmap(entry.getValue(), x, y);
-            iconMap.put(entry.getKey(), new Icon(x, y, spriteWidth, spriteHeight).scale(atlas.getWidth(), atlas.getHeight()));
         }
     }
 
