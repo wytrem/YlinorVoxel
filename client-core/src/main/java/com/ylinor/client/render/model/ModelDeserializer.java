@@ -1,6 +1,5 @@
 package com.ylinor.client.render.model;
 
-import com.badlogic.gdx.Gdx;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.resource.TextureAtlas;
 import com.ylinor.library.util.JsonUtil;
@@ -17,7 +16,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylinor.client.render.model.block.BlockModel;
@@ -35,12 +33,12 @@ public class ModelDeserializer {
     private ModelRegistry registry;
 
     private String name;
-    private TreeNode model;
+    private JsonNode model;
     private List<Cube> cubes;
     private Map<String, String> textures;
     private List<BlockModel> variants;
 
-    public ModelDeserializer(String name, ModelRegistry registry, TextureAtlas atlas, TreeNode tree) {
+    public ModelDeserializer(String name, ModelRegistry registry, TextureAtlas atlas, JsonNode tree) {
         this.name = name;
         this.registry = registry;
         this.atlas = atlas;
@@ -49,11 +47,11 @@ public class ModelDeserializer {
     }
 
     public void deserialize() {
-        TreeNode parentNode = model.get("parent");
+        JsonNode parentNode = model.get("parent");
 
-        if (!parentNode.isMissingNode()) {
-            File parentFile = new File(Assets.get().modelFolder, parentNode.asToken().asString() + ".json");
-            TreeNode parent;
+        if (parentNode != null) {
+            File parentFile = new File(Assets.get().getModelFolder(), parentNode.textValue() + ".json");
+            JsonNode parent;
 
             try
             {
@@ -64,7 +62,7 @@ public class ModelDeserializer {
                 throw new RuntimeException("Unable to read model '" + parentFile + "' (parent of " + name + ")", e);
             }
 
-            this.model = merge((JsonNode) parent, (JsonNode) this.model);
+            this.model = merge(parent, this.model);
         }
 
         try
@@ -78,62 +76,72 @@ public class ModelDeserializer {
 
         this.cubes = readPart(model.get("elements"), null);
 
-        walkTree(this.model.get("variants"), (name, variant) -> {
-            JsonNode model = merge((JsonNode) this.model, (JsonNode) variant, "variants");
-            ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model);
+        JsonNode variantsNode = this.model.get("variants");
 
-            this.variants.addAll(Arrays.asList(deserializer.getModel()));
-        });
+        if (variantsNode != null) {
+            walkTree(variantsNode, (name, variant) ->
+            {
+                JsonNode model = merge(this.model, variant, "variants");
+                ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model);
+
+                this.variants.addAll(Arrays.asList(deserializer.getModel()));
+            });
+        }
     }
 
-    public List<Cube> readPart(TreeNode model, TreeNode parent) {
+    public List<Cube> readPart(JsonNode model, JsonNode parent) {
         List<Cube> parts = new ArrayList<>();
 
         walkTree(model, (part, cube) -> {
             if (parent != null) {
-                cube = JsonUtil.merge((JsonNode) parent, (JsonNode) cube, "children");
+                cube = JsonUtil.merge(parent, cube, "children");
             }
 
-            TreeNode children = model.get("children");
-            TreeNode faces = model.get("faces");
+            JsonNode children = cube.get("children");
+            JsonNode faces = cube.get("faces");
 
             List<Cube> childrenParts = null;
 
             Vector3f position = new Vector3f(), size = new Vector3f();
             Quaternionf rotation = new Quaternionf();
 
-            if (children.isMissingNode()) {
+            if (children == null) {
                 try {
                     position = mapper.treeToValue(cube.get("position"), Vector3f.class);
                     size = mapper.treeToValue(cube.get("size"), Vector3f.class);
-                    rotation = mapper.treeToValue(cube.get("rotation"), Quaternionf.class);
+
+                    JsonNode rot = cube.get("rotation");
+
+                    if (rot != null) {
+                        rotation = mapper.treeToValue(rot, Quaternionf.class);
+                    }
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException("Unable to read json model " + name, e);
                 }
             }
             else {
-                childrenParts = readPart(children, model);
+                childrenParts = readPart(children, cube);
             }
 
             Map<Facing, UVMapping> mapping = new HashMap<>();
 
             if (faces.isObject()) {
-                TreeNode defNode = faces.get("allFaces");
-                String def = defNode.isMissingNode() ? null : defNode.asToken().asString();
+                JsonNode defNode = faces.get("allFaces");
+                String def = defNode == null ? null : defNode.textValue();
 
                 walkTree(faces, (face, obj) -> {
                     if (face.equals("allfaces")) {
-                        //Stream.of(Facing.values()).filter((f) -> !mapping.containsKey(f)).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(obj.asToken().asString()))));
+                        //Stream.of(Facing.values()).filter((f) -> !mapping.containsKey(f)).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(obj.textValue()))));
                         return;
                     }
 
                     Facing facing = Facing.valueOf(face);
-                    UVMapping uv = UVMapping.fromJson((JsonNode) obj, def, (s) -> atlas.getUVFor(textures.get(s.substring(1))));
+                    UVMapping uv = UVMapping.fromJson(obj, def, (s) -> atlas.getUVFor(textures.get(s.substring(1))));
 
                     mapping.put(facing, uv);
                 });
             } else {
-                String texture = faces.asToken().asString();
+                String texture = faces.textValue();
                 Stream.of(Facing.values()).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(textures.get(texture.substring(1))))));
             }
 

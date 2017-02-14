@@ -1,7 +1,11 @@
 package com.ylinor.client.resource;
 
 import com.badlogic.gdx.Gdx;
+import com.ylinor.client.render.model.ModelDeserializer;
+import com.ylinor.client.render.model.ModelRegistry;
+import com.ylinor.client.render.model.block.BlockModel;
 import java.io.File;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +66,7 @@ public class Assets implements Disposable {
     /**
      * The folder where the models are
      */
-    public final File modelFolder = Gdx.files.internal(MODELS_FOLDER).file();
+    private File modelFolder;
 
     private Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());
@@ -97,6 +101,21 @@ public class Assets implements Disposable {
         logger.info("Loading assets...");
 
         screen.load();
+
+        modelFolder = Gdx.files.internal(MODELS_FOLDER).file();
+
+        // Models
+        try
+        {
+            TextureAtlas atlas = new TextureAtlas();
+            atlas.loadFrom(Gdx.files.internal("img/blocks").file(), false);
+            BlockModel[] models = ModelDeserializer.read(new File(modelFolder, "test.json"), new ModelRegistry(), atlas).getModel();
+            System.out.println("ON A REUSSSI !!!");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -159,6 +178,11 @@ public class Assets implements Disposable {
      */
     public <T> T get(String file) {
         return assets.get(file);
+    }
+
+    public File getModelFolder()
+    {
+        return modelFolder;
     }
 
     /**
