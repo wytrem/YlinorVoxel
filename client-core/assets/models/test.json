@@ -14,8 +14,6 @@
       "y": 0.2,
       "z": 0.1
     },
-    "faces": {
-      "allfaces": "#presque_tout"
-    }
+    "faces": "#presque_tout"
   }
 }

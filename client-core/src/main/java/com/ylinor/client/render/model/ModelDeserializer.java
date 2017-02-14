@@ -134,7 +134,7 @@ public class ModelDeserializer {
                 });
             } else {
                 String texture = faces.asToken().asString();
-                Stream.of(Facing.values()).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(texture))));
+                Stream.of(Facing.values()).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(textures.get(texture.substring(1))))));
             }
 
             parts.add(new Cube(part, position, size, rotation, childrenParts, mapping));
