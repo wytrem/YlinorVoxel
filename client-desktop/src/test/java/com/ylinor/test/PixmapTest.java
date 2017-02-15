@@ -35,8 +35,7 @@ public class PixmapTest extends GdxTest {
 
     public void create() {
         atlas = new TextureAtlas();
-        atlas.loadFrom(new File("/home/victor/Ylinor/atlas/"), false, 512);
-
+        atlas.loadFrom(new File("/home/victor/Ylinor/atlas"), false, 512);
 
         // Create a texture to contain the pixmap
         texture = new Texture(atlas.getSheet()); // Pixmap.Format.RGBA8888);
