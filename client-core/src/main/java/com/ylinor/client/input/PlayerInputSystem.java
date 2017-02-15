@@ -1,7 +1,5 @@
 package com.ylinor.client.input;
 
-import org.joml.Vector3f;
-
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
@@ -11,17 +9,15 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.bulletphysics.dynamics.RigidBody;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.input.keyboard.KeyUpEvent;
 import com.ylinor.client.events.input.mouse.MouseMovedEvent;
 import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.InputControlledEntity;
 import com.ylinor.client.physics.Velocity;
-import com.ylinor.client.physics.alamano.Physics;
-import com.ylinor.client.physics.bullet.BulletEntity;
-
+import com.ylinor.client.physics.Physics;
 import net.mostlyoriginal.api.event.common.Subscribe;
+import org.joml.Vector3f;
 
 
 /**
@@ -60,8 +56,7 @@ public class PlayerInputSystem extends IteratingSystem {
 
     @SuppressWarnings("unchecked")
     public PlayerInputSystem() {
-        super(Aspect.all(InputControlledEntity.class)
-                    .one(Heading.class, BulletEntity.class));
+        super(Aspect.all(InputControlledEntity.class, Heading.class));
     }
 
     @Override

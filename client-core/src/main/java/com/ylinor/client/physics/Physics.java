@@ -1,10 +1,9 @@
-package com.ylinor.client.physics.alamano;
+package com.ylinor.client.physics;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.artemis.Component;
-import com.ylinor.client.physics.Heading;
 import com.ylinor.library.api.terrain.BlockExtraData;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.TempVars;
@@ -36,9 +35,9 @@ public class Physics extends Component {
     public boolean noClip;
     public float stepHeight;
     public float fallDistance;
-    private float landMovementFactor = 0.1f;
+    public float landMovementFactor = 0.1f;
     public boolean isJumping;
-    private int jumpTicks;
+    public int jumpTicks;
     public float width;
     public float height;
     public float jumpMovementFactor = 0.02F;
@@ -48,8 +47,8 @@ public class Physics extends Component {
     public static final AxisAlignedBB FULL_BLOCK_AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
     public Physics() {
-        this.stepHeight = 0.6f;
-        this.boundingBox = FULL_BLOCK_AABB;
+        this.stepHeight = -1.f;
+        this.boundingBox = new AxisAlignedBB(0,0,0,1,1,1);
         this.width = 0.6F;
         this.height = 1.8F;
         setPosition(0, 260, 0);
@@ -60,10 +59,10 @@ public class Physics extends Component {
         this.posY = y;
         this.posZ = z;
         float halfWidth = this.width / 2.0F;
-        this.setEntityBoundingBox(new AxisAlignedBB(x - halfWidth, y, z - halfWidth, x + halfWidth, y + this.height, z + halfWidth));
+        this.getEntityBoundingBox().set(x - halfWidth, y, z - halfWidth, x + halfWidth, y + this.height, z + halfWidth);
     }
 
-    public void tick(float delta, Heading heading, Terrain terrain) {
+    public void tick(Heading heading, Terrain terrain) {
         this.jumpMovementFactor = this.speedInAir;
 
         this.prevPosX = this.posX;
@@ -141,7 +140,7 @@ public class Physics extends Component {
                             if (terrain.getBlockType(tempVars.blockPos0)
                                        .isCollidable()) {
 
-                                AxisAlignedBB blockBb = FULL_BLOCK_AABB.offset(tempVars.blockPos0);
+                                AxisAlignedBB blockBb = FULL_BLOCK_AABB.copy().offsetLocal(tempVars.blockPos0);
                                 if (aabb.intersectsWith(blockBb)) {
                                     list.add(blockBb);
                                 }
@@ -174,13 +173,13 @@ public class Physics extends Component {
         //           }
         //        }
 
+
         return list;
     }
 
     public void moveEntity(float x, float y, float z, Terrain terrain) {
         if (this.noClip) {
-            this.setEntityBoundingBox(this.getEntityBoundingBox()
-                                          .offset(x, y, z));
+            this.getEntityBoundingBox().offsetLocal(x, y, z);
             this.resetPositionToBB();
         }
         else {
@@ -257,114 +256,112 @@ public class Physics extends Component {
                 y = collisionBoxes.get(i)
                                   .calculateYOffset(this.getEntityBoundingBox(), y);
             }
-            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
+            AxisAlignedBB aabbMovedOnlyOnY = this.getEntityBoundingBox().copy();
             boolean flag = this.onGround || initialY != y && initialY < 0.0f;
-
-            this.setEntityBoundingBox(this.getEntityBoundingBox()
-                                          .offset(0.0f, y, 0.0f));
+            this.getEntityBoundingBox().offsetLocal(0.0f, y, 0.0f);
             for (int i = 0; i < collisionBoxes.size(); i++) {
                 x = collisionBoxes.get(i)
                                   .calculateXOffset(this.getEntityBoundingBox(), x);
             }
 
-            this.setEntityBoundingBox(this.getEntityBoundingBox()
-                                          .offset(x, 0.0f, 0.0f));
+            this.getEntityBoundingBox().offsetLocal(x, 0.0f, 0.0f);
             for (int i = 0; i < collisionBoxes.size(); i++) {
                 z = collisionBoxes.get(i)
                                   .calculateZOffset(this.getEntityBoundingBox(), z);
             }
 
-            this.setEntityBoundingBox(this.getEntityBoundingBox()
-                                          .offset(0.0f, 0.0f, z));
+            this.getEntityBoundingBox().offsetLocal(0.0f, 0.0f, z);
 
             if (this.stepHeight > 0.0F && flag && (initialX != x || initialZ != z)) {
                 float d11 = x;
                 float d7 = y;
                 float d8 = z;
-                AxisAlignedBB axisalignedbb1 = this.getEntityBoundingBox();
-                this.setEntityBoundingBox(axisalignedbb);
+                AxisAlignedBB bbBeforeStep = this.getEntityBoundingBox().copy();
+                this.getEntityBoundingBox().set(aabbMovedOnlyOnY);
                 y = (float) this.stepHeight;
                 List<AxisAlignedBB> list = getCollisionBoxes(terrain, this.getEntityBoundingBox()
                                                                           .addCoord(initialX, y, initialZ));
-                AxisAlignedBB axisalignedbb2 = this.getEntityBoundingBox();
+                AxisAlignedBB axisalignedbb2 = this.getEntityBoundingBox().copy();
                 AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(initialX, 0.0f, initialZ);
                 float d9 = y;
                 int l = 0;
 
                 for (int i1 = list.size(); l < i1; ++l) {
-                    d9 = ((AxisAlignedBB) list.get(l)).calculateYOffset(axisalignedbb3, d9);
+                    d9 = (list.get(l)).calculateYOffset(axisalignedbb3, d9);
                 }
 
-                axisalignedbb2 = axisalignedbb2.offset(0.0f, d9, 0.0f);
+                axisalignedbb2.offsetLocal(0.0f, d9, 0.0f);
                 float d15 = initialX;
                 int j1 = 0;
 
                 for (int k1 = list.size(); j1 < k1; ++j1) {
-                    d15 = ((AxisAlignedBB) list.get(j1)).calculateXOffset(axisalignedbb2, d15);
+                    d15 = (list.get(j1)).calculateXOffset(axisalignedbb2, d15);
                 }
 
-                axisalignedbb2 = axisalignedbb2.offset(d15, 0.0f, 0.0f);
+                axisalignedbb2.offsetLocal(d15, 0.0f, 0.0f);
                 float d16 = initialZ;
                 int l1 = 0;
 
                 for (int i2 = list.size(); l1 < i2; ++l1) {
-                    d16 = ((AxisAlignedBB) list.get(l1)).calculateZOffset(axisalignedbb2, d16);
+                    d16 = (list.get(l1)).calculateZOffset(axisalignedbb2, d16);
                 }
 
-                axisalignedbb2 = axisalignedbb2.offset(0.0f, 0.0f, d16);
-                AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
+                axisalignedbb2.offsetLocal(0.0f, 0.0f, d16);
+                AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox().copy();
                 float d17 = y;
                 int j2 = 0;
 
                 for (int k2 = list.size(); j2 < k2; ++j2) {
-                    d17 = ((AxisAlignedBB) list.get(j2)).calculateYOffset(axisalignedbb4, d17);
+                    d17 = (list.get(j2)).calculateYOffset(axisalignedbb4, d17);
                 }
 
-                axisalignedbb4 = axisalignedbb4.offset(0.0f, d17, 0.0f);
+                axisalignedbb4.offsetLocal(0.0f, d17, 0.0f);
                 float d18 = initialX;
                 int l2 = 0;
 
                 for (int i3 = list.size(); l2 < i3; ++l2) {
-                    d18 = ((AxisAlignedBB) list.get(l2)).calculateXOffset(axisalignedbb4, d18);
+                    d18 = (list.get(l2)).calculateXOffset(axisalignedbb4, d18);
                 }
 
-                axisalignedbb4 = axisalignedbb4.offset(d18, 0.0f, 0.0f);
+                axisalignedbb4.offsetLocal(d18, 0.0f, 0.0f);
                 float d19 = initialZ;
                 int j3 = 0;
 
                 for (int k3 = list.size(); j3 < k3; ++j3) {
-                    d19 = ((AxisAlignedBB) list.get(j3)).calculateZOffset(axisalignedbb4, d19);
+                    d19 = (list.get(j3)).calculateZOffset(axisalignedbb4, d19);
                 }
 
-                axisalignedbb4 = axisalignedbb4.offset(0.0f, 0.0f, d19);
+                axisalignedbb4.offsetLocal(0.0f, 0.0f, d19);
                 float d20 = d15 * d15 + d16 * d16;
                 float d10 = d18 * d18 + d19 * d19;
                 if (d20 > d10) {
                     x = d15;
                     z = d16;
                     y = -d9;
-                    this.setEntityBoundingBox(axisalignedbb2);
+                    this.getEntityBoundingBox().set(axisalignedbb2);
                 }
                 else {
                     x = d18;
                     z = d19;
                     y = -d17;
-                    this.setEntityBoundingBox(axisalignedbb4);
+                    this.getEntityBoundingBox().set(axisalignedbb4);
                 }
 
                 int l3 = 0;
 
                 for (int i4 = list.size(); l3 < i4; ++l3) {
-                    y = ((AxisAlignedBB) list.get(l3)).calculateYOffset(this.getEntityBoundingBox(), y);
+                    y = (list.get(l3)).calculateYOffset(this.getEntityBoundingBox(), y);
                 }
 
-                this.setEntityBoundingBox(this.getEntityBoundingBox()
-                                              .offset(0.0f, y, 0.0f));
+
+                this.getEntityBoundingBox().offsetLocal(0.0f, y, 0.0f);
+//                this.setEntityBoundingBox(this.getEntityBoundingBox()
+//                                              .offset(0.0f, y, 0.0f));
                 if (d11 * d11 + d8 * d8 >= x * x + z * z) {
                     x = d11;
                     y = d7;
                     z = d8;
-                    this.setEntityBoundingBox(axisalignedbb1);
+                    this.getEntityBoundingBox().set(bbBeforeStep);
                 }
             }
 
@@ -593,9 +590,4 @@ public class Physics extends Component {
     public AxisAlignedBB getRenderBoundingBox() {
         return this.getEntityBoundingBox();
     }
-
-    public void setEntityBoundingBox(AxisAlignedBB bb) {
-        this.boundingBox = bb;
-    }
-
 }

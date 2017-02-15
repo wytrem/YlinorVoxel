@@ -1,4 +1,4 @@
-package com.ylinor.client.physics.alamano;
+package com.ylinor.client.physics;
 
 import org.joml.Vector3f;
 
@@ -6,12 +6,12 @@ import com.ylinor.library.util.math.BlockPos;
 
 
 public class AxisAlignedBB {
-    public final float minX;
-    public final float minY;
-    public final float minZ;
-    public final float maxX;
-    public final float maxY;
-    public final float maxZ;
+    public float minX;
+    public float minY;
+    public float minZ;
+    public float maxX;
+    public float maxY;
+    public float maxZ;
 
     public AxisAlignedBB(float x1, float y1, float z1, float x2, float y2, float z2) {
         this.minX = Math.min(x1, x2);
@@ -120,6 +120,42 @@ public class AxisAlignedBB {
         float d4 = Math.max(this.maxY, other.maxY);
         float d5 = Math.max(this.maxZ, other.maxZ);
         return new AxisAlignedBB(d0, d1, d2, d3, d4, d5);
+    }
+
+    public void set(AxisAlignedBB other) {
+        this.minX = other.minX;
+        this.minY = other.minY;
+        this.minZ = other.minZ;
+        this.maxX = other.maxX;
+        this.maxY = other.maxY;
+        this.maxZ = other.maxZ;
+    }
+
+    public void set(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
+    }
+
+    public AxisAlignedBB offsetLocal(float x, float y, float z) {
+        this.minX += x;
+        this.minY += y;
+        this.minZ += z;
+        this.maxX += x;
+        this.maxY += y;
+        this.maxZ += z;
+        return this;
+    }
+
+    public AxisAlignedBB offsetLocal(BlockPos pos) {
+        return this.offsetLocal(pos.x(), pos.y(), pos.z());
+    }
+
+    public AxisAlignedBB copy() {
+        return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public AxisAlignedBB offset(float x, float y, float z) {

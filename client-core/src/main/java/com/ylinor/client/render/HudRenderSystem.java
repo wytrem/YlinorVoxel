@@ -8,8 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ylinor.client.YlinorClient;
-import com.ylinor.client.physics.OnGround;
-import com.ylinor.client.physics.alamano.Physics;
+import com.ylinor.client.physics.Physics;
 
 
 public class HudRenderSystem extends IteratingSystem {

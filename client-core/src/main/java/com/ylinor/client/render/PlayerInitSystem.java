@@ -8,7 +8,7 @@ import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.InputControlledEntity;
 import com.ylinor.client.physics.Position;
 import com.ylinor.client.physics.Velocity;
-import com.ylinor.client.physics.alamano.Physics;
+import com.ylinor.client.physics.Physics;
 
 
 /**

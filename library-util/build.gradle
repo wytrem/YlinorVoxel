@@ -23,7 +23,4 @@ dependencies {
     compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
     compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
     compile "net.mostlyoriginal.artemis-odb:contrib-network:$artemisContribVersion"
-    
-    // jBullet physics engine
-    compile "cz.advel.jbullet:jbullet:20101010-1"
 }
