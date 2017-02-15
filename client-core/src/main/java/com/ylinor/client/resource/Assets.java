@@ -1,28 +1,30 @@
 package com.ylinor.client.resource;
 
-import com.badlogic.gdx.Gdx;
-import com.ylinor.client.render.model.ModelDeserializer;
-import com.ylinor.client.render.model.ModelRegistry;
-import com.ylinor.client.render.model.block.BlockModel;
 import java.io.File;
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
+import com.ylinor.client.render.model.ModelDeserializer;
+import com.ylinor.client.render.model.ModelRegistry;
 
 
 /**
  * Game's assets (Singleton)
  *
- * This class contains all constants of assets's folder
- * The {@link AssetManager}, and the other public assets class as
+ * This class contains all constants of assets's folder The
+ * {@link AssetManager}, and the other public assets class as
  * {@link ScreenAssets}.
  *
  * It contains load and preload function to precharge assets
@@ -66,7 +68,7 @@ public class Assets implements Disposable {
     /**
      * The folder where the models are
      */
-    private File modelFolder;
+    private FileHandle modelFolder;
 
     private Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());
@@ -102,18 +104,20 @@ public class Assets implements Disposable {
 
         screen.load();
 
-        modelFolder = Gdx.files.internal(MODELS_FOLDER).file();
+        modelFolder = Gdx.files.internal(MODELS_FOLDER);
 
         // Models
-        try
-        {
+        try {
             TextureAtlas atlas = new TextureAtlas();
-            atlas.loadFrom(Gdx.files.internal("img/blocks").file(), false, 2048);
-            BlockModel[] models = ModelDeserializer.read(new File(modelFolder, "test.json"), new ModelRegistry(), atlas).getModel();
+            atlas.loadFrom(new File("/home/victor/Ylinor/atlas"), false, 2048);
+            //            BlockModel[] models = ModelDeserializer.read(new File(modelFolder, "test.json"), new ModelRegistry(), atlas).getModel();
+            ModelDeserializer test = ModelDeserializer.read(modelFolder.child("test.json"), new ModelRegistry(), atlas, fileName -> modelFolder.child(fileName + ".json"));
+            test.deserialize();
+            System.out.println(test.variants);
+
             System.out.println("ON A REUSSSI !!!");
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -180,8 +184,7 @@ public class Assets implements Disposable {
         return assets.get(file);
     }
 
-    public File getModelFolder()
-    {
+    public FileHandle getModelFolder() {
         return modelFolder;
     }
 

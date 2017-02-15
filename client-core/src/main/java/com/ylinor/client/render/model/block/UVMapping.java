@@ -1,14 +1,10 @@
 package com.ylinor.client.render.model.block;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
+import java.util.function.Function;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.ylinor.client.render.model.Icon;
-import org.joml.Vector2f;
-
-import java.util.function.Function;
 
 public class UVMapping {
     private int[] mapping;
@@ -19,9 +15,13 @@ public class UVMapping {
         this.icon = icon;
     }
 
-    public static UVMapping fromJson(JsonNode node, String defaultTexture, Function<String, Icon> registeredIcons) {
+    public static UVMapping fromJson(JsonNode root, String defaultTexture, Function<String, Icon> registeredIcons) {
 
-        JsonNode uv = node.at("/uv");
+        if (root.isTextual()) {
+            return new UVMapping(new int[] {0,0,32,32}, registeredIcons.apply(root.asText()));
+        }
+        
+        JsonNode uv = root.at("/uv");
 
         if (uv.isArray())
         {
@@ -29,7 +29,7 @@ public class UVMapping {
 
             ArrayNode uvNode = (ArrayNode) uv;
             int[] mapping ={uvNode.get(0).asInt(), uvNode.get(1).asInt(), uvNode.get(2).asInt(), uvNode.get(3).asInt()};
-            JsonNode tex = node.at("/texture");
+            JsonNode tex = root.at("/texture");
             String texture = tex.isMissingNode() ? defaultTexture : tex.asText();
 
             uvMapping.mapping = mapping;

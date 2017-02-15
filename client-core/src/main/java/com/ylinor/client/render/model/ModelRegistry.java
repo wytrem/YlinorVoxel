@@ -1,16 +1,36 @@
 package com.ylinor.client.render.model;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.ylinor.client.render.model.block.BlockModel;
+import com.ylinor.client.resource.TextureAtlas;
+import com.ylinor.library.api.world.blocks.BlockType;
+
+import gnu.trove.map.TShortObjectMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModelRegistry
-{
+
+public class ModelRegistry {
+    
+    
+    private TShortObjectMap<String> blockStatesFiles;
     private Map<String, BlockModel> models;
 
-    public ModelRegistry()
-    {
+    public ModelRegistry() {
         this.models = new HashMap<>();
+        this.blockStatesFiles = new TShortObjectHashMap<>();
+    
+        registerStatesFiles();
+    }
+    
+    public void loadFrom(FileHandle folder, TextureAtlas atlas) {
+        
+    }
+    
+    private void registerStatesFiles() {
+        blockStatesFiles.put(BlockType.dirt.getId(), "dirt");
     }
 
     public void addModel(String name, BlockModel model) {

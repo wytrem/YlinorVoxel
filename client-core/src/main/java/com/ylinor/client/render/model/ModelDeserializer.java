@@ -1,30 +1,33 @@
 package com.ylinor.client.render.model;
 
-import com.ylinor.client.resource.Assets;
-import com.ylinor.client.resource.TextureAtlas;
-import com.ylinor.library.util.JsonUtil;
-import java.io.File;
+import static com.ylinor.library.util.JsonUtil.makeTree;
+import static com.ylinor.library.util.JsonUtil.merge;
+import static com.ylinor.library.util.JsonUtil.walkArray;
+import static com.ylinor.library.util.JsonUtil.walkTree;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.stream.Stream;
+
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.Cube;
 import com.ylinor.client.render.model.block.UVMapping;
+import com.ylinor.client.resource.TextureAtlas;
 import com.ylinor.library.util.Facing;
-
-
-import static com.ylinor.library.util.JsonUtil.*;
+import com.ylinor.library.util.JsonUtil;
+import com.ylinor.library.util.spring.Assert;
 
 
 public class ModelDeserializer {
@@ -33,58 +36,62 @@ public class ModelDeserializer {
     private ModelRegistry registry;
 
     private String name;
-    private JsonNode model;
+    private JsonNode jsonSource;
     private List<Cube> cubes;
     private Map<String, String> textures;
-    private List<BlockModel> variants;
+    public Map<String, BlockModel> variants;
+    private FileHandleResolver modelsResolver;
 
-    public ModelDeserializer(String name, ModelRegistry registry, TextureAtlas atlas, JsonNode tree) {
+    public ModelDeserializer(String name, ModelRegistry registry, TextureAtlas atlas, JsonNode tree, FileHandleResolver fileHandleResolver) {
         this.name = name;
         this.registry = registry;
         this.atlas = atlas;
-        this.model = tree;
-        this.variants = new ArrayList<>();
+        this.jsonSource = tree;
+        this.variants = new HashMap<>();
+        this.modelsResolver = fileHandleResolver;
     }
-
+    
     public void deserialize() {
-        JsonNode parentNode = model.get("parent");
+        JsonNode parentNode = jsonSource.get("parent");
 
         if (parentNode != null) {
-            File parentFile = new File(Assets.get().getModelFolder(), parentNode.textValue() + ".json");
+            FileHandle parentFile = modelsResolver.resolve(parentNode.textValue());
             JsonNode parent;
 
             try
             {
-                parent = makeTree(parentFile);
+                parent = makeTree(parentFile.read());
             }
             catch (IOException e)
             {
                 throw new RuntimeException("Unable to read model '" + parentFile + "' (parent of " + name + ")", e);
             }
 
-            this.model = merge(parent, this.model);
+            this.jsonSource = merge(parent, this.jsonSource);
         }
 
         try
         {
-            this.textures = mapper.treeToValue(model.get("textures"), Map.class);
+            this.textures = mapper.treeToValue(jsonSource.get("textures"), Map.class);
         }
         catch (JsonProcessingException e)
         {
             throw new RuntimeException("Unable to read model textures of model " + name, e);
         }
 
-        this.cubes = readPart(model.get("elements"), null);
+        this.cubes = readPart(jsonSource.get("elements"), null);
 
-        JsonNode variantsNode = this.model.get("variants");
+        JsonNode variantsNode = this.jsonSource.get("variants");
 
         if (variantsNode != null) {
-            walkTree(variantsNode, (name, variant) -> {
-                JsonNode model = merge(this.model, variant, "variants");
-                ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model);
-
-                this.variants.addAll(Arrays.asList(deserializer.getModel()));
-            });
+            if (variantsNode.isArray()) {
+                ArrayNode variantsArray = ((ArrayNode) variantsNode);
+                walkArray(variantsArray, variant -> {
+                    JsonNode model = merge(this.jsonSource, variant.get("apply"), "variants");
+                    ModelDeserializer deserializer = new ModelDeserializer(name, registry, atlas, model, this.modelsResolver);
+                    this.variants.put(variant.get("when").toString(), deserializer.getModel()[0]);
+                });
+            }
         }
     }
 
@@ -125,7 +132,7 @@ public class ModelDeserializer {
             Map<Facing, UVMapping> mapping = new HashMap<>();
 
             if (faces.isObject()) {
-                JsonNode defNode = faces.get("allFaces");
+                JsonNode defNode = faces.get("allfaces");
                 String def = defNode == null ? null : defNode.textValue();
 
                 walkTree(faces, (face, obj) -> {
@@ -141,13 +148,18 @@ public class ModelDeserializer {
                 });
             } else {
                 String texture = faces.textValue();
-                Stream.of(Facing.values()).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, atlas.getUVFor(textures.get(texture.substring(1))))));
+                Stream.of(Facing.values()).forEach((f) -> mapping.put(f, new UVMapping(new int[] {0, 0, 32, 32}, getIconFromMacro(texture))));
             }
 
             parts.add(new Cube(part, position, size, rotation, childrenParts, mapping));
         });
 
         return parts;
+    }
+    
+    private Icon getIconFromMacro(String macro) {
+        Assert.state(macro.startsWith("#"));
+        return atlas.getUVFor(textures.get(macro.substring(1)));
     }
 
     public BlockModel[] getModel() {
@@ -157,13 +169,12 @@ public class ModelDeserializer {
 
         ArrayList<BlockModel> models = new ArrayList<>();
         models.add(new BlockModel(name, cubes));
-        models.addAll(variants);
+//        models.addAll(variants);
 
         return models.toArray(new BlockModel[models.size()]);
     }
 
-    public static ModelDeserializer read(File file, ModelRegistry registry, TextureAtlas atlas) throws IOException {
-        String name = file.getName();
-        return new ModelDeserializer(name.substring(0, name.lastIndexOf(".json")), registry, atlas, makeTree(file));
+    public static ModelDeserializer read(FileHandle file, ModelRegistry registry, TextureAtlas atlas, FileHandleResolver resolver) throws IOException {
+        return new ModelDeserializer(file.nameWithoutExtension(), registry, atlas, makeTree(file.read()), resolver);
     }
 }

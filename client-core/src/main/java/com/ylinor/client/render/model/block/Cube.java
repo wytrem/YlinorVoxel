@@ -20,16 +20,13 @@ public class Cube implements Renderable {
     private Quaternionf rotation = new Quaternionf();
     private List<Cube> children = new ArrayList<>();
     private Map<Facing, UVMapping> textures;
+    private Map<Facing, Facing> cullfaces;
     public TextureRegion region;
 
-
-
-    public Cube()
-    {
+    public Cube() {
     }
 
-    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation, List<Cube> children, Map<Facing, UVMapping> textures)
-    {
+    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation, List<Cube> children, Map<Facing, UVMapping> textures) {
         this.id = id;
         this.position = position;
         this.size = size;
@@ -38,10 +35,9 @@ public class Cube implements Renderable {
         this.textures = textures;
     }
 
-    public static Cube from(TextureRegion region)
-    {
+    public static Cube from(TextureRegion region) {
         Cube cube = new Cube();
-        
+
         cube.region = region;
         return cube;
     }
@@ -51,7 +47,6 @@ public class Cube implements Renderable {
         TempVars tempVars = TempVars.get();
 
         tempVars.tempMat4.setTranslation(position).rotate(rotation).scale(size);
-        System.out.println("region = " + region);
         for (Facing face : Facing.values()) {
             putFace(face, vertexBuffer, tempVars);
         }
@@ -64,9 +59,8 @@ public class Cube implements Renderable {
     private void putFace(Facing face, VertexBuffer vertexBuffer, TempVars tempVars) {
 
     }
-    
-    public void initRendering(TempVars tempVars)
-    {
+
+    public void initRendering(TempVars tempVars) {
         tempVars.tempMat4.setTranslation(position).rotate(rotation).scale(size);
     }
 
@@ -111,7 +105,7 @@ public class Cube implements Renderable {
               .normal(tempVars.vect1)
               .texCoords(region.getU(), region.getV())
               .endVertex();
-        
+
         tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
               .normal(tempVars.vect1)
@@ -253,8 +247,14 @@ public class Cube implements Renderable {
               .endVertex();
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Cube [id=" + id + ", position=" + position + ", size=" + size + ", rotation=" + rotation + ", children=" + children + "]";
+    }
+    
+    
 }

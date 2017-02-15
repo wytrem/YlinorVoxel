@@ -116,7 +116,6 @@ public class YlinorClient extends YlinorApplication
         test.setWorld(world);
 
         renderGlobal = new RenderGlobal(world);
-        System.out.println(VertexFormats.BLOCKS.toGdx());
 
         //        protocol = new HandlerProtocol<>();
 

@@ -33,6 +33,8 @@ public class TextureAtlas {
     }
 
     private static final void addFiles(Path relativeTo, File folder, boolean recursive, List<String> files) {
+        
+        System.out.println("listFiles : " + folder.listFiles());
         for (File file : folder.listFiles()) {
             if (file.isDirectory() && recursive) {
                 addFiles(relativeTo, file, recursive, files);

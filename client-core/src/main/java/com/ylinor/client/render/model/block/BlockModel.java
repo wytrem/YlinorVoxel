@@ -14,10 +14,11 @@ import com.ylinor.client.render.model.ModelDeserializer;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.world.IBlockContainer;
 
+
 public class BlockModel implements Renderable {
     @Nullable
     private String name;
-    
+
     @NotNull
     protected List<Cube> cubes;
 
@@ -25,13 +26,11 @@ public class BlockModel implements Renderable {
         this.cubes = new ArrayList<>();
     }
 
-    public BlockModel(@NotNull List<Cube> cubes)
-    {
+    public BlockModel(@NotNull List<Cube> cubes) {
         this(null, cubes);
     }
 
-    public BlockModel(@Nullable String name, @NotNull List<Cube> cubes)
-    {
+    public BlockModel(@Nullable String name, @NotNull List<Cube> cubes) {
         this.name = name;
         this.cubes = cubes;
     }
@@ -39,30 +38,33 @@ public class BlockModel implements Renderable {
     public void render(VertexBuffer vertexBuffer) {
         cubes.forEach(cube -> cube.render(vertexBuffer));
     }
-    
+
     public void render(VertexBuffer vertexBuffer, IBlockContainer neighbours, int x, int y, int z) {
         render(vertexBuffer);
     }
-    
-    public int neededIndices(){
+
+    public int neededIndices() {
         return cubes.size() * 36;
     }
-    
+
     public static final BlockModel basicCube(TextureRegion region) {
         BasicBlockModel model = new BasicBlockModel();
-        
+
         model.cubes = Collections.singletonList(Cube.from(region));
-        
+
         return model;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public List<Cube> getCubes()
-    {
+    public List<Cube> getCubes() {
         return cubes;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockModel [name=" + name + ", cubes=" + cubes + "]";
     }
 }
