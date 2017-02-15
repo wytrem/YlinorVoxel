@@ -82,6 +82,9 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     }
 
     private short _typeAt(int x, int y, int z) {
+        if (y < 0 || y >= SIZE_Y) {
+            return (short) 0;
+        }
         synchronized (blocks) {
             return blocks[x][y][z];
         }

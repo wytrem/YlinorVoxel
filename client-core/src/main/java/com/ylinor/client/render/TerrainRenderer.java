@@ -36,13 +36,17 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     public TerrainRenderer(World world, RenderGlobal renderGlobal) {
         this.world = world;
         this.renderGlobal = renderGlobal;
-//        texture = new Texture(Assets.get().blockAssets.blockAtlas.getSheet());
-//        standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
     }
 
     public void update() {
         renderChunkX = ((int) (renderGlobal.camera.position.x) >> 4) - renderChunkSize / 2;
         renderChunkZ = ((int) (renderGlobal.camera.position.z) >> 4) - renderChunkSize / 2;
+        
+        
+        if (texture == null) {
+            texture = new Texture(Assets.get().blockAssets.blockAtlas.getSheet());
+            standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
+        }
     }
 
     @Override

@@ -17,43 +17,41 @@ import com.ylinor.library.util.TempVars;
 
 public class Cube implements Renderable {
     private String id = null;
-    private Vector3f position = new Vector3f(), size = new Vector3f(1);
-    private Quaternionf rotation = new Quaternionf();
+    public final Vector3f position, size;
+    public final Quaternionf rotation;
     private List<Cube> children = new ArrayList<>();
     private Map<Facing, UVMapping> textures;
     private Map<Facing, Facing> cullfaces;
     public TextureRegion region;
 
-    public Cube() {
-    }
-
-    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation, List<Cube> children, Map<Facing, UVMapping> textures) {
+    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation) {
         this.id = id;
         this.position = position;
         this.size = size;
         this.rotation = rotation;
-        this.children = children;
-        this.textures = textures;
     }
 
-    public static Cube from(TextureRegion region) {
-        Cube cube = new Cube();
-
-        cube.region = region;
-        return cube;
+    public void setCullfaces(Map<Facing, Facing> cullfaces) {
+        this.cullfaces = cullfaces;
     }
     
+    public void setTextures(Map<Facing, UVMapping> textures) {
+        this.textures = textures;
+    }
+    
+    public void setChildren(List<Cube> children) {
+        this.children = children;
+    }
+
     public void render(VertexBuffer vertexBuffer, IBlockContainer neighbours, int x, int y, int z) {
         TempVars tempVars = TempVars.get();
 
-        tempVars.tempMat4.setTranslation(position).rotate(rotation).scale(size);
-        tempVars.blockPos0.set(x, y, z);
+        tempVars.tempMat4.identity().translate(position).rotate(rotation).scale(size);
         for (Facing face : Facing.values()) {
-            
             if (cullfaces.containsKey(face)) {
-                tempVars.blockPos1.set(tempVars.blockPos0).offset(cullfaces.get(face));
+                tempVars.blockPos0.set(x, y, z).offset(cullfaces.get(face));
                 
-                if (!neighbours.getBlockType(tempVars.blockPos1).isOpaque()) {
+                if (neighbours.getBlockType(tempVars.blockPos0).isOpaque()) {
                     continue;
                 }
             }

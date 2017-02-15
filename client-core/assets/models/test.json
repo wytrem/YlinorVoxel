@@ -1,21 +1,63 @@
 {
-  "textures": {
-    "presque_tout": "dirt"
-  },
-  "elements": {
-    "first": {
-      "position": {
-        "x": 0.1,
-        "y": 0.2,
-        "z": 0.3
-      },
-      "size": {
-        "x": 0.8,
-        "y": 0.2,
-        "z": 0.1
-      },
-      "faces": "#presque_tout"
-    }
-  },
-  "variants": []
+	"elements": 
+	{
+		"block": 
+		{
+			"position": [0,0,0],
+
+			"size": [32,32,32],
+
+			"faces": 
+			{
+				"down": 
+				{
+					"texture": "#down",
+					"cullface": "down"
+				},
+
+				"up": 
+				{
+					"texture": "#up",
+					"cullface": "up"
+				},
+
+				"north": 
+				{
+					"texture": "#north",
+					"cullface": "north"
+				},
+
+				"south": 
+				{
+					"texture": "#south",
+					"cullface": "south"
+				},
+
+				"west": 
+				{
+					"texture": "#west",
+					"cullface": "west"
+				},
+
+				"east": 
+				{
+					"texture": "#east",
+					"cullface": "east"
+				}
+			}
+		}
+	},
+
+	"parent": "cube_all",
+	"textures": 
+	{
+		"particle": "#all",
+		"down": "#all",
+		"up": "#all",
+		"north": "#all",
+		"east": "#all",
+		"south": "#all",
+		"west": "#all",
+		"all": "stone"
+	}
 }
