@@ -36,6 +36,20 @@ public class Icon {
         this.maxV /= y;
         return this;
     }
+    
+    public Icon reduce(int[] uv) {
+        float iconSizeX = maxU - minU;
+        float iconSizeY = maxV - minV;
+        minU += (uv[0] / 32.0f * iconSizeX);
+        minV += (uv[1] / 32.0f * iconSizeY);
+        maxU -= ((32 - uv[2]) / 32.0f * iconSizeX);
+        maxV -= ((32 - uv[3]) / 32.0f * iconSizeY);
+        return this;
+    }
+    
+    public Icon copy() {
+        return new Icon(minU, minV, maxU, maxV);
+    }
 
     @Override
     public String toString() {

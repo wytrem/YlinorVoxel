@@ -16,10 +16,8 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.render.camera.FirstPersonCameraController;
-import com.ylinor.client.render.model.block.BlockModel;
-import com.ylinor.client.render.model.block.ModelsRegistry;
-import com.ylinor.client.render.model.block.UniqueVariant;
-import com.ylinor.library.api.world.blocks.BlockType;
+import com.ylinor.client.render.model.ModelRegistry;
+import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.world.World;
 
 
@@ -35,7 +33,7 @@ public class RenderGlobal implements Disposable {
     
     SpriteBatch spriteBatch;
     BitmapFont font;
-    ModelsRegistry blockModels;
+    ModelRegistry blockModels;
 
     public RenderGlobal(World world) {
         DefaultShader.Config shaderConfig = new Config();
@@ -63,12 +61,7 @@ public class RenderGlobal implements Disposable {
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
         
-        blockModels = new ModelsRegistry();
-        
-        for (BlockType tile : BlockType.REGISTRY.valueCollection())
-        {
-            blockModels.register(tile, new UniqueVariant(BlockModel.basicCube(terrainRenderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16])));
-        }
+        blockModels = Assets.get().blockAssets.modelsRegistry;
     }
 
     public void render() {

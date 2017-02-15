@@ -46,11 +46,6 @@ public class Assets implements Disposable {
     public static final String IMAGES_FOLDER = "img/";
 
     /**
-     * Models folder
-     */
-    public static final String MODELS_FOLDER = "models/";
-
-    /**
      * Class instance
      */
     private static Assets instance = new Assets();
@@ -65,16 +60,14 @@ public class Assets implements Disposable {
      */
     public final ScreenAssets screen;
 
-    /**
-     * The folder where the models are
-     */
-    private FileHandle modelFolder;
-
+    public final BlockAssets blockAssets;
+    
     private Assets() {
         assets = new AssetManager(new InternalFileHandleResolver());
         assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assets.getFileHandleResolver()));
 
         screen = new ScreenAssets(this);
+        blockAssets = new BlockAssets(this);
     }
 
     /**
@@ -103,24 +96,9 @@ public class Assets implements Disposable {
         logger.info("Loading assets...");
 
         screen.load();
-
-        modelFolder = Gdx.files.internal(MODELS_FOLDER);
-
-        // Models
-        try {
-            TextureAtlas atlas = new TextureAtlas();
-            atlas.loadFrom(new File("/home/victor/Ylinor/atlas"), false, 2048);
-            //            BlockModel[] models = ModelDeserializer.read(new File(modelFolder, "test.json"), new ModelRegistry(), atlas).getModel();
-            ModelDeserializer test = ModelDeserializer.read(modelFolder.child("test.json"), new ModelRegistry(), atlas, fileName -> modelFolder.child(fileName + ".json"));
-            test.deserialize();
-            System.out.println(test.variants);
-
-            System.out.println("ON A REUSSSI !!!");
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        blockAssets.load();
     }
+
 
     @Override
     public void dispose() {
@@ -182,10 +160,6 @@ public class Assets implements Disposable {
      */
     public <T> T get(String file) {
         return assets.get(file);
-    }
-
-    public FileHandle getModelFolder() {
-        return modelFolder;
     }
 
     /**

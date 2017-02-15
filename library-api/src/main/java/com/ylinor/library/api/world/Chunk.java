@@ -1,9 +1,9 @@
 package com.ylinor.library.api.world;
 
-import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.api.world.blocks.Block;
 import com.ylinor.library.api.world.blocks.BlockExtraData;
 import com.ylinor.library.api.world.blocks.BlockType;
+import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.Sizeable3D;
 
 import gnu.trove.map.TShortObjectMap;

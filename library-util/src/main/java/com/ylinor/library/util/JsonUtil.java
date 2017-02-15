@@ -23,19 +23,26 @@ public final class JsonUtil {
     private static final JsonFactory factory = new JsonFactory().setCodec(new ObjectMapper());
 
     public static JsonNode makeTree(File file) throws IOException {
-        Assert.notNull(file, "Cannot read from a null file.");
+        Assert.notNull(file, "Cannot read from a null file");
         JsonParser parser = factory.createParser(file);
         return parser.readValueAsTree();
     }
 
     public static JsonNode makeTree(InputStream input) throws IOException {
-        Assert.notNull(input, "Cannot read from a null InputStream.");
+        Assert.notNull(input, "Cannot read from a null InputStream");
         JsonParser parser = factory.createParser(input);
         return parser.readValueAsTree();
     }
 
     @SuppressWarnings("deprecation")
-    public static JsonNode merge(JsonNode mainNode, JsonNode updateNode, String... excludes) {
+    public static JsonNode mergeAndExclude(JsonNode mainNode, JsonNode updateNode, String... excludes) {
+        if (mainNode == null) {
+            return updateNode.deepCopy();
+        }
+        else if (updateNode == null) {
+            return mainNode.deepCopy();
+        }
+
         Assert.state(mainNode.isObject(), "mainNode must be an object node");
         Assert.state(updateNode.isObject(), "updateNode must be an object node");
 
@@ -53,7 +60,7 @@ public final class JsonUtil {
             JsonNode jsonNode = mainNode.get(fieldName);
 
             if (jsonNode != null && jsonNode.isObject()) {
-                result.set(fieldName, merge(jsonNode, updateNode.get(fieldName)));
+                result.set(fieldName, mergeAndExclude(jsonNode, updateNode.get(fieldName)));
             }
             else {
                 JsonNode value = updateNode.get(fieldName);

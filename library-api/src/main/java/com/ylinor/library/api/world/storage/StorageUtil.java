@@ -1,6 +1,6 @@
 package com.ylinor.library.api.world.storage;
 
-import com.ylinor.library.api.block.BlockPos;
+import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.PositionableObject2D;
 
 public final class StorageUtil

@@ -1,7 +1,8 @@
 package com.ylinor.library.api.world.blocks;
 
-import com.ylinor.library.api.block.BlockPos;
 import com.ylinor.library.api.world.World;
+import com.ylinor.library.util.math.BlockPos;
+
 import gnu.trove.map.hash.TShortObjectHashMap;
 
 
@@ -11,8 +12,8 @@ public class BlockType {
     public static final BlockType stone = new BlockType(1);
     public static final BlockType dirt = new BlockType(2);
     public static final BlockType wood = new BlockType(3).setTextureId(4);
-    public static final BlockType stoneBricks = new BlockType(4).setTextureId(5);
-    public static final BlockType bricks = new BlockType(5).setTextureId(7);
+    public static final BlockType stoneBrick = new BlockType(4).setTextureId(5);
+    public static final BlockType brick = new BlockType(5).setTextureId(7);
     public static final BlockType sand = new BlockType(6).setTextureId(18);
     public static final BlockType gravel = new BlockType(7).setTextureId(19);
     public static final BlockType sponge = new BlockType(8).setTextureId(48);

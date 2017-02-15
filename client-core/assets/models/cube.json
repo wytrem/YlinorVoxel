@@ -1,0 +1,60 @@
+{
+	"elements": 
+	{
+		"block": 
+		{
+			"position": 
+			{
+				"x": 0,
+				"y": 0,
+				"z": 0
+			},
+
+			"size": 
+			{
+				"x": 32,
+				"y": 32,
+				"z": 32
+			},
+
+			"faces": 
+			{
+				"down": 
+				{
+					"texture": "#down",
+					"cullface": "down"
+				},
+
+				"up": 
+				{
+					"texture": "#up",
+					"cullface": "up"
+				},
+
+				"north": 
+				{
+					"texture": "#north",
+					"cullface": "north"
+				},
+
+				"south": 
+				{
+					"texture": "#south",
+					"cullface": "south"
+				},
+
+				"west": 
+				{
+					"texture": "#west",
+					"cullface": "west"
+				},
+
+				"east": 
+				{
+					"texture": "#east",
+					"cullface": "east"
+				}
+			}
+		}
+	}
+}

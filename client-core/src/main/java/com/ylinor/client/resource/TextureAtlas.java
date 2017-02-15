@@ -33,8 +33,6 @@ public class TextureAtlas {
     }
 
     private static final void addFiles(Path relativeTo, File folder, boolean recursive, List<String> files) {
-        
-        System.out.println("listFiles : " + folder.listFiles());
         for (File file : folder.listFiles()) {
             if (file.isDirectory() && recursive) {
                 addFiles(relativeTo, file, recursive, files);
@@ -58,7 +56,6 @@ public class TextureAtlas {
         int spriteWidth = onePixmap.getWidth(), spriteHeight = onePixmap.getHeight();
 
         atlas = new Pixmap(atlasSize, atlasSize, Pixmap.Format.RGBA8888);
-        int rowLength = atlas.getWidth() / spriteWidth;
 
         Iterator<Map.Entry<String, Pixmap>> entryIterator = pixmaps.entrySet().iterator();
 

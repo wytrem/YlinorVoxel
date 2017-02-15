@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.ylinor.client.renderlib.GdxTempVars;
+import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.World;
 
@@ -29,16 +30,14 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
-    TextureRegion[][] tiles;
     Texture texture;
     int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 6;
 
     public TerrainRenderer(World world, RenderGlobal renderGlobal) {
         this.world = world;
         this.renderGlobal = renderGlobal;
-        texture = new Texture(Gdx.files.internal("img/tiles.png"));
-        this.tiles = TextureRegion.split(texture, 32, 32);
-        standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
+//        texture = new Texture(Assets.get().blockAssets.blockAtlas.getSheet());
+//        standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
     }
 
     public void update() {

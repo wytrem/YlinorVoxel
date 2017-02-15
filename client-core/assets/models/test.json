@@ -17,48 +17,5 @@
       "faces": "#presque_tout"
     }
   },
-  "variants": [
-  	{
-  	  "when": {
-  	    "prout":"lol"
-  	  },
-  	  "apply": {
-  	  	"elements": {
-  	  	  "first": {
-  	  	    "position":{
-  	  	      "x":1234.567
-  	  	    }
-  	  	  }
-  	  	}
-  	  }
-  	},
-  	{
-  	"when": {
-  	    "prout":"lol2"
-  	  },
-  	  "apply": {
-  	  	"elements": {
-  	  	  "first": {
-  	  	    "position":{
-  	  	      "x":78907
-  	  	    }
-  	  	  }
-  	  	}
-  	  }
-  	},
-  	{
-  	"when": {
-  	    "prout":"lol3"
-  	  },
-  	  "apply": {
-  	  	"elements": {
-  	  	  "first": {
-  	  	    "position":{
-  	  	      "x":9090
-  	  	    }
-  	  	  }
-  	  	}
-  	  }
-  	}	
-  ]
+  "variants": []
 }
