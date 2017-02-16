@@ -33,7 +33,8 @@ public class BlockAssets implements Loadable {
 
         // Models
         blockAtlas = new TextureAtlas();
-        blockAtlas.loadFrom(new File("/home/victor/Ylinor/YlinorVoxel/client-core/assets/img/blocks/"), false, 512);
+
+        blockAtlas.loadFrom(new File(new File("./img/blocks").getAbsolutePath()), false, 512);
 
         modelsRegistry = new ModelRegistry();
         modelsRegistry.loadFrom(this::getModel, blockAtlas);
