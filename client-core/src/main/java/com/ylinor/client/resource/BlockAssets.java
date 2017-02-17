@@ -34,11 +34,12 @@ public class BlockAssets implements Loadable {
         // Models
         blockAtlas = new TextureAtlas();
 
-        blockAtlas.loadFrom(new File(new File("./img/blocks").getAbsolutePath()), false, 512);
-
+//        blockAtlas.loadFrom(new File(new File("./img/blocks").getAbsolutePath()), false, 512);
+        blockAtlas.loadFrom(new File(new File("./img/blocks").getAbsolutePath()), false, 2048);
+        
         modelsRegistry = new ModelRegistry();
         modelsRegistry.loadFrom(this::getModel, blockAtlas);
-
+        
         //            //            BlockModel[] models = ModelDeserializer.read(new File(modelFolder, "test.json"), new ModelRegistry(), atlas).getModel();
         //            ModelDeserializer test = ModelDeserializer.read(modelFolder.child("test.json"), blockAtlas, modelName -> getModel(modelName));
         //            test.deserialize();

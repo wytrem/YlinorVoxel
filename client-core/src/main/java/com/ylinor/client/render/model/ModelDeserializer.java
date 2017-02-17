@@ -87,8 +87,6 @@ public class ModelDeserializer {
 
         this.bakedJson = bakeJson(originalJson);
         
-        System.out.println(bakedJson);
-
         try {
             this.textures = mapper.treeToValue(bakedJson.get("textures"), Map.class);
         }
@@ -223,8 +221,6 @@ public class ModelDeserializer {
 
                 if (obj.has("cullface")) {
                     
-                    System.out.println(facing + " culls if " + obj.get("cullface")
-                                                            .textValue());
                     cullfaces.put(facing, getFacing(obj.get("cullface")
                                                             .textValue()));
                 }
