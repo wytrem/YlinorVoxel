@@ -9,6 +9,7 @@ import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.client.renderlib.format.VertexFormats;
+import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.world.blocks.BlockType;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IBlockContainer;
@@ -58,10 +59,10 @@ public class ChunkRenderer implements Disposable {
 
                     if (tile != BlockType.air) {
                         
-                        model = renderer.renderGlobal.blockModels.get(chunk.getWorld(), tile, chunk.getBlockData(x, y, z));
+                        model = Assets.get().blockAssets.modelsRegistry.get(chunk.getWorld(), tile, chunk.getBlockData(x, y, z));
                         
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
-                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - 36) {
+                        if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - model.neededIndices()) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);

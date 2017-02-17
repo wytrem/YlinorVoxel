@@ -1,7 +1,7 @@
 package com.ylinor.client.render.model;
 
 import static com.ylinor.library.util.JsonUtil.makeTree;
-import static com.ylinor.library.util.JsonUtil.mergeAndExclude;
+import static com.ylinor.library.util.JsonUtil.mergeExcluding;
 import static com.ylinor.library.util.JsonUtil.walkArray;
 import static com.ylinor.library.util.JsonUtil.walkTree;
 
@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
@@ -27,62 +29,83 @@ import com.ylinor.client.render.model.block.Cube;
 import com.ylinor.client.render.model.block.UVMapping;
 import com.ylinor.client.resource.TextureAtlas;
 import com.ylinor.library.util.Facing;
-import com.ylinor.library.util.JsonUtil;
 import com.ylinor.library.util.spring.Assert;
 
 
 public class ModelDeserializer {
+    private static final Logger logger = LoggerFactory.getLogger(ModelDeserializer.class);
+
     private ObjectMapper mapper = new ObjectMapper();
     private TextureAtlas atlas;
 
     private String name;
-    private JsonNode jsonSource;
+    private ObjectNode originalJson;
     private List<Cube> cubes;
     private Map<String, String> textures;
     public Map<String, BlockModel> variants;
     private FileHandleResolver modelsResolver;
 
-    public ModelDeserializer(String name, TextureAtlas atlas, JsonNode tree, FileHandleResolver fileHandleResolver) {
+    private ObjectNode bakedJson;
+
+    public ModelDeserializer(String name, TextureAtlas atlas, ObjectNode tree, FileHandleResolver fileHandleResolver) {
         this.name = name;
         this.atlas = atlas;
-        this.jsonSource = tree;
+        this.originalJson = tree;
         this.variants = new HashMap<>();
         this.modelsResolver = fileHandleResolver;
     }
 
-    public void deserialize() {
-        JsonNode parentNode = jsonSource.get("parent");
+    private ObjectNode bakeJson(ObjectNode originalJson) {
+        ObjectNode bakedJson = originalJson.deepCopy();
+        JsonNode parentNameNode = originalJson.get("parent");
 
-        if (parentNode != null) {
-            FileHandle parentFile = modelsResolver.resolve(parentNode.textValue());
-            JsonNode parent;
+        ObjectNode bakedParent = null;
+
+        if (parentNameNode != null && !parentNameNode.isMissingNode() && parentNameNode.isTextual()) {
+            String parentName = parentNameNode.textValue();
 
             try {
-                parent = makeTree(parentFile.read());
+                ObjectNode parentOriginalNode = makeTree(modelsResolver.resolve(parentName)
+                                                                       .read());
+
+                bakedParent = bakeJson(parentOriginalNode);
             }
             catch (IOException e) {
-                throw new RuntimeException("Unable to read model '" + parentFile + "' (parent of " + name + ")", e);
+                logger.error("Model '{}' declares unknown model '{}' as parent.", name, parentName);
+                throw new ModelParseException("Unable to read and parse parent for model " + name, e);
             }
-
-            this.jsonSource = mergeAndExclude(parent, this.jsonSource);
         }
+
+        if (bakedParent != null) {
+            bakedJson = mergeExcluding(bakedParent, originalJson, "variants");
+        }
+
+        return bakedJson;
+    }
+
+    public void deserialize() {
+
+        this.bakedJson = bakeJson(originalJson);
+        
+        System.out.println(bakedJson);
 
         try {
-            this.textures = mapper.treeToValue(jsonSource.get("textures"), Map.class);
+            this.textures = mapper.treeToValue(bakedJson.get("textures"), Map.class);
         }
         catch (JsonProcessingException e) {
-            throw new RuntimeException("Unable to read model textures of model " + name, e);
+            throw new ModelParseException("Unable to read model textures of model " + name, e);
         }
 
-        this.cubes = readPart(jsonSource.get("elements"), parentNode);
+        this.cubes = readPart(bakedJson.get("elements"), null);
 
-        JsonNode variantsNode = this.jsonSource.get("variants");
+        JsonNode variantsNode = this.bakedJson.get("variants");
 
         if (variantsNode != null) {
             if (variantsNode.isArray()) {
                 ArrayNode variantsArray = ((ArrayNode) variantsNode);
                 walkArray(variantsArray, variant -> {
-                    JsonNode model = mergeAndExclude(this.jsonSource, variant.get("apply"), "variants");
+                    ObjectNode model = mergeExcluding(this.bakedJson, variant.get("apply"));
+                    model.remove("variants");
                     ModelDeserializer deserializer = new ModelDeserializer(name, atlas, model, this.modelsResolver);
                     this.variants.put(variant.get("when")
                                              .toString(), deserializer.getModel());
@@ -90,48 +113,80 @@ public class ModelDeserializer {
             }
         }
     }
+    
+    private static Vector3f readArrayToVector(JsonNode node) {
+        return readArrayToVector((ArrayNode) node);
+    }
+    
+    private static Vector3f readArrayToVector(ArrayNode array) {
+        return new Vector3f((float) array.get(0).asDouble(), (float) array.get(1).asDouble(), (float) array.get(2).asDouble());
+    }
 
-    public List<Cube> readPart(JsonNode model, JsonNode parent) {
+    public List<Cube> readPart(JsonNode model, Cube parent) {
         List<Cube> parts = new ArrayList<>();
-        
-        if (model == null) {
-            model = parent.get("elements");
-        }
 
         walkTree(model, (part, cube) -> {
-            if (parent != null) {
-                cube = JsonUtil.mergeAndExclude(parent, cube, "children");
-            }
-
             JsonNode children = cube.get("children");
-            JsonNode faces = cube.get("faces");
 
-            List<Cube> childrenParts = null;
+            // ----- Basic infos : postition, size, rotation
 
             Vector3f position = new Vector3f(), size = new Vector3f();
             Quaternionf rotation = new Quaternionf();
 
-            if (children == null) {
-                try {
-                    position = mapper.treeToValue(cube.get("position"), Vector3f.class);
+            try {
+                
+                if (cube.has("position")) {
+                    position = readArrayToVector(cube.get("position"));
                     position.mul(0.03125f);
-                    size = mapper.treeToValue(cube.get("size"), Vector3f.class);
+                    
+                    size = readArrayToVector(cube.get("size"));
                     size.mul(0.03125f);
-                    JsonNode rot = cube.get("rotation");
-
-                    if (rot != null) {
-                        rotation = mapper.treeToValue(rot, Quaternionf.class);
-                    }
                 }
-                catch (JsonProcessingException e) {
-                    throw new RuntimeException("Unable to read json model " + name, e);
+                else if (cube.has("from")) {
+                    position = readArrayToVector(cube.get("from"));
+                    position.mul(0.0625f);
+                    
+                    Vector3f to = readArrayToVector(cube.get("to"));
+                    to.mul(0.0625f);
+                    
+                    size = to.sub(position, new Vector3f());
+                }
+
+                if (parent != null) {
+                    position.add(parent.position);
+                }
+               
+                JsonNode rot = cube.get("rotation");
+
+                if (rot != null) {
+                    rotation = mapper.treeToValue(rot, Quaternionf.class);
+                }
+                
+                if (parent != null) {
+                    rotation.mul(parent.rotation);
                 }
             }
-            else {
-                childrenParts = readPart(children, cube);
+            catch (JsonProcessingException e) {
+                throw new ModelParseException("Unable to read json model " + name, e);
             }
 
-            Map<Facing, UVMapping> mapping = new HashMap<>();
+            Cube cubeObj = new Cube(part, position, size, rotation);
+
+            // ----- Children
+
+            List<Cube> childrenParts = null;
+
+            if (children != null) {
+                childrenParts = readPart(children, cubeObj);
+                cubeObj.setChildren(childrenParts);
+            }
+
+            // ----- Textures mapping & cullfaces
+
+            JsonNode faces = cube.get("faces");
+
+            Map<Facing, UVMapping> texturesMapping = new HashMap<>();
+            Map<Facing, Facing> cullfaces = new HashMap<>();
 
             JsonNode defNode = faces.get("allfaces");
 
@@ -161,21 +216,46 @@ public class ModelDeserializer {
                     return;
                 }
 
-                Facing facing = Facing.valueOf(face);
-                UVMapping uv = UVMapping.fromJson(mergeAndExclude(voilaLeFinalTamer, obj), this::getIconFromMacro);
+                Facing facing = getFacing(face);
+                UVMapping uv = UVMapping.fromJson(mergeExcluding(voilaLeFinalTamer, obj), this::getIconFromMacro);
 
-                mapping.put(facing, uv);
+                texturesMapping.put(facing, uv);
+
+                if (obj.has("cullface")) {
+                    
+                    System.out.println(facing + " culls if " + obj.get("cullface")
+                                                            .textValue());
+                    cullfaces.put(facing, getFacing(obj.get("cullface")
+                                                            .textValue()));
+                }
             });
 
-            parts.add(new Cube(part, position, size, rotation, childrenParts, mapping));
+            cubeObj.setTextures(texturesMapping);
+            cubeObj.setCullfaces(cullfaces);
+
+            parts.add(cubeObj);
         });
 
         return parts;
     }
+    
+    private static Facing getFacing(String name) {
+        return Facing.valueOf(name.toUpperCase());
+    }
+
+    private String getTextureFromMacro(String macro) {
+        Assert.state(macro.startsWith("#"));
+
+        while (macro != null && macro.startsWith("#")) {
+            macro = textures.get(macro.substring(1));
+        }
+
+        return macro;
+    }
 
     private Icon getIconFromMacro(String macro) {
         Assert.state(macro.startsWith("#"));
-        return atlas.getUVFor(textures.get(macro.substring(1)));
+        return atlas.getUVFor(getTextureFromMacro(macro));
     }
 
     public BlockModel getModel() {

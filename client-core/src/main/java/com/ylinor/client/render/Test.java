@@ -1,5 +1,6 @@
 package com.ylinor.client.render;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.ylinor.library.api.world.Chunk;
 import com.ylinor.library.api.world.IChunkProvider;
 import com.ylinor.library.api.world.World;
@@ -44,7 +45,15 @@ public class Test implements IChunkProvider {
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-                    chunk.setBlockType(x, y, z, world.getBlockType(BlockType.stone.getId()));
+                    
+                    if (y == 255) {
+                        if (MathUtils.randomBoolean(0.001f)) {
+                            chunk.setBlockType(x, y, z, world.getBlockType(BlockType.dirt.getId()));
+                        }
+                    }
+                    else {
+                        chunk.setBlockType(x, y, z, world.getBlockType(BlockType.stone.getId()));
+                    }
                     //                    chunk.setBlockType(x, y, z, world.getBlockType(id));
                 }
             }

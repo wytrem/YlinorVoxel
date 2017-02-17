@@ -55,7 +55,7 @@ public class ModelRegistry {
 
     private void registerStatesFiles() {
         register(BlockType.stone, "stone");
-        register(BlockType.dirt, "dirt");
+        register(BlockType.dirt, "anvil_undamaged");
     }
 
     private void register(BlockType type, String stateFile) {

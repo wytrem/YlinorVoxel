@@ -60,8 +60,6 @@ public class RenderGlobal implements Disposable {
         
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
-        
-        blockModels = Assets.get().blockAssets.modelsRegistry;
     }
 
     public void render() {
