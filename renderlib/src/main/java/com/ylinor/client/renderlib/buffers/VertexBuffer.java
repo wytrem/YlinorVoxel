@@ -2,6 +2,7 @@ package com.ylinor.client.renderlib.buffers;
 
 import java.nio.ByteBuffer;
 
+import org.joml.Vector2fc;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -162,6 +163,14 @@ public class VertexBuffer {
     public VertexBuffer texCoords(float s, float t) {
         vertexBuffer.putFloat(s).putFloat(t);
         return this;
+    }
+    
+    /**
+     * Puts two floats in that buffer.
+     * @return This {@link VertexBuffer} for chaining
+     */
+    public VertexBuffer texCoords(Vector2fc pos) {
+        return this.texCoords(pos.x(), pos.y());
     }
 
     /**

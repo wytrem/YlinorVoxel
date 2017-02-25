@@ -3,6 +3,7 @@ package com.ylinor.client.terrain;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.MathUtils;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
+import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
 import com.ylinor.library.api.terrain.Terrain;
@@ -42,19 +43,15 @@ public class ClientChunkProvider implements IChunkProvider {
     private Chunk generateAt(int chunkX, int chunkZ) {
         Chunk chunk = new Chunk(terrain, chunkX, chunkZ);
 
-        short id = (short) (Math.abs(chunkX % 3 + (chunkZ % 3) * 3) + 1);
-
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-
-                    if (y < 254) {
-                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (id)));
+                    if (y < 255) {
+                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (BlockType.stone.getId())));
                     }
                     else {
-                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.7f) ? id : 0)));
+                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.05f) ? BlockType.dirt.getId() : 0)));
                     }
-//                                                            chunk.setBlockType(x, y, z, terrain.getBlockType(id));
                 }
             }
         }

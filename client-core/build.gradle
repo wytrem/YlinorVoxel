@@ -9,6 +9,7 @@ dependencies {
     compile project(':renderlib')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+    compile "com.kotcrab.vis:vis-usl:0.2.1"
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     
     // DEBUG

@@ -38,7 +38,7 @@ public class LoadingScreen extends YlinorScreen {
         super.show();
 
         /* Créer le logo a partire de la classe Asset */
-        logo = new Image(assets.screenAssets.splash());
+        logo = new Image(assets.screen.splash());
         this.addActor(logo);
 
         /* Créer la ProgressBar */

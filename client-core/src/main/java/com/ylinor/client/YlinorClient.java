@@ -83,6 +83,11 @@ public class YlinorClient extends YlinorApplication
         terrain = new ClientTerrain();
 
         world = buildWorld();
+
+        //        protocol = new HandlerProtocol<>();
+
+        //        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
+        //        clientNetwork.start();
     }
 
     @Override

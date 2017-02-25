@@ -1,11 +1,9 @@
 package com.ylinor.client.render;
 
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.RenderableProvider;
@@ -18,6 +16,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.ylinor.client.events.ChunkRendererUpdatedEvent;
 import com.ylinor.client.renderlib.GdxTempVars;
+import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 
@@ -38,7 +37,6 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
-    TextureRegion[][] tiles;
     Texture texture;
     int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 6;
     
@@ -47,18 +45,23 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     
     @Wire
     EventSystem eventSystem;
+    
+    @Wire
+    Assets assets;
 
     public TerrainRenderer(Terrain world, RenderGlobal renderGlobal) {
         this.terrain = world;
         this.renderGlobal = renderGlobal;
-        texture = new Texture(Gdx.files.internal("img/tiles.png"));
-        this.tiles = TextureRegion.split(texture, 32, 32);
-        standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
     }
 
     public void update() {
         renderChunkX = ((int) (cameraSystem.getCamera().position.x) >> 4) - renderChunkSize / 2;
         renderChunkZ = ((int) (cameraSystem.getCamera().position.z) >> 4) - renderChunkSize / 2;
+        
+        if (texture == null) {
+            texture = new Texture(assets.blockAssets.blockAtlas.getSheet());
+            standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
+        }
     }
 
     @Override

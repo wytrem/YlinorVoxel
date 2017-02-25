@@ -4,6 +4,8 @@ import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -12,10 +14,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
-import com.ylinor.client.render.model.block.BlockModel;
-import com.ylinor.client.render.model.block.ModelsRegistry;
-import com.ylinor.client.render.model.block.UniqueVariant;
-import com.ylinor.library.api.terrain.BlockType;
+import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 
@@ -26,8 +25,10 @@ public class RenderGlobal implements Disposable {
     ModelBatch modelBatch;
     Environment environment;
     TerrainRenderer terrainRenderer;
-
-    ModelsRegistry blockModels;
+    
+    SpriteBatch spriteBatch;
+    BitmapFont font;
+    ModelRegistry blockModels;
 
     @Wire
     CameraSystem cameraSystem;
@@ -45,11 +46,8 @@ public class RenderGlobal implements Disposable {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         terrainRenderer = new TerrainRenderer(world, this);
 
-        blockModels = new ModelsRegistry();
-
-        for (BlockType tile : BlockType.REGISTRY.valueCollection()) {
-            blockModels.register(tile, new UniqueVariant(BlockModel.basicCube(terrainRenderer.tiles[tile.getTextureId() / 16][tile.getTextureId() % 16])));
-        }
+        spriteBatch = new SpriteBatch();
+        font = new BitmapFont();
     }
     
     public void inject(World world) {

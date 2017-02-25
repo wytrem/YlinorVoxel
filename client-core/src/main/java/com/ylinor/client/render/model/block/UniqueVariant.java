@@ -4,7 +4,6 @@ import com.ylinor.library.api.terrain.BlockExtraData;
 import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Terrain;
 
-
 public class UniqueVariant extends Variants {
     private BlockModel model;
 

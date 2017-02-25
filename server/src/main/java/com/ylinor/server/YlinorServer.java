@@ -4,11 +4,7 @@ import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.ylinor.library.api.YlinorApplication;
-import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
-
-import net.mostlyoriginal.api.system.camera.CameraSystem;
-import net.mostlyoriginal.api.system.render.ClearScreenSystem;
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
 

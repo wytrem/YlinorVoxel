@@ -2,38 +2,67 @@ package com.ylinor.client.render.model.block;
 
 import java.util.function.Function;
 
+import org.joml.Vector2f;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.ylinor.client.render.model.Icon;
+import com.ylinor.library.util.ArrayUtils;
+import com.ylinor.library.util.spring.Assert;
 
 
 public class UVMapping {
-    private int[] mapping;
-    private Icon icon;
+    private Vector2f[] mapping;
 
-    public UVMapping(int[] mapping, Icon icon) {
+    public UVMapping(Vector2f[] mapping) {
+        Assert.state(mapping.length == 4);
         this.mapping = mapping;
-        this.icon = icon;
+    }
+    
+    public Vector2f getCoords(int i) {
+        return mapping[i];
     }
 
-    public static UVMapping fromJson(JsonNode node, Function<String, Icon> registeredIcons) {
+    public static final UVMapping fromIcon(Icon icon) {
+        return new UVMapping(mappingFromIcon(icon));
+    }
 
-        JsonNode uv = node.at("/uv");
+    private static Vector2f[] mappingFromIcon(Icon icon) {
+        return new Vector2f[] {new Vector2f(icon.getMinU(), icon.getMinV()), new Vector2f(icon.getMaxU(), icon.getMinV()), new Vector2f(icon.getMaxU(), icon.getMaxV()), new Vector2f(icon.getMinU(), icon.getMaxV())};
+    }
 
-        if (uv.isArray()) {
-            UVMapping uvMapping = new UVMapping(null, null);
+    private static Vector2f[] mappingFromIcon(Icon icon, int[] uv) {
+        Icon reduced = icon.copy().reduce(uv);
+        return mappingFromIcon(reduced);
+    }
 
-            ArrayNode uvNode = (ArrayNode) uv;
-            int[] mapping = {uvNode.get(0)
-                                   .asInt(), uvNode.get(1)
-                                                   .asInt(), uvNode.get(2)
-                                                                   .asInt(), uvNode.get(3)
-                                                                                   .asInt()};
-            String texture = node.at("/texture").asText();
+    public static final void applyRotation(Vector2f[] mapping, int rotation) {
+        ArrayUtils.round(mapping, rotation / 90);
+    }
 
-            uvMapping.mapping = mapping;
-            uvMapping.icon = registeredIcons.apply(texture);
+    public static int[] uvFromJson(ArrayNode uvNode) {
+        int[] mapping = new int[4];
+
+        for (int i = 0; i < mapping.length; i++) {
+            mapping[i] = uvNode.get(i).asInt();
         }
-        throw new RuntimeException("Invalid uv node.");
+
+        return mapping;
+    }
+
+    public static UVMapping fromJson(JsonNode root, Function<String, Icon> registeredIcons) {
+
+        if (root.isTextual()) {
+            return fromIcon(registeredIcons.apply(root.textValue()));
+        }
+
+        int[] mapping = uvFromJson((ArrayNode) root.get("uv"));
+        String texture = root.get("texture").textValue();
+        int rotation = root.get("rotation").asInt();
+
+        Vector2f[] vertices = mappingFromIcon(registeredIcons.apply(texture), mapping);
+        applyRotation(vertices, rotation);
+
+        return new UVMapping(vertices);
     }
 }
