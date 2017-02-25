@@ -14,10 +14,10 @@ import com.ylinor.client.events.input.keyboard.KeyUpEvent;
 import com.ylinor.client.events.input.mouse.MouseMovedEvent;
 import com.ylinor.client.physics.Heading;
 import com.ylinor.client.physics.InputControlledEntity;
-import com.ylinor.client.physics.Velocity;
+import com.ylinor.client.physics.Motion;
 import com.ylinor.client.physics.Physics;
+
 import net.mostlyoriginal.api.event.common.Subscribe;
-import org.joml.Vector3f;
 
 
 /**
@@ -28,7 +28,6 @@ import org.joml.Vector3f;
  */
 public class PlayerInputSystem extends IteratingSystem {
 
-    private ComponentMapper<Velocity> velocityMapper;
     private ComponentMapper<Heading> headingMapper;
     private ComponentMapper<Physics> physicsMapper;
 
@@ -38,7 +37,6 @@ public class PlayerInputSystem extends IteratingSystem {
     private int BACKWARD = Keys.D;
     private int UP = Keys.SPACE;
     //    private int DOWN = Keys.SHIFT_LEFT;
-    private final Vector3f tmp = new Vector3f();
     private int mouseX = 0;
     private int mouseY = 0;
     private float rotSpeed = 0.2f;
@@ -54,7 +52,6 @@ public class PlayerInputSystem extends IteratingSystem {
     @Wire
     private GdxInputDispatcherSystem inputDispatcherSystem;
 
-    @SuppressWarnings("unchecked")
     public PlayerInputSystem() {
         super(Aspect.all(InputControlledEntity.class, Heading.class));
     }
@@ -71,7 +68,6 @@ public class PlayerInputSystem extends IteratingSystem {
     @Override
     protected void process(int entityId) {
         //        Motion motion = motionMapper.get(entityId);
-        Velocity velocity = velocityMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
         Physics physics = physicsMapper.get(entityId);
 

@@ -77,13 +77,12 @@ public class CameraSystem extends IteratingSystem {
 
     @Override
     protected void process(int entityId) {
-        Position aabb = positionMapper.get(entityId);
+        Position position = positionMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
-        Physics physics = physicsMapper.get(entityId);
 
-        float d0 = physics.prevPosX + (physics.posX - physics.prevPosX) * timer.renderPartialTicks;
-        float d1 = physics.prevPosY + (physics.posY - physics.prevPosY) * timer.renderPartialTicks;
-        float d2 = physics.prevPosZ + (physics.posZ - physics.prevPosZ) * timer.renderPartialTicks;
+        float d0 = position.prevPosition.x + (position.position.x - position.prevPosition.x) * timer.renderPartialTicks;
+        float d1 = position.prevPosition.y + (position.position.y - position.prevPosition.y) * timer.renderPartialTicks;
+        float d2 = position.prevPosition.z + (position.position.z - position.prevPosition.z) * timer.renderPartialTicks;
         camera.position.set(d0, d1, d2);
 
         if (eyeHeightMapper.has(entityId)) {
