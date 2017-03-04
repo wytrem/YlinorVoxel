@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
+import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
@@ -67,10 +68,11 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
             else {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
-
+                
                 assetsTime = 0;
                 loaded = true;
 
+                eventSystem.dispatch(new AssetsLoadedEvent());
                 screenSystem.setScreen(new MainMenuScreen());
             }
         }

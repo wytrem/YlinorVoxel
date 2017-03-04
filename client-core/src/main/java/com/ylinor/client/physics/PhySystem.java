@@ -9,8 +9,8 @@ import com.artemis.annotations.Wire;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.library.api.ecs.systems.TickingIteratingSystem;
 import com.ylinor.library.api.ecs.systems.Timer;
-import com.ylinor.library.api.terrain.BlockExtraData;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.util.TempVars;
 import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.MathHelper;
@@ -474,7 +474,7 @@ public class PhySystem extends TickingIteratingSystem {
 		}
 	}
 
-	protected void updateFallState(Physics physics, Terrain terrain, double y, boolean onGroundIn, BlockExtraData state,
+	protected void updateFallState(Physics physics, Terrain terrain, double y, boolean onGroundIn, BlockState state,
 			BlockPos pos) {
 		if (onGroundIn) {
 			if (physics.fallDistance > 0.0F) {

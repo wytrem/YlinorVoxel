@@ -3,11 +3,14 @@ package com.ylinor.client.render;
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import com.ylinor.client.YlinorClient;
+import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
+
+import net.mostlyoriginal.api.event.common.Subscribe;
 
 
 /**
@@ -49,14 +52,6 @@ public class TerrainRenderSystem extends BaseSystem {
     }
 
     @Override
-    protected void initialize() {
-        renderGlobal = new RenderGlobal(terrain);
-        terrain.inject(world);
-        world.inject(renderGlobal);
-        renderGlobal.inject(world);
-    }
-
-    @Override
     protected void processSystem() {
         if (assetsLoadingSystem.loaded()) {
             renderGlobal.render();
@@ -65,6 +60,15 @@ public class TerrainRenderSystem extends BaseSystem {
 
     public void dispose() {
         renderGlobal.dispose();
+    }
+    
+    @Subscribe
+    public void assetsLoaded(AssetsLoadedEvent event) {
+    	renderGlobal = new RenderGlobal();
+        terrain.inject(world);
+        world.inject(renderGlobal);
+        renderGlobal.init();
+        renderGlobal.inject(world);
     }
 
     @Override

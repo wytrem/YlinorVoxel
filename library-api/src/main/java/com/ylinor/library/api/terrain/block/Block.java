@@ -1,11 +1,13 @@
-package com.ylinor.library.api.terrain;
+package com.ylinor.library.api.terrain.block;
 
+import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
 
 
 public class Block {
     private BlockPos pos;
-    private BlockExtraData data;
+    private BlockState data;
     private BlockType type;
 
     public Block(BlockPos pos, BlockType type) {
@@ -13,7 +15,7 @@ public class Block {
         this.type = type;
     }
 
-    public Block(BlockPos pos, BlockExtraData data, BlockType type) {
+    public Block(BlockPos pos, BlockState data, BlockType type) {
         this.pos = pos;
         this.data = data;
         this.type = type;
@@ -23,7 +25,7 @@ public class Block {
         this.pos = pos;
     }
 
-    public void setData(BlockExtraData data) {
+    public void setData(BlockState data) {
         this.data = data;
     }
 
@@ -31,7 +33,7 @@ public class Block {
         return pos;
     }
 
-    public BlockExtraData getData() {
+    public BlockState getData() {
         return data;
     }
 

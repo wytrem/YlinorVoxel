@@ -1,5 +1,8 @@
 package com.ylinor.library.api.terrain;
 
+import com.ylinor.library.api.terrain.block.Block;
+import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
 
 
@@ -22,11 +25,11 @@ public interface IBlockContainer {
 
     BlockType getBlockType(int x, int y, int z);
 
-    default BlockExtraData getBlockData(BlockPos pos) {
+    default BlockState getBlockData(BlockPos pos) {
         return getBlockData(pos.x(), pos.y(), pos.z());
     }
 
-    BlockExtraData getBlockData(int x, int y, int z);
+    BlockState getBlockData(int x, int y, int z);
 
     default boolean hasData(int x, int y, int z) {
         return getBlockData(x, y, z) != null;
@@ -44,9 +47,9 @@ public interface IBlockContainer {
 
     void setBlockType(int x, int y, int z, BlockType type);
 
-    default void setBlockData(BlockPos pos, BlockExtraData data) {
+    default void setBlockData(BlockPos pos, BlockState data) {
         setBlockData(pos.x(), pos.y(), pos.z(), data);
     }
 
-    void setBlockData(int x, int y, int z, BlockExtraData data);
+    void setBlockData(int x, int y, int z, BlockState data);
 }

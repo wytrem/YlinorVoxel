@@ -7,14 +7,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.render.model.ModelRegistry;
+import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 
@@ -22,7 +26,8 @@ import com.ylinor.library.api.terrain.Terrain;
 public class RenderGlobal implements Disposable {
     int renderEngineVersion = 1;
 
-    ModelBatch modelBatch;
+    ModelBatch terrainBatch;
+    ModelBatch entitiesBatch;
     Environment environment;
     TerrainRenderer terrainRenderer;
     
@@ -32,22 +37,49 @@ public class RenderGlobal implements Disposable {
 
     @Wire
     CameraSystem cameraSystem;
+    
+    @Wire
+    Assets assets;
+    
+    ModelInstance test;
+    
+    @Wire
+    Terrain world;
+    AnimationController controller;
+    
+    DirectionalLight sun;
+    
 
-    public RenderGlobal(Terrain world) {
+    public RenderGlobal() {
+
+    }
+    
+    public void init() {
         DefaultShader.Config shaderConfig = new Config();
 
         shaderConfig.defaultCullFace = GL20.GL_FRONT;
 
-        modelBatch = new ModelBatch(new DefaultShaderProvider(shaderConfig));
+        terrainBatch = new ModelBatch(new DefaultShaderProvider(shaderConfig));
+        entitiesBatch = new ModelBatch();
 
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.set(new ColorAttribute(ColorAttribute.Fog, 0.13f, 0.13f, 0.13f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        
+        
+        sun = new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f);
+        environment.add(sun);
         terrainRenderer = new TerrainRenderer(world, this);
 
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
+        
+        Model player = assets.modelAssets.getModelTest();
+        test = new ModelInstance(player); 
+        test.transform.setToTranslation(0, 255, 0).scl(0.3f);
+        
+        controller = new AnimationController(test);
+        controller.setAnimation("run", -1);
     }
     
     public void inject(World world) {
@@ -55,22 +87,25 @@ public class RenderGlobal implements Disposable {
     }
 
     public void render() {
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        Gdx.gl.glClearColor(0.5f, 0.7f, 0.9f, 1.0f);
         update();
 
-        modelBatch.begin(cameraSystem.getCamera());
+        terrainBatch.begin(cameraSystem.getCamera());
 
         // Render terrain
-        modelBatch.render(terrainRenderer, environment);
+        terrainBatch.render(terrainRenderer, environment);
+        
+        terrainBatch.end();
+        
+        entitiesBatch.begin(cameraSystem.getCamera());
 
-        // Render entities
-        modelBatch.end();
+        // DEBUG
+        entitiesBatch.render(test, environment);
+        entitiesBatch.end();
     }
-
+    
     private void update() {
         terrainRenderer.update();
+        controller.update(Gdx.graphics.getDeltaTime());
     }
     
     public ChunkRenderer getChunkRenderer(Chunk chunk) {

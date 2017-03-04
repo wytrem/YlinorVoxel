@@ -10,9 +10,9 @@ import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.client.renderlib.format.VertexFormats;
 import com.ylinor.client.resource.Assets;
-import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IBlockContainer;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.procedure.TObjectProcedure;

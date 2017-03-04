@@ -1,11 +1,11 @@
 package com.ylinor.client.render;
 
-import com.ylinor.library.api.terrain.Block;
-import com.ylinor.library.api.terrain.BlockExtraData;
-import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.Block;
+import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 
 
 public class ChunkCache implements IBlockContainer {
@@ -83,7 +83,7 @@ public class ChunkCache implements IBlockContainer {
     }
 
     @Override
-    public BlockExtraData getBlockData(int x, int y, int z) {
+    public BlockState getBlockData(int x, int y, int z) {
         if (x < 0) {
             return xNeg.getBlockData(x + Chunk.SIZE_X, y, z);
         }
@@ -112,6 +112,6 @@ public class ChunkCache implements IBlockContainer {
     }
 
     @Override
-    public void setBlockData(int x, int y, int z, BlockExtraData data) {
+    public void setBlockData(int x, int y, int z, BlockState data) {
     }
 }

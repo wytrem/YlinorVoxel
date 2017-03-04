@@ -1,5 +1,7 @@
-package com.ylinor.library.api.terrain;
+package com.ylinor.library.api.terrain.block.type;
 
+import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.util.math.BlockPos;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
@@ -40,7 +42,7 @@ public class BlockType {
         return id != 0;
     }
 
-    public BlockExtraData createData(BlockPos pos, Terrain world) {
+    public BlockState createData(BlockPos pos, Terrain world) {
         return null;
     }
 

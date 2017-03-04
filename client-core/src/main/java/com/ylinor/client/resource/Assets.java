@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
 
@@ -54,6 +55,8 @@ public class Assets implements Disposable {
 	public final ScreenAssets screen;
 
 	public final BlockAssets blockAssets;
+	
+	public final ModelAssets modelAssets;
 
 	public Assets() {
 		assets = new AssetManager(new InternalFileHandleResolver());
@@ -61,6 +64,7 @@ public class Assets implements Disposable {
 
 		screen = new ScreenAssets(this);
 		blockAssets = new BlockAssets(this);
+		modelAssets = new ModelAssets(this);
 	}
 
 	/**
@@ -90,6 +94,7 @@ public class Assets implements Disposable {
 
 		screen.load();
 		blockAssets.load();
+		modelAssets.load();
 	}
 
 	@Override
@@ -144,6 +149,10 @@ public class Assets implements Disposable {
 	 */
 	public void loadFont(String file) {
 		load(file, FreeTypeFontGenerator.class);
+	}
+	
+	public void loadModel(String file) {
+		load(file, Model.class);
 	}
 
 	/**

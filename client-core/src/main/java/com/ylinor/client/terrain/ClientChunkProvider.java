@@ -3,10 +3,10 @@ package com.ylinor.client.terrain;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.MathUtils;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
-import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.PositionableObject2D;
 
 import gnu.trove.map.TLongObjectMap;
@@ -50,7 +50,7 @@ public class ClientChunkProvider implements IChunkProvider {
                         chunk.setBlockType(x, y, z, terrain.getBlockType((short) (BlockType.stone.getId())));
                     }
                     else {
-                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.05f) ? BlockType.dirt.getId() : 0)));
+                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.01f) ? BlockType.dirt.getId() : 0)));
                     }
                 }
             }

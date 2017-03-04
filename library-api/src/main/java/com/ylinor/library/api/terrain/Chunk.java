@@ -1,5 +1,8 @@
 package com.ylinor.library.api.terrain;
 
+import com.ylinor.library.api.terrain.block.Block;
+import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.Sizeable3D;
 
@@ -13,7 +16,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     public static final short SIZE_Z = 16;
 
     private TShortObjectMap<Block> blockCache = new TShortObjectHashMap<>(64);
-    private TShortObjectMap<BlockExtraData> blockDatas = new TShortObjectHashMap<>(64);
+    private TShortObjectMap<BlockState> blockDatas = new TShortObjectHashMap<>(64);
     private short[][][] blocks;
     private Terrain world;
     public final int x, z;
@@ -93,7 +96,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
         }
     }
 
-    private BlockExtraData _dataAt(short pos) {
+    private BlockState _dataAt(short pos) {
         synchronized (blockDatas) {
             return blockDatas.get(pos);
         }
@@ -105,7 +108,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
         }
     }
 
-    private void _setData(short pos, BlockExtraData data) {
+    private void _setData(short pos, BlockState data) {
         synchronized (blockDatas) {
             blockDatas.put(pos, data);
         }
@@ -119,16 +122,16 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     public Block getOrCreate(int x, int y, int z) {
         short pos = posInChunkToShort(x, y, z);
         Block block = _blockAt(pos);
-        if (block == null) {
-            BlockExtraData data = _dataAt(pos);
-            if (data == null) {
-                block = new Block(_newBlockPos(x, y, z), null, world.getBlockType(_typeAt(x, y, z)));
-            }
-            else {
-                block = data.provide(world.getBlockType(_typeAt(x, y, z)), _newBlockPos(x, y, z), world);
-            }
-            _cacheBlock(pos, block);
-        }
+//        if (block == null) {
+//            BlockExtraData data = _dataAt(pos);
+//            if (data == null) {
+//                block = new Block(_newBlockPos(x, y, z), null, world.getBlockType(_typeAt(x, y, z)));
+//            }
+//            else {
+//                block = data.provide(world.getBlockType(_typeAt(x, y, z)), _newBlockPos(x, y, z), world);
+//            }
+//            _cacheBlock(pos, block);
+//        }
         return block;
     }
 
@@ -138,7 +141,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     }
 
     @Override
-    public BlockExtraData getBlockData(int x, int y, int z) {
+    public BlockState getBlockData(int x, int y, int z) {
         return _dataAt(posInChunkToShort(x, y, z));
     }
 
@@ -158,11 +161,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
     }
 
     @Override
-    public void setBlockData(int x, int y, int z, BlockExtraData data) {
-        if (data != null && !data.isApplicableFor(getBlockType(x, y, z))) {
-            throw new IllegalArgumentException("Invalid data type.");
-        }
-
+    public void setBlockData(int x, int y, int z, BlockState data) {
         short pos = posInChunkToShort(x, y, z);
         _uncacheBlock(pos);
         _setData(pos, data);

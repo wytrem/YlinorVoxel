@@ -12,9 +12,9 @@ import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.UniqueVariant;
 import com.ylinor.client.render.model.block.Variants;
 import com.ylinor.client.resource.TextureAtlas;
-import com.ylinor.library.api.terrain.BlockExtraData;
-import com.ylinor.library.api.terrain.BlockType;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 
 import gnu.trove.map.TShortObjectMap;
 import gnu.trove.map.hash.TShortObjectHashMap;
@@ -69,7 +69,7 @@ public class ModelRegistry {
         variantsById.put(typeId, variants);
     }
 
-    public BlockModel get(Terrain world, BlockType type, BlockExtraData data) {
+    public BlockModel get(Terrain world, BlockType type, BlockState data) {
         return variantsById.get(type.getId()).get(world, type, data);
     }
 

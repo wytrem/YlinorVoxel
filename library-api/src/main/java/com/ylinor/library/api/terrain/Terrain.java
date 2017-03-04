@@ -1,6 +1,9 @@
 package com.ylinor.library.api.terrain;
 
 import com.artemis.World;
+import com.ylinor.library.api.terrain.block.Block;
+import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.PositionableObject2D;
 
@@ -83,12 +86,12 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     }
 
     @Override
-    public BlockExtraData getBlockData(BlockPos pos) {
+    public BlockState getBlockData(BlockPos pos) {
         return getChunkOf(pos).getBlockData(pos.x & 15, pos.y, pos.z & 15);
     }
 
     @Override
-    public BlockExtraData getBlockData(int x, int y, int z) {
+    public BlockState getBlockData(int x, int y, int z) {
         return getChunkOf(x, y, z).getBlockData(x & 15, y, z & 15);
     }
 
@@ -111,12 +114,12 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     }
 
     @Override
-    public void setBlockData(BlockPos pos, BlockExtraData data) {
+    public void setBlockData(BlockPos pos, BlockState data) {
         getChunkOf(pos).setBlockData(pos.x & 15, pos.y, pos.z & 15, data);
     }
 
     @Override
-    public void setBlockData(int x, int y, int z, BlockExtraData data) {
+    public void setBlockData(int x, int y, int z, BlockState data) {
         getChunkOf(x, y, z).setBlockData(x & 15, y, z & 15, data);
     }
 
