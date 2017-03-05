@@ -9,7 +9,6 @@ import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.api.terrain.block.material.EnumPushReaction;
 import com.ylinor.library.api.terrain.block.material.MapColor;
 import com.ylinor.library.api.terrain.block.material.Material;
-import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.math.AxisAlignedBB;
 import com.ylinor.library.util.math.BlockPos;
 
@@ -34,14 +33,13 @@ public class BlockAttributes {
 	private float slipperiness;
 	private RenderType renderType;
 	private boolean isFullCube;
-	private boolean canProvidePower;
-	private int weakPower;
-	private int strongPower;
-	private boolean hasComparatorInputOverride;
-	private int comparatorInputOverride;
 	private boolean isOpaqueCube;
 	private boolean isCollidable;
 	private AxisAlignedBB blockAabb;
+	private AxisAlignedBB collisionBoundingBox;
+	private boolean canCollideCheck;
+	private BlockRenderLayer renderLayer;
+	private int colorMultiplier;
 
 	public BlockAttributes(Material materialIn, MapColor mapColorIn) {
 		this.isOpaqueCube = true;
@@ -54,16 +52,28 @@ public class BlockAttributes {
 		this.lightOpacity = this.fullBlock ? 255 : 0;
 		this.translucent = !materialIn.blocksLight();
 		this.isFullCube = true;
-		this.canProvidePower = false;
-		this.weakPower = 0;
-		this.strongPower = 0;
-		this.hasComparatorInputOverride = false;
-		this.comparatorInputOverride = 0;
 		this.isCollidable = true;
 		this.blockAabb = FULL_BLOCK_AABB;
+		this.collisionBoundingBox = this.blockAabb;
+		this.renderType = RenderType.BLOCKMODEL;
+		this.lightValue = 0;
+		this.renderLayer = BlockRenderLayer.SOLID;
+		this.colorMultiplier = 0xffffff;
 	}
 	
-	public float getSlipperiness() {
+	public int getColorMultiplier() {
+        return colorMultiplier;
+    }
+
+    public void setColorMultiplier(int colorMultiplier) {
+        this.colorMultiplier = colorMultiplier;
+    }
+
+    public BlockAttributes(BlockAttributes defaultAttributes) {
+	    set(defaultAttributes);
+	}
+
+    public float getSlipperiness() {
 		return slipperiness;
 	}
 
@@ -127,31 +137,11 @@ public class BlockAttributes {
 	}
 
 	boolean isNormalCube() {
-		return getMaterial().isOpaque() && isFullCube() && !canProvidePower();
-	}
-
-	boolean canProvidePower() {
-		return canProvidePower;
-	}
-
-	int getWeakPower(IBlockContainer blockAccess, BlockPos pos, Facing side) {
-		return weakPower;
-	}
-
-	boolean hasComparatorInputOverride() {
-		return this.hasComparatorInputOverride;
-	}
-
-	int getComparatorInputOverride(World worldIn, BlockPos pos) {
-		return this.comparatorInputOverride;
+		return getMaterial().isOpaque() && isFullCube();
 	}
 
 	float getBlockHardness(World worldIn, BlockPos pos) {
 		return blockHardness;
-	}
-
-	int getStrongPower(IBlockContainer blockAccess, BlockPos pos, Facing side) {
-		return strongPower;
 	}
 
 	EnumPushReaction getMobilityFlag() {
@@ -168,7 +158,7 @@ public class BlockAttributes {
 
 	@Nullable
 	AxisAlignedBB getCollisionBoundingBox(IBlockContainer blockAccess, BlockPos pos) {
-		return getBoundingBox(blockAccess, pos);
+		return collisionBoundingBox;
 	}
 
 	boolean isFullyOpaque() {
@@ -223,7 +213,7 @@ public class BlockAttributes {
 		this.material = material;
 	}
 
-	public void setBlockMapColor(MapColor blockMapColor) {
+	public void setMapColor(MapColor blockMapColor) {
 		this.blockMapColor = blockMapColor;
 	}
 
@@ -239,26 +229,6 @@ public class BlockAttributes {
 		this.isFullCube = isFullCube;
 	}
 
-	public void setCanProvidePower(boolean canProvidePower) {
-		this.canProvidePower = canProvidePower;
-	}
-
-	public void setWeakPower(int weakPower) {
-		this.weakPower = weakPower;
-	}
-
-	public void setStrongPower(int strongPower) {
-		this.strongPower = strongPower;
-	}
-
-	public void setHasComparatorInputOverride(boolean hasComparatorInputOverride) {
-		this.hasComparatorInputOverride = hasComparatorInputOverride;
-	}
-
-	public void setComparatorInputOverride(int comparatorInputOverride) {
-		this.comparatorInputOverride = comparatorInputOverride;
-	}
-
 	public boolean isCollidable() {
 		return isCollidable;
 	}
@@ -270,8 +240,32 @@ public class BlockAttributes {
 	public void setOpaqueCube(boolean isOpaqueCube) {
 		this.isOpaqueCube = isOpaqueCube;
 	}
+	
+	public boolean isCanCollideCheck() {
+		return canCollideCheck;
+	}
 
-	public void set(BlockAttributes defaultAttributes) {
+	public void setCanCollideCheck(boolean canCollideCheck) {
+		this.canCollideCheck = canCollideCheck;
+	}
+	
+	public AxisAlignedBB getCollisionBoundingBox() {
+		return collisionBoundingBox;
+	}
+
+	public void setCollisionBoundingBox(AxisAlignedBB collisionBoundingBox) {
+		this.collisionBoundingBox = collisionBoundingBox;
+	}
+	
+	public BlockRenderLayer getRenderLayer() {
+        return renderLayer;
+    }
+
+    public void setRenderLayer(BlockRenderLayer renderLayer) {
+        this.renderLayer = renderLayer;
+    }
+
+    public void set(BlockAttributes defaultAttributes) {
 		this.fullBlock = defaultAttributes.fullBlock;
 		this.translucent = defaultAttributes.translucent;
 		this.lightOpacity = defaultAttributes.lightOpacity;
@@ -288,12 +282,11 @@ public class BlockAttributes {
 		this.slipperiness = defaultAttributes.slipperiness;
 		this.renderType = defaultAttributes.renderType;
 		this.isFullCube = defaultAttributes.isFullCube;
-		this.canProvidePower = defaultAttributes.canProvidePower;
-		this.weakPower = defaultAttributes.weakPower;
-		this.strongPower = defaultAttributes.strongPower;
-		this.hasComparatorInputOverride = defaultAttributes.hasComparatorInputOverride;
-		this.comparatorInputOverride = defaultAttributes.comparatorInputOverride;
 		this.isOpaqueCube = defaultAttributes.isOpaqueCube;
 		this.isCollidable = defaultAttributes.isCollidable;
+		this.canCollideCheck = defaultAttributes.canCollideCheck;
+		this.blockAabb = defaultAttributes.blockAabb;
+		this.collisionBoundingBox = defaultAttributes.collisionBoundingBox;
+		this.colorMultiplier = defaultAttributes.colorMultiplier;
 	}
 }

@@ -42,7 +42,8 @@ public class ModelRegistry {
                 try {
                     logger.info("Loading block model {}", arg1);
                     ModelDeserializer deserializer = ModelDeserializer.read(modelFileResolver.resolve(arg1), atlas, modelFileResolver);
-                    register(arg0, new UniqueVariant(deserializer.getModel()));
+                    deserializer.deserialize();
+                    register(arg0, new Variants(deserializer.variants));
                 }
                 catch (IOException e) {
                     e.printStackTrace();
@@ -54,7 +55,11 @@ public class ModelRegistry {
 
     private void registerStatesFiles() {
         register(BlockType.stone, "stone");
-        register(BlockType.dirt, "anvil_undamaged");
+        register(BlockType.grass, "grass");
+        register(BlockType.dirt, "dirt");
+        register(BlockType.cobbleStone, "cobblestone");
+        register(BlockType.planks, "planks");
+
     }
 
     private void register(BlockType type, String stateFile) {

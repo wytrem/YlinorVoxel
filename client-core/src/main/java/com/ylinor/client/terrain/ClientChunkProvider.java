@@ -50,7 +50,7 @@ public class ClientChunkProvider implements IChunkProvider {
                         chunk.setBlockType(x, y, z, terrain.getBlockType((short) (BlockType.stone.getId())));
                     }
                     else {
-                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.randomBoolean(0.01f) ? BlockType.dirt.getId() : 0)));
+                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.random(0, BlockType.REGISTRY.size() - 1))));
                     }
                 }
             }

@@ -76,7 +76,7 @@ public class RenderGlobal implements Disposable {
         
         Model player = assets.modelAssets.getModelTest();
         test = new ModelInstance(player); 
-        test.transform.setToTranslation(0, 255, 0).scl(0.3f);
+        test.transform.setToTranslation(0, 256, 0).scl(0.3f);
         
         controller = new AnimationController(test);
         controller.setAnimation("run", -1);

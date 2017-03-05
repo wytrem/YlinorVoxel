@@ -2,7 +2,6 @@ package com.ylinor.client.render.model;
 
 import static com.ylinor.library.util.JsonUtil.makeTree;
 import static com.ylinor.library.util.JsonUtil.mergeExcluding;
-import static com.ylinor.library.util.JsonUtil.walkArray;
 import static com.ylinor.library.util.JsonUtil.walkTree;
 
 import java.io.IOException;
@@ -26,8 +25,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.Cube;
-import com.ylinor.client.render.model.block.UVMapping;
+import com.ylinor.client.render.model.block.FaceRenderInfo;
 import com.ylinor.client.resource.TextureAtlas;
+import com.ylinor.library.api.terrain.block.state.props.StateProperty;
 import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.spring.Assert;
 
@@ -78,6 +78,7 @@ public class ModelDeserializer {
 
         if (bakedParent != null) {
             bakedJson = mergeExcluding(bakedParent, originalJson, "variants");
+            bakedJson.replace("variants", originalJson.get("variants"));
         }
 
         return bakedJson;
@@ -86,38 +87,45 @@ public class ModelDeserializer {
     public void deserialize() {
 
         this.bakedJson = bakeJson(originalJson);
-        
+
         try {
             this.textures = mapper.treeToValue(bakedJson.get("textures"), Map.class);
         }
         catch (JsonProcessingException e) {
             throw new ModelParseException("Unable to read model textures of model " + name, e);
         }
+        
+        if (this.bakedJson.has("variants")) {
+            JsonNode variantsNode = this.bakedJson.get("variants");
 
-        this.cubes = readPart(bakedJson.get("elements"), null);
-
-        JsonNode variantsNode = this.bakedJson.get("variants");
-
-        if (variantsNode != null) {
-            if (variantsNode.isArray()) {
-                ArrayNode variantsArray = ((ArrayNode) variantsNode);
-                walkArray(variantsArray, variant -> {
-                    ObjectNode model = mergeExcluding(this.bakedJson, variant.get("apply"));
+            if (variantsNode.isObject()) {
+                ObjectNode variantsObjectNode = ((ObjectNode) variantsNode);
+                walkTree(variantsObjectNode, (variant, apply) -> {
+                    ObjectNode model = mergeExcluding(this.bakedJson, apply);
                     model.remove("variants");
                     ModelDeserializer deserializer = new ModelDeserializer(name, atlas, model, this.modelsResolver);
-                    this.variants.put(variant.get("when")
-                                             .toString(), deserializer.getModel());
+                    deserializer.deserialize();
+                    this.variants.put(StateProperty.sort(variant), deserializer.getModel());
                 });
             }
         }
+        else {
+            System.out.println(this.bakedJson);
+            this.cubes = readPart(bakedJson.get("elements"), null);
+            
+            variants.put("", getModel());
+        }
     }
-    
+
     private static Vector3f readArrayToVector(JsonNode node) {
         return readArrayToVector((ArrayNode) node);
     }
-    
+
     private static Vector3f readArrayToVector(ArrayNode array) {
-        return new Vector3f((float) array.get(0).asDouble(), (float) array.get(1).asDouble(), (float) array.get(2).asDouble());
+        return new Vector3f((float) array.get(0)
+                                         .asDouble(), (float) array.get(1)
+                                                                   .asDouble(), (float) array.get(2)
+                                                                                             .asDouble());
     }
 
     public List<Cube> readPart(JsonNode model, Cube parent) {
@@ -132,34 +140,34 @@ public class ModelDeserializer {
             Quaternionf rotation = new Quaternionf();
 
             try {
-                
+
                 if (cube.has("position")) {
                     position = readArrayToVector(cube.get("position"));
-                    position.mul(0.03125f);
-                    
+                    position.mul(0.0625f);
+
                     size = readArrayToVector(cube.get("size"));
-                    size.mul(0.03125f);
+                    size.mul(0.0625f);
                 }
                 else if (cube.has("from")) {
                     position = readArrayToVector(cube.get("from"));
                     position.mul(0.0625f);
-                    
+
                     Vector3f to = readArrayToVector(cube.get("to"));
                     to.mul(0.0625f);
-                    
+
                     size = to.sub(position, new Vector3f());
                 }
 
                 if (parent != null) {
                     position.add(parent.position);
                 }
-               
+
                 JsonNode rot = cube.get("rotation");
 
                 if (rot != null) {
                     rotation = mapper.treeToValue(rot, Quaternionf.class);
                 }
-                
+
                 if (parent != null) {
                     rotation.mul(parent.rotation);
                 }
@@ -183,7 +191,7 @@ public class ModelDeserializer {
 
             JsonNode faces = cube.get("faces");
 
-            Map<Facing, UVMapping> texturesMapping = new HashMap<>();
+            Map<Facing, FaceRenderInfo> texturesMapping = new HashMap<>();
             Map<Facing, Facing> cullfaces = new HashMap<>();
 
             JsonNode defNode = faces.get("allfaces");
@@ -199,12 +207,16 @@ public class ModelDeserializer {
 
             if (!defNode.has("uv")) {
                 ArrayNode uv = new ArrayNode(JsonNodeFactory.instance);
-                uv.add(0).add(0).add(32).add(32);
+                uv.add(0).add(0).add(16).add(16);
                 ((ObjectNode) defNode).set("uv", uv);
             }
 
             if (!defNode.has("rotation")) {
                 ((ObjectNode) defNode).put("rotation", 0);
+            }
+            
+            if (!defNode.has("useColorMultiplier")) {
+                ((ObjectNode) defNode).put("useColorMultiplier", true);
             }
 
             final JsonNode voilaLeFinalTamer = defNode;
@@ -215,18 +227,18 @@ public class ModelDeserializer {
                 }
 
                 Facing facing = getFacing(face);
-                UVMapping uv = UVMapping.fromJson(mergeExcluding(voilaLeFinalTamer, obj), this::getIconFromMacro);
+                FaceRenderInfo uv = FaceRenderInfo.fromJson(mergeExcluding(voilaLeFinalTamer, obj), this::getIconFromMacro);
 
                 texturesMapping.put(facing, uv);
 
                 if (obj.has("cullface")) {
-                    
+
                     cullfaces.put(facing, getFacing(obj.get("cullface")
-                                                            .textValue()));
+                                                       .textValue()));
                 }
             });
 
-            cubeObj.setTextures(texturesMapping);
+            cubeObj.setFaces(texturesMapping);
             cubeObj.setCullfaces(cullfaces);
 
             parts.add(cubeObj);
@@ -234,7 +246,7 @@ public class ModelDeserializer {
 
         return parts;
     }
-    
+
     private static Facing getFacing(String name) {
         return Facing.valueOf(name.toUpperCase());
     }
@@ -256,7 +268,8 @@ public class ModelDeserializer {
 
     public BlockModel getModel() {
         if (cubes == null) {
-            deserialize();
+            //            deserialize();
+            return null;
         }
         return new BlockModel(name, cubes);
     }

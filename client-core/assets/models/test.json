@@ -1,63 +1,52 @@
 {
-	"elements": 
-	{
-		"block": 
-		{
-			"position": [0,0,0],
-
-			"size": [32,32,32],
-
-			"faces": 
-			{
-				"down": 
-				{
+	"elements": {
+		"block": {
+			"from": [
+				0,
+				0,
+				0
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"down": {
 					"texture": "#down",
 					"cullface": "down"
 				},
-
-				"up": 
-				{
+				"up": {
 					"texture": "#up",
 					"cullface": "up"
 				},
-
-				"north": 
-				{
+				"north": {
 					"texture": "#north",
 					"cullface": "north"
 				},
-
-				"south": 
-				{
+				"south": {
 					"texture": "#south",
 					"cullface": "south"
 				},
-
-				"west": 
-				{
+				"west": {
 					"texture": "#west",
 					"cullface": "west"
 				},
-
-				"east": 
-				{
+				"east": {
 					"texture": "#east",
 					"cullface": "east"
 				}
 			}
 		}
 	},
-
 	"parent": "cube_all",
-	"textures": 
-	{
+	"textures": {
 		"particle": "#all",
 		"down": "#all",
 		"up": "#all",
 		"north": "#all",
 		"east": "#all",
 		"south": "#all",
-		"west": "#all",
-		"all": "stone"
+		"west": "#all"
 	}
 }

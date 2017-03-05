@@ -15,8 +15,8 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 	public static final short SIZE_Z = 16;
 
 	private TShortObjectMap<Block> blockCache = new TShortObjectHashMap<>(64);
-	private TShortObjectMap<BlockState> blockDatas = new TShortObjectHashMap<>(64);
 	private short[][][] blocks;
+	private byte[][][] states;
 	private Terrain world;
 	public final int x, z;
 	public final long id;
@@ -28,6 +28,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 		this.z = chunkZ;
 		this.id = chunkXZ2Int(chunkX, chunkZ);
 		blocks = new short[SIZE_X][SIZE_Y][SIZE_Z];
+		states = new byte[SIZE_X][SIZE_Y][SIZE_Z];
 		needsRenderUpdate = true;
 	}
 
@@ -87,33 +88,28 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 		}
 	}
 	
-	private short _typeAt(short pos) {
-		return _typeAt(xFromShort(pos), yFromShort(pos), zFromShort(pos));
-	}
-
 	private void _setTypeAt(int x, int y, int z, short type) {
 		synchronized (blocks) {
 			blocks[x][y][z] = type;
 		}
 	}
 
-	private BlockState _dataAt(short pos) {
-		synchronized (blockDatas) {
-			return blockDatas.get(pos) == null ? world.getBlockType(_typeAt(pos)).getDefaultState() : blockDatas.get(pos);
+
+	private void _setState(int x, int y, int z, BlockState data) {
+		synchronized (states) {
+			states[x][y][z] = (byte) world.getBlockType(_typeAt(x, y, z)).getMetaFromState(data);
 		}
 	}
-
-	private void _unsetData(short pos) {
-        synchronized (blockDatas) {
-            blockDatas.remove(pos);
+	
+	private BlockState _stateAt(int x, int y, int z) {
+	    if (y >= 256 || y < 0 || x > 15 || x < 0 || z > 15 || z < 0) {
+            return BlockType.air.getDefaultState();
+        }
+	    
+        synchronized (states) {
+            return world.getBlockType(_typeAt(x, y, z)).getStateFromMeta(states[x][y][z]);
         }
     }
-
-	private void _setData(short pos, BlockState data) {
-		synchronized (blockDatas) {
-			blockDatas.put(pos, data);
-		}
-	}
 
 	private BlockPos _newBlockPos(int x, int y, int z) {
 		return new BlockPos(x << 4 + x, y, z << 4 + z);
@@ -145,7 +141,7 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 
 	@Override
 	public BlockState getBlockState(int x, int y, int z) {
-		return _dataAt(posInChunkToShort(x, y, z));
+		return _stateAt(x, y, z);
 	}
 
 	@Override
@@ -160,14 +156,14 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 		short pos = posInChunkToShort(x, y, z);
 		_uncacheBlock(pos);
 		_setTypeAt(x, y, z, type.getId());
-		_unsetData(pos);
+		_setState(x, y, z, type.getDefaultState());
 	}
 
 	@Override
 	public void setBlockState(int x, int y, int z, BlockState data) {
 		short pos = posInChunkToShort(x, y, z);
 		_uncacheBlock(pos);
-		_setData(pos, data);
+		_setState(x, y, z, data);
 	}
 
 	@Override

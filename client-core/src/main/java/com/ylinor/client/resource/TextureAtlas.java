@@ -9,6 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
@@ -16,6 +19,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.ylinor.client.render.model.Icon;
 
 public class TextureAtlas {
+    
+    private static final Logger logger = LoggerFactory.getLogger(TextureAtlas.class);
 
     private Map<String, Icon> iconMap;
     private Pixmap atlas;
@@ -82,7 +87,13 @@ public class TextureAtlas {
     }
 
     public Icon getUVFor(String texture) {
-        return iconMap.get(texture);
+        Icon icon = iconMap.get(texture);
+        
+        if (icon == null) {
+            logger.warn("Missing '{}' texture atlas.", texture);
+            return getUVFor("unknown");
+        }
+        return icon;
     }
 
     public String getTextureOf(Icon icon) {

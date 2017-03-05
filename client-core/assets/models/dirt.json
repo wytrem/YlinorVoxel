@@ -1,7 +1,40 @@
 {
-	"parent": "cube_all",
-	"textures": 
-	{
+	"parent": "cube_sided",
+	"textures": {
 		"all": "dirt"
+	},
+	"variants": {
+		"snowy=true,variant=dirt": {
+			"textures": {
+				"all": "dirt"
+			}
+		},
+		"snowy=false,variant=dirt": {
+			"textures": {
+				"all": "dirt"
+			}
+		},
+		"snowy=true,variant=coarse_dirt": {
+			"textures": {
+				"all": "coarse_dirt"
+			}
+		},
+		"snowy=false,variant=coarse_dirt": {
+			"textures": {
+				"all": "coarse_dirt"
+			}
+		},
+		"snowy=true,variant=podzol": {
+			"textures": {
+				"side": "dirt_podzol_side",
+				"top": "dirt_podzol_top"
+			}
+		},
+		"snowy=false,variant=podzol": {
+			"textures": {
+				"side": "dirt_podzol_side",
+				"top": "dirt_podzol_top"
+			}
+		}
 	}
 }

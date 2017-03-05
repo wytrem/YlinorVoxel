@@ -40,6 +40,12 @@ public class ArrayUtils {
         array[i] = array[j];
         array[j] = temp;
     }
+    
+    public static final void mult(int[] array, int number) {
+        for (int i = 0; i < array.length - 1; i++) {
+            array[i] = array[i] * number;
+        }
+    }
 
 
     public static void main(String[] args) {

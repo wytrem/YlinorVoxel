@@ -173,7 +173,7 @@ public class PhySystem extends TickingIteratingSystem {
 					for (int y = minY; y < maxY; ++y) {
 						if (i2 <= 0 || y != minY && y != maxY - 1) {
 							tempVars.blockPos0.set(x, y, z);
-
+							
 							terrain.getBlockState(tempVars.blockPos0).getAttributes().addCollisionBoxToList(terrain,
 									tempVars.blockPos0, aabb, list, entityId, false);
 						}

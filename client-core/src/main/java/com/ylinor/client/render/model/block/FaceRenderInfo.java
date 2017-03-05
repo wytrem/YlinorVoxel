@@ -11,20 +11,28 @@ import com.ylinor.library.util.ArrayUtils;
 import com.ylinor.library.util.spring.Assert;
 
 
-public class UVMapping {
-    private Vector2f[] mapping;
+public class FaceRenderInfo {
+    Vector2f[] uvMapping;
+    boolean useColorMultiplier;
 
-    public UVMapping(Vector2f[] mapping) {
+    public FaceRenderInfo(Vector2f[] mapping, boolean color) {
         Assert.state(mapping.length == 4);
-        this.mapping = mapping;
+        this.uvMapping = mapping;
+        this.useColorMultiplier = color;
     }
     
-    public Vector2f getCoords(int i) {
-        return mapping[i];
+    public Vector2f getTexCoords(int i) {
+        return uvMapping[i];
+    }
+    
+    public void mult(float scalar) {
+        for (int i = 0; i < uvMapping.length; i++) {
+            uvMapping[i].mul(scalar);
+        }
     }
 
-    public static final UVMapping fromIcon(Icon icon) {
-        return new UVMapping(mappingFromIcon(icon));
+    public static final FaceRenderInfo fromIcon(Icon icon, boolean color) {
+        return new FaceRenderInfo(mappingFromIcon(icon), color);
     }
 
     private static Vector2f[] mappingFromIcon(Icon icon) {
@@ -50,19 +58,20 @@ public class UVMapping {
         return mapping;
     }
 
-    public static UVMapping fromJson(JsonNode root, Function<String, Icon> registeredIcons) {
+    public static FaceRenderInfo fromJson(JsonNode root, Function<String, Icon> registeredIcons) {
 
         if (root.isTextual()) {
-            return fromIcon(registeredIcons.apply(root.textValue()));
+            return fromIcon(registeredIcons.apply(root.textValue()), true);
         }
 
         int[] mapping = uvFromJson((ArrayNode) root.get("uv"));
+        
         String texture = root.get("texture").textValue();
         int rotation = root.get("rotation").asInt();
 
         Vector2f[] vertices = mappingFromIcon(registeredIcons.apply(texture), mapping);
         applyRotation(vertices, rotation);
 
-        return new UVMapping(vertices);
+        return new FaceRenderInfo(vertices, root.get("useColorMultiplier").asBoolean());
     }
 }

@@ -1,79 +1,91 @@
 package com.ylinor.library.api.terrain.block.type;
 
 import com.artemis.World;
-import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.api.terrain.block.BlockAttributes;
 import com.ylinor.library.api.terrain.block.material.MapColor;
 import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
+import com.ylinor.library.api.terrain.block.state.props.StateProperty;
 import com.ylinor.library.util.math.BlockPos;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
 
+
 public class BlockType {
-	public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
-	public static final BlockType air = new BlockTypeAir(0);
-	public static final BlockType stone = new BlockType(1);
-	public static final BlockType dirt = new BlockType(2);
-	public static final BlockType wood = new BlockType(3);
-	public static final BlockType stoneBricks = new BlockType(4);
-	public static final BlockType bricks = new BlockType(5);
-	public static final BlockType sand = new BlockType(6);
-	public static final BlockType gravel = new BlockType(7);
-	public static final BlockType sponge = new BlockType(8);
-	public static final BlockType ice = new BlockType(9);
+    public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
+    public static final BlockType air = new BlockTypeAir(0);
+    public static final BlockType stone = new BlockTypeStone(1);
+    public static final BlockType grass = new BlockTypeGrass(2);
+    public static final BlockType dirt = new BlockTypeDirt(3);
+    public static final BlockType cobbleStone = new BlockTypeCobbleStone(4);
+    public static final BlockType planks = new BlockTypePlanks(5);
 
-	private final short id;
-	protected final BlockStateFactory blockStateFactory;
-	private BlockState defaultBlockState;
-	private BlockAttributes defaultAttributes;
+    private final short id;
+    protected BlockStateFactory blockStateFactory;
+    private BlockState defaultBlockState;
+    private final BlockAttributes defaultAttributes;
 
-	protected final Material blockMaterial;
-	protected final MapColor blockMapColor;
+    protected BlockType(int id, Material blockMaterialIn, MapColor blockMapColorIn) {
+        this.id = (short) id;
+        defaultAttributes = new BlockAttributes(blockMaterialIn, blockMapColorIn);
+        REGISTRY.put(this.id, this);
+    }
+    
+    protected final void initStateFactory() {
+        this.blockStateFactory = createBlockState();
+        setDefaultState(blockStateFactory.getOneState());
+    }
+    
+    protected void initStates() {
+        
+    }
 
-	protected BlockType(int id, Material blockMaterialIn, MapColor blockMapColorIn) {
-		this.id = (short) id;
-		this.blockStateFactory = createStateFactory();
-		REGISTRY.put(this.id, this);
-		setDefaultBlockState(blockStateFactory.getOneState());
-		defaultAttributes = new BlockAttributes(blockMaterialIn, blockMapColorIn);
-	}
+    protected BlockType(int id, Material materialIn) {
+        this(id, materialIn, materialIn.getMaterialMapColor());
+    }
 
-	protected BlockType(int id, Material materialIn) {
-		this(id, materialIn, materialIn.getMaterialMapColor());
-	}
+    protected BlockStateFactory createBlockState() {
+        return new BlockStateFactory(this, new StateProperty<?> [0]);
+    }
 
-	public MapColor getBlockMapColor() {
-		return blockMapColor;
-	}
+    public void setDefaultState(BlockState defaultBlockState) {
+        this.defaultBlockState = defaultBlockState;
+    }
 
-	public Material getBlockMaterial() {
-		return blockMaterial;
-	}
+    public BlockState getDefaultState() {
+        return defaultBlockState;
+    }
 
-	protected BlockStateFactory createStateFactory() {
-		return new BlockStateFactory(this);
-	}
+    public short getId() {
+        return id;
+    }
 
-	public void setDefaultBlockState(BlockState defaultBlockState) {
-		this.defaultBlockState = defaultBlockState;
-	}
+    public BlockState getStateFromMeta(int meta) {
+        return this.getDefaultState();
+     }
+    
+    public int getMetaFromState(BlockState state) {
+        if (state.getProperties().isEmpty()) {
+            return 0;
+        }
+        else {
+            throw new IllegalArgumentException("Don\'t know how to convert " + state + " back into data...");
+        }
+    }
 
-	public BlockState getDefaultState() {
-		return defaultBlockState;
-	}
+    public void onFallenUpon(World worldIn, BlockPos pos, int entityIn, float fallDistance) {
+        // entityIn.fall(fallDistance, 1.0F);
+    }
 
-	public short getId() {
-		return id;
-	}
-
-	public void onFallenUpon(World worldIn, BlockPos pos, int entityIn, float fallDistance) {
-		// entityIn.fall(fallDistance, 1.0F);
-		System.out.println("entity " + entityIn + " fell on " + this.getId());
-	}
-
-	public BlockAttributes getDefaultAttributes() {
-		return null;
-	}
+    public BlockAttributes getDefaultAttributes() {
+        return defaultAttributes;
+    }
+    
+    static {
+        REGISTRY.valueCollection().forEach(type -> {
+            type.initStateFactory();
+            type.initStates();
+        });
+    }
 }

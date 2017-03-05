@@ -38,12 +38,13 @@ public class Icon {
     }
     
     public Icon reduce(int[] uv) {
+        float baseSize = 16.0f;
         float iconSizeX = maxU - minU;
         float iconSizeY = maxV - minV;
-        minU += (uv[0] / 32.0f * iconSizeX);
-        minV += (uv[1] / 32.0f * iconSizeY);
-        maxU -= ((32 - uv[2]) / 32.0f * iconSizeX);
-        maxV -= ((32 - uv[3]) / 32.0f * iconSizeY);
+        minU += (uv[0] / baseSize * iconSizeX);
+        minV += (uv[1] / baseSize * iconSizeY);
+        maxU -= ((baseSize - uv[2]) / baseSize * iconSizeX);
+        maxV -= ((baseSize - uv[3]) / baseSize * iconSizeY);
         return this;
     }
     

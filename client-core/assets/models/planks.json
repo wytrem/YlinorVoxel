@@ -1,0 +1,35 @@
+{
+	"parent": "cube_all",
+	"variants": {
+		"variant=oak": {
+			"textures": {
+				"all": "planks_oak"
+			}
+		},
+		"variant=spruce": {
+			"textures": {
+				"all": "planks_spruce"
+			}
+		},
+		"variant=birch": {
+			"textures": {
+				"all": "planks_birch"
+			}
+		},
+		"variant=jungle": {
+			"textures": {
+				"all": "planks_jungle"
+			}
+		},
+		"variant=acacia": {
+			"textures": {
+				"all": "planks_acacia"
+			}
+		},
+		"variant=dark_oak": {
+			"textures": {
+				"all": "planks_dark_oak"
+			}
+		}
+	}
+}

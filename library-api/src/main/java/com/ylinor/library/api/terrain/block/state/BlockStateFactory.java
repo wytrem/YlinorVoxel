@@ -1,11 +1,14 @@
 package com.ylinor.library.api.terrain.block.state;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.ylinor.library.api.terrain.block.state.props.StateProperty;
 import com.ylinor.library.api.terrain.block.type.BlockType;
@@ -13,7 +16,7 @@ import com.ylinor.library.api.terrain.block.type.BlockType;
 public class BlockStateFactory {
 	private StateProperty<?>[] possibleProperties;
 	private BlockType blockType;
-	private Map<Map<StateProperty<?>, Object>, BlockState> statesFromProperties;
+	private Map<SortedMap<StateProperty<?>, Object>, BlockState> statesFromProperties;
 
 	public BlockStateFactory(BlockType blockType, StateProperty<?>... possibleProperties) {
 		super();
@@ -23,11 +26,15 @@ public class BlockStateFactory {
 		this.buildStatesFromProperties();
 	}
 	
+	public Collection<BlockState> getPossibleStates() {
+	    return statesFromProperties.values();
+	}
+	
 	public StateProperty<?>[] getPossibleProperties() {
 		return possibleProperties;
 	}
 	
-	public Map<Map<StateProperty<?>, Object>, BlockState> getStatesFromProperties() {
+	public Map<SortedMap<StateProperty<?>, Object>, BlockState> getStatesFromProperties() {
 		return statesFromProperties;
 	}
 	
@@ -44,12 +51,12 @@ public class BlockStateFactory {
 		statesFromProperties.values().forEach(BlockState::fillLinks);
 		
 		if (statesFromProperties.isEmpty()) {
-			statesFromProperties.put(new HashMap<>(), new BlockState(new HashMap<>(), this));
+			statesFromProperties.put(new TreeMap<>(), new BlockState(new TreeMap<>(), this));
 		}
 	}
 	
-	private Collection<Map<StateProperty<?>, Object>> buildPossibleValuesSets() {
-		Collection<Map<StateProperty<?>, Object>> result = new HashSet<>();
+	private Collection<SortedMap<StateProperty<?>, Object>> buildPossibleValuesSets() {
+		Collection<SortedMap<StateProperty<?>, Object>> result = new HashSet<>();
 
 		for (int i = 0; i < possibleProperties.length; i++) {
 			result = addPossibleValuesToMaps(result, possibleProperties[i]);
@@ -58,20 +65,20 @@ public class BlockStateFactory {
 		return result;
 	}
 
-	private Collection<Map<StateProperty<?>, Object>> addPossibleValuesToMaps(
-			Collection<Map<StateProperty<?>, Object>> maps, StateProperty<?> property) {
-		Collection<Map<StateProperty<?>, Object>> maps2 = new HashSet<>();
+	private Collection<SortedMap<StateProperty<?>, Object>> addPossibleValuesToMaps(
+			Collection<SortedMap<StateProperty<?>, Object>> maps, StateProperty<?> property) {
+		Collection<SortedMap<StateProperty<?>, Object>> maps2 = new HashSet<>();
 
 		if (maps.isEmpty()) {
 			for (Object value : property.possibleValues()) {
-				Map<StateProperty<?>, Object> copy = new HashMap<>();
+			    SortedMap<StateProperty<?>, Object> copy = new TreeMap<>();
 				copy.put(property, value);
 				maps2.add(copy);
 			}
 		} else {
 			for (Map<StateProperty<?>, Object> map : maps) {
 				for (Object value : property.possibleValues()) {
-					Map<StateProperty<?>, Object> copy = new HashMap<>(map);
+				    SortedMap<StateProperty<?>, Object> copy = new TreeMap<>(map);
 					copy.put(property, value);
 					maps2.add(copy);
 				}
@@ -79,6 +86,11 @@ public class BlockStateFactory {
 		}
 
 		return maps2;
+	}
+	
+	public void print() {
+	    System.out.println("possible = " + Arrays.toString(possibleProperties));
+	    buildPossibleValuesSets().forEach(BlockStateFactory::prettyPrintValuesSet);
 	}
 
 	public static void prettyPrintValuesSet(Map<StateProperty<?>, Object> props) {

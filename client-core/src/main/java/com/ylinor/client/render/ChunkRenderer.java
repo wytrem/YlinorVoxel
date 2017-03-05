@@ -9,9 +9,10 @@ import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.renderlib.RenderConstants;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.client.renderlib.format.VertexFormats;
-import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IBlockContainer;
+import com.ylinor.library.api.terrain.block.RenderType;
+import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -49,23 +50,29 @@ public class ChunkRenderer implements Disposable {
 
         vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
 
-        BlockType tile;
+        BlockState state;
         BlockModel model;
 
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-                    tile = neighbours.getBlockType(x, y, z);
+                    state = neighbours.getBlockState(x, y, z);
+                    
 
-                    if (tile != BlockType.air) {
-                        model = renderer.assets.blockAssets.modelsRegistry.get(chunk.getWorld(), tile, chunk.getBlockState(x, y, z));
+                    if (state.getAttributes().getRenderType().equals(RenderType.BLOCKMODEL)) {
+                        model = renderer.assets.blockAssets.modelsRegistry.get(chunk.getWorld(), state.getBlockType(), state);
+                        
+                        if (model == null) {
+                            throw new RenderingException("Missing model for properties : '" + state.propertiesToString() + "'");
+                        }
+                        
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
                         if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - model.neededIndices()) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
                         }
-
+                        
                         model.render(vertexBuffer, neighbours, x, y, z);
                     }
                 }

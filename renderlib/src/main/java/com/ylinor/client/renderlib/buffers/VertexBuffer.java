@@ -90,6 +90,18 @@ public class VertexBuffer {
     }
 
     /**
+     * Puts three floats in that buffer.
+     * 
+     * @param r The red component
+     * @param g The green component
+     * @param b The blue component
+     * @return This {@link VertexBuffer} for chaining
+     */
+    public VertexBuffer color(int rgb) {
+        return this.color((float) (rgb >> 16 & 255) / 255.0F, (float) (rgb >> 8 & 255) / 255.0F, (float) (rgb & 255) / 255.0F, 1.0f);
+    }
+
+    /**
      * Puts two floats in that buffer.
      * 
      * @param x The X coordinate of the vertex
@@ -164,9 +176,10 @@ public class VertexBuffer {
         vertexBuffer.putFloat(s).putFloat(t);
         return this;
     }
-    
+
     /**
      * Puts two floats in that buffer.
+     * 
      * @return This {@link VertexBuffer} for chaining
      */
     public VertexBuffer texCoords(Vector2fc pos) {

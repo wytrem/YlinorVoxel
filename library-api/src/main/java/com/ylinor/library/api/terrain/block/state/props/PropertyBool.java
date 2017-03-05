@@ -2,8 +2,8 @@ package com.ylinor.library.api.terrain.block.state.props;
 
 import java.util.Arrays;
 
-public class BooleanProperty extends StateProperty<Boolean> {
-	protected BooleanProperty(String name) {
+public class PropertyBool extends StateProperty<Boolean> {
+	protected PropertyBool(String name) {
 		super(name, Arrays.asList(true, false));
 	}
 
@@ -17,7 +17,7 @@ public class BooleanProperty extends StateProperty<Boolean> {
 		return Boolean.valueOf(serialized);
 	}
 
-	public static BooleanProperty create(String name) {
-		return new BooleanProperty(name);
+	public static PropertyBool create(String name) {
+		return new PropertyBool(name);
 	}
 }
