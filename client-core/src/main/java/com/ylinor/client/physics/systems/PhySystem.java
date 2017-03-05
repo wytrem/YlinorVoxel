@@ -1,17 +1,29 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.systems;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.joml.Vector3f;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.ylinor.client.YlinorClient;
+import com.ylinor.client.physics.components.AABB;
+import com.ylinor.client.physics.components.CollisionState;
+import com.ylinor.client.physics.components.Heading;
+import com.ylinor.client.physics.components.Physics;
+import com.ylinor.client.physics.components.Position;
+import com.ylinor.client.physics.components.Size;
+import com.ylinor.client.physics.components.Sneaking;
 import com.ylinor.library.api.ecs.systems.TickingIteratingSystem;
 import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.TempVars;
+import com.ylinor.library.util.math.AxisAlignedBB;
 import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.MathHelper;
 
@@ -34,10 +46,10 @@ public class PhySystem extends TickingIteratingSystem {
 
 	@Wire
 	private ComponentMapper<AABB> aabbMapper;
-	
+
 	@Wire
 	private ComponentMapper<CollisionState> collisionStateMapper;
-	
+
 	@Wire
 	private Terrain terrain;
 
@@ -49,8 +61,6 @@ public class PhySystem extends TickingIteratingSystem {
 
 	private TempVars tempVars;
 
-	public static final AxisAlignedBB FULL_BLOCK_AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-
 	public PhySystem() {
 		super(Aspect.all(Physics.class, Position.class, Heading.class, Size.class, AABB.class, CollisionState.class));
 	}
@@ -60,6 +70,7 @@ public class PhySystem extends TickingIteratingSystem {
 		tempVars = TempVars.get();
 	}
 
+	private int entityId;
 	private Heading heading;
 	private Position position;
 	private Physics physics;
@@ -69,6 +80,7 @@ public class PhySystem extends TickingIteratingSystem {
 	private boolean isSneaking;
 
 	protected void tickEntity(int entityId) {
+		this.entityId = entityId;
 		heading = headingMapper.get(entityId);
 		position = positionMapper.get(entityId);
 		physics = physicsMapper.get(entityId);
@@ -93,11 +105,12 @@ public class PhySystem extends TickingIteratingSystem {
 		float halfWidth = size.width / 2.0F;
 		aabb.aabb.set(x - halfWidth, y, z - halfWidth, x + halfWidth, y + size.height, z + halfWidth);
 	}
-	
+
 	public void setPosition(int entityId, float x, float y, float z) {
 		positionMapper.get(entityId).position.set(x, y, z);
 		float halfWidth = sizeMapper.get(entityId).width / 2.0F;
-		aabbMapper.get(entityId).aabb.set(x - halfWidth, y, z - halfWidth, x + halfWidth, y + sizeMapper.get(entityId).height, z + halfWidth);
+		aabbMapper.get(entityId).aabb.set(x - halfWidth, y, z - halfWidth, x + halfWidth,
+				y + sizeMapper.get(entityId).height, z + halfWidth);
 	}
 
 	public void tick() {
@@ -107,16 +120,16 @@ public class PhySystem extends TickingIteratingSystem {
 		physics.prevRotationPitch = physics.rotationPitch;
 		physics.prevRotationYaw = physics.rotationYaw;
 
-		if (Math.abs(physics.motionX) < 0.003f) {
-			physics.motionX = 0.0f;
+		if (Math.abs(physics.motion.x) < 0.003f) {
+			physics.motion.x = 0.0f;
 		}
 
-		if (Math.abs(physics.motionY) < 0.003f) {
-			physics.motionY = 0.0f;
+		if (Math.abs(physics.motion.y) < 0.003f) {
+			physics.motion.y = 0.0f;
 		}
 
-		if (Math.abs(physics.motionZ) < 0.003f) {
-			physics.motionZ = 0.0f;
+		if (Math.abs(physics.motion.z) < 0.003f) {
+			physics.motion.z = 0.0f;
 		}
 
 		if (physics.jumpTicks > 0) {
@@ -136,10 +149,14 @@ public class PhySystem extends TickingIteratingSystem {
 
 		physics.moveStrafing *= 0.98f;
 		physics.moveForward *= 0.98f;
-		moveEntityWithHeading(terrain, physics.moveStrafing, physics.moveForward);
+		moveEntityWithHeading(physics.moveStrafing, physics.moveForward);
 	}
 
 	public List<AxisAlignedBB> getCollisionBoxes(AxisAlignedBB aabb) {
+		return getCollisionBoxes(aabb, -1);
+	}
+
+	public List<AxisAlignedBB> getCollisionBoxes(AxisAlignedBB aabb, int entityId) {
 		List<AxisAlignedBB> list = new ArrayList<>();
 		int minX = MathHelper.floor_double(aabb.minX) - 1;
 		int maxX = MathHelper.ceiling_double_int(aabb.maxX) + 1;
@@ -157,24 +174,8 @@ public class PhySystem extends TickingIteratingSystem {
 						if (i2 <= 0 || y != minY && y != maxY - 1) {
 							tempVars.blockPos0.set(x, y, z);
 
-							// IBlockState iblockstate1 = iblockstate;
-							// if(worldborder.contains(blockpos$pooledmutableblockpos)
-							// || !flag1) {
-							// iblockstate1 =
-							// this.getBlockState(blockpos$pooledmutableblockpos);
-							// }
-							//
-							// iblockstate1.addCollisionBoxToList(this,
-							// blockpos$pooledmutableblockpos, aabb, list,
-							// entityIn);
-
-							if (terrain.getBlockType(tempVars.blockPos0).isCollidable()) {
-
-								AxisAlignedBB blockBb = FULL_BLOCK_AABB.copy().offsetLocal(tempVars.blockPos0);
-								if (aabb.intersectsWith(blockBb)) {
-									list.add(blockBb);
-								}
-							}
+							terrain.getBlockState(tempVars.blockPos0).getAttributes().addCollisionBoxToList(terrain,
+									tempVars.blockPos0, aabb, list, entityId, false);
 						}
 					}
 				}
@@ -208,95 +209,95 @@ public class PhySystem extends TickingIteratingSystem {
 		return list;
 	}
 
-	public void moveEntity(float x, float y, float z, Terrain terrain) {
+	public void moveEntity(Vector3f initialMotion) {
 		if (collisionState.noClip) {
-			aabb.aabb.offsetLocal(x, y, z);
+			aabb.aabb.offsetLocal(initialMotion);
 			resetPositionToBB();
 		} else {
 			// float d0 = position.position.x;
 			// float d1 = position.position.y;
 			// float d2 = position.position.z;
 
-			float initialX = x;
-			float initialY = y;
-			float initialZ = z;
+			Vector3f motion = new Vector3f(initialMotion);
+
 			boolean shouldApplySneak = collisionState.onGround && isSneaking;
 			shouldApplySneak = false;
 			if (shouldApplySneak) {
-				for (; x != 0.0f && getCollisionBoxes(aabb.aabb.offset(x, -1.0f, 0.0f))
-						.isEmpty(); initialX = x) {
-					if (x < 0.05f && x >= -0.05f) {
-						x = 0.0f;
-					} else if (x > 0.0f) {
-						x -= 0.05f;
+				for (; motion.x != 0.0f && getCollisionBoxes(aabb.aabb.offset(motion.x, -1.0f, 0.0f))
+						.isEmpty(); initialMotion.x = motion.x) {
+					if (motion.x < 0.05f && motion.x >= -0.05f) {
+						motion.x = 0.0f;
+					} else if (motion.x > 0.0f) {
+						motion.x -= 0.05f;
 					} else {
-						x += 0.05f;
+						motion.x += 0.05f;
 					}
 				}
 
-				for (; z != 0.0f && getCollisionBoxes(aabb.aabb.offset(0.0f, -1.0f, z))
-						.isEmpty(); initialZ = z) {
-					if (z < 0.05f && z >= -0.05f) {
-						z = 0.0f;
-					} else if (z > 0.0f) {
-						z -= 0.05f;
+				for (; motion.z != 0.0f && getCollisionBoxes(aabb.aabb.offset(0.0f, -1.0f, motion.z))
+						.isEmpty(); initialMotion.z = motion.z) {
+					if (motion.z < 0.05f && motion.z >= -0.05f) {
+						motion.z = 0.0f;
+					} else if (motion.z > 0.0f) {
+						motion.z -= 0.05f;
 					} else {
-						z += 0.05f;
+						motion.z += 0.05f;
 					}
 				}
 
-				for (; x != 0.0f && z != 0.0f && getCollisionBoxes(aabb.aabb.offset(x, -1.0f, z))
-						.isEmpty(); initialZ = z) {
-					if (x < 0.05f && x >= -0.05f) {
-						x = 0.0f;
-					} else if (x > 0.0f) {
-						x -= 0.05f;
+				for (; motion.x != 0.0f && motion.z != 0.0f
+						&& getCollisionBoxes(aabb.aabb.offset(motion.x, -1.0f, motion.z))
+								.isEmpty(); initialMotion.z = motion.z) {
+					if (motion.x < 0.05f && motion.x >= -0.05f) {
+						motion.x = 0.0f;
+					} else if (motion.x > 0.0f) {
+						motion.x -= 0.05f;
 					} else {
-						x += 0.05f;
+						motion.x += 0.05f;
 					}
 
-					initialX = x;
-					if (z < 0.05D && z >= -0.05f) {
-						z = 0.0f;
-					} else if (z > 0.0f) {
-						z -= 0.05f;
+					initialMotion.x = motion.x;
+					if (motion.z < 0.05D && motion.z >= -0.05f) {
+						motion.z = 0.0f;
+					} else if (motion.z > 0.0f) {
+						motion.z -= 0.05f;
 					} else {
-						z += 0.05f;
+						motion.z += 0.05f;
 					}
 				}
 			}
 
-			List<AxisAlignedBB> collisionBoxes = getCollisionBoxes(aabb.aabb.addCoord(x, y, z));
+			List<AxisAlignedBB> collisionBoxes = getCollisionBoxes(aabb.aabb.addCoord(motion.x, motion.y, motion.z));
 
 			for (int i = 0; i < collisionBoxes.size(); i++) {
-				y = collisionBoxes.get(i).calculateYOffset(aabb.aabb, y);
+				motion.y = collisionBoxes.get(i).calculateYOffset(aabb.aabb, motion.y);
 			}
 			AxisAlignedBB aabbMovedOnlyOnY = aabb.aabb.copy();
-			boolean flag = collisionState.onGround || initialY != y && initialY < 0.0f;
-			aabb.aabb.offsetLocal(0.0f, y, 0.0f);
+			boolean flag = collisionState.onGround || initialMotion.y != motion.y && initialMotion.y < 0.0f;
+			aabb.aabb.offsetLocal(0.0f, motion.y, 0.0f);
 			for (int i = 0; i < collisionBoxes.size(); i++) {
-				x = collisionBoxes.get(i).calculateXOffset(aabb.aabb, x);
+				motion.x = collisionBoxes.get(i).calculateXOffset(aabb.aabb, motion.x);
 			}
 
-			aabb.aabb.offsetLocal(x, 0.0f, 0.0f);
+			aabb.aabb.offsetLocal(motion.x, 0.0f, 0.0f);
 			for (int i = 0; i < collisionBoxes.size(); i++) {
-				z = collisionBoxes.get(i).calculateZOffset(aabb.aabb, z);
+				motion.z = collisionBoxes.get(i).calculateZOffset(aabb.aabb, motion.z);
 			}
 
-			aabb.aabb.offsetLocal(0.0f, 0.0f, z);
+			aabb.aabb.offsetLocal(0.0f, 0.0f, motion.z);
 
-			if (physics.stepHeight > 0.0F && flag && (initialX != x || initialZ != z)) {
-				float d11 = x;
-				float d7 = y;
-				float d8 = z;
+			if (physics.stepHeight > 0.0F && flag && (initialMotion.x != motion.x || initialMotion.z != motion.z)) {
+				float d11 = motion.x;
+				float d7 = motion.y;
+				float d8 = motion.z;
 				AxisAlignedBB bbBeforeStep = aabb.aabb.copy();
 				aabb.aabb.set(aabbMovedOnlyOnY);
-				y = (float) physics.stepHeight;
+				motion.y = (float) physics.stepHeight;
 				List<AxisAlignedBB> list = getCollisionBoxes(
-						aabb.aabb.addCoord(initialX, y, initialZ));
+						aabb.aabb.addCoord(initialMotion.x, motion.y, initialMotion.z));
 				AxisAlignedBB axisalignedbb2 = aabb.aabb.copy();
-				AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(initialX, 0.0f, initialZ);
-				float d9 = y;
+				AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(initialMotion.x, 0.0f, initialMotion.z);
+				float d9 = motion.y;
 				int l = 0;
 
 				for (int i1 = list.size(); l < i1; ++l) {
@@ -304,7 +305,7 @@ public class PhySystem extends TickingIteratingSystem {
 				}
 
 				axisalignedbb2.offsetLocal(0.0f, d9, 0.0f);
-				float d15 = initialX;
+				float d15 = initialMotion.x;
 				int j1 = 0;
 
 				for (int k1 = list.size(); j1 < k1; ++j1) {
@@ -312,7 +313,7 @@ public class PhySystem extends TickingIteratingSystem {
 				}
 
 				axisalignedbb2.offsetLocal(d15, 0.0f, 0.0f);
-				float d16 = initialZ;
+				float d16 = initialMotion.z;
 				int l1 = 0;
 
 				for (int i2 = list.size(); l1 < i2; ++l1) {
@@ -321,7 +322,7 @@ public class PhySystem extends TickingIteratingSystem {
 
 				axisalignedbb2.offsetLocal(0.0f, 0.0f, d16);
 				AxisAlignedBB axisalignedbb4 = aabb.aabb.copy();
-				float d17 = y;
+				float d17 = motion.y;
 				int j2 = 0;
 
 				for (int k2 = list.size(); j2 < k2; ++j2) {
@@ -329,7 +330,7 @@ public class PhySystem extends TickingIteratingSystem {
 				}
 
 				axisalignedbb4.offsetLocal(0.0f, d17, 0.0f);
-				float d18 = initialX;
+				float d18 = initialMotion.x;
 				int l2 = 0;
 
 				for (int i3 = list.size(); l2 < i3; ++l2) {
@@ -337,7 +338,7 @@ public class PhySystem extends TickingIteratingSystem {
 				}
 
 				axisalignedbb4.offsetLocal(d18, 0.0f, 0.0f);
-				float d19 = initialZ;
+				float d19 = initialMotion.z;
 				int j3 = 0;
 
 				for (int k3 = list.size(); j3 < k3; ++j3) {
@@ -348,71 +349,68 @@ public class PhySystem extends TickingIteratingSystem {
 				float d20 = d15 * d15 + d16 * d16;
 				float d10 = d18 * d18 + d19 * d19;
 				if (d20 > d10) {
-					x = d15;
-					z = d16;
-					y = -d9;
+					motion.x = d15;
+					motion.z = d16;
+					motion.y = -d9;
 					aabb.aabb.set(axisalignedbb2);
 				} else {
-					x = d18;
-					z = d19;
-					y = -d17;
+					motion.x = d18;
+					motion.z = d19;
+					motion.y = -d17;
 					aabb.aabb.set(axisalignedbb4);
 				}
 
 				int l3 = 0;
 
 				for (int i4 = list.size(); l3 < i4; ++l3) {
-					y = (list.get(l3)).calculateYOffset(aabb.aabb, y);
+					motion.y = (list.get(l3)).calculateYOffset(aabb.aabb, motion.y);
 				}
 
-				aabb.aabb.offsetLocal(0.0f, y, 0.0f);
+				aabb.aabb.offsetLocal(0.0f, motion.y, 0.0f);
 				// this.setEntityBoundingBox(this.getEntityBoundingBox()
 				// .offset(0.0f, y, 0.0f));
-				if (d11 * d11 + d8 * d8 >= x * x + z * z) {
-					x = d11;
-					y = d7;
-					z = d8;
+				if (d11 * d11 + d8 * d8 >= motion.x * motion.x + motion.z * motion.z) {
+					motion.x = d11;
+					motion.y = d7;
+					motion.z = d8;
 					aabb.aabb.set(bbBeforeStep);
 				}
 			}
 
 			resetPositionToBB();
-			collisionState.isCollidedHorizontally = initialX != x || initialZ != z;
-			collisionState.isCollidedVertically = initialY != y;
+			collisionState.isCollidedHorizontally = initialMotion.x != motion.x || initialMotion.z != motion.z;
+			collisionState.isCollidedVertically = initialMotion.y != motion.y;
 
-			collisionState.onGround = collisionState.isCollidedVertically && initialY < 0.0f;
+			collisionState.onGround = collisionState.isCollidedVertically && initialMotion.y < 0.0f;
 			collisionState.isCollided = collisionState.isCollidedHorizontally || collisionState.isCollidedVertically;
-			// j4 = MathHelper.floor_float(position.position.x);
-			// int l4 = MathHelper.floor_float(position.position.y -
-			// 0.20000000298023224f);
-			// int i5 = MathHelper.floor_float(position.position.z);
-			// BlockPos blockpos = new BlockPos(j4, l4, i5);
-			// BlockExtraData iblockstate = terrain.getBlockData(blockpos);
-			// if (iblockstate.getMaterial() == Material.AIR) {
-			// BlockPos blockpos1 = blockpos.down();
-			// IBlockState iblockstate1 = worldObj.getBlockState(blockpos1);
-			// Block block1 = iblockstate1.getBlock();
-			// if (block1 instanceof BlockFence || block1 instanceof BlockWall
-			// || block1 instanceof BlockFenceGate) {
-			// iblockstate = iblockstate1;
-			// blockpos = blockpos1;
-			// }
-			// }
-
-			// this.updateFallState(terrain, y, this.onGround, iblockstate,
-			// blockpos);
-			if (initialX != x) {
-				physics.motionX = 0.0f;
+			int j4 = MathHelper.floor_float(position.position.x);
+			int l4 = MathHelper.floor_float(position.position.y - 0.20000000298023224f);
+			int i5 = MathHelper.floor_float(position.position.z);
+			BlockPos blockpos = new BlockPos(j4, l4, i5);
+			BlockState iblockstate = terrain.getBlockState(blockpos);
+			if (iblockstate.getAttributes().getMaterial() == Material.AIR) {
+				BlockPos blockpos1 = blockpos.down();
+				BlockState iblockstate1 = terrain.getBlockState(blockpos1);
+				BlockType block1 = iblockstate1.getBlockType();
+				// if (block1 instanceof BlockFence || block1 instanceof
+				// BlockWall || block1 instanceof BlockFenceGate) {
+				// iblockstate = iblockstate1;
+				// blockpos = blockpos1;
+				// }
 			}
 
-			if (initialZ != z) {
-				physics.motionZ = 0.0f;
+			this.updateFallState(motion.y, collisionState.onGround, iblockstate, blockpos);
+			if (initialMotion.x != motion.x) {
+				physics.motion.x = 0.0f;
 			}
 
-			// Block block = iblockstate.getBlock();
-			if (initialY != y) {
-				// block.onLanded(worldObj, this);
-				physics.motionY = 0.0f;
+			if (initialMotion.z != motion.z) {
+				physics.motion.z = 0.0f;
+			}
+
+			if (initialMotion.y != motion.y) {
+				iblockstate.getBehaviour().onLanded(world, entityId);
+				physics.motion.y = 0.0f;
 			}
 			//
 			// if (this.canTriggerWalking() && !flag && !this.isRiding()) {
@@ -439,9 +437,10 @@ public class PhySystem extends TickingIteratingSystem {
 			// this.nextStepDistance = (int) this.distanceWalkedOnStepModified +
 			// 1;
 			// if (this.isInWater()) {
-			// float f = MathHelper.sqrt_float(this.motionX * this.motionX *
-			// 0.20000000298023224D + this.motionY * this.motionY + this.motionZ
-			// * this.motionZ * 0.20000000298023224D) * 0.35F;
+			// float f = MathHelper.sqrt_float(this.motion.x * this.motion.x *
+			// 0.20000000298023224D + this.motion.y * this.motion.y +
+			// this.motion.z
+			// * this.motion.z * 0.20000000298023224D) * 0.35F;
 			// if (f > 1.0F) {
 			// f = 1.0F;
 			// }
@@ -474,12 +473,10 @@ public class PhySystem extends TickingIteratingSystem {
 		}
 	}
 
-	protected void updateFallState(Physics physics, Terrain terrain, double y, boolean onGroundIn, BlockState state,
-			BlockPos pos) {
+	protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
 		if (onGroundIn) {
 			if (physics.fallDistance > 0.0F) {
-				// state.getBlock().onFallenUpon(terrain, pos, this,
-				// this.fallDistance);
+				state.getBlockType().onFallenUpon(world, pos, entityId, physics.fallDistance);
 			}
 
 			physics.fallDistance = 0.0F;
@@ -488,49 +485,15 @@ public class PhySystem extends TickingIteratingSystem {
 		}
 	}
 
-	public void moveEntityWithHeading(Terrain terrain, float strafe, float forward) {
-		// VIEUX
-		// double d0 = position.position.y;
-		// float f1 = this.func_189749_co();
-		// float f2 = 0.02F;
-		// float f3 = 3.0f;
-		//
-		// if (!this.onGround) {
-		// f3 *= 0.5F;
-		// }
-		//
-		// if (f3 > 0.0F) {
-		// f1 += (0.54600006F - f1) * f3 / 3.0F;
-		// f2 += (this.getAIMoveSpeed() - f2) * f3 / 3.0F;
-		// }
-		//
-		// this.moveRelative(strafe, forward, f2);
-		// this.moveEntity(this.motionX, this.motionY, this.motionZ, terrain);
-		// this.motionX *= f1;
-		// this.motionY *= 0.800000011920929f;
-		// this.motionZ *= f1;
-		// // Gravity
-		// this.motionY -= 0.08f;
-		//
-		// // if (this.isCollidedHorizontally &&
-		// this.isOffsetPositionInLiquid(this.motionX, this.motionY +
-		// 0.6000000238418579D - position.position.y + d0, this.motionZ)) {
-		// // this.motionY = 0.30000001192092896f;
-		// // }
+	public void moveEntityWithHeading(float strafe, float forward) {
 
 		// NOUVEAU
 
 		float f6 = 0.91F;
-		// BlockPos.PooledMutableBlockPos blockpos$pooledmutableblockpos =
-		// BlockPos.PooledMutableBlockPos.retain(position.position.x,
-		// this.getEntityBoundingBox().minY - 1.0D, position.position.z);
-		// if(this.onGround) {
-		// f6 =
-		// this.worldObj.getBlockState(blockpos$pooledmutableblockpos).getBlock().slipperiness
-		// * 0.91F;
-		// }
-
-		f6 = 0.6f * 0.91f;
+		tempVars.blockPos0.set(position.position.x, aabb.aabb.minY - 1.0D, position.position.z);
+		if (collisionState.onGround) {
+			f6 = terrain.getBlockState(tempVars.blockPos0).getAttributes().getSlipperiness() * 0.91F;
+		}
 
 		float f7 = 0.16277136F / (f6 * f6 * f6);
 		float f8;
@@ -543,46 +506,37 @@ public class PhySystem extends TickingIteratingSystem {
 		moveRelative(strafe, forward, f8);
 
 		f6 = 0.91F;
-		// if(this.onGround) {
-		// f6 =
-		// this.worldObj.getBlockState(blockpos$pooledmutableblockpos.func_189532_c(position.position.x,
-		// this.getEntityBoundingBox().minY - 1.0D,
-		// position.position.z)).getBlock().slipperiness * 0.91F;
-		// }
-
-		f6 = 0.91f;
-
-		if (collisionState.onGround) {
-			f6 *= 0.6f;
+		if (this.collisionState.onGround) {
+			f6 = terrain.getBlockState(tempVars.blockPos0).getAttributes().getSlipperiness() * 0.91F;
 		}
 
 		// if(this.isOnLadder()) {
 		// float f9 = 0.15F;
-		// this.motionX = MathHelper.clamp_double(this.motionX,
+		// this.motion.x = MathHelper.clamp_double(this.motion.x,
 		// -0.15000000596046448D, 0.15000000596046448D);
-		// this.motionZ = MathHelper.clamp_double(this.motionZ,
+		// this.motion.z = MathHelper.clamp_double(this.motion.z,
 		// -0.15000000596046448D, 0.15000000596046448D);
 		// this.fallDistance = 0.0F;
-		// if(this.motionY < -0.15D) {
-		// this.motionY = -0.15D;
+		// if(this.motion.y < -0.15D) {
+		// this.motion.y = -0.15D;
 		// }
 		//
 		// boolean flag = this.isSneaking() && this instanceof EntityPlayer;
-		// if(flag && this.motionY < 0.0D) {
-		// this.motionY = 0.0D;
+		// if(flag && this.motion.y < 0.0D) {
+		// this.motion.y = 0.0D;
 		// }
 		// }
 
-		moveEntity(physics.motionX, physics.motionY, physics.motionZ, terrain);
+		moveEntity(physics.motion);
 		// if(this.isCollidedHorizontally && this.isOnLadder()) {
-		// this.motionY = 0.2D;
+		// this.motion.y = 0.2D;
 		// }
 
-		physics.motionY -= 0.08D;
+		physics.motion.y -= 0.08D;
 
-		physics.motionY *= 0.9800000190734863D;
-		physics.motionX *= (double) f6;
-		physics.motionZ *= (double) f6;
+		physics.motion.y *= 0.9800000190734863D;
+		physics.motion.x *= (double) f6;
+		physics.motion.z *= (double) f6;
 		// blockpos$pooledmutableblockpos.release();
 	}
 
@@ -599,8 +553,8 @@ public class PhySystem extends TickingIteratingSystem {
 			forward = forward * f;
 			float f1 = MathHelper.sin(physics.rotationYaw * MathHelper.DEG_TO_RAD);
 			float f2 = MathHelper.cos(physics.rotationYaw * MathHelper.DEG_TO_RAD);
-			physics.motionX += (strafe * f2 - forward * f1);
-			physics.motionZ += (forward * f2 + strafe * f1);
+			physics.motion.x += (strafe * f2 - forward * f1);
+			physics.motion.z += (forward * f2 + strafe * f1);
 		}
 	}
 
@@ -616,5 +570,9 @@ public class PhySystem extends TickingIteratingSystem {
 	@Override
 	protected boolean checkProcessing() {
 		return client.isInGame;
+	}
+
+	public static interface MotionModifier {
+		boolean apply(int entityId, Vector3f initialMotion, Vector3f modified);
 	}
 }

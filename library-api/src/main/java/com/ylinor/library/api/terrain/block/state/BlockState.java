@@ -4,18 +4,40 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ylinor.library.api.terrain.block.BlockAttributes;
+import com.ylinor.library.api.terrain.block.BlockBehaviour;
 import com.ylinor.library.api.terrain.block.state.props.StateProperty;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.Pair;
 
 public class BlockState {
 	private final Map<StateProperty<?>, Object> properties;
 	private final BlockStateFactory blockStateFactory;
 	private final Map<Pair<StateProperty<?>, Object>, BlockState> links;
+	private BlockType type;
+	private BlockAttributes attributes;
+	private BlockBehaviour behaviour;
 	
 	public BlockState(Map<StateProperty<?>, Object> properties, BlockStateFactory blockStateFactory) {
 		this.properties = Collections.unmodifiableMap(properties);
 		this.blockStateFactory = blockStateFactory;
 		this.links = new HashMap<>();
+		this.type = blockStateFactory.getBlockType();
+		attributes = new BlockAttributes(type.getBlockMaterial(), type.getBlockMapColor());
+		attributes.set(type.getDefaultAttributes());
+		behaviour = new BlockBehaviour(this);
+	}
+	
+	public BlockBehaviour getBehaviour() {
+		return behaviour;
+	}
+	
+	public BlockAttributes getAttributes() {
+		return attributes;
+	}
+	
+	public BlockType getBlockType() {
+		return type;
 	}
 	
 	protected void fillLinks() {

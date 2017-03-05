@@ -25,18 +25,18 @@ public interface IBlockContainer {
 
     BlockType getBlockType(int x, int y, int z);
 
-    default BlockState getBlockData(BlockPos pos) {
-        return getBlockData(pos.x(), pos.y(), pos.z());
+    default BlockState getBlockState(BlockPos pos) {
+        return getBlockState(pos.x(), pos.y(), pos.z());
     }
 
-    BlockState getBlockData(int x, int y, int z);
+    BlockState getBlockState(int x, int y, int z);
 
     default boolean hasData(int x, int y, int z) {
-        return getBlockData(x, y, z) != null;
+        return getBlockState(x, y, z) != null;
     }
 
     default boolean hasData(BlockPos pos) {
-        return getBlockData(pos) != null;
+        return getBlockState(pos) != null;
     }
 
     void setBlock(Block block);
@@ -47,9 +47,9 @@ public interface IBlockContainer {
 
     void setBlockType(int x, int y, int z, BlockType type);
 
-    default void setBlockData(BlockPos pos, BlockState data) {
-        setBlockData(pos.x(), pos.y(), pos.z(), data);
+    default void setBlockState(BlockPos pos, BlockState data) {
+        setBlockState(pos.x(), pos.y(), pos.z(), data);
     }
 
-    void setBlockData(int x, int y, int z, BlockState data);
+    void setBlockState(int x, int y, int z, BlockState data);
 }

@@ -1,8 +1,6 @@
-package com.ylinor.client.physics;
+package com.ylinor.library.util.math;
 
 import org.joml.Vector3f;
-
-import com.ylinor.library.util.math.BlockPos;
 
 
 public class AxisAlignedBB {
@@ -147,6 +145,16 @@ public class AxisAlignedBB {
         this.maxX += x;
         this.maxY += y;
         this.maxZ += z;
+        return this;
+    }
+    
+    public AxisAlignedBB offsetLocal(Vector3f offset) {
+        this.minX += offset.x;
+        this.minY += offset.y;
+        this.minZ += offset.z;
+        this.maxX += offset.x;
+        this.maxY += offset.y;
+        this.maxZ += offset.z;
         return this;
     }
 

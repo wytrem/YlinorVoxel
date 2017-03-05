@@ -11,7 +11,7 @@ import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
-import com.ylinor.client.physics.PhySystem;
+import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.*;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.terrain.ClientTerrain;

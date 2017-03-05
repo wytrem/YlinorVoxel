@@ -50,7 +50,7 @@ public class Cube implements Renderable {
             if (cullfaces.containsKey(face)) {
                 tempVars.blockPos0.set(x, y, z).offset(cullfaces.get(face));
                 
-                if (neighbours.getBlockType(tempVars.blockPos0).isOpaque()) {
+                if (neighbours.getBlockState(tempVars.blockPos0).getAttributes().isOpaqueCube()) {
                     continue;
                 }
             }

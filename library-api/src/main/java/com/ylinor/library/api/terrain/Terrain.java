@@ -86,13 +86,13 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     }
 
     @Override
-    public BlockState getBlockData(BlockPos pos) {
-        return getChunkOf(pos).getBlockData(pos.x & 15, pos.y, pos.z & 15);
+    public BlockState getBlockState(BlockPos pos) {
+        return getChunkOf(pos).getBlockState(pos.x & 15, pos.y, pos.z & 15);
     }
 
     @Override
-    public BlockState getBlockData(int x, int y, int z) {
-        return getChunkOf(x, y, z).getBlockData(x & 15, y, z & 15);
+    public BlockState getBlockState(int x, int y, int z) {
+        return getChunkOf(x, y, z).getBlockState(x & 15, y, z & 15);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Terrain implements IChunkProvider, IBlockContainer {
         Chunk chunk = getChunkOf(block.getPos());
 
         chunk.setBlockType(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getType());
-        chunk.setBlockData(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getData());
+        chunk.setBlockState(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getData());
     }
 
     @Override
@@ -114,13 +114,13 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     }
 
     @Override
-    public void setBlockData(BlockPos pos, BlockState data) {
-        getChunkOf(pos).setBlockData(pos.x & 15, pos.y, pos.z & 15, data);
+    public void setBlockState(BlockPos pos, BlockState data) {
+        getChunkOf(pos).setBlockState(pos.x & 15, pos.y, pos.z & 15, data);
     }
 
     @Override
-    public void setBlockData(int x, int y, int z, BlockState data) {
-        getChunkOf(x, y, z).setBlockData(x & 15, y, z & 15, data);
+    public void setBlockState(int x, int y, int z, BlockState data) {
+        getChunkOf(x, y, z).setBlockState(x & 15, y, z & 15, data);
     }
 
     public BlockType getBlockType(short id) {

@@ -12,9 +12,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.ylinor.client.YlinorClient;
-import com.ylinor.client.physics.Heading;
-import com.ylinor.client.physics.Physics;
-import com.ylinor.client.physics.Position;
+import com.ylinor.client.physics.components.Heading;
+import com.ylinor.client.physics.components.Physics;
+import com.ylinor.client.physics.components.Position;
 import com.ylinor.library.api.ecs.systems.Timer;
 
 

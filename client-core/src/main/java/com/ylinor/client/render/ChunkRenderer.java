@@ -58,7 +58,7 @@ public class ChunkRenderer implements Disposable {
                     tile = neighbours.getBlockType(x, y, z);
 
                     if (tile != BlockType.air) {
-                        model = renderer.assets.blockAssets.modelsRegistry.get(chunk.getWorld(), tile, chunk.getBlockData(x, y, z));
+                        model = renderer.assets.blockAssets.modelsRegistry.get(chunk.getWorld(), tile, chunk.getBlockState(x, y, z));
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
                         if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - model.neededIndices()) {
                             vertexBuffer.finishDrawing();

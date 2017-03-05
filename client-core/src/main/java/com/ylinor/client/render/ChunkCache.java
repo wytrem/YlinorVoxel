@@ -83,24 +83,24 @@ public class ChunkCache implements IBlockContainer {
     }
 
     @Override
-    public BlockState getBlockData(int x, int y, int z) {
+    public BlockState getBlockState(int x, int y, int z) {
         if (x < 0) {
-            return xNeg.getBlockData(x + Chunk.SIZE_X, y, z);
+            return xNeg.getBlockState(x + Chunk.SIZE_X, y, z);
         }
 
         if (z < 0) {
-            return zNeg.getBlockData(x, y, z + Chunk.SIZE_Z);
+            return zNeg.getBlockState(x, y, z + Chunk.SIZE_Z);
         }
 
         if (x >= Chunk.SIZE_X) {
-            return xPos.getBlockData(x - Chunk.SIZE_X, y, z);
+            return xPos.getBlockState(x - Chunk.SIZE_X, y, z);
         }
 
         if (z >= Chunk.SIZE_Z) {
-            return zPos.getBlockData(x, y, z - Chunk.SIZE_Z);
+            return zPos.getBlockState(x, y, z - Chunk.SIZE_Z);
         }
 
-        return center.getBlockData(x, y, z);
+        return center.getBlockState(x, y, z);
     }
 
     @Override
@@ -112,6 +112,6 @@ public class ChunkCache implements IBlockContainer {
     }
 
     @Override
-    public void setBlockData(int x, int y, int z, BlockState data) {
+    public void setBlockState(int x, int y, int z, BlockState data) {
     }
 }

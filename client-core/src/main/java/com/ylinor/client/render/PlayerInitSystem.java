@@ -5,15 +5,15 @@ import com.artemis.ArchetypeBuilder;
 import com.artemis.BaseSystem;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
-import com.ylinor.client.physics.AABB;
-import com.ylinor.client.physics.CollisionState;
-import com.ylinor.client.physics.Heading;
-import com.ylinor.client.physics.InputControlledEntity;
-import com.ylinor.client.physics.PhySystem;
-import com.ylinor.client.physics.Physics;
-import com.ylinor.client.physics.Position;
-import com.ylinor.client.physics.Size;
-import com.ylinor.client.physics.Velocity;
+import com.ylinor.client.physics.components.AABB;
+import com.ylinor.client.physics.components.CollisionState;
+import com.ylinor.client.physics.components.Heading;
+import com.ylinor.client.physics.components.InputControlledEntity;
+import com.ylinor.client.physics.components.Physics;
+import com.ylinor.client.physics.components.Position;
+import com.ylinor.client.physics.components.Size;
+import com.ylinor.client.physics.components.Velocity;
+import com.ylinor.client.physics.systems.PhySystem;
 
 /**
  * Initializes the player entity in the world. Used only for debugging.

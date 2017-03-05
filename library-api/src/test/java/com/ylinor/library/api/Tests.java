@@ -14,7 +14,7 @@ public class Tests {
 		StateProperty<Facing> a = PropertyEnum.create("toto", Facing.class);
 		StateProperty<Facing> b = PropertyEnum.create("tata", Facing.class);
 		StateProperty<Boolean> c = BooleanProperty.create("coucou");
-		BlockStateFactory factory = new BlockStateFactory(new StateProperty[] {a, b, c}, null);
+		BlockStateFactory factory = new BlockStateFactory(null, a, b, c);
 	
 		BlockState state = factory.getOneState();
 		System.out.println(state.toString());

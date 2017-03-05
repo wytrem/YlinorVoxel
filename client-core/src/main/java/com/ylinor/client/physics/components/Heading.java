@@ -1,4 +1,4 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.components;
 
 import org.joml.Vector3f;
 

@@ -12,10 +12,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.input.keyboard.KeyUpEvent;
 import com.ylinor.client.events.input.mouse.MouseMovedEvent;
-import com.ylinor.client.physics.Heading;
-import com.ylinor.client.physics.InputControlledEntity;
-import com.ylinor.client.physics.Motion;
-import com.ylinor.client.physics.Physics;
+import com.ylinor.client.physics.components.Heading;
+import com.ylinor.client.physics.components.InputControlledEntity;
+import com.ylinor.client.physics.components.Motion;
+import com.ylinor.client.physics.components.Physics;
 
 import net.mostlyoriginal.api.event.common.Subscribe;
 

@@ -15,7 +15,7 @@ public class BlockStateFactory {
 	private BlockType blockType;
 	private Map<Map<StateProperty<?>, Object>, BlockState> statesFromProperties;
 
-	public BlockStateFactory(StateProperty<?>[] possibleProperties, BlockType blockType) {
+	public BlockStateFactory(BlockType blockType, StateProperty<?>... possibleProperties) {
 		super();
 		this.possibleProperties = possibleProperties;
 		this.blockType = blockType;
@@ -89,5 +89,9 @@ public class BlockStateFactory {
 			System.out.println(entry.getKey().name() + " = " + entry.getValue());
 		}
 		System.out.println("]");
+	}
+
+	public BlockType getBlockType() {
+		return blockType;
 	}
 }

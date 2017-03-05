@@ -1,56 +1,79 @@
 package com.ylinor.library.api.terrain.block.type;
 
+import com.artemis.World;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.api.terrain.block.BlockAttributes;
+import com.ylinor.library.api.terrain.block.material.MapColor;
+import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.util.math.BlockPos;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
 
-
 public class BlockType {
-    public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
-    public static final BlockType air = new BlockType(0);
-    public static final BlockType stone = new BlockType(1);
-    public static final BlockType dirt = new BlockType(2);
-    public static final BlockType wood = new BlockType(3).setTextureId(4);
-    public static final BlockType stoneBricks = new BlockType(4).setTextureId(5);
-    public static final BlockType bricks = new BlockType(5).setTextureId(7);
-    public static final BlockType sand = new BlockType(6).setTextureId(18);
-    public static final BlockType gravel = new BlockType(7).setTextureId(19);
-    public static final BlockType sponge = new BlockType(8).setTextureId(48);
-    public static final BlockType ice = new BlockType(9).setTextureId(67);
+	public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
+	public static final BlockType air = new BlockTypeAir(0);
+	public static final BlockType stone = new BlockType(1);
+	public static final BlockType dirt = new BlockType(2);
+	public static final BlockType wood = new BlockType(3);
+	public static final BlockType stoneBricks = new BlockType(4);
+	public static final BlockType bricks = new BlockType(5);
+	public static final BlockType sand = new BlockType(6);
+	public static final BlockType gravel = new BlockType(7);
+	public static final BlockType sponge = new BlockType(8);
+	public static final BlockType ice = new BlockType(9);
 
-    private final short id;
-    private int textureId;
+	private final short id;
+	protected final BlockStateFactory blockStateFactory;
+	private BlockState defaultBlockState;
+	private BlockAttributes defaultAttributes;
 
-    public BlockType(int id) {
-        this.id = (short) id;
-        textureId = id;
-        REGISTRY.put(this.id, this);
-    }
+	protected final Material blockMaterial;
+	protected final MapColor blockMapColor;
 
-    public BlockType setTextureId(int texture) {
-        this.textureId = texture;
-        return this;
-    }
+	protected BlockType(int id, Material blockMaterialIn, MapColor blockMapColorIn) {
+		this.id = (short) id;
+		this.blockStateFactory = createStateFactory();
+		REGISTRY.put(this.id, this);
+		setDefaultBlockState(blockStateFactory.getOneState());
+		defaultAttributes = new BlockAttributes(blockMaterialIn, blockMapColorIn);
+	}
 
-    public int getTextureId() {
-        return textureId;
-    }
+	protected BlockType(int id, Material materialIn) {
+		this(id, materialIn, materialIn.getMaterialMapColor());
+	}
 
-    public boolean isOpaque() {
-        return id != 0;
-    }
+	public MapColor getBlockMapColor() {
+		return blockMapColor;
+	}
 
-    public BlockState createData(BlockPos pos, Terrain world) {
-        return null;
-    }
+	public Material getBlockMaterial() {
+		return blockMaterial;
+	}
 
-    public short getId() {
-        return id;
-    }
+	protected BlockStateFactory createStateFactory() {
+		return new BlockStateFactory(this);
+	}
 
-    public boolean isCollidable() {
-        return this != air;
-    }
+	public void setDefaultBlockState(BlockState defaultBlockState) {
+		this.defaultBlockState = defaultBlockState;
+	}
+
+	public BlockState getDefaultState() {
+		return defaultBlockState;
+	}
+
+	public short getId() {
+		return id;
+	}
+
+	public void onFallenUpon(World worldIn, BlockPos pos, int entityIn, float fallDistance) {
+		// entityIn.fall(fallDistance, 1.0F);
+		System.out.println("entity " + entityIn + " fell on " + this.getId());
+	}
+
+	public BlockAttributes getDefaultAttributes() {
+		return null;
+	}
 }

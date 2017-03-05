@@ -1,14 +1,15 @@
-package com.ylinor.client.physics;
+package com.ylinor.client.physics.components;
+
+import org.joml.Vector3f;
 
 import com.artemis.Component;
+import com.ylinor.library.util.math.AxisAlignedBB;
 
 
 public class Physics extends Component {
     public float moveStrafing;
     public float moveForward;
-    public float motionX;
-    public float motionY;
-    public float motionZ;
+    public Vector3f motion = new Vector3f();
     public float rotationYaw;
     public float rotationPitch;
     public float prevRotationYaw;
@@ -32,8 +33,8 @@ public class Physics extends Component {
         return 0.42F;
     }
 
-    protected void jump() {
-        this.motionY = this.getJumpUpwardsMotion();
+    public void jump() {
+        this.motion.y = this.getJumpUpwardsMotion();
     }
 
     public float getAIMoveSpeed() {
