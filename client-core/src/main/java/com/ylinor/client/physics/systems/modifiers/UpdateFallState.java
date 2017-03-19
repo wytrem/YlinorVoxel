@@ -10,11 +10,12 @@ import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.util.Pair;
 import com.ylinor.library.util.math.BlockPos;
 
+
 public class UpdateFallState extends MotionModifier {
-    
+
     @Wire
     private ComponentMapper<CollisionState> collisionStateMapper;
-    
+
     @Wire
     private ComponentMapper<Physics> physicsMapper;
 
@@ -35,7 +36,7 @@ public class UpdateFallState extends MotionModifier {
     @SuppressWarnings("unchecked")
     @Override
     public Object apply(int entityId, Vector3f motion, Vector3f initialMotion, Object previousOuput) {
-        
+
         Physics physics = physicsMapper.get(entityId);
         CollisionState collisionState = collisionStateMapper.get(entityId);
 

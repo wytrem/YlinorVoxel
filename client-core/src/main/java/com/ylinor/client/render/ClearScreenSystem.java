@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
+
 public class ClearScreenSystem extends BaseSystem {
 
     @Override

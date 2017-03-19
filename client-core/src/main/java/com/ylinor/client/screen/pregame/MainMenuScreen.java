@@ -16,63 +16,65 @@ import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 
+
 public class MainMenuScreen extends YlinorScreen {
 
-	@Wire
-	private ScreenSystem screenSystem;
+    @Wire
+    private ScreenSystem screenSystem;
 
-	@Wire
-	private YlinorClient client;
-	
-	@Wire
-	private Assets assets;
+    @Wire
+    private YlinorClient client;
 
-	public MainMenuScreen() {
-	}
+    @Wire
+    private Assets assets;
 
-	Image logo;
+    public MainMenuScreen() {
+    }
 
-	@Override
-	public void show() {
-		super.show();
+    Image logo;
 
-		VisTable table = new VisTable();
+    @Override
+    public void show() {
+        super.show();
 
-		TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
-		table.setBackground(new TextureRegionDrawable(backgroundRegion));
+        VisTable table = new VisTable();
 
-		table.setFillParent(true);
+        TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
+        table.setBackground(new TextureRegionDrawable(backgroundRegion));
 
-		{
-			logo = new Image(assets.screen.mainMenuLogo());
-			logo.setWidth(350);
-			logo.setHeight(150);
-			table.addActor(logo);
-		}
+        table.setFillParent(true);
 
-		{
-			final VisTextButtonStyle ylButtonStyle = new VisTextButtonStyle();
-			ylButtonStyle.font = assets.screen.liberation().generateFont(new FreeTypeFontParameter());
-			ylButtonStyle.up = new NinePatchDrawable(assets.screen.bigTextButtonNormal());
+        {
+            logo = new Image(assets.screen.mainMenuLogo());
+            logo.setWidth(350);
+            logo.setHeight(150);
+            table.addActor(logo);
+        }
 
-			VisTextButton play = new VisTextButton("Jouer", ylButtonStyle);
-			play.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					super.clicked(event, x, y);
-					screenSystem.setScreen(null);
-					client.isInGame = true;
-				}
-			});
+        {
+            final VisTextButtonStyle ylButtonStyle = new VisTextButtonStyle();
+            ylButtonStyle.font = assets.screen.liberation()
+                                              .generateFont(new FreeTypeFontParameter());
+            ylButtonStyle.up = new NinePatchDrawable(assets.screen.bigTextButtonNormal());
 
-			table.add(play);
-		}
+            VisTextButton play = new VisTextButton("Jouer", ylButtonStyle);
+            play.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    screenSystem.setScreen(null);
+                    client.isInGame = true;
+                }
+            });
 
-		addActor(table);
-	}
+            table.add(play);
+        }
 
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-	}
+        addActor(table);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+    }
 }

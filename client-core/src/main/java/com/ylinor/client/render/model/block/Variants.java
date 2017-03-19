@@ -19,7 +19,7 @@ public class Variants {
         if (variants.size() == 1) {
             return variants.values().iterator().next();
         }
-        
+
         return variants.get(data.propertiesToString());
     }
 }

@@ -12,56 +12,57 @@ import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.util.math.AxisAlignedBB;
 import com.ylinor.library.util.math.BlockPos;
 
+
 public class BlockAttributes {
-	public static final AxisAlignedBB FULL_BLOCK_AABB = new AxisAlignedBB(0.f, 0.f, 0.f, 1.f, 1.f, 1.f);
-	@Nullable
-	public static final AxisAlignedBB NULL_AABB = null;
+    public static final AxisAlignedBB FULL_BLOCK_AABB = new AxisAlignedBB(0.f, 0.f, 0.f, 1.f, 1.f, 1.f);
+    @Nullable
+    public static final AxisAlignedBB NULL_AABB = null;
 
-	private boolean fullBlock;
-	private int lightOpacity;
-	private boolean translucent;
-	private int lightValue;
-	private boolean useNeighborBrightness;
-	private float blockHardness;
-	private float blockResistance;
-	private boolean enableStats;
-	private boolean needsRandomTick;
-	private boolean isBlockContainer;
-	private float blockParticleGravity;
-	private Material material;
-	private MapColor blockMapColor;
-	private float slipperiness;
-	private RenderType renderType;
-	private boolean isFullCube;
-	private boolean isOpaqueCube;
-	private boolean isCollidable;
-	private AxisAlignedBB blockAabb;
-	private AxisAlignedBB collisionBoundingBox;
-	private boolean canCollideCheck;
-	private BlockRenderLayer renderLayer;
-	private int colorMultiplier;
+    private boolean fullBlock;
+    private int lightOpacity;
+    private boolean translucent;
+    private int lightValue;
+    private boolean useNeighborBrightness;
+    private float blockHardness;
+    private float blockResistance;
+    private boolean enableStats;
+    private boolean needsRandomTick;
+    private boolean isBlockContainer;
+    private float blockParticleGravity;
+    private Material material;
+    private MapColor blockMapColor;
+    private float slipperiness;
+    private RenderType renderType;
+    private boolean isFullCube;
+    private boolean isOpaqueCube;
+    private boolean isCollidable;
+    private AxisAlignedBB blockAabb;
+    private AxisAlignedBB collisionBoundingBox;
+    private boolean canCollideCheck;
+    private BlockRenderLayer renderLayer;
+    private int colorMultiplier;
 
-	public BlockAttributes(Material materialIn, MapColor mapColorIn) {
-		this.isOpaqueCube = true;
-		this.fullBlock = isOpaqueCube;
-		this.enableStats = true;
-		this.blockParticleGravity = 1.0F;
-		this.slipperiness = 0.6F;
-		this.material = materialIn;
-		this.blockMapColor = mapColorIn;
-		this.lightOpacity = this.fullBlock ? 255 : 0;
-		this.translucent = !materialIn.blocksLight();
-		this.isFullCube = true;
-		this.isCollidable = true;
-		this.blockAabb = FULL_BLOCK_AABB;
-		this.collisionBoundingBox = this.blockAabb;
-		this.renderType = RenderType.BLOCKMODEL;
-		this.lightValue = 0;
-		this.renderLayer = BlockRenderLayer.SOLID;
-		this.colorMultiplier = 0xffffff;
-	}
-	
-	public int getColorMultiplier() {
+    public BlockAttributes(Material materialIn, MapColor mapColorIn) {
+        this.isOpaqueCube = true;
+        this.fullBlock = isOpaqueCube;
+        this.enableStats = true;
+        this.blockParticleGravity = 1.0F;
+        this.slipperiness = 0.6F;
+        this.material = materialIn;
+        this.blockMapColor = mapColorIn;
+        this.lightOpacity = this.fullBlock ? 255 : 0;
+        this.translucent = !materialIn.blocksLight();
+        this.isFullCube = true;
+        this.isCollidable = true;
+        this.blockAabb = FULL_BLOCK_AABB;
+        this.collisionBoundingBox = this.blockAabb;
+        this.renderType = RenderType.BLOCKMODEL;
+        this.lightValue = 0;
+        this.renderLayer = BlockRenderLayer.SOLID;
+        this.colorMultiplier = 0xffffff;
+    }
+
+    public int getColorMultiplier() {
         return colorMultiplier;
     }
 
@@ -70,194 +71,192 @@ public class BlockAttributes {
     }
 
     public BlockAttributes(BlockAttributes defaultAttributes) {
-	    set(defaultAttributes);
-	}
+        set(defaultAttributes);
+    }
 
     public float getSlipperiness() {
-		return slipperiness;
-	}
+        return slipperiness;
+    }
 
-	public Material getMaterial() {
-		return material;
-	}
+    public Material getMaterial() {
+        return material;
+    }
 
-	public void addCollisionBoxToList(IBlockContainer worldIn, BlockPos pos, AxisAlignedBB entityBox,
-			List<AxisAlignedBB> collidingBoxes, int entityIn, boolean p_185477_7_) {
-		addCollisionBoxToList(pos, entityBox, collidingBoxes, getCollisionBoundingBox(worldIn, pos));
-	}
+    public void addCollisionBoxToList(IBlockContainer worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, int entityIn, boolean p_185477_7_) {
+        addCollisionBoxToList(pos, entityBox, collidingBoxes, getCollisionBoundingBox(worldIn, pos));
+    }
 
-	protected static void addCollisionBoxToList(BlockPos pos, AxisAlignedBB entityBox,
-			List<AxisAlignedBB> collidingBoxes, @Nullable AxisAlignedBB blockBox) {
-		if (blockBox != NULL_AABB) {
-			AxisAlignedBB axisalignedbb = blockBox.offset(pos);
-			if (entityBox.intersectsWith(axisalignedbb)) {
-				collidingBoxes.add(axisalignedbb);
-			}
-		}
-	}
+    protected static void addCollisionBoxToList(BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable AxisAlignedBB blockBox) {
+        if (blockBox != NULL_AABB) {
+            AxisAlignedBB axisalignedbb = blockBox.offset(pos);
+            if (entityBox.intersectsWith(axisalignedbb)) {
+                collidingBoxes.add(axisalignedbb);
+            }
+        }
+    }
 
-	public AxisAlignedBB getBoundingBox(IBlockContainer blockContainer, BlockPos pos) {
-		return blockAabb;
-	}
+    public AxisAlignedBB getBoundingBox(IBlockContainer blockContainer, BlockPos pos) {
+        return blockAabb;
+    }
 
-	public boolean isFullBlock() {
-		return this.fullBlock;
-	}
+    public boolean isFullBlock() {
+        return this.fullBlock;
+    }
 
-	public int getLightOpacity() {
-		return lightOpacity;
-	}
+    public int getLightOpacity() {
+        return lightOpacity;
+    }
 
-	public int getLightValue() {
-		return lightValue;
-	}
+    public int getLightValue() {
+        return lightValue;
+    }
 
-	public boolean isTranslucent() {
-		return translucent;
-	}
+    public boolean isTranslucent() {
+        return translucent;
+    }
 
-	public boolean useNeighborBrightness() {
-		return useNeighborBrightness;
-	}
+    public boolean useNeighborBrightness() {
+        return useNeighborBrightness;
+    }
 
-	public MapColor getMapColor() {
-		return blockMapColor;
-	}
+    public MapColor getMapColor() {
+        return blockMapColor;
+    }
 
-	public boolean isFullCube() {
-		return this.isFullCube;
-	}
+    public boolean isFullCube() {
+        return this.isFullCube;
+    }
 
-	public RenderType getRenderType() {
-		return renderType;
-	}
+    public RenderType getRenderType() {
+        return renderType;
+    }
 
-	boolean isBlockNormalCube() {
-		return getMaterial().blocksMovement() && isFullCube();
-	}
+    boolean isBlockNormalCube() {
+        return getMaterial().blocksMovement() && isFullCube();
+    }
 
-	boolean isNormalCube() {
-		return getMaterial().isOpaque() && isFullCube();
-	}
+    boolean isNormalCube() {
+        return getMaterial().isOpaque() && isFullCube();
+    }
 
-	float getBlockHardness(World worldIn, BlockPos pos) {
-		return blockHardness;
-	}
+    float getBlockHardness(World worldIn, BlockPos pos) {
+        return blockHardness;
+    }
 
-	EnumPushReaction getMobilityFlag() {
-		return getMaterial().getMobilityFlag();
-	}
+    EnumPushReaction getMobilityFlag() {
+        return getMaterial().getMobilityFlag();
+    }
 
-	AxisAlignedBB getSelectedBoundingBox(IBlockContainer blockAccess, BlockPos pos) {
-		return getBoundingBox(blockAccess, pos).offset(pos);
-	}
+    AxisAlignedBB getSelectedBoundingBox(IBlockContainer blockAccess, BlockPos pos) {
+        return getBoundingBox(blockAccess, pos).offset(pos);
+    }
 
-	public boolean isOpaqueCube() {
-		return this.isOpaqueCube;
-	}
+    public boolean isOpaqueCube() {
+        return this.isOpaqueCube;
+    }
 
-	@Nullable
-	AxisAlignedBB getCollisionBoundingBox(IBlockContainer blockAccess, BlockPos pos) {
-		return collisionBoundingBox;
-	}
+    @Nullable
+    AxisAlignedBB getCollisionBoundingBox(IBlockContainer blockAccess, BlockPos pos) {
+        return collisionBoundingBox;
+    }
 
-	boolean isFullyOpaque() {
-		return getMaterial().isOpaque() && isFullCube();
-	}
-	
-	public void setFullBlock(boolean fullBlock) {
-		this.fullBlock = fullBlock;
-	}
+    boolean isFullyOpaque() {
+        return getMaterial().isOpaque() && isFullCube();
+    }
 
-	public void setLightOpacity(int lightOpacity) {
-		this.lightOpacity = lightOpacity;
-	}
+    public void setFullBlock(boolean fullBlock) {
+        this.fullBlock = fullBlock;
+    }
 
-	public void setTranslucent(boolean translucent) {
-		this.translucent = translucent;
-	}
+    public void setLightOpacity(int lightOpacity) {
+        this.lightOpacity = lightOpacity;
+    }
 
-	public void setLightValue(int lightValue) {
-		this.lightValue = lightValue;
-	}
+    public void setTranslucent(boolean translucent) {
+        this.translucent = translucent;
+    }
 
-	public void setUseNeighborBrightness(boolean useNeighborBrightness) {
-		this.useNeighborBrightness = useNeighborBrightness;
-	}
+    public void setLightValue(int lightValue) {
+        this.lightValue = lightValue;
+    }
 
-	public void setBlockHardness(float blockHardness) {
-		this.blockHardness = blockHardness;
-	}
+    public void setUseNeighborBrightness(boolean useNeighborBrightness) {
+        this.useNeighborBrightness = useNeighborBrightness;
+    }
 
-	public void setBlockResistance(float blockResistance) {
-		this.blockResistance = blockResistance;
-	}
+    public void setBlockHardness(float blockHardness) {
+        this.blockHardness = blockHardness;
+    }
 
-	public void setEnableStats(boolean enableStats) {
-		this.enableStats = enableStats;
-	}
+    public void setBlockResistance(float blockResistance) {
+        this.blockResistance = blockResistance;
+    }
 
-	public void setNeedsRandomTick(boolean needsRandomTick) {
-		this.needsRandomTick = needsRandomTick;
-	}
+    public void setEnableStats(boolean enableStats) {
+        this.enableStats = enableStats;
+    }
 
-	public void setBlockContainer(boolean isBlockContainer) {
-		this.isBlockContainer = isBlockContainer;
-	}
+    public void setNeedsRandomTick(boolean needsRandomTick) {
+        this.needsRandomTick = needsRandomTick;
+    }
 
-	public void setBlockParticleGravity(float blockParticleGravity) {
-		this.blockParticleGravity = blockParticleGravity;
-	}
+    public void setBlockContainer(boolean isBlockContainer) {
+        this.isBlockContainer = isBlockContainer;
+    }
 
-	public void setMaterial(Material material) {
-		this.material = material;
-	}
+    public void setBlockParticleGravity(float blockParticleGravity) {
+        this.blockParticleGravity = blockParticleGravity;
+    }
 
-	public void setMapColor(MapColor blockMapColor) {
-		this.blockMapColor = blockMapColor;
-	}
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
 
-	public void setSlipperiness(float slipperiness) {
-		this.slipperiness = slipperiness;
-	}
+    public void setMapColor(MapColor blockMapColor) {
+        this.blockMapColor = blockMapColor;
+    }
 
-	public void setRenderType(RenderType renderType) {
-		this.renderType = renderType;
-	}
+    public void setSlipperiness(float slipperiness) {
+        this.slipperiness = slipperiness;
+    }
 
-	public void setFullCube(boolean isFullCube) {
-		this.isFullCube = isFullCube;
-	}
+    public void setRenderType(RenderType renderType) {
+        this.renderType = renderType;
+    }
 
-	public boolean isCollidable() {
-		return isCollidable;
-	}
+    public void setFullCube(boolean isFullCube) {
+        this.isFullCube = isFullCube;
+    }
 
-	public void setCollidable(boolean isCollidable) {
-		this.isCollidable = isCollidable;
-	}
+    public boolean isCollidable() {
+        return isCollidable;
+    }
 
-	public void setOpaqueCube(boolean isOpaqueCube) {
-		this.isOpaqueCube = isOpaqueCube;
-	}
-	
-	public boolean isCanCollideCheck() {
-		return canCollideCheck;
-	}
+    public void setCollidable(boolean isCollidable) {
+        this.isCollidable = isCollidable;
+    }
 
-	public void setCanCollideCheck(boolean canCollideCheck) {
-		this.canCollideCheck = canCollideCheck;
-	}
-	
-	public AxisAlignedBB getCollisionBoundingBox() {
-		return collisionBoundingBox;
-	}
+    public void setOpaqueCube(boolean isOpaqueCube) {
+        this.isOpaqueCube = isOpaqueCube;
+    }
 
-	public void setCollisionBoundingBox(AxisAlignedBB collisionBoundingBox) {
-		this.collisionBoundingBox = collisionBoundingBox;
-	}
-	
-	public BlockRenderLayer getRenderLayer() {
+    public boolean isCanCollideCheck() {
+        return canCollideCheck;
+    }
+
+    public void setCanCollideCheck(boolean canCollideCheck) {
+        this.canCollideCheck = canCollideCheck;
+    }
+
+    public AxisAlignedBB getCollisionBoundingBox() {
+        return collisionBoundingBox;
+    }
+
+    public void setCollisionBoundingBox(AxisAlignedBB collisionBoundingBox) {
+        this.collisionBoundingBox = collisionBoundingBox;
+    }
+
+    public BlockRenderLayer getRenderLayer() {
         return renderLayer;
     }
 
@@ -266,29 +265,29 @@ public class BlockAttributes {
     }
 
     public void set(BlockAttributes defaultAttributes) {
-		this.fullBlock = defaultAttributes.fullBlock;
-		this.translucent = defaultAttributes.translucent;
-		this.lightOpacity = defaultAttributes.lightOpacity;
-		this.lightValue = defaultAttributes.lightValue;
-		this.useNeighborBrightness = defaultAttributes.useNeighborBrightness;
-		this.blockHardness = defaultAttributes.blockHardness;
-		this.blockResistance = defaultAttributes.blockResistance;
-		this.enableStats = defaultAttributes.enableStats;
-		this.needsRandomTick = defaultAttributes.needsRandomTick;
-		this.isBlockContainer = defaultAttributes.isBlockContainer;
-		this.material = defaultAttributes.material;
-		this.blockParticleGravity = defaultAttributes.blockParticleGravity;
-		this.blockMapColor = defaultAttributes.blockMapColor;
-		this.slipperiness = defaultAttributes.slipperiness;
-		this.renderType = defaultAttributes.renderType;
-		this.isFullCube = defaultAttributes.isFullCube;
-		this.isOpaqueCube = defaultAttributes.isOpaqueCube;
-		this.isCollidable = defaultAttributes.isCollidable;
-		this.canCollideCheck = defaultAttributes.canCollideCheck;
-		this.blockAabb = defaultAttributes.blockAabb;
-		this.collisionBoundingBox = defaultAttributes.collisionBoundingBox;
-		this.colorMultiplier = defaultAttributes.colorMultiplier;
-	}
+        this.fullBlock = defaultAttributes.fullBlock;
+        this.translucent = defaultAttributes.translucent;
+        this.lightOpacity = defaultAttributes.lightOpacity;
+        this.lightValue = defaultAttributes.lightValue;
+        this.useNeighborBrightness = defaultAttributes.useNeighborBrightness;
+        this.blockHardness = defaultAttributes.blockHardness;
+        this.blockResistance = defaultAttributes.blockResistance;
+        this.enableStats = defaultAttributes.enableStats;
+        this.needsRandomTick = defaultAttributes.needsRandomTick;
+        this.isBlockContainer = defaultAttributes.isBlockContainer;
+        this.material = defaultAttributes.material;
+        this.blockParticleGravity = defaultAttributes.blockParticleGravity;
+        this.blockMapColor = defaultAttributes.blockMapColor;
+        this.slipperiness = defaultAttributes.slipperiness;
+        this.renderType = defaultAttributes.renderType;
+        this.isFullCube = defaultAttributes.isFullCube;
+        this.isOpaqueCube = defaultAttributes.isOpaqueCube;
+        this.isCollidable = defaultAttributes.isCollidable;
+        this.canCollideCheck = defaultAttributes.canCollideCheck;
+        this.blockAabb = defaultAttributes.blockAabb;
+        this.collisionBoundingBox = defaultAttributes.collisionBoundingBox;
+        this.colorMultiplier = defaultAttributes.colorMultiplier;
+    }
 
     public void setBoundingBox(AxisAlignedBB axisAlignedBB) {
         this.blockAabb = axisAlignedBB;

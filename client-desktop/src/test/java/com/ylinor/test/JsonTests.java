@@ -7,17 +7,13 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 /**
  *
  */
 public class JsonTests {
     public static final void main(String[] args) throws IOException {
-        String json = "\n" +
-                "\n" +
-                "{\n" +
-                "  \"address\" : { \"street\" : \"2940 5th Ave\", \"zip\" : 980021 }, \n" +
-                "  \"dimensions\" : [ 10.0, 20.0, 15.0 ]\n" +
-                "}";
+        String json = "\n" + "\n" + "{\n" + "  \"address\" : { \"street\" : \"2940 5th Ave\", \"zip\" : 980021 }, \n" + "  \"dimensions\" : [ 10.0, 20.0, 15.0 ]\n" + "}";
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(json);

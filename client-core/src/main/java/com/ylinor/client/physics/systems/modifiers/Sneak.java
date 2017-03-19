@@ -9,6 +9,7 @@ import com.ylinor.client.physics.components.CollisionState;
 import com.ylinor.client.physics.components.Sneaking;
 import com.ylinor.library.api.terrain.Terrain;
 
+
 public class Sneak extends MotionModifier {
     @Wire
     private ComponentMapper<Sneaking> sneakingMapper;
@@ -75,7 +76,7 @@ public class Sneak extends MotionModifier {
                 motion.z += 0.05f;
             }
         }
-        
+
         return null;
     }
 

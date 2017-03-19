@@ -17,14 +17,14 @@ public abstract class YlinorApplication {
     protected static YlinorApplication instance;
 
     public final World buildWorld() {
-        
+
         WorldConfigurationBuilder configurationBuilder = new WorldConfigurationBuilder();
         preConfigure(configurationBuilder);
         WorldConfiguration configuration = configurationBuilder.build();
         configure(configuration);
         return new World(configuration);
     }
-    
+
     public abstract String getVersion();
 
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
@@ -33,7 +33,7 @@ public abstract class YlinorApplication {
         configurationBuilder.dependsOn(SystemsPriorities.Update.WORLD_UPDATE, WorldEventsDispatcherSystem.class);
         configurationBuilder.dependsOn(SystemsPriorities.Update.EVENT_DISPATCH, EventSystem.class);
     }
-    
+
     protected void configure(WorldConfiguration configuration) {
         configuration.register(new Timer(20.0f));
     }
@@ -41,7 +41,7 @@ public abstract class YlinorApplication {
     public static YlinorApplication getYlinorApplication() {
         return instance;
     }
-    
+
     public ObjectMapper getMapper() {
         return mapper;
     }

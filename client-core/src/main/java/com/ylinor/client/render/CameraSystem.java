@@ -42,12 +42,12 @@ public class CameraSystem extends IteratingSystem {
 
     @Wire
     private YlinorClient client;
-    
+
     @Wire
     private ComponentMapper<Physics> physicsMapper;
 
     private Camera camera;
-    
+
     @Wire
     private Timer timer;
 
@@ -79,7 +79,7 @@ public class CameraSystem extends IteratingSystem {
     protected void process(int entityId) {
         Position position = positionMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
-        
+
         camera.viewportWidth = Gdx.graphics.getWidth();
         camera.viewportHeight = Gdx.graphics.getHeight();
 

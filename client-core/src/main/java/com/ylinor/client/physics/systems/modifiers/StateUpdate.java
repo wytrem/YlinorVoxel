@@ -8,23 +8,23 @@ import com.ylinor.client.physics.components.AABB;
 import com.ylinor.client.physics.components.CollisionState;
 import com.ylinor.client.physics.components.Position;
 
+
 public class StateUpdate extends MotionModifier {
-    
+
     @Wire
     private ComponentMapper<AABB> aabbMapper;
 
     @Wire
     private ComponentMapper<Position> positionMapper;
-    
+
     @Wire
     private ComponentMapper<CollisionState> collisionStateMapper;
-    
+
     @Override
     public Object apply(int entityId, Vector3f motion, Vector3f initialMotion, Object previousOuput) {
         Position position = positionMapper.get(entityId);
         AABB aabb = aabbMapper.get(entityId);
         CollisionState collisionState = collisionStateMapper.get(entityId);
-        
 
         resetPositionToBB(position, aabb);
         collisionState.isCollidedHorizontally = initialMotion.x != motion.x || initialMotion.z != motion.z;
@@ -39,7 +39,7 @@ public class StateUpdate extends MotionModifier {
     public boolean shouldApply(int entityId) {
         return aabbMapper.has(entityId) && collisionStateMapper.has(entityId) && positionMapper.has(entityId);
     }
-    
+
     public void resetPositionToBB(Position position, AABB aabb) {
         position.position.x = (aabb.aabb.minX + aabb.aabb.maxX) / 2.0f;
         position.position.y = aabb.aabb.minY;

@@ -22,7 +22,7 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     public Terrain(IChunkProvider storage) {
         this.storage = storage;
     }
-    
+
     public void inject(World world) {
         world.inject(storage);
     }
@@ -132,7 +132,7 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     public BlockType getBlockType(short id) {
         return BlockType.REGISTRY.get(id);
     }
-    
+
     public List<AxisAlignedBB> getCollisionBoxes(AxisAlignedBB aabb) {
         return getCollisionBoxes(aabb, -1);
     }
@@ -154,9 +154,9 @@ public class Terrain implements IChunkProvider, IBlockContainer {
                     for (int y = minY; y < maxY; ++y) {
                         if (i2 <= 0 || y != minY && y != maxY - 1) {
                             tempVars.blockPos0.set(x, y, z);
-                            
-                            getBlockState(tempVars.blockPos0).getAttributes().addCollisionBoxToList(this,
-                                    tempVars.blockPos0, aabb, list, entityId, false);
+
+                            getBlockState(tempVars.blockPos0).getAttributes()
+                                                             .addCollisionBoxToList(this, tempVars.blockPos0, aabb, list, entityId, false);
                         }
                     }
                 }

@@ -45,7 +45,7 @@ public class HudRenderSystem extends IteratingSystem {
     protected void end() {
         spriteBatch.end();
     }
-    
+
     @Override
     protected boolean checkProcessing() {
         return client.isInGame;

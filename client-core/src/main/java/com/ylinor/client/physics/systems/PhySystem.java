@@ -187,7 +187,6 @@ public class PhySystem extends TickingIteratingSystem {
                 }
             }
 
-            
             //
             // if (this.canTriggerWalking() && !flag && !this.isRiding()) {
             // float d12 = position.position.x - d0;

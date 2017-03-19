@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
 
+
 /**
  * Game's assets (Singleton)
  *
@@ -27,182 +28,175 @@ import com.kotcrab.vis.ui.VisUI;
  * @since 1.0.0
  */
 public class Assets implements Disposable {
-	private static final Logger logger = LoggerFactory.getLogger(Assets.class);
+    private static final Logger logger = LoggerFactory.getLogger(Assets.class);
 
-	/**
-	 * Font folder
-	 */
-	public static final String FONTS_FOLDER = "fonts/";
+    /**
+     * Font folder
+     */
+    public static final String FONTS_FOLDER = "fonts/";
 
-	/**
-	 * Images folder
-	 */
-	public static final String IMAGES_FOLDER = "img/";
+    /**
+     * Images folder
+     */
+    public static final String IMAGES_FOLDER = "img/";
 
-	/**
-	 * Images folder
-	 */
-	public static final String UI_IMAGES_FOLDER = IMAGES_FOLDER + "ui/";
+    /**
+     * Images folder
+     */
+    public static final String UI_IMAGES_FOLDER = IMAGES_FOLDER + "ui/";
 
-	/**
-	 * LibGDX's assets manager
-	 */
-	private final AssetManager assets;
+    /**
+     * LibGDX's assets manager
+     */
+    private final AssetManager assets;
 
-	/**
-	 * Screens's assets
-	 */
-	public final ScreenAssets screen;
+    /**
+     * Screens's assets
+     */
+    public final ScreenAssets screen;
 
-	public final BlockAssets blockAssets;
-	
-	public final ModelAssets modelAssets;
+    public final BlockAssets blockAssets;
 
-	public Assets() {
-		assets = new AssetManager(new InternalFileHandleResolver());
-		assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assets.getFileHandleResolver()));
+    public final ModelAssets modelAssets;
 
-		screen = new ScreenAssets(this);
-		blockAssets = new BlockAssets(this);
-		modelAssets = new ModelAssets(this);
-	}
+    public Assets() {
+        assets = new AssetManager(new InternalFileHandleResolver());
+        assets.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assets.getFileHandleResolver()));
 
-	/**
-	 * Load pre-assets (used before or during the loading screen)
-	 */
-	public void beginPreloding() {
-		logger.info("Loading pre-assets (including VisUI)...");
+        screen = new ScreenAssets(this);
+        blockAssets = new BlockAssets(this);
+        modelAssets = new ModelAssets(this);
+    }
 
-		VisUI.load();
-		screen.preload();
-	}
+    /**
+     * Load pre-assets (used before or during the loading screen)
+     */
+    public void beginPreloding() {
+        logger.info("Loading pre-assets (including VisUI)...");
 
-	/**
-	 * Load assets.
-	 *
-	 * @return if assets are completely loaded
-	 */
-	public boolean update() {
-		return assets.update();
-	}
+        VisUI.load();
+        screen.preload();
+    }
 
-	/**
-	 * Load assets
-	 */
-	public void beginLoading() {
-		logger.info("Loading assets...");
+    /**
+     * Load assets.
+     *
+     * @return if assets are completely loaded
+     */
+    public boolean update() {
+        return assets.update();
+    }
 
-		screen.load();
-		blockAssets.load();
-		modelAssets.load();
-	}
+    /**
+     * Load assets
+     */
+    public void beginLoading() {
+        logger.info("Loading assets...");
 
-	@Override
-	public void dispose() {
-		logger.info("Disposing assets...");
+        screen.load();
+        blockAssets.load();
+        modelAssets.load();
+    }
 
-		assets.dispose();
-		VisUI.dispose();
+    @Override
+    public void dispose() {
+        logger.info("Disposing assets...");
 
-		logger.info("Done !");
-	}
+        assets.dispose();
+        VisUI.dispose();
 
-	/**
-	 * @return the number of loaded assets
-	 */
-	public int assetsLoaded() {
-		return assets.getLoadedAssets();
-	}
+        logger.info("Done !");
+    }
 
-	/**
-	 * @return The number of assets to load
-	 */
-	public int assetsToLoad() {
-		return assets.getQueuedAssets();
-	}
+    /**
+     * @return the number of loaded assets
+     */
+    public int assetsLoaded() {
+        return assets.getLoadedAssets();
+    }
 
-	/**
-	 * Loads a texture.
-	 *
-	 * @param file
-	 *            the texture's file
-	 */
-	public void loadTexture(String file) {
-		load(file, Texture.class);
-	}
+    /**
+     * @return The number of assets to load
+     */
+    public int assetsToLoad() {
+        return assets.getQueuedAssets();
+    }
 
-	/**
-	 * Loads a pixmap.
-	 *
-	 * @param file
-	 *            the pixmap's file
-	 */
-	public void loadPixmap(String file) {
-		load(file, Pixmap.class);
-	}
+    /**
+     * Loads a texture.
+     *
+     * @param file the texture's file
+     */
+    public void loadTexture(String file) {
+        load(file, Texture.class);
+    }
 
-	/**
-	 * Load the police
-	 *
-	 * @param file
-	 *            the police's file
-	 */
-	public void loadFont(String file) {
-		load(file, FreeTypeFontGenerator.class);
-	}
-	
-	public void loadModel(String file) {
-		load(file, Model.class);
-	}
+    /**
+     * Loads a pixmap.
+     *
+     * @param file the pixmap's file
+     */
+    public void loadPixmap(String file) {
+        load(file, Pixmap.class);
+    }
 
-	/**
-	 * Load an assets
-	 *
-	 * @param file
-	 *            the asset's file
-	 * @param type
-	 *            the asset to load
-	 */
-	public void load(String file, Class<?> type) {
-		assets.load(file, type);
-	}
+    /**
+     * Load the police
+     *
+     * @param file the police's file
+     */
+    public void loadFont(String file) {
+        load(file, FreeTypeFontGenerator.class);
+    }
 
-	/**
-	 * @param file
-	 *            The file of the asset
-	 * @param <T>
-	 *            the asset type
-	 *
-	 * @return the asset
-	 */
-	public <T> T get(String file) {
-		return assets.get(file);
-	}
+    public void loadModel(String file) {
+        load(file, Model.class);
+    }
 
-	public static NinePatch fromPixmap(Pixmap pixmap) {
-		Pixmap realTexture = new Pixmap(pixmap.getWidth() - 2, pixmap.getHeight() - 2, pixmap.getFormat());
-		realTexture.drawPixmap(pixmap, 0, 0, 1, 1, pixmap.getWidth() - 2, pixmap.getHeight() - 2);
+    /**
+     * Load an assets
+     *
+     * @param file the asset's file
+     * @param type the asset to load
+     */
+    public void load(String file, Class<?> type) {
+        assets.load(file, type);
+    }
 
-		int top = 0;
-		while (top < pixmap.getHeight() - 1 && pixmap.getPixel(0, top) == 0) {
-			top++;
-		}
+    /**
+     * @param file The file of the asset
+     * @param <T> the asset type
+     *
+     * @return the asset
+     */
+    public <T> T get(String file) {
+        return assets.get(file);
+    }
 
-		int bottom = 0;
-		while (bottom < pixmap.getHeight() - 1 && pixmap.getPixel(0, pixmap.getHeight() - 1 - bottom) == 0) {
-			bottom++;
-		}
+    public static NinePatch fromPixmap(Pixmap pixmap) {
+        Pixmap realTexture = new Pixmap(pixmap.getWidth() - 2, pixmap.getHeight() - 2, pixmap.getFormat());
+        realTexture.drawPixmap(pixmap, 0, 0, 1, 1, pixmap.getWidth() - 2, pixmap.getHeight() - 2);
 
-		int left = 0;
-		while (left < pixmap.getWidth() && pixmap.getPixel(0, left) == 0) {
-			left++;
-		}
+        int top = 0;
+        while (top < pixmap.getHeight() - 1 && pixmap.getPixel(0, top) == 0) {
+            top++;
+        }
 
-		int right = 0;
-		while (right < pixmap.getWidth() - 1 && pixmap.getPixel(pixmap.getWidth() - 1 - right, 0) == 0) {
-			right++;
-		}
+        int bottom = 0;
+        while (bottom < pixmap.getHeight() - 1 && pixmap.getPixel(0, pixmap.getHeight() - 1 - bottom) == 0) {
+            bottom++;
+        }
 
-		return new NinePatch(new Texture(realTexture), left - 1, right - 1, top - 1, bottom - 1);
-	}
+        int left = 0;
+        while (left < pixmap.getWidth() && pixmap.getPixel(0, left) == 0) {
+            left++;
+        }
+
+        int right = 0;
+        while (right < pixmap.getWidth() - 1 && pixmap.getPixel(pixmap.getWidth() - 1 - right, 0) == 0) {
+            right++;
+        }
+
+        return new NinePatch(new Texture(realTexture), left - 1, right - 1, top - 1, bottom - 1);
+    }
 }

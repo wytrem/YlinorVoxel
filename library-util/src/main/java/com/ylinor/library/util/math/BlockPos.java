@@ -113,7 +113,7 @@ public class BlockPos extends Vector3i {
         this.z = z;
         return this;
     }
-    
+
     public BlockPos set(double x, double y, double z) {
         this.x = (int) x;
         this.y = (int) y;

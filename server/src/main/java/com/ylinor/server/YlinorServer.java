@@ -5,12 +5,14 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.terrain.Terrain;
+
+
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
 
     private World world;
     private Terrain terrain;
-    
+
     public YlinorServer() {
         instance = this;
         server = this;
@@ -19,11 +21,11 @@ public class YlinorServer extends YlinorApplication {
     public static void main(String[] args) {
         new YlinorServer().start();
     }
-    
+
     @Override
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         super.preConfigure(configurationBuilder);
-//        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
+        //        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
     }
 
     @Override
@@ -36,24 +38,24 @@ public class YlinorServer extends YlinorApplication {
     }
 
     private void start() {
-    	
-    	world = buildWorld();
-    	
-    	lastRun = System.currentTimeMillis();
-    	run();
-	}
+
+        world = buildWorld();
+
+        lastRun = System.currentTimeMillis();
+        run();
+    }
 
     long lastRun;
-    
-	private void run() {
-		long deltaMillis = System.currentTimeMillis() - lastRun;
-		
-		float delta = deltaMillis / 1000.f;
-		world.setDelta(delta);
-		world.process();
-	}
 
-	public static YlinorServer server() {
+    private void run() {
+        long deltaMillis = System.currentTimeMillis() - lastRun;
+
+        float delta = deltaMillis / 1000.f;
+        world.setDelta(delta);
+        world.process();
+    }
+
+    public static YlinorServer server() {
         return server;
     }
 

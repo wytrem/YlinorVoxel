@@ -46,7 +46,7 @@ public class TerrainRenderSystem extends BaseSystem {
     private YlinorClient client;
 
     private RenderGlobal renderGlobal;
-    
+
     public ChunkRenderer getChunkRenderer(Chunk chunk) {
         return renderGlobal.getChunkRenderer(chunk);
     }
@@ -62,10 +62,10 @@ public class TerrainRenderSystem extends BaseSystem {
         if (renderGlobal != null)
             renderGlobal.dispose();
     }
-    
+
     @Subscribe
     public void assetsLoaded(AssetsLoadedEvent event) {
-    	renderGlobal = new RenderGlobal();
+        renderGlobal = new RenderGlobal();
         terrain.inject(world);
         world.inject(renderGlobal);
         renderGlobal.init(world);

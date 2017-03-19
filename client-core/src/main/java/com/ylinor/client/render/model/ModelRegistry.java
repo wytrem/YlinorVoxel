@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.ylinor.client.render.model.block.BlockModel;
-import com.ylinor.client.render.model.block.UniqueVariant;
 import com.ylinor.client.render.model.block.Variants;
 import com.ylinor.client.resource.TextureAtlas;
 import com.ylinor.library.api.terrain.Terrain;
@@ -69,7 +68,7 @@ public class ModelRegistry {
     public void register(BlockType type, Variants variants) {
         register(type.getId(), variants);
     }
-    
+
     public void register(short typeId, Variants variants) {
         variantsById.put(typeId, variants);
     }

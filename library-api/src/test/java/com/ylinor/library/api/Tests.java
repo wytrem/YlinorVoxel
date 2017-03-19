@@ -27,7 +27,7 @@ public class Tests {
 
         Quaternionf quat = new Quaternionf();
         quat.setAngleAxis(-Math.toRadians(90), 0, 1, 0);
-        
+
         Quaternionf inv = quat.invert(new Quaternionf());
         Vector3f origin = new Vector3f(0.5f, 0.0f, 0.5f);
         Vector3f negatedOrigin = origin.negate(new Vector3f());
@@ -38,23 +38,26 @@ public class Tests {
         System.out.println("transformedOrigin = " + transformedOrigin);
         System.out.println("negatedOrigin = " + negatedOrigin);
         System.out.println("transformedNegatedOrigin = " + transformedNegatedOrigin);
-        
+
         Matrix4f rot = new Matrix4f().rotation(quat);
-        
+
         Matrix4f negatedOriginMat = new Matrix4f().translation(negatedOrigin);
         Matrix4f originMat = new Matrix4f().translation(origin);
         Vector3f testVec = new Vector3f(2.0f);
-        
+
         Matrix4f test = new Matrix4f().translation(testVec);
 
         Matrix4f matrix = new Matrix4f();
-        
-        matrix.translate(testVec).translate(origin).rotate(quat).translate(negatedOrigin);
-        
-//        matrix.mul(test).mul(originMat).mul(rot).mul(negatedOriginMat);
+
+        matrix.translate(testVec)
+              .translate(origin)
+              .rotate(quat)
+              .translate(negatedOrigin);
+
+        //        matrix.mul(test).mul(originMat).mul(rot).mul(negatedOriginMat);
 
         System.out.println(matrix.toString());
-        
+
         System.out.println(matrix.transform(1, 0, 1, 1, new Vector4f()));
     }
 }

@@ -13,6 +13,7 @@ import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.Pair;
 import com.ylinor.library.util.math.AxisAlignedBB;
 
+
 public class StepHeight extends MotionModifier {
     @Wire
     private ComponentMapper<AABB> aabbMapper;
@@ -22,14 +23,14 @@ public class StepHeight extends MotionModifier {
 
     @Wire
     private ComponentMapper<Physics> physicsMapper;
-    
+
     @Wire
     private Terrain terrain;
 
     @SuppressWarnings("unchecked")
     @Override
     public Object apply(int entityId, Vector3f motion, Vector3f initialMotion, Object previousOuput) {
-        
+
         Physics physics = physicsMapper.get(entityId);
         AABB aabb = aabbMapper.get(entityId);
         boolean flag = ((Pair<AxisAlignedBB, Boolean>) previousOuput).getValue();
@@ -42,8 +43,7 @@ public class StepHeight extends MotionModifier {
             AxisAlignedBB bbBeforeStep = aabb.aabb.copy();
             aabb.aabb.set(aabbMovedOnlyOnY);
             motion.y = (float) physics.stepHeight;
-            List<AxisAlignedBB> list = terrain.getCollisionBoxes(
-                    aabb.aabb.addCoord(initialMotion.x, motion.y, initialMotion.z));
+            List<AxisAlignedBB> list = terrain.getCollisionBoxes(aabb.aabb.addCoord(initialMotion.x, motion.y, initialMotion.z));
             AxisAlignedBB axisalignedbb2 = aabb.aabb.copy();
             AxisAlignedBB axisalignedbb3 = axisalignedbb2.addCoord(initialMotion.x, 0.0f, initialMotion.z);
             float d9 = motion.y;
@@ -102,7 +102,8 @@ public class StepHeight extends MotionModifier {
                 motion.z = d16;
                 motion.y = -d9;
                 aabb.aabb.set(axisalignedbb2);
-            } else {
+            }
+            else {
                 motion.x = d18;
                 motion.z = d19;
                 motion.y = -d17;
@@ -123,8 +124,7 @@ public class StepHeight extends MotionModifier {
                 aabb.aabb.set(bbBeforeStep);
             }
         }
-        
-        
+
         return null;
     }
 

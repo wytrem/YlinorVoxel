@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
-import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
@@ -31,31 +30,30 @@ public class RenderGlobal implements Disposable {
     ModelBatch entitiesBatch;
     Environment environment;
     TerrainRenderer terrainRenderer;
-    
+
     SpriteBatch spriteBatch;
     BitmapFont font;
     ModelRegistry blockModels;
 
     @Wire
     CameraSystem cameraSystem;
-    
+
     @Wire
     Assets assets;
-    
+
     ModelInstance test;
-    
+
     @Wire
     Terrain terrain;
-    
+
     AnimationController controller;
-    
+
     DirectionalLight sun;
-    
 
     public RenderGlobal() {
 
     }
-    
+
     public void init(World world) {
         DefaultShader.Config shaderConfig = new Config();
 
@@ -67,8 +65,7 @@ public class RenderGlobal implements Disposable {
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.set(new ColorAttribute(ColorAttribute.Fog, 0.13f, 0.13f, 0.13f, 1f));
-        
-        
+
         sun = new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f);
         environment.add(sun);
         terrainRenderer = new TerrainRenderer(terrain, this);
@@ -77,15 +74,15 @@ public class RenderGlobal implements Disposable {
 
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
-        
+
         Model player = assets.modelAssets.getModelTest();
-        test = new ModelInstance(player); 
+        test = new ModelInstance(player);
         test.transform.setToTranslation(0, 256, 0).scl(0.3f);
-        
+
         controller = new AnimationController(test);
         controller.setAnimation("run", -1);
     }
-    
+
     public void render() {
         update();
 
@@ -93,25 +90,25 @@ public class RenderGlobal implements Disposable {
 
         // Render terrain
         terrainBatch.render(terrainRenderer, environment);
-        
+
         terrainBatch.end();
-        
+
         entitiesBatch.begin(cameraSystem.getCamera());
 
         // DEBUG
         entitiesBatch.render(test, environment);
         entitiesBatch.end();
     }
-    
+
     private void update() {
         terrainRenderer.update();
         controller.update(Gdx.graphics.getDeltaTime());
     }
-    
+
     public ChunkRenderer getChunkRenderer(Chunk chunk) {
         return terrainRenderer.chunkRenderers.get(chunk.id);
     }
-    
+
     @Override
     public void dispose() {
         terrainRenderer.dispose();

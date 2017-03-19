@@ -18,13 +18,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.ylinor.client.render.model.Icon;
 
+
 public class TextureAtlas {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(TextureAtlas.class);
 
     private Map<String, Icon> iconMap;
     private Pixmap atlas;
-
 
     public void loadFrom(File folder, boolean recursive, int atlasSize) {
         FileHandleResolver resolver = new FileHandleResolver() {
@@ -45,8 +45,10 @@ public class TextureAtlas {
         for (File file : folder.listFiles()) {
             if (file.isDirectory() && recursive) {
                 addFiles(relativeTo, file, recursive, files);
-            } else if (file.getName().endsWith(".png")) {
-                files.add(relativeTo.relativize(Paths.get(file.getAbsolutePath())).toString());
+            }
+            else if (file.getName().endsWith(".png")) {
+                files.add(relativeTo.relativize(Paths.get(file.getAbsolutePath()))
+                                    .toString());
             }
         }
     }
@@ -56,24 +58,26 @@ public class TextureAtlas {
 
         Map<String, Pixmap> pixmaps = new HashMap<>(64);
 
-
         for (String texture : textures) {
             pixmaps.put(basename(texture), new Pixmap(fileHandleResolver.resolve(texture)));
         }
 
         Pixmap onePixmap = pixmaps.values().iterator().next();
-        int spriteWidth = onePixmap.getWidth(), spriteHeight = onePixmap.getHeight();
+        int spriteWidth = onePixmap.getWidth(),
+                        spriteHeight = onePixmap.getHeight();
 
         atlas = new Pixmap(atlasSize, atlasSize, Pixmap.Format.RGBA8888);
 
-        Iterator<Map.Entry<String, Pixmap>> entryIterator = pixmaps.entrySet().iterator();
+        Iterator<Map.Entry<String, Pixmap>> entryIterator = pixmaps.entrySet()
+                                                                   .iterator();
 
         int x = 0, y = 0;
         while (entryIterator.hasNext()) {
             Map.Entry<String, Pixmap> entry = entryIterator.next();
 
             atlas.drawPixmap(entry.getValue(), x, y);
-            iconMap.put(entry.getKey(), Icon.fromPosSize(x, y, spriteWidth, spriteHeight).scale(atlas.getWidth(), atlas.getHeight()));
+            iconMap.put(entry.getKey(), Icon.fromPosSize(x, y, spriteWidth, spriteHeight)
+                                            .scale(atlas.getWidth(), atlas.getHeight()));
 
             if ((x += spriteWidth) >= atlas.getWidth()) {
                 x = 0;
@@ -88,7 +92,7 @@ public class TextureAtlas {
 
     public Icon getUVFor(String texture) {
         Icon icon = iconMap.get(texture);
-        
+
         if (icon == null) {
             logger.warn("Missing '{}' texture atlas.", texture);
             return getUVFor("unknown");

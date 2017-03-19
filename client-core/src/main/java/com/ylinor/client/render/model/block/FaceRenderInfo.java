@@ -20,11 +20,11 @@ public class FaceRenderInfo {
         this.uvMapping = mapping;
         this.useColorMultiplier = color;
     }
-    
+
     public Vector2f getTexCoords(int i) {
         return uvMapping[i];
     }
-    
+
     public void mult(float scalar) {
         for (int i = 0; i < uvMapping.length; i++) {
             uvMapping[i].mul(scalar);
@@ -65,13 +65,14 @@ public class FaceRenderInfo {
         }
 
         int[] mapping = uvFromJson((ArrayNode) root.get("uv"));
-        
+
         String texture = root.get("texture").textValue();
         int rotation = root.get("rotation").asInt();
 
         Vector2f[] vertices = mappingFromIcon(registeredIcons.apply(texture), mapping);
         applyRotation(vertices, rotation);
 
-        return new FaceRenderInfo(vertices, root.get("useColorMultiplier").asBoolean());
+        return new FaceRenderInfo(vertices, root.get("useColorMultiplier")
+                                                .asBoolean());
     }
 }

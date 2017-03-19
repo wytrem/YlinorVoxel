@@ -57,11 +57,11 @@ public class Cube implements Renderable {
 
         tempVars.blockPos0.set(x, y, z);
         BlockState state = neighbours.getBlockState(tempVars.blockPos0);
-        
+
         if (state.getBlockType() == BlockType.stone) {
             System.out.println("");
         }
-         
+
         for (Facing facing : faces.keySet()) {
             if (cullfaces.containsKey(facing)) {
                 tempVars.blockPos0.set(x, y, z).offset(cullfaces.get(facing));

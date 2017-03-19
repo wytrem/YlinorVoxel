@@ -149,7 +149,7 @@ public class Pair<K, V> implements Serializable {
         }
         return false;
     }
-    
+
     public static final <K, V> Pair<K, V> of(K key, V value) {
         return new Pair<K, V>(key, value);
     }

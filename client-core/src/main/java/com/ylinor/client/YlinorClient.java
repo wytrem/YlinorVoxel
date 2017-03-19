@@ -1,5 +1,13 @@
 package com.ylinor.client;
 
+import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.artemis.ArtemisMultiException;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
@@ -13,7 +21,13 @@ import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.physics.systems.PhySystem;
-import com.ylinor.client.render.*;
+import com.ylinor.client.render.AssetsLoadingSystem;
+import com.ylinor.client.render.CameraSystem;
+import com.ylinor.client.render.ClearScreenSystem;
+import com.ylinor.client.render.HudRenderSystem;
+import com.ylinor.client.render.PlayerInitSystem;
+import com.ylinor.client.render.ScreenSystem;
+import com.ylinor.client.render.TerrainRenderSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.client.util.YlinorFiles;
@@ -21,13 +35,6 @@ import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-
-import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
 
 
 /**
@@ -125,10 +132,11 @@ public class YlinorClient extends YlinorApplication
     @Override
     public void dispose() {
         logger.info("Disposing world.");
-        
+
         try {
             world.dispose();
-        } catch (ArtemisMultiException e) {
+        }
+        catch (ArtemisMultiException e) {
             e.getExceptions().stream().forEach(ex -> {
                 logger.error("Error while disposing world :", ex);
             });

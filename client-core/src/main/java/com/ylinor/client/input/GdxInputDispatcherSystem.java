@@ -18,32 +18,34 @@ import com.ylinor.client.events.input.mouse.MouseTouchUpEvent;
 
 import net.mostlyoriginal.api.event.common.EventSystem;
 
-public class GdxInputDispatcherSystem extends BaseSystem implements InputProcessor{
+
+public class GdxInputDispatcherSystem extends BaseSystem
+                implements InputProcessor {
 
     private List<Integer> pressedKeys = new ArrayList<>();
-    
+
     @Wire
     private EventSystem eventSystem;
-    
+
     @Override
     protected void initialize() {
         Gdx.input.setInputProcessor(this);
     }
-    
+
     @Override
     protected void processSystem() {
         // Nothing.
     }
-    
+
     @Override
     protected boolean checkProcessing() {
         return false;
     }
-    
+
     public List<Integer> getPressedKeys() {
         return pressedKeys;
     }
-    
+
     @Override
     public boolean keyDown(int keycode) {
         pressedKeys.add(Integer.valueOf(keycode));

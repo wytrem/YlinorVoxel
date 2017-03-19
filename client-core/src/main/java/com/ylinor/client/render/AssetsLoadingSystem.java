@@ -25,7 +25,7 @@ public class AssetsLoadingSystem extends BaseSystem {
 
     @Wire
     private TerrainRenderSystem renderSystem;
-    
+
     @Wire
     private ScreenSystem screenSystem;
 
@@ -68,7 +68,7 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
             else {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
-                
+
                 assetsTime = 0;
                 loaded = true;
 

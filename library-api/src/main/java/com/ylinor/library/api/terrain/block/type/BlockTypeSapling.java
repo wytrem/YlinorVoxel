@@ -24,13 +24,15 @@ public class BlockTypeSapling extends BlockType {
         getDefaultAttributes().setFullCube(false);
         getDefaultAttributes().setOpaqueCube(false);
         getDefaultAttributes().setBoundingBox(new AxisAlignedBB(0.09999999403953552f, 0.0f, 0.09999999403953552f, 0.8999999761581421f, 0.800000011920929f, 0.8999999761581421f));
-//        getDefaultAttributes().setCollisionBoundingBox(null);
+        //        getDefaultAttributes().setCollisionBoundingBox(null);
         getDefaultAttributes().setRenderLayer(BlockRenderLayer.CUTOUT);
     }
-    
+
     @Override
     protected void initStates() {
-        this.setDefaultState(this.getDefaultState().with(TYPE, PlanksType.OAK).with(STAGE, 0));
+        this.setDefaultState(this.getDefaultState()
+                                 .with(TYPE, PlanksType.OAK)
+                                 .with(STAGE, 0));
     }
 
     public int getMetaFromState(BlockState state) {

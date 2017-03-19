@@ -4,7 +4,6 @@ import org.joml.Vector3f;
 
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
-import com.ylinor.client.physics.components.CollisionState;
 import com.ylinor.client.physics.components.Physics;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.util.Pair;
@@ -15,14 +14,15 @@ public class FinalStateUpdate extends MotionModifier {
 
     @Wire
     private ComponentMapper<Physics> physicsMapper;
+
     @SuppressWarnings("unchecked")
     @Override
     public Object apply(int entityId, Vector3f motion, Vector3f initialMotion, Object previousOuput) {
-        
+
         Physics physics = physicsMapper.get(entityId);
 
         Pair<BlockState, BlockPos> blockPair = (Pair<BlockState, BlockPos>) previousOuput;
-        
+
         if (initialMotion.x != motion.x) {
             physics.motion.x = 0.0f;
         }

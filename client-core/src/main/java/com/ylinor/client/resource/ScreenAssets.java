@@ -35,7 +35,6 @@ public class ScreenAssets implements Loadable, Preloadable {
 
     public final String bigTextButtonNormal = UI_IMAGES_FOLDER + "bigbutton/normal.9.png";
 
-
     public void preload() {
         assets.loadTexture(splash);
     }
@@ -57,17 +56,17 @@ public class ScreenAssets implements Loadable, Preloadable {
     public Texture logo() {
         return assets.get(logo);
     }
-    
+
     public Texture mainMenuLogo() {
-    	return assets.get(mainMenuLogo);
+        return assets.get(mainMenuLogo);
     }
-    
+
     public NinePatch bigTextButtonNormal() {
-    	return fromPixmap((Pixmap) assets.get(bigTextButtonNormal));
+        return fromPixmap((Pixmap) assets.get(bigTextButtonNormal));
     }
-    
+
     public Texture mainMenuBackground() {
-    	return assets.get(mainMenuBackground);
+        return assets.get(mainMenuBackground);
     }
 
     public FreeTypeFontGenerator augustus() {
