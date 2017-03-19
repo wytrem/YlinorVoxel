@@ -1,10 +1,16 @@
 package com.ylinor.library.api.terrain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.artemis.World;
 import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
+import com.ylinor.library.util.TempVars;
+import com.ylinor.library.util.math.AxisAlignedBB;
 import com.ylinor.library.util.math.BlockPos;
+import com.ylinor.library.util.math.MathHelper;
 import com.ylinor.library.util.math.PositionableObject2D;
 
 
@@ -125,5 +131,39 @@ public class Terrain implements IChunkProvider, IBlockContainer {
 
     public BlockType getBlockType(short id) {
         return BlockType.REGISTRY.get(id);
+    }
+    
+    public List<AxisAlignedBB> getCollisionBoxes(AxisAlignedBB aabb) {
+        return getCollisionBoxes(aabb, -1);
+    }
+
+    public List<AxisAlignedBB> getCollisionBoxes(AxisAlignedBB aabb, int entityId) {
+        List<AxisAlignedBB> list = new ArrayList<>();
+        int minX = MathHelper.floor_double(aabb.minX) - 1;
+        int maxX = MathHelper.ceiling_double_int(aabb.maxX) + 1;
+        int minY = MathHelper.floor_double(aabb.minY) - 1;
+        int maxY = MathHelper.ceiling_double_int(aabb.maxY) + 1;
+        int minZ = MathHelper.floor_double(aabb.minZ) - 1;
+        int maxZ = MathHelper.ceiling_double_int(aabb.maxZ) + 1;
+        TempVars tempVars = TempVars.get();
+
+        for (int x = minX; x < maxX; ++x) {
+            for (int z = minZ; z < maxZ; ++z) {
+                int i2 = (x != minX && x != maxX - 1 ? 0 : 1) + (z != minZ && z != maxZ - 1 ? 0 : 1);
+                if (i2 != 2) {
+                    for (int y = minY; y < maxY; ++y) {
+                        if (i2 <= 0 || y != minY && y != maxY - 1) {
+                            tempVars.blockPos0.set(x, y, z);
+                            
+                            getBlockState(tempVars.blockPos0).getAttributes().addCollisionBoxToList(this,
+                                    tempVars.blockPos0, aabb, list, entityId, false);
+                        }
+                    }
+                }
+            }
+        }
+
+        tempVars.release();
+        return list;
     }
 }

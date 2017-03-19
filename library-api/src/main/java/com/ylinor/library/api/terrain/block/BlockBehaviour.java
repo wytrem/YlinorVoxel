@@ -1,6 +1,5 @@
 package com.ylinor.library.api.terrain.block;
 
-import com.artemis.World;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 
 public class BlockBehaviour {
@@ -10,7 +9,7 @@ public class BlockBehaviour {
 		this.state = state;
 	}
 	
-	public void onLanded(World world, int entityId) {
+	public void onLanded(int entityId) {
 		
 	}
 }

@@ -95,7 +95,7 @@ public class BlockType {
         }
     }
 
-    public void onFallenUpon(World worldIn, BlockPos pos, int entityIn, float fallDistance) {
+    public void onFallenUpon(BlockPos pos, int entityIn, float fallDistance) {
         // entityIn.fall(fallDistance, 1.0F);
     }
 
