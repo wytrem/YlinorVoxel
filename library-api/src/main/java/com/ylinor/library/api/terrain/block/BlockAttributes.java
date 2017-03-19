@@ -289,4 +289,8 @@ public class BlockAttributes {
 		this.collisionBoundingBox = defaultAttributes.collisionBoundingBox;
 		this.colorMultiplier = defaultAttributes.colorMultiplier;
 	}
+
+    public void setBoundingBox(AxisAlignedBB axisAlignedBB) {
+        this.blockAabb = axisAlignedBB;
+    }
 }

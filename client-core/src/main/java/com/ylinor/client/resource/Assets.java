@@ -70,7 +70,7 @@ public class Assets implements Disposable {
 	/**
 	 * Load pre-assets (used before or during the loading screen)
 	 */
-	public void preload() {
+	public void beginPreloding() {
 		logger.info("Loading pre-assets (including VisUI)...");
 
 		VisUI.load();
@@ -89,7 +89,7 @@ public class Assets implements Disposable {
 	/**
 	 * Load assets
 	 */
-	public void load() {
+	public void beginLoading() {
 		logger.info("Loading assets...");
 
 		screen.load();

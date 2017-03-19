@@ -1,5 +1,6 @@
 package com.ylinor.client;
 
+import com.artemis.ArtemisMultiException;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
@@ -124,7 +125,14 @@ public class YlinorClient extends YlinorApplication
     @Override
     public void dispose() {
         logger.info("Disposing world.");
-        world.dispose();
+        
+        try {
+            world.dispose();
+        } catch (ArtemisMultiException e) {
+            e.getExceptions().stream().forEach(ex -> {
+                logger.error("Error while disposing world :", ex);
+            });
+        }
         logger.info("Stopping!");
     }
 
@@ -146,5 +154,10 @@ public class YlinorClient extends YlinorApplication
 
     public static final YlinorClient client() {
         return client;
+    }
+
+    @Override
+    public String getVersion() {
+        return VERSION;
     }
 }

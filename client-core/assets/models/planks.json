@@ -28,7 +28,7 @@
 		},
 		"variant=dark_oak": {
 			"textures": {
-				"all": "planks_dark_oak"
+				"all": "planks_big_oak"
 			}
 		}
 	}

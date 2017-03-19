@@ -12,7 +12,10 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setWindowedMode(800, 600);
+        
+        YlinorClient client = new YlinorClient();
+        config.setTitle("Ylinor client - v" + client.getVersion());
 
-        new Lwjgl3Application(new YlinorClient(), config);
+        new Lwjgl3Application(client, config);
     }
 }

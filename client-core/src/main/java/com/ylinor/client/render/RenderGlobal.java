@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
+import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
@@ -44,7 +45,8 @@ public class RenderGlobal implements Disposable {
     ModelInstance test;
     
     @Wire
-    Terrain world;
+    Terrain terrain;
+    
     AnimationController controller;
     
     DirectionalLight sun;
@@ -54,7 +56,7 @@ public class RenderGlobal implements Disposable {
 
     }
     
-    public void init() {
+    public void init(World world) {
         DefaultShader.Config shaderConfig = new Config();
 
         shaderConfig.defaultCullFace = GL20.GL_FRONT;
@@ -69,7 +71,9 @@ public class RenderGlobal implements Disposable {
         
         sun = new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f);
         environment.add(sun);
-        terrainRenderer = new TerrainRenderer(world, this);
+        terrainRenderer = new TerrainRenderer(terrain, this);
+        world.inject(terrainRenderer);
+        terrainRenderer.init();
 
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
@@ -82,10 +86,6 @@ public class RenderGlobal implements Disposable {
         controller.setAnimation("run", -1);
     }
     
-    public void inject(World world) {
-        world.inject(terrainRenderer);
-    }
-
     public void render() {
         update();
 
@@ -111,7 +111,7 @@ public class RenderGlobal implements Disposable {
     public ChunkRenderer getChunkRenderer(Chunk chunk) {
         return terrainRenderer.chunkRenderers.get(chunk.id);
     }
-
+    
     @Override
     public void dispose() {
         terrainRenderer.dispose();

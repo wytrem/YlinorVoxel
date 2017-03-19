@@ -21,8 +21,8 @@ public class BlockTypeDirt extends BlockType {
     @Override
     protected void initStates() {
         this.setDefaultState(this.blockStateFactory.getOneState()
-                                                   .with(VARIANT, DirtType.PODZOL)
-                                                   .with(SNOWY, Boolean.valueOf(true)));
+                                                   .with(VARIANT, DirtType.DIRT)
+                                                   .with(SNOWY, Boolean.valueOf(false)));
 
         for (BlockState state : blockStateFactory.getPossibleStates()) {
             state.getAttributes().setMapColor(state.get(VARIANT).getColor());

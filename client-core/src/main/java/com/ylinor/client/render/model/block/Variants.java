@@ -16,7 +16,6 @@ public class Variants {
     }
 
     public BlockModel get(Terrain world, BlockType type, BlockState data) {
-        
         if (variants.size() == 1) {
             return variants.values().iterator().next();
         }

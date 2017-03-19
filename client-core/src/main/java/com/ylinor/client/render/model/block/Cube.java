@@ -11,6 +11,7 @@ import com.ylinor.client.render.Renderable;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.TempVars;
 
@@ -22,12 +23,14 @@ public class Cube implements Renderable {
     private List<Cube> children = new ArrayList<>();
     private Map<Facing, FaceRenderInfo> faces;
     private Map<Facing, Facing> cullfaces;
+    private Vector3f rotationOrigin;
 
-    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation) {
+    public Cube(String id, Vector3f position, Vector3f size, Quaternionf rotation, Vector3f rotationOrigin) {
         this.id = id;
         this.position = position;
         this.size = size;
         this.rotation = rotation;
+        this.rotationOrigin = rotationOrigin;
     }
 
     public void setCullfaces(Map<Facing, Facing> cullfaces) {
@@ -44,14 +47,21 @@ public class Cube implements Renderable {
 
     public void render(VertexBuffer vertexBuffer, IBlockContainer neighbours, int x, int y, int z) {
         TempVars tempVars = TempVars.get();
-
+        tempVars.vect0.set(rotationOrigin).negate();
         tempVars.tempMat4.identity()
                          .translate(position)
+                         .scale(size)
+                         .translate(rotationOrigin)
                          .rotate(rotation)
-                         .scale(size);
+                         .translate(tempVars.vect0);
 
         tempVars.blockPos0.set(x, y, z);
         BlockState state = neighbours.getBlockState(tempVars.blockPos0);
+        
+        if (state.getBlockType() == BlockType.stone) {
+            System.out.println("");
+        }
+         
         for (Facing facing : faces.keySet()) {
             if (cullfaces.containsKey(facing)) {
                 tempVars.blockPos0.set(x, y, z).offset(cullfaces.get(facing));
@@ -62,11 +72,11 @@ public class Cube implements Renderable {
                     continue;
                 }
             }
-            
+
             FaceRenderInfo infos = faces.get(facing);
 
             putFace(facing, vertexBuffer, infos.useColorMultiplier ? state.getAttributes()
-                            .getColorMultiplier() : 0xffffff, tempVars);
+                                                                          .getColorMultiplier() : 0xffffff, tempVars);
         }
 
         tempVars.release();
@@ -123,25 +133,29 @@ public class Cube implements Renderable {
         // pos
         tempVars.vect0.set(0, 1, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(0))
               .endVertex();
 
         tempVars.vect0.set(1, 1, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(1))
               .endVertex();
 
         tempVars.vect0.set(1, 1, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(2))
               .endVertex();
 
         tempVars.vect0.set(0, 1, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(3))
               .endVertex();
     }
@@ -154,25 +168,29 @@ public class Cube implements Renderable {
         // pos
         tempVars.vect0.set(0, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(0))
               .endVertex();
 
         tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(1))
               .endVertex();
 
         tempVars.vect0.set(1, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(2))
               .endVertex();
 
         tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(3))
               .endVertex();
     }
@@ -185,25 +203,29 @@ public class Cube implements Renderable {
         // pos
         tempVars.vect0.set(0, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(3))
               .endVertex();
 
         tempVars.vect0.set(0, 1, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(0))
               .endVertex();
 
         tempVars.vect0.set(0, 1, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(1))
               .endVertex();
 
         tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(2))
               .endVertex();
     }
@@ -215,25 +237,29 @@ public class Cube implements Renderable {
         // pos
         tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(3))
               .endVertex();
 
         tempVars.vect0.set(1, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(2))
               .endVertex();
 
         tempVars.vect0.set(1, 1, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(1))
               .endVertex();
 
         tempVars.vect0.set(1, 1, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(0))
               .endVertex();
     }
@@ -245,25 +271,29 @@ public class Cube implements Renderable {
         // pos
         tempVars.vect0.set(0, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(2))
               .endVertex();
 
         tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(3))
               .endVertex();
 
         tempVars.vect0.set(1, 1, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(0))
               .endVertex();
 
         tempVars.vect0.set(0, 1, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(1))
               .endVertex();
     }
@@ -276,25 +306,29 @@ public class Cube implements Renderable {
         // pos
         tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(2))
               .endVertex();
 
         tempVars.vect0.set(0, 1, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(1))
               .endVertex();
 
         tempVars.vect0.set(1, 1, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(0))
               .endVertex();
 
         tempVars.vect0.set(1, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
-              .color(color).normal(tempVars.vect1)
+              .color(color)
+              .normal(tempVars.vect1)
               .texCoords(texture.getTexCoords(3))
               .endVertex();
     }

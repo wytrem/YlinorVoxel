@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -69,6 +70,14 @@ public final class JsonUtil {
         }
 
         return result;
+    }
+    
+    public static void walkTreeOrArray(JsonNode tree, BiConsumer<String, JsonNode> consumer) {
+        if (tree.isObject()) {
+            walkTree(tree, consumer);
+        } else if (tree.isArray()) {
+            walkArray(((ArrayNode) tree), node -> consumer.accept(UUID.randomUUID().toString(), node));
+        }
     }
 
     public static void walkTree(JsonNode tree, BiConsumer<String, JsonNode> consumer) {

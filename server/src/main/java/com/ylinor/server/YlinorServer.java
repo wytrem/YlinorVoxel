@@ -49,10 +49,16 @@ public class YlinorServer extends YlinorApplication {
 		long deltaMillis = System.currentTimeMillis() - lastRun;
 		
 		float delta = deltaMillis / 1000.f;
-		
+		world.setDelta(delta);
+		world.process();
 	}
 
 	public static YlinorServer server() {
         return server;
+    }
+
+    @Override
+    public String getVersion() {
+        return "0.0.1";
     }
 }

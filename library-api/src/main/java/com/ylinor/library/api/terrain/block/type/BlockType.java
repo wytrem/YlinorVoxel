@@ -14,22 +14,43 @@ import gnu.trove.map.hash.TShortObjectHashMap;
 
 public class BlockType {
     public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
-    public static final BlockType air = new BlockTypeAir(0);
-    public static final BlockType stone = new BlockTypeStone(1);
-    public static final BlockType grass = new BlockTypeGrass(2);
-    public static final BlockType dirt = new BlockTypeDirt(3);
-    public static final BlockType cobbleStone = new BlockTypeCobbleStone(4);
-    public static final BlockType planks = new BlockTypePlanks(5);
+    public static final BlockType air = new BlockTypeAir(0).setUnlocalizedName("air");
+    public static final BlockType stone = new BlockTypeStone(1).setUnlocalizedName("stone");
+    public static final BlockType grass = new BlockTypeGrass(2).setUnlocalizedName("grass");
+    public static final BlockType dirt = new BlockTypeDirt(3).setUnlocalizedName("dirt");
+    public static final BlockType cobbleStone = new BlockTypeCobbleStone(4).setUnlocalizedName("cobblestone");
+    public static final BlockType planks = new BlockTypePlanks(5).setUnlocalizedName("planks");
+    public static final BlockType sapling = new BlockTypeSapling(6).setUnlocalizedName("sapling");
+    public static final BlockType bedrock = new BlockType(7, Material.ROCK).setUnlocalizedName("bedrock");
+    public static final BlockType flowingWater = new BlockType(8, Material.WATER).setUnlocalizedName("flowing_water");
+    public static final BlockType water = new BlockType(9, Material.WATER).setUnlocalizedName("water");
+    public static final BlockType flowingLava = new BlockType(10, Material.LAVA).setUnlocalizedName("flowing_lava");
+    public static final BlockType lava = new BlockType(11, Material.LAVA).setUnlocalizedName("lava");
+    public static final BlockType sand = new BlockType(12, Material.SAND).setUnlocalizedName("sand");
+    public static final BlockType gravel = new BlockType(13, Material.SAND).setUnlocalizedName("gravel");
+    public static final BlockType goldOre = new BlockType(14, Material.ROCK).setUnlocalizedName("gold_ore");
+    public static final BlockType ironOre = new BlockType(15, Material.ROCK).setUnlocalizedName("iron_ore");
+    public static final BlockType coalOre = new BlockType(16, Material.ROCK).setUnlocalizedName("coal_ore");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;
     private BlockState defaultBlockState;
     private final BlockAttributes defaultAttributes;
+    private String unlocalizedName;
 
     protected BlockType(int id, Material blockMaterialIn, MapColor blockMapColorIn) {
         this.id = (short) id;
         defaultAttributes = new BlockAttributes(blockMaterialIn, blockMapColorIn);
         REGISTRY.put(this.id, this);
+    }
+    
+    public BlockType setUnlocalizedName(String name) {
+        this.unlocalizedName = name;
+        return this;
+    }
+    
+    public String getUnlocalizedName() {
+        return unlocalizedName;
     }
     
     protected final void initStateFactory() {

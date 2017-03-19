@@ -33,7 +33,7 @@ public class PlayerInitSystem extends BaseSystem {
 				.add(AABB.class).add(CollisionState.class).add(Physics.class).build(world);
 
 		Entity player = world.createEntity(playerArchetype);
-		player.getComponent(EyeHeight.class).eyePadding.y = 1.65f * 0.85f;
+		player.getComponent(EyeHeight.class).eyePadding.y = 1.65f;
 		player.getComponent(Size.class).setSize(0.6f, 1.8f);
 		id = player.getId();
 	}

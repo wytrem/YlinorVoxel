@@ -54,12 +54,12 @@ public class ModelRegistry {
     }
 
     private void registerStatesFiles() {
-        register(BlockType.stone, "stone");
-        register(BlockType.grass, "grass");
-        register(BlockType.dirt, "dirt");
-        register(BlockType.cobbleStone, "cobblestone");
-        register(BlockType.planks, "planks");
-
+        for (BlockType type : BlockType.REGISTRY.valueCollection()) {
+            if (type == BlockType.air) {
+                continue;
+            }
+            register(type, type.getUnlocalizedName());
+        }
     }
 
     private void register(BlockType type, String stateFile) {

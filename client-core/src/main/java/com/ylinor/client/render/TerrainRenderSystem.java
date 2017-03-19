@@ -59,7 +59,8 @@ public class TerrainRenderSystem extends BaseSystem {
     }
 
     public void dispose() {
-        renderGlobal.dispose();
+        if (renderGlobal != null)
+            renderGlobal.dispose();
     }
     
     @Subscribe
@@ -67,8 +68,7 @@ public class TerrainRenderSystem extends BaseSystem {
     	renderGlobal = new RenderGlobal();
         terrain.inject(world);
         world.inject(renderGlobal);
-        renderGlobal.init();
-        renderGlobal.inject(world);
+        renderGlobal.init(world);
     }
 
     @Override

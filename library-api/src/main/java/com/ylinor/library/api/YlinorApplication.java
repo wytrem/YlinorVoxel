@@ -12,7 +12,7 @@ import com.ylinor.library.api.ecs.systems.WorldEventsDispatcherSystem;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
 
-public class YlinorApplication {
+public abstract class YlinorApplication {
     private ObjectMapper mapper = new ObjectMapper();
     protected static YlinorApplication instance;
 
@@ -24,6 +24,8 @@ public class YlinorApplication {
         configure(configuration);
         return new World(configuration);
     }
+    
+    public abstract String getVersion();
 
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         configurationBuilder.dependsOn(SystemsPriorities.Update.TIMER_UPDATE, TimerUpdateSystem.class);
@@ -39,7 +41,7 @@ public class YlinorApplication {
     public static YlinorApplication getYlinorApplication() {
         return instance;
     }
-
+    
     public ObjectMapper getMapper() {
         return mapper;
     }

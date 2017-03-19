@@ -79,6 +79,9 @@ public class CameraSystem extends IteratingSystem {
     protected void process(int entityId) {
         Position position = positionMapper.get(entityId);
         Heading heading = headingMapper.get(entityId);
+        
+        camera.viewportWidth = Gdx.graphics.getWidth();
+        camera.viewportHeight = Gdx.graphics.getHeight();
 
         float d0 = position.prevPosition.x + (position.position.x - position.prevPosition.x) * timer.renderPartialTicks;
         float d1 = position.prevPosition.y + (position.position.y - position.prevPosition.y) * timer.renderPartialTicks;

@@ -49,7 +49,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     @Override
     protected void initialize() {
         assetsTime = System.currentTimeMillis();
-        assets.preload();
+        assets.beginPreloding();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class AssetsLoadingSystem extends BaseSystem {
                 logger.info("Pre-assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
 
                 assetsTime = System.currentTimeMillis();
-                assets.load();
+                assets.beginLoading();
 
                 preloaded = true;
 
@@ -80,7 +80,8 @@ public class AssetsLoadingSystem extends BaseSystem {
 
     @Override
     protected void dispose() {
-        assets.dispose();
+        if (assets != null)
+            assets.dispose();
     }
 
     public boolean loaded() {

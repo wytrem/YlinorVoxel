@@ -39,13 +39,13 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     Material standardBlockMaterial;
     Texture texture;
     int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 4;
-    
+
     @Wire
     CameraSystem cameraSystem;
-    
+
     @Wire
     EventSystem eventSystem;
-    
+
     @Wire
     Assets assets;
 
@@ -54,14 +54,14 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
         this.renderGlobal = renderGlobal;
     }
 
+    public void init() {
+        texture = new Texture(assets.blockAssets.blockAtlas.getSheet());
+        standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
+    }
+
     public void update() {
         renderChunkX = ((int) (cameraSystem.getCamera().position.x) >> 4) - renderChunkSize / 2;
         renderChunkZ = ((int) (cameraSystem.getCamera().position.z) >> 4) - renderChunkSize / 2;
-        
-        if (texture == null) {
-            texture = new Texture(assets.blockAssets.blockAtlas.getSheet());
-            standardBlockMaterial = new Material(TextureAttribute.createDiffuse(texture), new BlendingAttribute(false, 1f), FloatAttribute.createAlphaTest(0.5f));
-        }
     }
 
     @Override
