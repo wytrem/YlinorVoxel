@@ -1,6 +1,6 @@
 package com.ylinor.client.render.model;
 
-import static com.ylinor.library.util.JsonUtil.makeTree;
+import static com.ylinor.library.util.JsonUtil.*;
 import static com.ylinor.library.util.JsonUtil.mergeExcluding;
 import static com.ylinor.library.util.JsonUtil.walkTree;
 import static com.ylinor.library.util.JsonUtil.walkTreeOrArray;
@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -29,6 +31,7 @@ import com.ylinor.client.render.model.block.BlockModel;
 import com.ylinor.client.render.model.block.Cube;
 import com.ylinor.client.render.model.block.FaceRenderInfo;
 import com.ylinor.client.resource.TextureAtlas;
+import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.state.props.StateProperty;
 import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.spring.Assert;
@@ -127,6 +130,56 @@ public class ModelDeserializer {
 
             variants.put("", getModel());
         }
+    }
+
+    public BlockModel variant(BlockState state) {
+        if (this.bakedJson.has("variants")) {
+            JsonNode variantsNode = this.bakedJson.get("variants");
+
+            if (variantsNode.isObject()) {
+                return variants.get(state.propertiesToString());
+            }
+            else if (variantsNode.isArray()) {
+                ArrayNode variantsArrayNode = ((ArrayNode) variantsNode);
+                
+                ObjectNode model = this.bakedJson;
+                Iterator<JsonNode> it = variantsArrayNode.elements();
+
+                while (it.hasNext()) {
+                    JsonNode element = it.next();
+                    if (element.has("when") && element.has("apply")) {
+                        
+                        ObjectNode when = (ObjectNode) element.get("when");
+                        ObjectNode apply = (ObjectNode) element.get("apply");
+
+                        if (matches(when, state)) {
+                            model = mergeExcluding(model, apply);
+                            model.remove("variants");
+                        }
+                    }
+                }
+                
+                ModelDeserializer deserializer = new ModelDeserializer(name + "#" + state.propertiesToString(), atlas, model, this.modelsResolver);
+                deserializer.deserialize();
+                
+                return deserializer.getModel();
+            }
+        }
+
+        return null;
+    }
+
+    private boolean matches(ObjectNode when, BlockState state) {
+        Iterator<Entry<String, JsonNode>> it = when.fields();
+
+        while (it.hasNext()) {
+            Entry<String, JsonNode> entry = it.next();
+            if (!state.has(entry.getKey(), entry.getValue().textValue())) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     private static Vector3f readArrayToVector(JsonNode node) {
@@ -261,12 +314,9 @@ public class ModelDeserializer {
             Map<Facing, FaceRenderInfo> texturesMapping = new HashMap<>();
             Map<Facing, Facing> cullfaces = new HashMap<>();
 
-            JsonNode defNode = faces.get("allfaces");
+            JsonNode defNode = faces.has("allfaces") ? faces.get("allfaces") : new ObjectNode(JsonNodeFactory.instance);
 
-            if (defNode == null) {
-                defNode = new ObjectNode(JsonNodeFactory.instance);
-            }
-            else if (defNode.isTextual()) {
+            if (defNode.isTextual()) {
                 String defTexture = defNode.textValue();
                 defNode = new ObjectNode(JsonNodeFactory.instance);
                 ((ObjectNode) defNode).put("texture", defTexture);

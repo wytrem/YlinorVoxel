@@ -25,7 +25,7 @@ public class BlockTypeOldLog extends BlockType {
     @Override
     protected void initStates() {
         this.setDefaultState(this.blockStateFactory.getOneState()
-                                                   .with(VARIANT, PlanksType.OAK)
+                                                   .with(VARIANT, PlanksType.SPRUCE)
                                                    .with(LOG_AXIS, EnumAxis.Y));
     }
 

@@ -31,6 +31,7 @@ public class BlockType {
     public static final BlockType goldOre = new BlockType(14, Material.ROCK).setUnlocalizedName("gold_ore");
     public static final BlockType ironOre = new BlockType(15, Material.ROCK).setUnlocalizedName("iron_ore");
     public static final BlockType coalOre = new BlockType(16, Material.ROCK).setUnlocalizedName("coal_ore");
+    public static final BlockType oldLog = new BlockTypeOldLog(17).setUnlocalizedName("old_log");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;

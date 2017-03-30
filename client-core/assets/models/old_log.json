@@ -1,0 +1,49 @@
+{
+	"parent": "cube_column",
+	"variants" : [
+		{
+			"when": {
+				"variant":"oak"
+			}, 
+			"apply": {
+				"textures": {
+					"end": "log_oak_top",
+					"side": "log_oak"
+				}
+			}
+		},
+		{
+			"when": {
+				"variant":"spruce"
+			}, 
+			"apply": {
+				"textures": {
+					"end": "log_spruce_top",
+					"side": "log_spruce"
+				}
+			}
+		},
+		{
+			"when": {
+				"variant":"birch"
+			}, 
+			"apply": {
+				"textures": {
+					"end": "log_birch_top",
+					"side": "log_birch"
+				}
+			}
+		},
+		{
+			"when": {
+				"variant":"jungle"
+			}, 
+			"apply": {
+				"textures": {
+					"end": "log_jungle_top",
+					"side": "log_jungle"
+				}
+			}
+		}
+	]
+}

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.ylinor.client.render.model.block.BlockModel;
-import com.ylinor.client.render.model.block.UniqueVariant;
 import com.ylinor.client.render.model.block.Variants;
 import com.ylinor.client.resource.TextureAtlas;
 import com.ylinor.library.api.terrain.Terrain;
@@ -36,14 +35,13 @@ public class ModelRegistry {
 
     public void loadFrom(FileHandleResolver modelFileResolver, TextureAtlas atlas) {
         blockStatesFiles.forEachEntry(new TShortObjectProcedure<String>() {
-
             @Override
             public boolean execute(short arg0, String arg1) {
                 try {
                     logger.info("Loading block model {}", arg1);
                     ModelDeserializer deserializer = ModelDeserializer.read(modelFileResolver.resolve(arg1), atlas, modelFileResolver);
                     deserializer.deserialize();
-                    register(arg0, new Variants(deserializer.variants));
+                    register(arg0, new Variants(deserializer.variants, deserializer));
                 }
                 catch (IOException e) {
                     e.printStackTrace();

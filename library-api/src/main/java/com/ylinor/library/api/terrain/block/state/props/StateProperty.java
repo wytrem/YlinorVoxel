@@ -4,9 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-/**
- *
- */
 public abstract class StateProperty<T> implements Comparable<StateProperty<?>>{
 	protected String name;
 	protected Collection<T> possibleValues;
@@ -23,6 +20,10 @@ public abstract class StateProperty<T> implements Comparable<StateProperty<?>>{
 	@SuppressWarnings("unchecked")
     public String equality(Object value) {
 	    return name() + "=" + serialize((T) value);
+	}
+	@SuppressWarnings("unchecked")
+	public String serializeObject(Object value) {
+	    return serialize((T) value);
 	}
 
 	public abstract String serialize(T value);

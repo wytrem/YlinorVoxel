@@ -2,6 +2,7 @@ package com.ylinor.library.api.terrain.block.state;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -78,8 +79,25 @@ public class BlockState {
         return links.get(new Pair<StateProperty<V>, V>(stateProperty, value));
     }
 
+    public boolean has(String propertyName, String value) {
+        Optional<StateProperty<?>> propOptional = properties.keySet()
+                                                            .stream()
+                                                            .filter(property -> property.name()
+                                                                                        .equalsIgnoreCase(propertyName))
+                                                            .findFirst();
+
+        if (propOptional.isPresent()) {
+            StateProperty<?> prop = propOptional.get();
+            return prop.serializeObject(properties.get(prop)).equals(value);
+        }
+        else {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         return "BlockState [" + properties + "]";
     }
+
 }
