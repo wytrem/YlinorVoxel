@@ -1,0 +1,6 @@
+{
+    "parent": "cross",
+    "textures": {
+        "cross": "mushroom_brown"
+    }
+}

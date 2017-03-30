@@ -1,0 +1,8 @@
+{
+    "parent": "orientable",
+    "textures": {
+        "top": "furnace_top",
+        "front": "dispenser_front_horizontal",
+        "side": "furnace_side"
+    }
+}

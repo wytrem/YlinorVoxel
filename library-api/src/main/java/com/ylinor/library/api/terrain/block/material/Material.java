@@ -40,7 +40,7 @@ public class Material {
    }).setRequiresTool().setNoPushMobility();
    public static final Material PISTON = (new Material(MapColor.STONE)).setImmovableMobility();
    public static final Material BARRIER = (new Material(MapColor.AIR)).setRequiresTool().setImmovableMobility();
-   public static final Material field_189963_J = new MaterialTransparent(MapColor.AIR);
+   public static final Material TRANSPARENT = new MaterialTransparent(MapColor.AIR);
    private boolean canBurn;
    private boolean replaceable;
    private boolean isTranslucent;

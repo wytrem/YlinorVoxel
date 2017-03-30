@@ -43,7 +43,7 @@ public class YlinorClient extends YlinorApplication
     /**
      * La verision du client
      */
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "Espilon 0.1";
 
     /**
      * Un logger Wylog
@@ -71,7 +71,7 @@ public class YlinorClient extends YlinorApplication
 
     @Override
     public void create() {
-        logger.info("Loading Ylinor Client v" + VERSION);
+        logger.info("Loading Ylinor Client - " + VERSION);
 
         try {
             settings = GameSettings.get(new File(YlinorFiles.getGameFolder(), "settings.json"));

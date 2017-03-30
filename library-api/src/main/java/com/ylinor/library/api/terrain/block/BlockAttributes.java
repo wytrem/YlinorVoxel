@@ -42,7 +42,7 @@ public class BlockAttributes {
 	private int colorMultiplier;
 
 	public BlockAttributes(Material materialIn, MapColor mapColorIn) {
-		this.isOpaqueCube = true;
+		this.isOpaqueCube = materialIn.isOpaque();
 		this.fullBlock = isOpaqueCube;
 		this.enableStats = true;
 		this.blockParticleGravity = 1.0F;

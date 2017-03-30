@@ -11,8 +11,8 @@ import com.ylinor.library.api.terrain.block.type.BlockTypePlanks.PlanksType;
 
 public class BlockTypeOldLog extends BlockType {
     public static final PropertyEnum<PlanksType> VARIANT = PropertyEnum.create("variant", PlanksType.class, new Predicate<PlanksType>() {
-        public boolean test(PlanksType p_apply_1_) {
-            return p_apply_1_.getMetadata() < 4;
+        public boolean test(PlanksType type) {
+            return type.getMetadata() < 4;
         }
     });
 
@@ -20,12 +20,14 @@ public class BlockTypeOldLog extends BlockType {
 
     protected BlockTypeOldLog(int id) {
         super(id, Material.WOOD);
+        getDefaultAttributes().setBlockHardness(2.0f);
+        getDefaultAttributes().setBlockResistance(10.0f);
     }
 
     @Override
     protected void initStates() {
         this.setDefaultState(this.blockStateFactory.getOneState()
-                                                   .with(VARIANT, PlanksType.SPRUCE)
+                                                   .with(VARIANT, PlanksType.OAK)
                                                    .with(LOG_AXIS, EnumAxis.Y));
     }
 

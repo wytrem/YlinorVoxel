@@ -46,14 +46,34 @@ public class ClientChunkProvider implements IChunkProvider {
         for (int x = 0; x < Chunk.SIZE_X; x++) {
             for (int y = 0; y < Chunk.SIZE_Y; y++) {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
-                    if (y < 255) {
-                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (BlockType.dirt.getId())));
+                    if (y < 115) {
+                        chunk.setBlockType(x, y, z, BlockType.dirt);
                     }
-                    else {
-                        chunk.setBlockType(x, y, z, terrain.getBlockType((short) (MathUtils.random(7, 17))));
+                    else if (y < 120) {
+                        if (MathUtils.randomBoolean(0.01f)) {
+                            chunk.setBlockType(x, y, z, terrain.getBlockType((short) MathUtils.random(42, 49)));
+                        }
                     }
                 }
             }
+        }
+        if (chunkX == 0 && chunkZ == 0) {
+            for (int x = -1; x < 2; x++) {
+                for (int z = -1; z < 2; z++) {
+                    chunk.setBlockType(8 + x, 115 + 3, 8 + z, BlockType.oldLeaves);
+                }
+            }
+            
+            chunk.setBlockType(8 - 1, 115 + 4, 8, BlockType.oldLeaves);
+            chunk.setBlockType(8 + 1, 115 + 4, 8, BlockType.oldLeaves);
+            chunk.setBlockType(8, 115 + 4, 8 - 1, BlockType.oldLeaves);
+            chunk.setBlockType(8, 115 + 4, 8 + 1, BlockType.oldLeaves);
+            chunk.setBlockType(8, 115 + 5, 8, BlockType.oldLeaves);
+
+            for (int y = 0; y < 4; y++) {
+                chunk.setBlockType(8, 115 + y, 8, BlockType.oldLog);
+            }
+
         }
 
         return chunk;

@@ -1,0 +1,6 @@
+{
+    "parent": "rail_flat",
+    "textures": {
+        "rail": "rail_golden"
+    }
+}

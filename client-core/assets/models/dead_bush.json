@@ -1,0 +1,6 @@
+{
+    "parent": "cross",
+    "textures": {
+        "cross": "deadbush"
+    }
+}

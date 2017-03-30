@@ -1,5 +1,5 @@
 {
-	"elements": {
+		"elements": {
 		"block": {
 			"from": [
 				0,
@@ -16,38 +16,40 @@
 					"useColorMutiplier": true
 				},
 				"down": {
-					"texture": "#down",
-					"cullface": "down"
+					"texture": "#down"
 				},
 				"up": {
-					"texture": "#up",
-					"cullface": "up"
+					"texture": "#up"
 				},
 				"north": {
-					"texture": "#north",
-					"cullface": "north"
+					"texture": "#north"
 				},
 				"south": {
-					"texture": "#south",
-					"cullface": "south"
+					"texture": "#south"
 				},
 				"west": {
-					"texture": "#west",
-					"cullface": "west"
+					"texture": "#west"
 				},
 				"east": {
-					"texture": "#east",
-					"cullface": "east"
+					"texture": "#east"
 				}
 			}
 		}
 	},
-	"parent": "cube_tinted",
-	"variants": [
+	"textures": {
+		"particle": "#all",
+		"down": "#all",
+		"up": "#all",
+		"north": "#all",
+		"east": "#all",
+		"south": "#all",
+		"west": "#all"
+	},
+	"variants" : [
 		{
 			"when": {
-				"variant": "oak"
-			},
+				"variant":"oak"
+			}, 
 			"apply": {
 				"textures": {
 					"all": "leaves_oak"
@@ -56,8 +58,8 @@
 		},
 		{
 			"when": {
-				"variant": "spruce"
-			},
+				"variant":"spruce"
+			}, 
 			"apply": {
 				"textures": {
 					"all": "leaves_spruce"
@@ -66,8 +68,8 @@
 		},
 		{
 			"when": {
-				"variant": "birch"
-			},
+				"variant":"birch"
+			}, 
 			"apply": {
 				"textures": {
 					"all": "leaves_birch"
@@ -76,8 +78,8 @@
 		},
 		{
 			"when": {
-				"variant": "jungle"
-			},
+				"variant":"jungle"
+			}, 
 			"apply": {
 				"textures": {
 					"all": "leaves_jungle"

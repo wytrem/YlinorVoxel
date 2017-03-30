@@ -1,6 +1,6 @@
 {
 	"parent": "cube_all",
 	"textures": {
-		"all": "noteblock"
+		"all": "iron_block"
 	}
 }

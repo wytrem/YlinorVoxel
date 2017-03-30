@@ -57,11 +57,7 @@ public class Cube implements Renderable {
 
         tempVars.blockPos0.set(x, y, z);
         BlockState state = neighbours.getBlockState(tempVars.blockPos0);
-        
-        if (state.getBlockType() == BlockType.stone) {
-            System.out.println("");
-        }
-         
+
         for (Facing facing : faces.keySet()) {
             if (cullfaces.containsKey(facing)) {
                 tempVars.blockPos0.set(x, y, z).offset(cullfaces.get(facing));
@@ -161,7 +157,6 @@ public class Cube implements Renderable {
     }
 
     public void createBottom(VertexBuffer buffer, TempVars tempVars, int color, FaceRenderInfo texture) {
-
         // normal
         tempVars.vect1.set(0, -1, 0).mulProject(tempVars.tempMat4);
 
@@ -173,11 +168,11 @@ public class Cube implements Renderable {
               .texCoords(texture.getTexCoords(0))
               .endVertex();
 
-        tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
+        tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
               .color(color)
               .normal(tempVars.vect1)
-              .texCoords(texture.getTexCoords(1))
+              .texCoords(texture.getTexCoords(3))
               .endVertex();
 
         tempVars.vect0.set(1, 0, 1).mulProject(tempVars.tempMat4);
@@ -187,11 +182,11 @@ public class Cube implements Renderable {
               .texCoords(texture.getTexCoords(2))
               .endVertex();
 
-        tempVars.vect0.set(0, 0, 1).mulProject(tempVars.tempMat4);
+        tempVars.vect0.set(1, 0, 0).mulProject(tempVars.tempMat4);
         buffer.pos(tempVars.vect0)
               .color(color)
               .normal(tempVars.vect1)
-              .texCoords(texture.getTexCoords(3))
+              .texCoords(texture.getTexCoords(1))
               .endVertex();
     }
 

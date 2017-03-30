@@ -14,7 +14,7 @@ public class DesktopLauncher {
         config.setWindowedMode(800, 600);
         
         YlinorClient client = new YlinorClient();
-        config.setTitle("Ylinor client - v" + client.getVersion());
+        config.setTitle("Ylinor client - " + client.getVersion());
 
         new Lwjgl3Application(client, config);
     }
