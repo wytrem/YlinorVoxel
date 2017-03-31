@@ -62,7 +62,7 @@ public class ChunkRenderer implements Disposable {
                         model = renderer.assets.blockAssets.modelsRegistry.get(chunk.getWorld(), state.getBlockType(), state);
                         
                         if (model == null) {
-                            throw new RenderingException("Missing model for properties : '" + state.propertiesToString() + "' in block type " + state.getBlockType().getUnlocalizedName());
+                            throw new RenderingException("Missing model for properties : '" + state.propertiesToString() + "' in block type " + state.getBlockType().getModelName());
                         }
                         
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);

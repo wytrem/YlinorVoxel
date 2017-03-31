@@ -1,0 +1,7 @@
+{
+    "parent": "door_bottom",
+    "textures": {
+        "bottom": "door_wood_lower",
+        "top": "door_wood_upper"
+    }
+}

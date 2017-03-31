@@ -1,0 +1,7 @@
+{
+	"parent": "cube_all",
+	"textures": 
+	{
+		"all": "fire"
+	}
+}

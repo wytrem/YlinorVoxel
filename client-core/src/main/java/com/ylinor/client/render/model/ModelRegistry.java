@@ -56,7 +56,7 @@ public class ModelRegistry {
             if (type == BlockType.air) {
                 continue;
             }
-            register(type, type.getUnlocalizedName());
+            register(type, type.getModelName());
         }
     }
 

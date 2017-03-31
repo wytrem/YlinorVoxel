@@ -14,62 +14,98 @@ import gnu.trove.map.hash.TShortObjectHashMap;
 
 public class BlockType {
     public static final TShortObjectHashMap<BlockType> REGISTRY = new TShortObjectHashMap<>();
-    public static final BlockType air = new BlockTypeAir(0).setUnlocalizedName("air");
-    public static final BlockType stone = new BlockTypeStone(1).setUnlocalizedName("stone");
-    public static final BlockType grass = new BlockTypeGrass(2).setUnlocalizedName("grass");
-    public static final BlockType dirt = new BlockTypeDirt(3).setUnlocalizedName("dirt");
-    public static final BlockType cobbleStone = new BlockTypeCobbleStone(4).setUnlocalizedName("cobblestone");
-    public static final BlockType planks = new BlockTypePlanks(5).setUnlocalizedName("planks");
-    public static final BlockType sapling = new BlockTypeSapling(6).setUnlocalizedName("sapling");
-    public static final BlockType bedrock = new BlockType(7, Material.ROCK).setUnlocalizedName("bedrock");
-    public static final BlockType flowingWater = new BlockType(8, Material.WATER).setUnlocalizedName("flowing_water");
-    public static final BlockType water = new BlockType(9, Material.WATER).setUnlocalizedName("water");
-    public static final BlockType flowingLava = new BlockType(10, Material.LAVA).setUnlocalizedName("flowing_lava");
-    public static final BlockType lava = new BlockType(11, Material.LAVA).setUnlocalizedName("lava");
-    public static final BlockType sand = new BlockType(12, Material.SAND).setUnlocalizedName("sand");
-    public static final BlockType gravel = new BlockType(13, Material.SAND).setUnlocalizedName("gravel");
-    public static final BlockType goldOre = new BlockType(14, Material.ROCK).setUnlocalizedName("gold_ore");
-    public static final BlockType ironOre = new BlockType(15, Material.ROCK).setUnlocalizedName("iron_ore");
-    public static final BlockType coalOre = new BlockType(16, Material.ROCK).setUnlocalizedName("coal_ore");
-    public static final BlockType oldLog = new BlockTypeOldLog(17).setUnlocalizedName("old_log");
-    public static final BlockType oldLeaves = new BlockTypeOldLeaves(18).setUnlocalizedName("old_leaves");
-    public static final BlockType sponge = new BlockType(19, Material.SPONGE).setUnlocalizedName("sponge");
-    public static final BlockType glass = new BlockType(20, Material.GLASS).setUnlocalizedName("glass");
-    public static final BlockType lapisOre = new BlockType(21, Material.ROCK).setUnlocalizedName("lapis_ore");
-    public static final BlockType lapisBlock = new BlockType(22, Material.ROCK).setUnlocalizedName("lapis_block");
-    public static final BlockType dispenser = new BlockType(23).setUnlocalizedName("dispenser");
-    public static final BlockType sandstone = new BlockType(24).setUnlocalizedName("sandstone");
-    public static final BlockType noteblock = new BlockType(25).setUnlocalizedName("noteblock");
-    public static final BlockType bed = new BlockType(26).setUnlocalizedName("bed");
-    public static final BlockType goldenRail = new BlockType(27).setUnlocalizedName("golden_rail");
-    public static final BlockType detectorRail = new BlockType(28).setUnlocalizedName("detector_rail");
-    public static final BlockType stickyPiston = new BlockType(29).setUnlocalizedName("sticky_piston");
-    public static final BlockType web = new BlockType(30).setUnlocalizedName("web");
-    public static final BlockType tallgrass = new BlockTallGrass(31).setUnlocalizedName("tallgrass");
-    public static final BlockType deadBush = new BlockType(32).setUnlocalizedName("dead_bush");
-    public static final BlockType piston = new BlockType(33).setUnlocalizedName("piston_normal");
+    public static final BlockType air = new BlockTypeAir(0).setModelName("air");
+    public static final BlockType stone = new BlockTypeStone(1).setModelName("stone");
+    public static final BlockType grass = new BlockTypeGrass(2).setModelName("grass");
+    public static final BlockType dirt = new BlockTypeDirt(3).setModelName("dirt");
+    public static final BlockType cobbleStone = new BlockTypeCobbleStone(4).setModelName("cobblestone");
+    public static final BlockType planks = new BlockTypePlanks(5).setModelName("planks");
+    public static final BlockType sapling = new BlockTypeSapling(6).setModelName("sapling");
+    public static final BlockType bedrock = new BlockType(7, Material.ROCK).setModelName("bedrock");
+    public static final BlockType flowingWater = new BlockType(8, Material.WATER).setModelName("flowing_water");
+    public static final BlockType water = new BlockType(9, Material.WATER).setModelName("water");
+    public static final BlockType flowingLava = new BlockType(10, Material.LAVA).setModelName("flowing_lava");
+    public static final BlockType lava = new BlockType(11, Material.LAVA).setModelName("lava");
+    public static final BlockType sand = new BlockType(12, Material.SAND).setModelName("sand");
+    public static final BlockType gravel = new BlockType(13, Material.SAND).setModelName("gravel");
+    public static final BlockType goldOre = new BlockType(14, Material.ROCK).setModelName("gold_ore");
+    public static final BlockType ironOre = new BlockType(15, Material.ROCK).setModelName("iron_ore");
+    public static final BlockType coalOre = new BlockType(16, Material.ROCK).setModelName("coal_ore");
+    public static final BlockType oldLog = new BlockTypeOldLog(17).setModelName("old_log");
+    public static final BlockType oldLeaves = new BlockTypeOldLeaves(18).setModelName("old_leaves");
+    public static final BlockType sponge = new BlockType(19, Material.SPONGE).setModelName("sponge");
+    public static final BlockType glass = new BlockType(20, Material.GLASS).setModelName("glass");
+    public static final BlockType lapisOre = new BlockType(21, Material.ROCK).setModelName("lapis_ore");
+    public static final BlockType lapisBlock = new BlockType(22, Material.ROCK).setModelName("lapis_block");
+    public static final BlockType dispenser = new BlockType(23).setModelName("dispenser");
+    public static final BlockType sandstone = new BlockType(24).setModelName("sandstone");
+    public static final BlockType noteblock = new BlockType(25).setModelName("noteblock");
+    public static final BlockType bed = new BlockType(26).setModelName("bed");
+    public static final BlockType goldenRail = new BlockType(27).setModelName("golden_rail");
+    public static final BlockType detectorRail = new BlockType(28).setModelName("detector_rail");
+    public static final BlockType stickyPiston = new BlockType(29).setModelName("sticky_piston");
+    public static final BlockType web = new BlockType(30).setModelName("web");
+    public static final BlockType tallgrass = new BlockTallGrass(31).setModelName("tallgrass");
+    public static final BlockType deadBush = new BlockType(32).setModelName("dead_bush");
+    public static final BlockType piston = new BlockType(33).setModelName("piston_normal");
     // 34 : piston head
-    public static final BlockType wool = new BlockType(35).setUnlocalizedName("wool");
+    public static final BlockType wool = new BlockType(35).setModelName("wool");
     // 36 : piston moving
-    public static final BlockType yellowFlower = new BlockType(37).setUnlocalizedName("yellow_flower");
-    public static final BlockType redFlower = new BlockType(38).setUnlocalizedName("red_flower");
-    public static final BlockType brownMushroom = new BlockType(39).setUnlocalizedName("brown_mushroom");
-    public static final BlockType redMushroom = new BlockType(40).setUnlocalizedName("red_mushroom");
-    public static final BlockType goldBlock = new BlockType(41).setUnlocalizedName("gold_block");
-    public static final BlockType ironBlock = new BlockType(42).setUnlocalizedName("iron_block");
-    public static final BlockType doubleStoneSlab = new BlockType(43).setUnlocalizedName("double_stone");
-    public static final BlockType stoneSlab = new BlockType(44).setUnlocalizedName("half_slab_stone");
-    public static final BlockType brickBlock = new BlockType(45).setUnlocalizedName("brick");
-    public static final BlockType tnt = new BlockType(46).setUnlocalizedName("tnt");
-    public static final BlockType bookshelf = new BlockType(47).setUnlocalizedName("bookshelf");
-    public static final BlockType mossyCobblestone = new BlockType(48).setUnlocalizedName("mossy_cobblestone");
-    public static final BlockType obsidian = new BlockType(49).setUnlocalizedName("obsidian");
+    public static final BlockType yellowFlower = new BlockType(37).setModelName("yellow_flower");
+    public static final BlockType redFlower = new BlockType(38).setModelName("red_flower");
+    public static final BlockType brownMushroom = new BlockType(39).setModelName("brown_mushroom");
+    public static final BlockType redMushroom = new BlockType(40).setModelName("red_mushroom");
+    public static final BlockType goldBlock = new BlockType(41).setModelName("gold_block");
+    public static final BlockType ironBlock = new BlockType(42).setModelName("iron_block");
+    public static final BlockType doubleStoneSlab = new BlockType(43).setModelName("double_stone");
+    public static final BlockType stoneSlab = new BlockType(44).setModelName("half_slab_stone");
+    public static final BlockType brickBlock = new BlockType(45).setModelName("brick");
+    public static final BlockType tnt = new BlockType(46).setModelName("tnt");
+    public static final BlockType bookshelf = new BlockType(47).setModelName("bookshelf");
+    public static final BlockType mossyCobblestone = new BlockType(48).setModelName("mossy_cobblestone");
+    public static final BlockType obsidian = new BlockType(49).setModelName("obsidian");
+    public static final BlockType torch = new BlockType(50).setModelName("normal_torch");
+    public static final BlockType fire = new BlockType(51).setModelName("fire");
+    public static final BlockType mobSpawner = new BlockType(52).setModelName("mob_spawner");
+    public static final BlockType oakStairs = new BlockType(53).setModelName("oak_stairs");
+    public static final BlockType chest = new BlockType(54).setModelName("chest");
+    public static final BlockType redstoneWire = new BlockType(55).setModelName("redstone_dot");
+    public static final BlockType diamondOre = new BlockType(56).setModelName("diamond_ore");
+    public static final BlockType diamondBlock = new BlockType(57).setModelName("diamond_block");
+    public static final BlockType craftingTable = new BlockType(58).setModelName("crafting_table");
+    public static final BlockType wheat = new BlockType(59).setModelName("wheat_stage_0");
+    public static final BlockType farmland = new BlockType(60).setModelName("farmland_dry");
+    public static final BlockType furnace = new BlockType(61).setModelName("furnace");
+    public static final BlockType litFurnace = new BlockType(62).setModelName("lit_furnace");
+    public static final BlockType standingSign = new BlockType(63).setModelName("sign");
+    public static final BlockType doorWood = new BlockType(64).setModelName("wooden_door_bottom");
+    public static final BlockType ladder = new BlockType(65).setModelName("ladder");
+    public static final BlockType rail = new BlockType(66).setModelName("normal_rail_flat");
+    public static final BlockType stoneStairs = new BlockType(67).setModelName("stone_stairs");
+    public static final BlockType wallSign = new BlockType(68).setModelName("sign");
+    public static final BlockType lever = new BlockType(69).setModelName("lever");
+    public static final BlockType stonePressurePlate = new BlockType(70).setModelName("stone_pressure_plate_up");
+    public static final BlockType ironDoor = new BlockType(71).setModelName("iron_door_bottom");
+    public static final BlockType woodePressurePlate = new BlockType(72).setModelName("wooden_pressure_plate_up");
+    public static final BlockType redstoneOre = new BlockType(73).setModelName("redstone_ore");
+    public static final BlockType litRedstoneOre = new BlockType(74).setModelName("lit_redstone_ore");
+    public static final BlockType unlitRedstoneTorch = new BlockType(75).setModelName("unlit_redstone_torch");
+    public static final BlockType redstoneTorch = new BlockType(76).setModelName("redstone_torch");
+    public static final BlockType stoneButton = new BlockType(77).setModelName("stone_button");
+    public static final BlockType snowLayer = new BlockType(78).setModelName("snow_layer");
+    public static final BlockType ice = new BlockType(79).setModelName("ice");
+    public static final BlockType snow = new BlockType(80).setModelName("snow");
+    public static final BlockType cactus = new BlockType(81).setModelName("cactus");
+    public static final BlockType clay = new BlockType(82).setModelName("clay");
+    public static final BlockType reeds = new BlockType(83).setModelName("reeds");
+    public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
+    public static final BlockType fence = new BlockType(85).setModelName("oak_fence_side");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;
     private BlockState defaultBlockState;
     private final BlockAttributes defaultAttributes;
-    private String unlocalizedName;
+    private String modelName;
 
     protected BlockType(int id, Material blockMaterialIn, MapColor blockMapColorIn) {
         this.id = (short) id;
@@ -77,13 +113,13 @@ public class BlockType {
         REGISTRY.put(this.id, this);
     }
     
-    public BlockType setUnlocalizedName(String name) {
-        this.unlocalizedName = name;
+    public BlockType setModelName(String name) {
+        this.modelName = name;
         return this;
     }
     
-    public String getUnlocalizedName() {
-        return unlocalizedName;
+    public String getModelName() {
+        return modelName;
     }
     
     protected final void initStateFactory() {

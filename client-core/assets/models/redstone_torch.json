@@ -1,0 +1,6 @@
+{
+    "parent": "torch",
+    "textures": {
+        "torch": "redstone_torch_on"
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "parent": "cube_top",
+    "textures": {
+        "top": "jukebox_top",
+        "side": "jukebox_side"
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "pressure_plate_up",
+    "textures": {
+        "texture": "planks_oak"
+    }
+}

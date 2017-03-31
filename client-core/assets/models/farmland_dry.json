@@ -1,0 +1,8 @@
+{
+    "parent": "farmland",
+    "textures": {
+        "particle": "dirt",
+        "dirt": "dirt",
+        "top": "farmland_dry"
+    }
+}

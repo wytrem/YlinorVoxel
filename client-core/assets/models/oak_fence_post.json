@@ -1,0 +1,6 @@
+{
+    "parent": "fence_post",
+    "textures": {
+        "texture": "planks_oak"
+    }
+}
