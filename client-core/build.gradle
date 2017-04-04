@@ -11,6 +11,7 @@ dependencies {
     compile "com.kotcrab.vis:vis-ui:$visuiVersion"
     compile "com.kotcrab.vis:vis-usl:0.2.1"
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    compile "com.flowpowered:flow-nbt:1.0.0"
     
     // DEBUG
     compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
