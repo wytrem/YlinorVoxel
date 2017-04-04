@@ -60,7 +60,7 @@ public class CameraSystem extends IteratingSystem {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.lookAt(0, 0, 0);
         camera.near = 0.1f;
-        camera.far = 45f;
+        camera.far = 100.0f;
         camera.update();
     }
 

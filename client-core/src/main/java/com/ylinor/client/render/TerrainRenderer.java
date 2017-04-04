@@ -38,7 +38,7 @@ public class TerrainRenderer implements RenderableProvider, Disposable {
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
     Texture texture;
-    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 4;
+    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 8;
 
     @Wire
     CameraSystem cameraSystem;
