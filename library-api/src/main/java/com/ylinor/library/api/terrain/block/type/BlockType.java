@@ -100,6 +100,7 @@ public class BlockType {
     public static final BlockType reeds = new BlockType(83).setModelName("reeds");
     public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
     public static final BlockType fence = new BlockType(85).setModelName("oak_fence_side");
+//    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;
