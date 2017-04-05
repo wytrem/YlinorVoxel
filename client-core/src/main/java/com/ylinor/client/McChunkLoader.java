@@ -9,19 +9,28 @@ import com.ylinor.library.api.terrain.block.type.BlockType;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * @author Alexis L.
  */
-public final class ChunkLoader {
+public final class McChunkLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(McChunkLoader.class);
+    
     public static Chunk loadChunk(Terrain terrain, int chunkX, int chunkZ) throws IOException {
+        
+        logger.debug("Loading chunk at (x: {}, z: {})", chunkX, chunkZ);
         int regionX = MathUtils.floor(chunkX / 32.0f);
         int regionZ = MathUtils.floor(chunkZ / 32.0f);
         FileHandle regionHandle = Gdx.files.local(String.format("r.%d.%d.mca", regionX, regionZ));
         Chunk chunk = new Chunk(terrain, chunkX, chunkZ);
 
         if (regionHandle.exists()) {
-            int regionChunkX = Math.abs(chunkX % 32);
-            int regionChunkZ = Math.abs(chunkZ % 32);
+            int regionChunkX = Math.floorMod(chunkX, 32);
+            int regionChunkZ = Math.floorMod(chunkZ, 32);
             RegionFile regionFile = new RegionFile(regionHandle.file());
 
             if (regionFile.hasChunk(regionChunkX, regionChunkZ)) {

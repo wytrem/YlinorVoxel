@@ -2,7 +2,7 @@ package com.ylinor.client.terrain;
 
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.MathUtils;
-import com.ylinor.client.ChunkLoader;
+import com.ylinor.client.McChunkLoader;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
@@ -36,7 +36,7 @@ public class ClientChunkProvider implements IChunkProvider {
 
         if (chunk == null) {
             try {
-                chunk = ChunkLoader.loadChunk(terrain, x, z);
+                chunk = McChunkLoader.loadChunk(terrain, x, z);
             } catch (IOException e) {
                 e.printStackTrace();
 

@@ -45,9 +45,6 @@ public class YlinorClient extends YlinorApplication
      */
     public static final String VERSION = "Espilon 0.1";
 
-    /**
-     * Un logger Wylog
-     */
     private static final Logger logger = LoggerFactory.getLogger(YlinorClient.class);
 
     /**
