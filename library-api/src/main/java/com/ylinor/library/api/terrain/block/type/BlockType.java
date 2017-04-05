@@ -58,7 +58,7 @@ public class BlockType {
     public static final BlockType goldBlock = new BlockType(41).setModelName("gold_block");
     public static final BlockType ironBlock = new BlockType(42).setModelName("iron_block");
     public static final BlockType doubleStoneSlab = new BlockType(43).setModelName("double_stone");
-    public static final BlockType stoneSlab = new BlockType(44).setModelName("half_slab_stone");
+    public static final BlockType stoneSlab = new BlockTypeHalfSlab(44).setModelName("half_slab_stone");
     public static final BlockType brickBlock = new BlockType(45).setModelName("brick");
     public static final BlockType tnt = new BlockType(46).setModelName("tnt");
     public static final BlockType bookshelf = new BlockType(47).setModelName("bookshelf");
@@ -95,11 +95,14 @@ public class BlockType {
     public static final BlockType snowLayer = new BlockType(78).setModelName("snow_layer");
     public static final BlockType ice = new BlockType(79).setModelName("ice");
     public static final BlockType snow = new BlockType(80).setModelName("snow");
-    public static final BlockType cactus = new BlockType(81).setModelName("cactus");
+    public static final BlockType cactus = new BlockTypeCactus(81).setModelName("cactus");
     public static final BlockType clay = new BlockType(82).setModelName("clay");
     public static final BlockType reeds = new BlockType(83).setModelName("reeds");
     public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
-    public static final BlockType fence = new BlockType(85).setModelName("oak_fence_side");
+    public static final BlockType fence = new BlockTypeFence(85).setModelName("oak_fence_side");
+    public static final BlockType netherBrick = new BlockType(112).setModelName("nether_brick");
+    public static final BlockType woodSlab = new BlockType(126).setModelName("half_slab_oak");
+    public static final BlockType hayBale = new BlockType(170).setModelName("hay");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;
