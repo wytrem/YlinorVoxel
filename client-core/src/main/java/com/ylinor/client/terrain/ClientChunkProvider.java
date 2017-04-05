@@ -8,7 +8,6 @@ import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.api.terrain.block.type.BlockType;
-import com.ylinor.library.util.math.PositionableObject2D;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
@@ -55,10 +54,5 @@ public class ClientChunkProvider implements IChunkProvider {
      */
     public static long chunkXZ2Int(int chunkX, int chunkZ) {
         return chunkX & 4294967295L | (chunkZ & 4294967295L) << 32;
-    }
-
-    @Override
-    public Chunk getChunk(PositionableObject2D pos) {
-        return getChunk(pos.x(), pos.y());
     }
 }

@@ -41,7 +41,7 @@ public class PlayerInitSystem extends BaseSystem {
 	@Override
 	protected void processSystem() {
 		if (id != -1) {
-			phySystem.setPosition(id, 0, 126, 0);
+			phySystem.setPosition(id, 1818, 126, 6710);
 			id = -1;
 		}
 	}

@@ -4,12 +4,11 @@ import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
-import com.ylinor.library.util.math.Sizeable3D;
 
 import gnu.trove.map.TShortObjectMap;
 import gnu.trove.map.hash.TShortObjectHashMap;
 
-public class Chunk implements IBlockContainer, Sizeable3D {
+public class Chunk implements IBlockContainer {
 	public static final short SIZE_X = 16;
 	public static final short SIZE_Y = 256;
 	public static final short SIZE_Z = 16;
@@ -166,17 +165,14 @@ public class Chunk implements IBlockContainer, Sizeable3D {
 		_setState(x, y, z, data);
 	}
 
-	@Override
 	public int getSizeX() {
 		return SIZE_X;
 	}
 
-	@Override
 	public int getSizeY() {
 		return SIZE_Y;
 	}
 
-	@Override
 	public int getSizeZ() {
 		return SIZE_Z;
 	}

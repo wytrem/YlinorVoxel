@@ -5,7 +5,6 @@ import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
-import com.ylinor.library.util.math.PositionableObject2D;
 
 
 public class Terrain implements IChunkProvider, IBlockContainer {
@@ -35,11 +34,6 @@ public class Terrain implements IChunkProvider, IBlockContainer {
 
     public Chunk getChunkOf(int x, int y, int z) {
         return getChunk(x >> 4, z >> 4);
-    }
-
-    @Override
-    public Chunk getChunk(PositionableObject2D pos) {
-        return storage.getChunk(pos);
     }
 
     @Override
