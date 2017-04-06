@@ -35,19 +35,26 @@ public final class McChunkLoader {
             if (regionFile.hasChunk(regionChunkX, regionChunkZ)) {
                 MinecraftChunk minecraftChunk = new MinecraftChunk(regionFile.getChunkDataInputStream(regionChunkX, regionChunkZ));
 
-                for (int subChunkY = 0; subChunkY < 16; subChunkY++) {
-                    if (minecraftChunk.isSectionPresent(subChunkY)) {
-                        byte[] blocks = minecraftChunk.getSectionBlocks(subChunkY);
+                for (int sectionY = 0; sectionY < 16; sectionY++) {
+                    if (minecraftChunk.isSectionPresent(sectionY)) {
+                        short[] blocks = minecraftChunk.getSectionBlocks(sectionY);
 
                         for (int y = 0; y < 16; y++) {
-                            int posY = y + subChunkY * 16;
+                            int posY = y + sectionY * 16;
 
                             for (int z = 0; z < 16; z++) {
+                                int idx = (y * 16 + z) * 16;
+
                                 for (int x = 0; x < 16; x++) {
                                     BlockType blockType;
 
-                                    if ((blockType = BlockType.REGISTRY.get(blocks[(y * 16 + z) * 16 + x])) != null) {
+                                    short block = blocks[idx + x];
+                                    short blockID = (short) (block & 0xfff);
+                                    byte metadata = (byte) ((block >> 12) & 0x0f);
+
+                                    if ((blockType = BlockType.REGISTRY.get(blockID)) != null) {
                                         chunk.setBlockType(x, posY, z, blockType);
+                                        chunk.setBlockState(x, posY, z, blockType.getStateFromMeta(metadata));
                                     }
                                 }
                             }

@@ -101,7 +101,7 @@ public class BlockType {
     public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
     public static final BlockType fence = new BlockTypeFence(85).setModelName("oak_fence_side");
     public static final BlockType netherBrick = new BlockType(112).setModelName("nether_brick");
-    public static final BlockType woodSlab = new BlockType(126).setModelName("half_slab_oak");
+    public static final BlockType woodSlab = new BlockTypeHalfSlab(126).setModelName("half_slab_oak");
     public static final BlockType hayBale = new BlockType(170).setModelName("hay");
 
     private final short id;
