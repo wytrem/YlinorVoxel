@@ -5,11 +5,17 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.packets.Dictionnary;
+
+import net.mostlyoriginal.api.network.marshal.kryonet.KryonetServerMarshalStrategy;
+import net.mostlyoriginal.api.network.system.MarshalSystem;
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
 
     private World world;
     private Terrain terrain;
+    private KryonetServerMarshalStrategy kryonetServerMarshalStrategy;
+    private MarshalSystem marshalSystem;
     
     public YlinorServer() {
         instance = this;
@@ -33,6 +39,10 @@ public class YlinorServer extends YlinorApplication {
         configuration.register(Terrain.class.getName(), terrain);
         configuration.register(terrain);
         configuration.register(this);
+        
+        kryonetServerMarshalStrategy = new KryonetServerMarshalStrategy("localhost", 32321);
+        marshalSystem = new MarshalSystem(Dictionnary.MARSHAL_DICTIONARY, kryonetServerMarshalStrategy);
+        configuration.setSystem(marshalSystem);
     }
 
     private void start() {

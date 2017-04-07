@@ -3,7 +3,7 @@ package com.ylinor.packets;
 import net.mostlyoriginal.api.network.marshal.common.MarshalDictionary;
 
 public class Dictionnary {
-    private static final MarshalDictionary MARSHAL_DICTIONARY;
+    public static final MarshalDictionary MARSHAL_DICTIONARY;
 
     static {
         MARSHAL_DICTIONARY = new MarshalDictionary();
