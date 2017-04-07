@@ -9,21 +9,44 @@ import com.ylinor.packets.Dictionnary;
 
 import net.mostlyoriginal.api.network.marshal.kryonet.KryonetServerMarshalStrategy;
 import net.mostlyoriginal.api.network.system.MarshalSystem;
+
+import java.io.File;
+import java.io.IOException;
+
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
 
+    private ServerConfiguration configuration;
     private World world;
     private Terrain terrain;
     private KryonetServerMarshalStrategy kryonetServerMarshalStrategy;
     private MarshalSystem marshalSystem;
-    
+
     public YlinorServer() {
-        instance = this;
-        server = this;
+        this.configuration = new ServerConfiguration();
+        loadConfiguration(new File("server.properties"));
     }
 
-    public static void main(String[] args) {
-        new YlinorServer().start();
+    private void loadConfiguration(File configFile) {
+        if (configFile.exists()) {
+            try {
+                configuration.read(configFile);
+                configuration.removeUnknownKeys();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        configuration.loadDefaults(false);
+        saveConfiguration(configFile);
+    }
+
+    private void saveConfiguration(File configFile) {
+        try {
+            configuration.write(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -70,5 +93,10 @@ public class YlinorServer extends YlinorApplication {
     @Override
     public String getVersion() {
         return "0.0.1";
+    }
+
+    public static void main(String[] args) {
+        instance = server = new YlinorServer();
+        server.start();
     }
 }
