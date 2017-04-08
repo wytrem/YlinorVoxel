@@ -13,7 +13,7 @@ public final class ServerConfiguration {
 
         defaultProperties.put("maxPlayers", "50");
         defaultProperties.put("database.host", "localhost");
-        defaultProperties.put("database.port", "3306");
+        defaultProperties.put("database.port", "8529");
         defaultProperties.put("database.user", "root");
         defaultProperties.put("database.password", "");
         defaultProperties.put("database.dbname", "ylinor");
