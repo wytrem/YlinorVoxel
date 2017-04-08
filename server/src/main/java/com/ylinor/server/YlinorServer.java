@@ -17,6 +17,7 @@ public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
 
     private ServerConfiguration configuration;
+    private DatabaseManager databaseManager;
     private World world;
     private Terrain terrain;
     private KryonetServerMarshalStrategy kryonetServerMarshalStrategy;
@@ -25,6 +26,18 @@ public class YlinorServer extends YlinorApplication {
     public YlinorServer() {
         this.configuration = new ServerConfiguration();
         loadConfiguration(new File("server.properties"));
+
+        initDatabase();
+    }
+
+    private void initDatabase() {
+        String host = configuration.getProperty("database.host");
+        String port = configuration.getProperty("database.port");
+        String user = configuration.getProperty("database.user");
+        String password = configuration.getProperty("database.password");
+        String dbName = configuration.getProperty("database.dbname");
+
+        this.databaseManager = new DatabaseManager(host, Integer.valueOf(port), user, password, dbName);
     }
 
     private void loadConfiguration(File configFile) {
