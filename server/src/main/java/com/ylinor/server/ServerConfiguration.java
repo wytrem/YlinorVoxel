@@ -41,8 +41,6 @@ public final class ServerConfiguration {
                 }
             }
         }
-
-        System.out.println(properties);
     }
 
     public void write(File file) throws IOException {
@@ -67,5 +65,13 @@ public final class ServerConfiguration {
                 properties.remove(key);
             }
         }
+    }
+
+    public String getProperty(String property) {
+        return properties.get(property);
+    }
+
+    public void setProperty(String property, String value) {
+        properties.put(property, value);
     }
 }
