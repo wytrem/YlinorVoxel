@@ -9,12 +9,15 @@ import com.ylinor.packets.Dictionnary;
 
 import net.mostlyoriginal.api.network.marshal.kryonet.KryonetServerMarshalStrategy;
 import net.mostlyoriginal.api.network.system.MarshalSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
+    private static final Logger LOGGER = LoggerFactory.getLogger(YlinorServer.class);
 
     private ServerConfiguration configuration;
     private DatabaseManager databaseManager;
@@ -24,10 +27,33 @@ public class YlinorServer extends YlinorApplication {
     private MarshalSystem marshalSystem;
 
     public YlinorServer() {
-        this.configuration = new ServerConfiguration();
-        loadConfiguration(new File("server.properties"));
+        LOGGER.info("Loading Ylinor server version Epsilon 0.1");
 
+        initConfiguration();
         initDatabase();
+    }
+
+    private void initConfiguration() {
+        this.configuration = new ServerConfiguration();
+        File configFile = new File("server.properties");
+
+        LOGGER.info("Loading configuration...");
+
+        try {
+            configuration.read(configFile);
+
+            LOGGER.info("Done");
+        } catch (IOException e) {
+            LOGGER.warn("Can't read " + configFile.getName(), e);
+        }
+
+        configuration.loadDefaults(false);
+
+        try {
+            configuration.write(configFile);
+        } catch (IOException e) {
+            ;
+        }
     }
 
     private void initDatabase() {
@@ -38,28 +64,6 @@ public class YlinorServer extends YlinorApplication {
         String dbName = configuration.getProperty("database.dbname");
 
         this.databaseManager = new DatabaseManager(host, Integer.valueOf(port), user, password, dbName);
-    }
-
-    private void loadConfiguration(File configFile) {
-        if (configFile.exists()) {
-            try {
-                configuration.read(configFile);
-                configuration.removeUnknownKeys();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        configuration.loadDefaults(false);
-        saveConfiguration(configFile);
-    }
-
-    private void saveConfiguration(File configFile) {
-        try {
-            configuration.write(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     
     @Override
