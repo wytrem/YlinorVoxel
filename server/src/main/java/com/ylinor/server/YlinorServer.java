@@ -1,20 +1,27 @@
 package com.ylinor.server;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.packets.Dictionnary;
+import com.ylinor.packets.NetworkableObjects;
 
+import net.mostlyoriginal.api.network.marshal.common.MarshalObserver;
+import net.mostlyoriginal.api.network.marshal.common.MarshalState;
 import net.mostlyoriginal.api.network.marshal.kryonet.KryonetServerMarshalStrategy;
 import net.mostlyoriginal.api.network.system.MarshalSystem;
 
-import java.io.File;
-import java.io.IOException;
-
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
+    
+    private static final Logger logger = LoggerFactory.getLogger(YlinorServer.class);
 
     private ServerConfiguration configuration;
     private DatabaseManager databaseManager;
@@ -27,7 +34,7 @@ public class YlinorServer extends YlinorApplication {
         this.configuration = new ServerConfiguration();
         loadConfiguration(new File("server.properties"));
 
-        initDatabase();
+//        initDatabase();
     }
 
     private void initDatabase() {
@@ -77,18 +84,46 @@ public class YlinorServer extends YlinorApplication {
         configuration.register(this);
         
         kryonetServerMarshalStrategy = new KryonetServerMarshalStrategy("localhost", 32321);
-        marshalSystem = new MarshalSystem(Dictionnary.MARSHAL_DICTIONARY, kryonetServerMarshalStrategy);
+        marshalSystem = new MarshalSystem(NetworkableObjects.MARSHAL_DICTIONARY, kryonetServerMarshalStrategy);
         configuration.setSystem(marshalSystem);
+        marshalSystem.getMarshal().setListener(new MarshalObserver() {
+            @Override
+            public void received(int connectionId, Object object) {
+                logger.info("Received (from {}) : {}", connectionId, object);
+            }
+            
+            @Override
+            public void disconnected(int connectionId) {
+                logger.info("Disconnected {}", connectionId);
+            }
+            
+            @Override
+            public void connected(int connectionId) {
+                logger.info("Connected {}", connectionId);
+            }
+        });
     }
 
     private void start() {
-    	
+        logger.info("Starting Ylinor Server version {}.", getVersion());
+        logger.info("Loading terrain.");
+        terrain = new ServerTerrain(new File("."));
+        
+        logger.info("Creating world object.");
     	world = buildWorld();
+    	
+    	logger.info("Starting network system.");
+    	marshalSystem.start();
+    	
+    	if (marshalSystem.getState() != MarshalState.STARTED) {
+    	    logger.error("Network start failed, aborting.");
+    	    System.exit(-1);
+    	}
     	
     	lastRun = System.currentTimeMillis();
     	run();
 	}
-
+    
     long lastRun;
     
 	private void run() {

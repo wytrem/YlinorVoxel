@@ -1,22 +1,36 @@
 package com.ylinor.packets;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.util.UUID;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
 public class PacketLogin extends Packet {
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        
+    
+    private int id;
+    
+    public PacketLogin() {
+        id = UUID.randomUUID().hashCode();
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        
+    public void write(Kryo kryo, Output output) {
+        output.write(id);
+    }
+
+    @Override
+    public void read(Kryo kryo, Input input) {
+        id = input.read();
     }
     
     @Override
     public void handle(PacketHandler handler) {
         handler.handleLogin(this);
+    }
+
+    @Override
+    public String toString() {
+        return "PacketLogin [id=" + id + "]";
     }
 }

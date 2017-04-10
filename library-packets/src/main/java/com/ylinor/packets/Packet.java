@@ -1,8 +1,8 @@
 package com.ylinor.packets;
 
-import java.io.Externalizable;
+import com.esotericsoftware.kryo.KryoSerializable;
 
-public abstract class Packet implements Externalizable {
+public abstract class Packet implements KryoSerializable {
 
     public abstract void handle(PacketHandler handler);
 }

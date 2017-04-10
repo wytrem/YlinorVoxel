@@ -1,41 +1,41 @@
-package com.ylinor.client.terrain;
+package com.ylinor.library.api.terrain;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.math.MathUtils;
-import com.ylinor.client.McChunkLoader;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
-import com.ylinor.library.api.terrain.Chunk;
-import com.ylinor.library.api.terrain.IChunkProvider;
-import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.library.api.terrain.block.type.BlockType;
+import com.ylinor.library.api.terrain.mc.McChunkLoader;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import net.mostlyoriginal.api.event.common.EventSystem;
 
-import java.io.IOException;
-
-
-public class ClientChunkProvider implements IChunkProvider {
+public class ChunkProviderReader implements IChunkProvider {
     @Wire
     private Terrain terrain;
 
     @Wire
     private EventSystem eventSystem;
 
-    public ClientChunkProvider() {
-    }
+    private File regionsFolder;
+    
+    public ChunkProviderReader(File regionsFolder) {
+        this.regionsFolder = regionsFolder;
+    }   
 
     private TLongObjectMap<Chunk> chunkMap = new TLongObjectHashMap<Chunk>();
 
-    public Chunk getChunk(int x, int z) {
+    public @NotNull Chunk getChunk(int x, int z) {
         long id = chunkXZ2Int(x, z);
 
         Chunk chunk = chunkMap.get(id);
 
         if (chunk == null) {
             try {
-                chunk = McChunkLoader.loadChunk(terrain, x, z);
+                chunk = McChunkLoader.loadChunk(terrain, x, z, regionsFolder);
             } catch (IOException e) {
                 e.printStackTrace();
 

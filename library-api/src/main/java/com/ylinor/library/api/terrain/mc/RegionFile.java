@@ -56,7 +56,7 @@
 
  */
 
-package com.ylinor.client;
+package com.ylinor.library.api.terrain.mc;
 
 import java.io.*;
 import java.util.ArrayList;
