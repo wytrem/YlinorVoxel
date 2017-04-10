@@ -1,7 +1,5 @@
 package com.ylinor.packets;
 
-import java.util.UUID;
-
 import net.mostlyoriginal.api.network.marshal.common.MarshalDictionary;
 
 
@@ -11,11 +9,6 @@ public class NetworkableObjects {
 
     static {
         MARSHAL_DICTIONARY = new MarshalDictionary();
-        {
-            registerType(UUID.class);
-            registerType(String.class);
-        }
-
         {
             registerType(PacketLogin.class);
         }

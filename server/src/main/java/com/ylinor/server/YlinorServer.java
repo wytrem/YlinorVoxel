@@ -18,9 +18,9 @@ import net.mostlyoriginal.api.network.marshal.common.MarshalState;
 import net.mostlyoriginal.api.network.marshal.kryonet.KryonetServerMarshalStrategy;
 import net.mostlyoriginal.api.network.system.MarshalSystem;
 
+
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
-    
     private static final Logger logger = LoggerFactory.getLogger(YlinorServer.class);
 
     private ServerConfiguration configuration;
@@ -31,10 +31,35 @@ public class YlinorServer extends YlinorApplication {
     private MarshalSystem marshalSystem;
 
     public YlinorServer() {
-        this.configuration = new ServerConfiguration();
-        loadConfiguration(new File("server.properties"));
+        logger.info("Loading Ylinor server version Epsilon 0.1");
 
+        initConfiguration();
 //        initDatabase();
+    }
+
+    private void initConfiguration() {
+        this.configuration = new ServerConfiguration();
+        File configFile = new File("server.properties");
+
+        logger.info("Loading configuration...");
+
+        try {
+            configuration.read(configFile);
+
+            logger.info("Done");
+        }
+        catch (IOException e) {
+            logger.warn("Can't read " + configFile.getName(), e);
+        }
+
+        configuration.loadDefaults(false);
+
+        try {
+            configuration.write(configFile);
+        }
+        catch (IOException e) {
+            ;
+        }
     }
 
     private void initDatabase() {
@@ -47,32 +72,10 @@ public class YlinorServer extends YlinorApplication {
         this.databaseManager = new DatabaseManager(host, Integer.valueOf(port), user, password, dbName);
     }
 
-    private void loadConfiguration(File configFile) {
-        if (configFile.exists()) {
-            try {
-                configuration.read(configFile);
-                configuration.removeUnknownKeys();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        configuration.loadDefaults(false);
-        saveConfiguration(configFile);
-    }
-
-    private void saveConfiguration(File configFile) {
-        try {
-            configuration.write(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
     @Override
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         super.preConfigure(configurationBuilder);
-//        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
+        //        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class YlinorServer extends YlinorApplication {
         configuration.register(Terrain.class.getName(), terrain);
         configuration.register(terrain);
         configuration.register(this);
-        
+
         kryonetServerMarshalStrategy = new KryonetServerMarshalStrategy("localhost", 32321);
         marshalSystem = new MarshalSystem(NetworkableObjects.MARSHAL_DICTIONARY, kryonetServerMarshalStrategy);
         configuration.setSystem(marshalSystem);
@@ -91,12 +94,12 @@ public class YlinorServer extends YlinorApplication {
             public void received(int connectionId, Object object) {
                 logger.info("Received (from {}) : {}", connectionId, object);
             }
-            
+
             @Override
             public void disconnected(int connectionId) {
                 logger.info("Disconnected {}", connectionId);
             }
-            
+
             @Override
             public void connected(int connectionId) {
                 logger.info("Connected {}", connectionId);
@@ -108,33 +111,33 @@ public class YlinorServer extends YlinorApplication {
         logger.info("Starting Ylinor Server version {}.", getVersion());
         logger.info("Loading terrain.");
         terrain = new ServerTerrain(new File("."));
-        
-        logger.info("Creating world object.");
-    	world = buildWorld();
-    	
-    	logger.info("Starting network system.");
-    	marshalSystem.start();
-    	
-    	if (marshalSystem.getState() != MarshalState.STARTED) {
-    	    logger.error("Network start failed, aborting.");
-    	    System.exit(-1);
-    	}
-    	
-    	lastRun = System.currentTimeMillis();
-    	run();
-	}
-    
-    long lastRun;
-    
-	private void run() {
-		long deltaMillis = System.currentTimeMillis() - lastRun;
-		
-		float delta = deltaMillis / 1000.f;
-		world.setDelta(delta);
-		world.process();
-	}
 
-	public static YlinorServer server() {
+        logger.info("Creating world object.");
+        world = buildWorld();
+
+        logger.info("Starting network system.");
+        marshalSystem.start();
+
+        if (marshalSystem.getState() != MarshalState.STARTED) {
+            logger.error("Network start failed, aborting.");
+            System.exit(-1);
+        }
+
+        lastRun = System.currentTimeMillis();
+        run();
+    }
+
+    long lastRun;
+
+    private void run() {
+        long deltaMillis = System.currentTimeMillis() - lastRun;
+
+        float delta = deltaMillis / 1000.f;
+        world.setDelta(delta);
+        world.process();
+    }
+
+    public static YlinorServer server() {
         return server;
     }
 

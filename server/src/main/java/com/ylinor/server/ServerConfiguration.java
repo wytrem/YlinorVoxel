@@ -34,10 +34,12 @@ public final class ServerConfiguration {
                     continue;
 
                 if (line.contains(":")) {
-                    String key = line.substring(0, line.indexOf(':'));
-                    String value = line.substring(line.indexOf(':') + 1);
+                    String key = line.substring(0, line.indexOf(':')).trim();
+                    String value = line.substring(line.indexOf(':') + 1).trim();
 
-                    properties.put(key.trim(), value.trim());
+                    if (defaultProperties.containsKey(key)) {
+                        properties.put(key, value);
+                    }
                 }
             }
         }
@@ -55,14 +57,6 @@ public final class ServerConfiguration {
         for (Map.Entry<String, String> defaultProperty : defaultProperties.entrySet()) {
             if (!properties.containsKey(defaultProperty.getKey()) || overwrite) {
                 properties.put(defaultProperty.getKey(), defaultProperty.getValue());
-            }
-        }
-    }
-
-    public void removeUnknownKeys() {
-        for (String key : new HashMap<String, String>(properties).keySet()) {
-            if (!defaultProperties.containsKey(key)) {
-                properties.remove(key);
             }
         }
     }
