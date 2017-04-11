@@ -102,6 +102,28 @@ public class BlockType {
     public static final BlockType fence = new BlockType(85).setModelName("oak_fence_side");
 //    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
 
+    // 144: Skull
+    public static final BlockType anvil = new BlockType(145).setModelName("anvil");
+    // 146: Trapped chest
+    public static final BlockType lightWeightedPressurePlate = new BlockType(147).setModelName("light_weighted_pressure_plate_up");
+    public static final BlockType heavyWeightedPressurePlate = new BlockType(148).setModelName("heavy_weighted_pressure_plate_up");
+    // 149: Unpowered comparator
+    // 150: Powered comparator
+    // 151: Daylight detector
+    public static final BlockType redstoneBlock = new BlockType(153).setModelName("redstone_block");
+    // 153: Quartz ore
+    public static final BlockType hopper = new BlockType(154).setModelName("hopper");
+    public static final BlockType quartzBlock = new BlockType(155).setModelName("quartz_block");
+    public static final BlockType quartzStairs = new BlockType(156).setModelName("quartz_stairs");
+    public static final BlockType activatorRail = new BlockType(157).setModelName("activator_rail");
+    public static final BlockType dropper = new BlockType(158).setModelName("dropper");
+    // 159: stained_hardened_clay
+    // 160 : stained_glass_pane
+    // 161 : leaves2
+    // 162 : log2
+    public static final BlockType acaciaStairs = new BlockType(163).setModelName("acacia_stairs");
+    public static final BlockType darkOakStairs = new BlockType(164).setModelName("dark_oak_stairs");
+
     private final short id;
     protected BlockStateFactory blockStateFactory;
     private BlockState defaultBlockState;
