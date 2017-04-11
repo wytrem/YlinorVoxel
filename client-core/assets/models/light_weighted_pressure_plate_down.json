@@ -1,0 +1,6 @@
+{
+  "parent": "pressure_plate_down",
+  "textures": {
+    "texture": "gold_block"
+  }
+}
