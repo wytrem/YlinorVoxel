@@ -100,7 +100,13 @@ public class BlockType {
     public static final BlockType reeds = new BlockType(83).setModelName("reeds");
     public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
     public static final BlockType fence = new BlockType(85).setModelName("oak_fence_side");
-//    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
+    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
+    public static final BlockType netherrack = new BlockType(87).setModelName("netherrack");
+    public static final BlockType soulSand = new BlockType(88).setModelName("soul_sand");
+    public static final BlockType glowstone = new BlockType(89).setModelName("glowstone");
+    public static final BlockType portal = new BlockType(90).setModelName("portal");
+    public static final BlockType litPumpkin = new BlockType(91).setModelName("lit_pumpkin");
+    public static final BlockType cake = new BlockType(92).setModelName("cake");
 
     // 144: Skull
     public static final BlockType anvil = new BlockType(145).setModelName("anvil_undamaged");
