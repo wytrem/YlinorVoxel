@@ -117,12 +117,19 @@ public class BlockType {
     public static final BlockType quartzStairs = new BlockType(156).setModelName("quartz_stairs");
     public static final BlockType activatorRail = new BlockType(157).setModelName("activator_rail");
     public static final BlockType dropper = new BlockType(158).setModelName("dropper");
-    public static final BlockType hardenedClay = new BlockType(159).setModelName("hardened_clay");
+    public static final BlockType stainedHardenedClay = new BlockType(159).setModelName("hardened_clay");
     public static final BlockType glassPane = new BlockType(160).setModelName("glass_pane_post");
     public static final BlockType leaves2 = new BlockTypeOldLeaves(161).setModelName("old_leaves");
     public static final BlockType log2 = new BlockTypeOldLog(162).setModelName("old_log");
     public static final BlockType acaciaStairs = new BlockType(163).setModelName("acacia_stairs");
     public static final BlockType darkOakStairs = new BlockType(164).setModelName("dark_oak_stairs");
+    public static final BlockType slime = new BlockType(165).setModelName("slime");
+    public static final BlockType hayBlock = new BlockType(170).setModelName("hay");
+    public static final BlockType carpet = new BlockType(171).setModelName("carpet_blue");
+    public static final BlockType hardenedClay = new BlockType(172).setModelName("hardened_clay");
+    public static final BlockType coalBlock = new BlockType(173).setModelName("coal_block");
+    public static final BlockType packedIce = new BlockType(174).setModelName("packed_ice");
+    public static final BlockType doublePlante = new BlockType(175).setModelName("double_rose_top");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;

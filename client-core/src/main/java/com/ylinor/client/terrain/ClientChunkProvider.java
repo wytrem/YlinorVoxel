@@ -51,7 +51,7 @@ public class ClientChunkProvider implements IChunkProvider {
                     }
                     else if (y < 120) {
                         if (MathUtils.randomBoolean(0.01f)) {
-                            chunk.setBlockType(x, y, z, terrain.getBlockType((short) MathUtils.random(145, 164)));
+                            chunk.setBlockType(x, y, z, terrain.getBlockType((short) MathUtils.random(170, 175)));
                         }
                     }
                 }

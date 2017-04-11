@@ -1,0 +1,6 @@
+{
+    "parent": "cross",
+    "textures": {
+        "cross": "double_plant_rose_top"
+    }
+}
