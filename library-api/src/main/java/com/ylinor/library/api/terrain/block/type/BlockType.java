@@ -48,9 +48,9 @@ public class BlockType {
     public static final BlockType tallgrass = new BlockTallGrass(31).setModelName("tallgrass");
     public static final BlockType deadBush = new BlockType(32).setModelName("dead_bush");
     public static final BlockType piston = new BlockType(33).setModelName("piston_normal");
-    // 34 : piston head
+    // 34: piston head
     public static final BlockType wool = new BlockType(35).setModelName("wool");
-    // 36 : piston moving
+    // 36: piston moving
     public static final BlockType yellowFlower = new BlockType(37).setModelName("yellow_flower");
     public static final BlockType redFlower = new BlockType(38).setModelName("red_flower");
     public static final BlockType brownMushroom = new BlockType(39).setModelName("brown_mushroom");
@@ -103,24 +103,24 @@ public class BlockType {
 //    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
 
     // 144: Skull
-    public static final BlockType anvil = new BlockType(145).setModelName("anvil");
-    // 146: Trapped chest
+    public static final BlockType anvil = new BlockType(145).setModelName("anvil_undamaged");
+    public static final BlockType trappedChest = new BlockType(146).setModelName("chest");
     public static final BlockType lightWeightedPressurePlate = new BlockType(147).setModelName("light_weighted_pressure_plate_up");
     public static final BlockType heavyWeightedPressurePlate = new BlockType(148).setModelName("heavy_weighted_pressure_plate_up");
-    // 149: Unpowered comparator
-    // 150: Powered comparator
-    // 151: Daylight detector
-    public static final BlockType redstoneBlock = new BlockType(153).setModelName("redstone_block");
-    // 153: Quartz ore
+    public static final BlockType unpoweredComparator = new BlockType(149).setModelName("comparator_unlit");
+    public static final BlockType poweredComparator = new BlockType(150).setModelName("comparator_lit");
+    public static final BlockType daylightDetector = new BlockType(151).setModelName("daylight_detector");
+    public static final BlockType redstoneBlock = new BlockType(152).setModelName("redstone_block");
+    public static final BlockType quartzOre = new BlockType(153).setModelName("quartz_ore");
     public static final BlockType hopper = new BlockType(154).setModelName("hopper");
     public static final BlockType quartzBlock = new BlockType(155).setModelName("quartz_block");
     public static final BlockType quartzStairs = new BlockType(156).setModelName("quartz_stairs");
     public static final BlockType activatorRail = new BlockType(157).setModelName("activator_rail");
     public static final BlockType dropper = new BlockType(158).setModelName("dropper");
-    // 159: stained_hardened_clay
-    // 160 : stained_glass_pane
-    // 161 : leaves2
-    // 162 : log2
+    public static final BlockType hardenedClay = new BlockType(159).setModelName("hardened_clay");
+    public static final BlockType glassPane = new BlockType(160).setModelName("glass_pane_post");
+    public static final BlockType leaves2 = new BlockTypeOldLeaves(161).setModelName("old_leaves");
+    public static final BlockType log2 = new BlockTypeOldLog(162).setModelName("old_log");
     public static final BlockType acaciaStairs = new BlockType(163).setModelName("acacia_stairs");
     public static final BlockType darkOakStairs = new BlockType(164).setModelName("dark_oak_stairs");
 
