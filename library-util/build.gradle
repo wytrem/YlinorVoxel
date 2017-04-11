@@ -22,5 +22,4 @@ dependencies {
     // Artemis-odb bonus functionality (systems, events, components).
     compile "net.mostlyoriginal.artemis-odb:contrib-core:$artemisContribVersion"
     compile "net.mostlyoriginal.artemis-odb:contrib-eventbus:$artemisContribVersion"
-    compile "net.mostlyoriginal.artemis-odb:contrib-network:$artemisContribVersion"
 }
