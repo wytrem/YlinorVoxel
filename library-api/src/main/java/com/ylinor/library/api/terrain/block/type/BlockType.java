@@ -107,7 +107,21 @@ public class BlockType {
     public static final BlockType portal = new BlockType(90).setModelName("portal");
     public static final BlockType litPumpkin = new BlockType(91).setModelName("lit_pumpkin");
     public static final BlockType cake = new BlockType(92).setModelName("cake");
+    public static final BlockType unpoweredRepeater = new BlockType(93).setModelName("repeater_1tick");
+    public static final BlockType poweredRepeater = new BlockType(94).setModelName("repeater_1tick");
+    public static final BlockType stainedGlass = new BlockType(95).setModelName("glass_white");
+    public static final BlockType trapdoor = new BlockType(96).setModelName("wooden_trapdoor_bottom");
+    public static final BlockType monsterEgg = new BlockType(97).setModelName("stonebrick_normal");
+    public static final BlockType stonebrick = new BlockType(98).setModelName("stonebrick_normal");
+    public static final BlockType brownMushroomBlock = new BlockType(99).setModelName("brown_mushroom_block_cap_all");
+    public static final BlockType redMushroomBlock = new BlockType(100).setModelName("red_mushroom_block_cap_all");
+    public static final BlockType ironBars = new BlockType(101).setModelName("iron_bars_post");
+    public static final BlockType glassPane = new BlockType(102).setModelName("glass_pane_post");
+    public static final BlockType melon = new BlockType(103).setModelName("melon");
+    public static final BlockType pumpkinStem = new BlockType(104).setModelName("pumpkin_stem_growth0");
+    public static final BlockType melonStem = new BlockType(105).setModelName("melon_stem_growth0");
 
+    
     // 144: Skull
     public static final BlockType anvil = new BlockType(145).setModelName("anvil_undamaged");
     public static final BlockType trappedChest = new BlockType(146).setModelName("chest");
@@ -124,7 +138,7 @@ public class BlockType {
     public static final BlockType activatorRail = new BlockType(157).setModelName("activator_rail");
     public static final BlockType dropper = new BlockType(158).setModelName("dropper");
     public static final BlockType stainedHardenedClay = new BlockType(159).setModelName("hardened_clay");
-    public static final BlockType glassPane = new BlockType(160).setModelName("glass_pane_post");
+    public static final BlockType stainedGlassPane = new BlockType(160).setModelName("glass_pane_post");
     public static final BlockType leaves2 = new BlockTypeOldLeaves(161).setModelName("old_leaves");
     public static final BlockType log2 = new BlockTypeOldLog(162).setModelName("old_log");
     public static final BlockType acaciaStairs = new BlockType(163).setModelName("acacia_stairs");

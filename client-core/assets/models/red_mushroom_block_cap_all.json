@@ -1,0 +1,6 @@
+{
+    "parent": "cube_all",
+    "textures": {
+        "all": "mushroom_block_skin_red"
+    }
+}
