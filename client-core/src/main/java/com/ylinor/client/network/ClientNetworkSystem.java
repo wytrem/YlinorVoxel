@@ -11,11 +11,11 @@ import java.net.InetAddress;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public final class NetworkSystem extends BaseSystem {
+public final class ClientNetworkSystem extends BaseSystem {
     private final Client client;
     private final Deque<Packet> packetQueue;
 
-    public NetworkSystem() {
+    public ClientNetworkSystem() {
         this.client = new Client();
         client.start();
 
@@ -39,7 +39,7 @@ public final class NetworkSystem extends BaseSystem {
         client.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
-
+                System.out.println("received " + object);
             }
         });
     }

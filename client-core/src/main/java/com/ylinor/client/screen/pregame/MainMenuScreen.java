@@ -12,14 +12,23 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 import com.ylinor.client.YlinorClient;
+import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
+import com.ylinor.packets.PacketLogin;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainMenuScreen extends YlinorScreen {
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
+    
 	@Wire
 	private ScreenSystem screenSystem;
 
@@ -29,6 +38,12 @@ public class MainMenuScreen extends YlinorScreen {
 	@Wire
 	private Assets assets;
 
+	@Wire
+	private ClientNetworkSystem networkSystem;
+	
+    private String host = "localhost";
+    private int port = 25565;
+	
 	public MainMenuScreen() {
 	}
 
@@ -64,7 +79,7 @@ public class MainMenuScreen extends YlinorScreen {
 					super.clicked(event, x, y);
 					screenSystem.setScreen(null);
 					try {
-						client.connectToServer();
+						connectToServer();
 					} catch (IOException e) {
 						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
 					}
@@ -77,6 +92,13 @@ public class MainMenuScreen extends YlinorScreen {
 
 		addActor(table);
 	}
+	
+	public void connectToServer() throws IOException {
+        logger.info("Connecting to server {}:{}.", host, port);
+        networkSystem.init(InetAddress.getByName(host), port);
+
+        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
+    }
 
 	@Override
 	public void resize(int width, int height) {

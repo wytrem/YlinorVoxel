@@ -12,7 +12,7 @@ import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
-import com.ylinor.client.network.NetworkSystem;
+import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.*;
 import com.ylinor.client.resource.Assets;
@@ -63,10 +63,6 @@ public class YlinorClient extends YlinorApplication
 
 
     private World world;
-    private String host = "localhost";
-    private int port = 25565;
-
-    private NetworkSystem networkSystem;
 
     public boolean isInGame = false;
 
@@ -90,15 +86,6 @@ public class YlinorClient extends YlinorApplication
         terrain = new ClientTerrain();
 
         world = buildWorld();
-
-        this.networkSystem = world.getSystem(NetworkSystem.class);
-    }
-
-    public void connectToServer() throws IOException {
-        logger.info("Connecting to server {}:{}.", host, port);
-        networkSystem.init(InetAddress.getByName(host), port);
-
-        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
     }
 
     @Override
@@ -106,7 +93,7 @@ public class YlinorClient extends YlinorApplication
         super.preConfigure(configurationBuilder);
         configurationBuilder.dependsOn(Priority.HIGHEST, PlayerInitSystem.class);
 
-        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, NetworkSystem.class);
+        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, ClientNetworkSystem.class);
 
         configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
 
