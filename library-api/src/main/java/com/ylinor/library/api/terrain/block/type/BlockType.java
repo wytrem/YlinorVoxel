@@ -1,6 +1,7 @@
 package com.ylinor.library.api.terrain.block.type;
 
 import com.artemis.World;
+import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.BlockAttributes;
 import com.ylinor.library.api.terrain.block.material.MapColor;
 import com.ylinor.library.api.terrain.block.material.Material;
@@ -120,8 +121,26 @@ public class BlockType {
     public static final BlockType melon = new BlockType(103).setModelName("melon");
     public static final BlockType pumpkinStem = new BlockType(104).setModelName("pumpkin_stem_growth0");
     public static final BlockType melonStem = new BlockType(105).setModelName("melon_stem_growth0");
-
-    
+    // A intégrer :3
+    // Crash :'( public static final BlockType doubleWoodenSlab = new BlockTypePlanks(125).setModelName("double_wooden_slab");
+    public static final BlockType woodenSlab = new BlockTypePlanks(126).setModelName("wooden_slab");
+    public static final BlockType cocoa = new BlockType(127).setModelName("cocoa_age0_s");
+    public static final BlockType sandstoneStairs = new BlockType(128).setModelName("sandstone_stairs");
+    public static final BlockType emeraldOre = new BlockType(129).setModelName("emerald_ore");
+    public static final BlockType enderChest = new BlockType(130).setModelName("ender_chest");
+    public static final BlockType tripwireHook = new BlockType(131).setModelName("tripwire_hook");
+    public static final BlockType tripwire = new BlockType(132).setModelName("tripwire_n");
+    public static final BlockType emeraldBlock = new BlockType(133).setModelName("emerald_block");
+    public static final BlockType spruceStairs = new BlockType(134).setModelName("spruce_stairs");
+    public static final BlockType birchStairs = new BlockType(135).setModelName("birch_stairs");
+    public static final BlockType jungleStairs = new BlockType(136).setModelName("jungle_stairs");
+    // 137: Command block => Je l'avais fait puis en testant j'ai vu qu'il n'y avait pas la texture du coup je l'ai enlevé en déduisant qu'on l'utiliserait pas (logique en même temps)
+    public static final BlockType beacon = new BlockType(138).setModelName("beacon");
+    public static final BlockType cobblestoneWall = new BlockType(139).setModelName("cobblestone_wall_side");
+    public static final BlockType flowerPot = new BlockType(140).setModelName("flower_pot");
+    public static final BlockType carrots = new BlockType(141).setModelName("carrots_stage_3");
+    public static final BlockType potatoes = new BlockType(142).setModelName("potatoes_stage_3");
+    public static final BlockType woodenButton = new BlockType(143).setModelName("wooden_button");
     // 144: Skull
     public static final BlockType anvil = new BlockType(145).setModelName("anvil_undamaged");
     public static final BlockType trappedChest = new BlockType(146).setModelName("chest");
