@@ -1,0 +1,177 @@
+
+ui.png
+size: 3948,3354
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mainmenu/background
+  rotate: false
+  xy: 2, 1624
+  size: 3072, 1728
+  orig: 3072, 1728
+  offset: 0, 0
+  index: -1
+mainmenu/event
+  rotate: false
+  xy: 3076, 1329
+  size: 534, 662
+  orig: 534, 662
+  offset: 0, 0
+  index: -1
+mainmenu/hide
+  rotate: false
+  xy: 3859, 3243
+  size: 80, 25
+  orig: 80, 25
+  offset: 0, 0
+  index: -1
+mainmenu/logo
+  rotate: false
+  xy: 2309, 33
+  size: 1118, 553
+  orig: 1118, 553
+  offset: 0, 0
+  index: -1
+mainmenu/options
+  rotate: false
+  xy: 2037, 1487
+  size: 463, 135
+  orig: 463, 135
+  offset: 0, 0
+  index: -1
+mainmenu/options_hover
+  rotate: false
+  xy: 2037, 1487
+  size: 463, 135
+  orig: 463, 135
+  offset: 0, 0
+  index: -1
+mainmenu/quit
+  rotate: false
+  xy: 3818, 3282
+  size: 59, 70
+  orig: 59, 70
+  offset: 0, 0
+  index: -1
+widgets/active
+  rotate: false
+  xy: 3612, 1526
+  size: 203, 39
+  orig: 203, 39
+  offset: 0, 0
+  index: -1
+widgets/bars_background
+  rotate: false
+  xy: 2, 2
+  size: 1263, 584
+  orig: 1263, 584
+  offset: 0, 0
+  index: -1
+widgets/bonuses_background
+  rotate: false
+  xy: 2679, 588
+  size: 1267, 739
+  orig: 1267, 739
+  offset: 0, 0
+  index: -1
+widgets/desc_background_active
+  rotate: false
+  xy: 2, 682
+  size: 1067, 433
+  orig: 1067, 433
+  offset: 0, 0
+  index: -1
+widgets/desc_background_passive
+  rotate: false
+  xy: 1071, 682
+  size: 1067, 433
+  orig: 1067, 433
+  offset: 0, 0
+  index: -1
+widgets/entry_background
+  rotate: false
+  xy: 2, 1117
+  size: 2033, 505
+  orig: 2033, 505
+  offset: 0, 0
+  index: -1
+widgets/passive
+  rotate: false
+  xy: 3612, 1485
+  size: 203, 39
+  orig: 203, 39
+  offset: 0, 0
+  index: -1
+widgets/plus
+  rotate: false
+  xy: 3879, 3312
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: -1
+widgets/plus_disabled
+  rotate: false
+  xy: 3879, 3270
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: -1
+widgets/plus_hover
+  rotate: false
+  xy: 3818, 3240
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: -1
+widgets/slot_active
+  rotate: false
+  xy: 3612, 1780
+  size: 214, 211
+  orig: 214, 211
+  offset: 0, 0
+  index: -1
+widgets/slot_passive
+  rotate: false
+  xy: 3612, 1567
+  size: 214, 211
+  orig: 214, 211
+  offset: 0, 0
+  index: -1
+widgets/stats_background
+  rotate: false
+  xy: 3076, 1993
+  size: 740, 1359
+  orig: 740, 1359
+  offset: 0, 0
+  index: -1
+widgets/text_background
+  rotate: false
+  xy: 1267, 65
+  size: 1040, 615
+  orig: 1040, 615
+  offset: 0, 0
+  index: -1
+widgets/textbutton_disabled
+  rotate: false
+  xy: 2037, 1422
+  size: 640, 63
+  split: 8, 11, 10, 13
+  orig: 640, 63
+  offset: 0, 0
+  index: -1
+widgets/textbutton_hover
+  rotate: false
+  xy: 2037, 1357
+  size: 640, 63
+  split: 8, 11, 10, 13
+  orig: 640, 63
+  offset: 0, 0
+  index: -1
+widgets/textbutton_normal
+  rotate: false
+  xy: 2037, 1292
+  size: 640, 63
+  split: 8, 11, 10, 13
+  orig: 640, 63
+  offset: 0, 0
+  index: -1
