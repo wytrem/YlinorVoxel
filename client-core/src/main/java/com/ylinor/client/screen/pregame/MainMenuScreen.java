@@ -16,6 +16,8 @@ import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 
+import java.io.IOException;
+
 public class MainMenuScreen extends YlinorScreen {
 
 	@Wire
@@ -61,7 +63,11 @@ public class MainMenuScreen extends YlinorScreen {
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					screenSystem.setScreen(null);
-					client.connectToServer();
+					try {
+						client.connectToServer();
+					} catch (IOException e) {
+						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
+					}
 					client.isInGame = true;
 				}
 			});

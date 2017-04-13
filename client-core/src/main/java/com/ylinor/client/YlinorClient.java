@@ -1,13 +1,5 @@
 package com.ylinor.client;
 
-import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.artemis.ArtemisMultiException;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
@@ -20,14 +12,9 @@ import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
+import com.ylinor.client.network.NetworkSystem;
 import com.ylinor.client.physics.systems.PhySystem;
-import com.ylinor.client.render.AssetsLoadingSystem;
-import com.ylinor.client.render.CameraSystem;
-import com.ylinor.client.render.ClearScreenSystem;
-import com.ylinor.client.render.HudRenderSystem;
-import com.ylinor.client.render.PlayerInitSystem;
-import com.ylinor.client.render.ScreenSystem;
-import com.ylinor.client.render.TerrainRenderSystem;
+import com.ylinor.client.render.*;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.client.util.YlinorFiles;
@@ -35,13 +22,16 @@ import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.packets.NetworkableObjects;
 import com.ylinor.packets.PacketLogin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import net.mostlyoriginal.api.network.marshal.common.MarshalObserver;
-import net.mostlyoriginal.api.network.marshal.common.MarshalState;
-import net.mostlyoriginal.api.network.marshal.kryonet.KryonetClientMarshalStrategy;
-import net.mostlyoriginal.api.network.system.MarshalSystem;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.UUID;
+
+import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
 
 
 /**
@@ -71,12 +61,12 @@ public class YlinorClient extends YlinorApplication
      */
     private Terrain terrain;
 
-    private KryonetClientMarshalStrategy kryonetClientMarshalStrategy;
-    private MarshalSystem marshalSystem;
 
     private World world;
     private String host = "localhost";
-    private int port = 8529;
+    private int port = 25565;
+
+    private NetworkSystem networkSystem;
 
     public boolean isInGame = false;
 
@@ -100,24 +90,23 @@ public class YlinorClient extends YlinorApplication
         terrain = new ClientTerrain();
 
         world = buildWorld();
+
+        this.networkSystem = world.getSystem(NetworkSystem.class);
     }
 
-    public void connectToServer() {
+    public void connectToServer() throws IOException {
         logger.info("Connecting to server {}:{}.", host, port);
-        marshalSystem.start();
+        networkSystem.init(InetAddress.getByName(host), port);
 
-        if (marshalSystem.getState() != MarshalState.STARTED) {
-            logger.error("Network start failed, aborting.");
-            System.exit(-1);
-        }
-        
-        kryonetClientMarshalStrategy.sendToAll(new PacketLogin());
+        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
     }
 
     @Override
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         super.preConfigure(configurationBuilder);
         configurationBuilder.dependsOn(Priority.HIGHEST, PlayerInitSystem.class);
+
+        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, NetworkSystem.class);
 
         configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
 
@@ -132,26 +121,6 @@ public class YlinorClient extends YlinorApplication
         configuration.register(terrain);
         configuration.register(new Assets());
         configuration.register(this);
-
-        kryonetClientMarshalStrategy = new KryonetClientMarshalStrategy("localhost", 32321);
-        marshalSystem = new MarshalSystem(NetworkableObjects.MARSHAL_DICTIONARY, kryonetClientMarshalStrategy);
-        configuration.setSystem(marshalSystem);
-        marshalSystem.getMarshal().setListener(new MarshalObserver() {
-            @Override
-            public void received(int connectionId, Object object) {
-                logger.info("Received (from {}) : {}", connectionId, object);
-            }
-
-            @Override
-            public void disconnected(int connectionId) {
-                logger.info("Disconnected {}", connectionId);
-            }
-
-            @Override
-            public void connected(int connectionId) {
-                logger.info("Connected {}", connectionId);
-            }
-        });
     }
 
     @Override

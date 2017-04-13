@@ -2,7 +2,11 @@ package com.ylinor.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,13 +15,6 @@ import com.artemis.WorldConfiguration;
 import com.artemis.WorldConfigurationBuilder;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.packets.NetworkableObjects;
-
-import net.mostlyoriginal.api.network.marshal.common.MarshalObserver;
-import net.mostlyoriginal.api.network.marshal.common.MarshalState;
-import net.mostlyoriginal.api.network.marshal.kryonet.KryonetServerMarshalStrategy;
-import net.mostlyoriginal.api.network.system.MarshalSystem;
-
 
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
@@ -27,11 +24,12 @@ public class YlinorServer extends YlinorApplication {
     private DatabaseManager databaseManager;
     private World world;
     private Terrain terrain;
-    private KryonetServerMarshalStrategy kryonetServerMarshalStrategy;
-    private MarshalSystem marshalSystem;
+    private List<Player> playersList;
 
     public YlinorServer() {
         logger.info("Loading Ylinor server version Epsilon 0.1");
+
+        this.playersList = new ArrayList<Player>();
 
         initConfiguration();
 //        initDatabase();
@@ -75,7 +73,9 @@ public class YlinorServer extends YlinorApplication {
     @Override
     protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
         super.preConfigure(configurationBuilder);
-        //        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
+
+//      configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
+        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, NetworkSystem.class);
     }
 
     @Override
@@ -85,26 +85,6 @@ public class YlinorServer extends YlinorApplication {
         configuration.register(Terrain.class.getName(), terrain);
         configuration.register(terrain);
         configuration.register(this);
-
-        kryonetServerMarshalStrategy = new KryonetServerMarshalStrategy("localhost", 32321);
-        marshalSystem = new MarshalSystem(NetworkableObjects.MARSHAL_DICTIONARY, kryonetServerMarshalStrategy);
-        configuration.setSystem(marshalSystem);
-        marshalSystem.getMarshal().setListener(new MarshalObserver() {
-            @Override
-            public void received(int connectionId, Object object) {
-                logger.info("Received (from {}) : {}", connectionId, object);
-            }
-
-            @Override
-            public void disconnected(int connectionId) {
-                logger.info("Disconnected {}", connectionId);
-            }
-
-            @Override
-            public void connected(int connectionId) {
-                logger.info("Connected {}", connectionId);
-            }
-        });
     }
 
     private void start() {
@@ -116,25 +96,51 @@ public class YlinorServer extends YlinorApplication {
         world = buildWorld();
 
         logger.info("Starting network system.");
-        marshalSystem.start();
 
-        if (marshalSystem.getState() != MarshalState.STARTED) {
-            logger.error("Network start failed, aborting.");
-            System.exit(-1);
+        try {
+            world.getSystem(NetworkSystem.class).init(this, new InetSocketAddress("localhost", 25565));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        lastRun = System.currentTimeMillis();
         run();
     }
 
-    long lastRun;
-
     private void run() {
-        long deltaMillis = System.currentTimeMillis() - lastRun;
+        long lastFrameTime = System.currentTimeMillis();
 
-        float delta = deltaMillis / 1000.f;
-        world.setDelta(delta);
-        world.process();
+        while (true) {
+            long time = System.currentTimeMillis();
+            long deltaTime = time - lastFrameTime;
+            lastFrameTime = time;
+
+            for (Player player : new ArrayList<>(playersList)) {
+                if (player.getPlayerConnection().shouldDisconnect()) {
+                    playersList.remove(player);
+
+                    System.out.println("Player disconnected :(");
+                }
+            }
+
+            world.setDelta(deltaTime / 1000.0f);
+            world.process();
+
+            if (deltaTime < (1000 / 50)) {
+                try {
+                    Thread.sleep((1000 / 50) - deltaTime);
+                } catch (InterruptedException e) {
+                    ;
+                }
+            }
+        }
+    }
+
+    protected void newConnection(PlayerConnection playerConnection) {
+        playersList.add(new Player(playerConnection));
+    }
+
+    public List<Player> getPlayersList() {
+        return playersList;
     }
 
     public static YlinorServer server() {

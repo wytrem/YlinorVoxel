@@ -6,24 +6,27 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-public class PacketLogin extends Packet {
-    
-    private int id;
+public final class PacketLogin extends Packet {
+    private UUID authToken;
     
     public PacketLogin() {
-        id = UUID.randomUUID().hashCode();
+
+    }
+
+    public PacketLogin(UUID playerToken) {
+        this.authToken = playerToken;
     }
 
     @Override
     public void write(Kryo kryo, Output output) {
-        output.write(id);
+        writeUUID(output, authToken);
     }
 
     @Override
     public void read(Kryo kryo, Input input) {
-        id = input.read();
+        this.authToken = readUUID(input);
     }
-    
+
     @Override
     public void handle(PacketHandler handler) {
         handler.handleLogin(this);
@@ -31,6 +34,14 @@ public class PacketLogin extends Packet {
 
     @Override
     public String toString() {
-        return "PacketLogin [id=" + id + "]";
+        return "PacketLogin [authToken=" + authToken + "]";
+    }
+
+    public UUID getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(UUID authToken) {
+        this.authToken = authToken;
     }
 }
