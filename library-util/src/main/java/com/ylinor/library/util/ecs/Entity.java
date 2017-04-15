@@ -46,10 +46,14 @@ public final class Entity {
         return components.keySet();
     }
 
+    public void delete() {
+        world.delete(entityId);
+    }
+    
     public int getEntityId() {
         return entityId;
     }
-
+    
     @Override
     public String toString() {
         return "Entity [components={" + components.keySet().stream().map(Class::getSimpleName).collect(Collectors.joining(";")) + "}, entityId=" + entityId + "]";

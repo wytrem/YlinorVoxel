@@ -3,13 +3,18 @@ package com.ylinor.library.util.ecs;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 
 public class World {
+    private static final Logger logger = LoggerFactory.getLogger(World.class);
+    
     private TIntObjectMap<Entity> entities = new TIntObjectHashMap<>();
-    private List<System> systems = new ArrayList<>();
+    private List<BaseSystem> systems = new ArrayList<>();
 
     public float delta;
 
@@ -24,12 +29,13 @@ public class World {
         return 0;
     }
 
-    public void setSystem(System sys) {
+    public void setSystem(BaseSystem sys) {
         systems.add(sys);
+        sys.setWorld(this);
     }
     
     public void tick() {
-        systems.forEach(System::process);
+        systems.forEach(BaseSystem::process);
     }
 
     public Entity create() {
@@ -42,6 +48,10 @@ public class World {
             entity = new Entity(entityId, this);
             entities.put(entityId, entity);
         }
+        else {
+            logger.warn("Attempted to override entity {}.", entityId);
+            return null;
+        }
 
         notifyCreated(entityId);
         return entity;
@@ -51,9 +61,9 @@ public class World {
         if (!entities.containsKey(entityId)) {
             return false;
         }
-
-        entities.remove(entityId);
+        
         notifyDeleted(entityId);
+        entities.remove(entityId);
         return true;
     }
 
@@ -62,10 +72,10 @@ public class World {
     }
 
     private void notifyDeleted(int entityId) {
-        systems.stream().filter(s -> s instanceof EntitySystem).map(EntitySystem.class::cast).forEach(s -> s.notifyDeleted(entities.get(entityId)));
+        systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyDeleted(entities.get(entityId)));
     }
 
     void notifyAspectChanged(int entityId) {
-        systems.stream().filter(s -> s instanceof EntitySystem).map(EntitySystem.class::cast).forEach(s -> s.notifyAspectChanged(entities.get(entityId)));
+        systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyAspectChanged(entities.get(entityId)));
     }
 }

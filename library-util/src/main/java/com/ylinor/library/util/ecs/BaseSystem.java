@@ -1,12 +1,12 @@
 package com.ylinor.library.util.ecs;
 
-public abstract class System {
+public abstract class BaseSystem {
     /**
      * The world this system belongs to.
      */
     protected World world;
 
-    public System() {}
+    public BaseSystem() {}
 
     protected void begin() {
     }

@@ -15,6 +15,7 @@ dependencies {
     compile 'de.ruedigermoeller:fst:1.63'
     compile 'com.github.luben:zstd-jni:1.1.2'
     compile 'commons-io:commons-io:2.5'
+    compile 'com.google.inject:guice:4.1.0'
     
     // Entity Component System
     compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"

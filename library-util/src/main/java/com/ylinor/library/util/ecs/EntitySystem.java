@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class EntitySystem extends System {
+public abstract class EntitySystem extends BaseSystem {
     protected List<Entity> entities;
     protected Aspect aspect;
     
