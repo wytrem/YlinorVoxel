@@ -38,6 +38,10 @@ public class World {
         // This should never happen.
         return 0;
     }
+    
+    public List<BaseSystem> getSystems() {
+        return systems;
+    }
 
     public void setSystem(BaseSystem sys) {
         systems.add(sys);

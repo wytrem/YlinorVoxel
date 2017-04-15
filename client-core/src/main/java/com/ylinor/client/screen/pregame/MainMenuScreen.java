@@ -79,11 +79,11 @@ public class MainMenuScreen extends YlinorScreen {
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					screenSystem.setScreen(null);
-//					try {
-//						connectToServer();
-//					} catch (IOException e) {
-//						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
-//					}
+					try {
+						connectToServer();
+					} catch (IOException e) {
+						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
+					}
 					client.isInGame = true;
 				}
 			});
