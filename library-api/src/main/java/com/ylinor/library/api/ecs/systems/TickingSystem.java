@@ -2,7 +2,7 @@ package com.ylinor.library.api.ecs.systems;
 
 import javax.inject.Inject;
 
-import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 public abstract class TickingSystem extends BaseSystem {
     
     @Inject

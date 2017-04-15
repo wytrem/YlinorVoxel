@@ -15,9 +15,9 @@ import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.Physics;
 import com.ylinor.client.physics.components.Position;
 import com.ylinor.library.api.ecs.systems.Timer;
-import com.ylinor.library.util.ecs.Aspect;
-import com.ylinor.library.util.ecs.Entity;
-import com.ylinor.library.util.ecs.IteratingSystem;
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.IteratingSystem;
 
 
 /**
@@ -47,7 +47,7 @@ public class CameraSystem extends IteratingSystem {
     }
 
     @Override
-    protected void initialize() {
+    public  void initialize() {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.lookAt(0, 0, 0);
         camera.near = 0.1f;

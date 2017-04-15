@@ -1,4 +1,4 @@
-package com.ylinor.library.util.ecs;
+package com.ylinor.library.util.ecs.entity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.component.Component;
 import com.ylinor.library.util.spring.Assert;
 
 @SuppressWarnings("unchecked")

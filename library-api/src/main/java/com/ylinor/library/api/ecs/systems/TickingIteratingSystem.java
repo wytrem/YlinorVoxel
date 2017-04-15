@@ -2,9 +2,9 @@ package com.ylinor.library.api.ecs.systems;
 
 import javax.inject.Inject;
 
-import com.ylinor.library.util.ecs.Aspect.Builder;
-import com.ylinor.library.util.ecs.Entity;
-import com.ylinor.library.util.ecs.EntitySystem;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.entity.Aspect.Builder;
+import com.ylinor.library.util.ecs.system.EntitySystem;
 
 
 public abstract class TickingIteratingSystem extends EntitySystem {

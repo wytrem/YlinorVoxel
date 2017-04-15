@@ -12,8 +12,8 @@ import com.ylinor.client.physics.components.Position;
 import com.ylinor.client.physics.components.Size;
 import com.ylinor.client.physics.components.Velocity;
 import com.ylinor.client.physics.systems.PhySystem;
-import com.ylinor.library.util.ecs.BaseSystem;
-import com.ylinor.library.util.ecs.Entity;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 
 
 /**
@@ -29,7 +29,7 @@ public class PlayerInitSystem extends BaseSystem {
     private Entity player;
 
     @Override
-    protected void initialize() {
+    public  void initialize() {
         player = world.create();
         player.set(RenderViewEntity.class)
               .set(InputControlledEntity.class)

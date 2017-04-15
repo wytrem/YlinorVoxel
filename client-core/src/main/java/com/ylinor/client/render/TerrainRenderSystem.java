@@ -11,7 +11,7 @@ import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 
 
 /**

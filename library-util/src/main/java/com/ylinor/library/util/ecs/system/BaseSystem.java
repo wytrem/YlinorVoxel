@@ -1,4 +1,6 @@
-package com.ylinor.library.util.ecs;
+package com.ylinor.library.util.ecs.system;
+
+import com.ylinor.library.util.ecs.World;
 
 public abstract class BaseSystem {
     /**
@@ -28,17 +30,17 @@ public abstract class BaseSystem {
     protected boolean checkProcessing() {
         return true;
     }
-    protected void initialize() {
+    public void initialize() {
     }
 
-    protected void setWorld(World world) {
+    public void setWorld(World world) {
         this.world = world;
     }
 
-    protected World getWorld() {
+    public World getWorld() {
         return world;
     }
 
-    protected void dispose() {
+    public void dispose() {
     }
 }

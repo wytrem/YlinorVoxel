@@ -7,9 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ylinor.client.YlinorClient;
-import com.ylinor.library.util.ecs.Aspect;
-import com.ylinor.library.util.ecs.Entity;
-import com.ylinor.library.util.ecs.IteratingSystem;
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.IteratingSystem;
+
 
 @Singleton
 public class HudRenderSystem extends IteratingSystem {
@@ -27,7 +28,7 @@ public class HudRenderSystem extends IteratingSystem {
     }
 
     @Override
-    protected void initialize() {
+    public void initialize() {
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
     }
@@ -48,7 +49,7 @@ public class HudRenderSystem extends IteratingSystem {
     protected void end() {
         spriteBatch.end();
     }
-    
+
     @Override
     protected boolean checkProcessing() {
         return client.isInGame;

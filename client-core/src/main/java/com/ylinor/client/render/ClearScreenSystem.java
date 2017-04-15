@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 
 @Singleton
 public class ClearScreenSystem extends BaseSystem {

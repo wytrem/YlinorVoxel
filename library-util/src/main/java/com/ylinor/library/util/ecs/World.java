@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.EntitySystem;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -82,7 +85,10 @@ public class World {
         systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyDeleted(entities.get(entityId)));
     }
 
-    void notifyAspectChanged(int entityId) {
+    /**
+     * INTERNAL USE ONLY.
+     */
+    public void notifyAspectChanged(int entityId) {
         systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyAspectChanged(entities.get(entityId)));
     }
 

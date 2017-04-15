@@ -2,7 +2,7 @@ package com.ylinor.client.render;
 
 import org.joml.Vector3f;
 
-import com.ylinor.library.util.ecs.Component;
+import com.ylinor.library.util.ecs.component.Component;
 
 
 /**

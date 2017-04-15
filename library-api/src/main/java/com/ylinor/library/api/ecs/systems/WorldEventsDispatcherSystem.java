@@ -5,10 +5,10 @@ import javax.inject.Singleton;
 
 import com.ylinor.library.api.ecs.events.entity.EntityDeletedEvent;
 import com.ylinor.library.api.ecs.events.entity.EntitySpawnedEvent;
-import com.ylinor.library.util.ecs.Aspect;
-import com.ylinor.library.util.ecs.Entity;
-import com.ylinor.library.util.ecs.EventSystem;
-import com.ylinor.library.util.ecs.IteratingSystem;
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.EventSystem;
+import com.ylinor.library.util.ecs.system.IteratingSystem;
 
 @Singleton
 public class WorldEventsDispatcherSystem extends IteratingSystem {

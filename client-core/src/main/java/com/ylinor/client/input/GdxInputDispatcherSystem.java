@@ -16,8 +16,8 @@ import com.ylinor.client.events.input.mouse.MouseMovedEvent;
 import com.ylinor.client.events.input.mouse.MouseScrolledEvent;
 import com.ylinor.client.events.input.mouse.MouseTouchDownEvent;
 import com.ylinor.client.events.input.mouse.MouseTouchUpEvent;
-import com.ylinor.library.util.ecs.BaseSystem;
-import com.ylinor.library.util.ecs.EventSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.EventSystem;
 @Singleton
 public class GdxInputDispatcherSystem extends BaseSystem implements InputProcessor{
 
@@ -27,7 +27,7 @@ public class GdxInputDispatcherSystem extends BaseSystem implements InputProcess
     private EventSystem eventSystem;
     
     @Override
-    protected void initialize() {
+    public  void initialize() {
         Gdx.input.setInputProcessor(this);
     }
     

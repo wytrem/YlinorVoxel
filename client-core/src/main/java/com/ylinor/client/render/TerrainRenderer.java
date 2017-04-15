@@ -20,7 +20,7 @@ import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.library.util.ecs.EventSystem;
+import com.ylinor.library.util.ecs.system.EventSystem;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;

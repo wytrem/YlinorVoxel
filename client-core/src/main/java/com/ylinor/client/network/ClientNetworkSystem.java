@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 import com.ylinor.packets.Packet;
 
 @Singleton

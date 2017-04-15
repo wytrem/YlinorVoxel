@@ -10,8 +10,8 @@ import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
-import com.ylinor.library.util.ecs.BaseSystem;
-import com.ylinor.library.util.ecs.EventSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.EventSystem;
 
 
 @Singleton
@@ -49,7 +49,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     private long assetsTime;
 
     @Override
-    protected void initialize() {
+    public  void initialize() {
         assetsTime = System.currentTimeMillis();
         assets.beginPreloding();
     }
@@ -81,7 +81,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     }
 
     @Override
-    protected void dispose() {
+    public  void dispose() {
         if (assets != null)
             assets.dispose();
     }

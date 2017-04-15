@@ -5,12 +5,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.ylinor.library.util.ecs.Aspect;
-import com.ylinor.library.util.ecs.BaseSystem;
-import com.ylinor.library.util.ecs.Component;
 import com.ylinor.library.util.ecs.WorldConfiguration;
-import com.ylinor.library.util.ecs.Entity;
-import com.ylinor.library.util.ecs.IteratingSystem;
+import com.ylinor.library.util.ecs.component.Component;
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.IteratingSystem;
 import com.ylinor.library.util.ecs.World;
 
 

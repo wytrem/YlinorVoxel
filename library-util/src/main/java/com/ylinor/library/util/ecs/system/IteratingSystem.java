@@ -1,6 +1,7 @@
-package com.ylinor.library.util.ecs;
+package com.ylinor.library.util.ecs.system;
 
-import com.ylinor.library.util.ecs.Aspect.Builder;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.entity.Aspect.Builder;
 
 public abstract class IteratingSystem extends EntitySystem {
 

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
 import com.ylinor.library.api.terrain.mc.McChunkLoader;
-import com.ylinor.library.util.ecs.EventSystem;
+import com.ylinor.library.util.ecs.system.EventSystem;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;

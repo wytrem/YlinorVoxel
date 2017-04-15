@@ -13,7 +13,7 @@ import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
-import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 @Singleton
 public class ScreenSystem extends BaseSystem {
 

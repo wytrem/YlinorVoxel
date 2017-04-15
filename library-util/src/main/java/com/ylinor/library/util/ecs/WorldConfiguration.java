@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 
 
 public class WorldConfiguration {

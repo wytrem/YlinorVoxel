@@ -7,7 +7,7 @@ import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.library.api.ecs.systems.TimerUpdateSystem;
 import com.ylinor.library.api.ecs.systems.WorldEventsDispatcherSystem;
 import com.ylinor.library.util.ecs.WorldConfiguration;
-import com.ylinor.library.util.ecs.EventSystem;
+import com.ylinor.library.util.ecs.system.EventSystem;
 import com.ylinor.library.util.ecs.World;
 
 

@@ -1,7 +1,10 @@
-package com.ylinor.library.util.ecs;
+package com.ylinor.library.util.ecs.system;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 
 public abstract class EntitySystem extends BaseSystem {
@@ -13,7 +16,7 @@ public abstract class EntitySystem extends BaseSystem {
         this.aspect = builder.build();
     }
 
-    void notifyAspectChanged(Entity entity) {
+    public void notifyAspectChanged(Entity entity) {
         if (entities.contains(entity) && !aspect.matches(entity)) {
             entities.remove(entity);
             removed(entity);
@@ -24,7 +27,7 @@ public abstract class EntitySystem extends BaseSystem {
         }
     }
     
-    void notifyDeleted(Entity entity) {
+    public void notifyDeleted(Entity entity) {
         if (entities.contains(entity)) {
             entities.remove(entity);
             removed(entity);

@@ -1,8 +1,10 @@
-package com.ylinor.library.util.ecs;
+package com.ylinor.library.util.ecs.entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.ylinor.library.util.ecs.component.Component;
 
 
 public class Aspect {

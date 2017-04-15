@@ -6,8 +6,8 @@ import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.api.terrain.block.state.props.StateProperty;
-import com.ylinor.library.util.ecs.Entity;
 import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.math.BlockPos;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
