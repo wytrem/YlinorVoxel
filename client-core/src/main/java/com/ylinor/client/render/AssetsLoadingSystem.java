@@ -1,32 +1,34 @@
 package com.ylinor.client.render;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
 import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.pregame.LoadingScreen;
 import com.ylinor.client.screen.pregame.MainMenuScreen;
+import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.EventSystem;
 
-import net.mostlyoriginal.api.event.common.EventSystem;
 
-
+@Singleton
 public class AssetsLoadingSystem extends BaseSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(AssetsLoadingSystem.class);
 
-    @Wire
+    @Inject
     private Assets assets;
 
-    @Wire
+    @Inject
     private EventSystem eventSystem;
 
-    @Wire
+    @Inject
     private TerrainRenderSystem renderSystem;
     
-    @Wire
+    @Inject
     private ScreenSystem screenSystem;
 
     /**

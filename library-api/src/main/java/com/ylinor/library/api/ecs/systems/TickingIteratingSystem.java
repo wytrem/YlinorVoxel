@@ -1,14 +1,15 @@
 package com.ylinor.library.api.ecs.systems;
 
-import com.artemis.Aspect.Builder;
-import com.artemis.BaseEntitySystem;
-import com.artemis.annotations.Wire;
-import com.artemis.utils.IntBag;
+import javax.inject.Inject;
+
+import com.ylinor.library.util.ecs.Aspect.Builder;
+import com.ylinor.library.util.ecs.Entity;
+import com.ylinor.library.util.ecs.EntitySystem;
 
 
-public abstract class TickingIteratingSystem extends BaseEntitySystem {
+public abstract class TickingIteratingSystem extends EntitySystem {
 
-    @Wire
+    @Inject
     private Timer timer;
 
     public TickingIteratingSystem(Builder aspect) {
@@ -24,13 +25,11 @@ public abstract class TickingIteratingSystem extends BaseEntitySystem {
     }
 
     protected void tickEntities() {
-        IntBag actives = subscription.getEntities();
-        int[] ids = actives.getData();
-        for (int i = 0, s = actives.size(); s > i; i++) {
-            tickEntity(ids[i]);
+        for (Entity entity : entities) {
+            tickEntity(entity);
         }
     }
 
-    protected abstract void tickEntity(int i);
+    protected abstract void tickEntity(Entity i);
 
 }

@@ -1,7 +1,6 @@
 package com.ylinor.client.events;
 
-import net.mostlyoriginal.api.event.common.Event;
-
+import com.ylinor.library.util.ecs.Event;
 
 /**
  * A event related to the client.

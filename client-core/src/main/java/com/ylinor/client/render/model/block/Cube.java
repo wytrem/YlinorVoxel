@@ -11,7 +11,6 @@ import com.ylinor.client.render.Renderable;
 import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.api.terrain.block.state.BlockState;
-import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.Facing;
 import com.ylinor.library.util.TempVars;
 

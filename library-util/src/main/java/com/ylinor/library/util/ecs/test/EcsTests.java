@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import com.ylinor.library.util.ecs.Aspect;
 import com.ylinor.library.util.ecs.BaseSystem;
 import com.ylinor.library.util.ecs.Component;
-import com.ylinor.library.util.ecs.Configuration;
+import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.library.util.ecs.Entity;
 import com.ylinor.library.util.ecs.IteratingSystem;
 import com.ylinor.library.util.ecs.World;
@@ -17,7 +17,7 @@ import com.ylinor.library.util.ecs.World;
 public class EcsTests {
 
     static void testEcs() {
-        Configuration conf = new Configuration();
+        WorldConfiguration conf = new WorldConfiguration();
         conf.with(PrintSystem.class).with(ComputeSystem.class);
         World world = conf.build();
 

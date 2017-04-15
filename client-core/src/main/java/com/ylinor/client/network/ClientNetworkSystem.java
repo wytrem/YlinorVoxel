@@ -1,16 +1,19 @@
 package com.ylinor.client.network;
 
-import com.artemis.BaseSystem;
-import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.ylinor.packets.Packet;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import javax.inject.Singleton;
+
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.packets.Packet;
+
+@Singleton
 public final class ClientNetworkSystem extends BaseSystem {
     private final Client client;
     private final Deque<Packet> packetQueue;

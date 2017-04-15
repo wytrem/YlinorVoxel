@@ -1,7 +1,9 @@
 package com.ylinor.library.api.ecs.events.entity;
 
+import com.ylinor.library.util.ecs.Entity;
+
 public class EntityDeletedEvent extends EntityEvent {
-    public EntityDeletedEvent(int entityId) {
-        super(entityId);
+    public EntityDeletedEvent(Entity entity) {
+        super(entity);
     }
 }

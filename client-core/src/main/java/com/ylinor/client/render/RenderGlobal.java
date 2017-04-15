@@ -1,7 +1,7 @@
 package com.ylinor.client.render;
 
-import com.artemis.World;
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,11 +17,11 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Disposable;
-import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.util.ecs.World;
 
 
 public class RenderGlobal implements Disposable {
@@ -36,15 +36,15 @@ public class RenderGlobal implements Disposable {
     BitmapFont font;
     ModelRegistry blockModels;
 
-    @Wire
+    @Inject
     CameraSystem cameraSystem;
     
-    @Wire
+    @Inject
     Assets assets;
     
     ModelInstance test;
     
-    @Wire
+    @Inject
     Terrain terrain;
     
     AnimationController controller;
@@ -72,7 +72,7 @@ public class RenderGlobal implements Disposable {
         sun = new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f);
         environment.add(sun);
         terrainRenderer = new TerrainRenderer(terrain, this);
-        world.inject(terrainRenderer);
+        world.injector.injectMembers(terrainRenderer);
         terrainRenderer.init();
 
         spriteBatch = new SpriteBatch();

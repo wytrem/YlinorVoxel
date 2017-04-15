@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Injector;
+
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -17,7 +19,12 @@ public class World {
     private List<BaseSystem> systems = new ArrayList<>();
 
     public float delta;
-
+    public final Injector injector;
+    
+    public World(Injector injector) {
+        this.injector = injector;
+    }
+    
     private int findFirstEmptyId() {
         for (int i = 1; i < entities.size() + 1; i++) {
             if (!entities.containsKey(i)) {
@@ -77,5 +84,17 @@ public class World {
 
     void notifyAspectChanged(int entityId) {
         systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyAspectChanged(entities.get(entityId)));
+    }
+
+    public <S extends BaseSystem> S getSystem(Class<S> clazz) {
+        return injector.getInstance(clazz);
+    }
+
+    public void dispose() {
+        systems.forEach(BaseSystem::dispose);
+    }
+
+    public void initialize() {
+        systems.forEach(BaseSystem::initialize);
     }
 }

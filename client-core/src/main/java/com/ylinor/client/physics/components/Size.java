@@ -1,6 +1,6 @@
 package com.ylinor.client.physics.components;
 
-import com.artemis.Component;
+import com.ylinor.library.util.ecs.Component;
 
 public class Size extends Component {
 	public float width = 0.6f, height = 1.8f;

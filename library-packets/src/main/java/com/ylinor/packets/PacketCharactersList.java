@@ -1,11 +1,11 @@
 package com.ylinor.packets;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-
-import java.util.Arrays;
-import java.util.List;
 
 public final class PacketCharactersList extends Packet {
     private List<String> charactersList;

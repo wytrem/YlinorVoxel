@@ -1,22 +1,25 @@
 package com.ylinor.client.render;
 
-import com.artemis.Aspect;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.IteratingSystem;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ylinor.client.YlinorClient;
+import com.ylinor.library.util.ecs.Aspect;
+import com.ylinor.library.util.ecs.Entity;
+import com.ylinor.library.util.ecs.IteratingSystem;
 
-
+@Singleton
 public class HudRenderSystem extends IteratingSystem {
     private SpriteBatch spriteBatch;
     private BitmapFont font;
 
-    @Wire
+    @Inject
     private CameraSystem cameraSystem;
 
-    @Wire
+    @Inject
     private YlinorClient client;
 
     public HudRenderSystem() {
@@ -35,7 +38,7 @@ public class HudRenderSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int entityId) {
+    protected void process(Entity entityId) {
         font.draw(spriteBatch, "dir : " + cameraSystem.getCamera().direction.toString(), 0, 80);
         font.draw(spriteBatch, "pos : " + cameraSystem.getCamera().position.toString(), 0, 60);
         font.draw(spriteBatch, "fps : " + Gdx.graphics.getFramesPerSecond(), 0, 40);

@@ -1,19 +1,20 @@
 package com.ylinor.client.render;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.google.common.eventbus.Subscribe;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
-
-import net.mostlyoriginal.api.event.common.Subscribe;
-
+import com.ylinor.library.util.ecs.BaseSystem;
+@Singleton
 public class ScreenSystem extends BaseSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(ScreenSystem.class);
@@ -23,7 +24,7 @@ public class ScreenSystem extends BaseSystem {
      */
     private Screen screen;
     
-    @Wire
+    @Inject
     private GdxInputDispatcherSystem inputDispatcherSystem;
     
     @Override
@@ -50,7 +51,7 @@ public class ScreenSystem extends BaseSystem {
         this.screen = screen;
 
         if (this.screen != null) {
-            world.inject(screen);
+            world.injector.injectMembers(screen);
             this.screen.show();
             this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }

@@ -9,34 +9,35 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 
 
-public class Configuration {
+public class WorldConfiguration {
     private List<Module> injectorModules = new ArrayList<>();
     private List<Class<? extends BaseSystem>> systemsClasses = new ArrayList<>();
     
     @SafeVarargs
-    public final Configuration with(Class<? extends BaseSystem>...classes) {
+    public final WorldConfiguration with(Class<? extends BaseSystem>...classes) {
         return with(0, classes);
     }
     
     @SafeVarargs
-    public final Configuration with(int priority, Class<? extends BaseSystem>...classes) {
+    public final WorldConfiguration with(int priority, Class<? extends BaseSystem>...classes) {
         systemsClasses.addAll(Arrays.asList(classes));
         return this;
     }
     
-    public Configuration with(Module module) {
+    public WorldConfiguration with(Module module) {
         injectorModules.add(module);
         return this;
     }
 
     public World build() {
-        World world = new World();
-
         Injector injector = Guice.createInjector(injectorModules);
-
+        World world = new World(injector);
+       
         for (Class<? extends BaseSystem> clazz : systemsClasses) {
             world.setSystem(injector.getInstance(clazz));
         }
+        
+        world.initialize();
 
         return world;
     }

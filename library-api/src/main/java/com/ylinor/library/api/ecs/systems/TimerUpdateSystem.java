@@ -1,10 +1,13 @@
 package com.ylinor.library.api.ecs.systems;
 
-import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import com.ylinor.library.util.ecs.BaseSystem;
+
+@Singleton
 public class TimerUpdateSystem extends BaseSystem {
-    @Wire
+    @Inject
     private Timer timer;
     
     @Override

@@ -1,9 +1,9 @@
 package com.ylinor.library.api.terrain;
 
-import com.artemis.World;
 import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
+import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.math.BlockPos;
 
 
@@ -17,7 +17,7 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     }
     
     public void inject(World world) {
-        world.inject(storage);
+        world.injector.injectMembers(storage);
     }
 
     public void setStorage(IChunkProvider storage) {

@@ -1,9 +1,8 @@
 package com.ylinor.library.api.ecs;
 
-import com.artemis.World;
-
-import net.mostlyoriginal.api.event.common.Event;
-import net.mostlyoriginal.api.event.common.EventSystem;
+import com.ylinor.library.util.ecs.Event;
+import com.ylinor.library.util.ecs.EventSystem;
+import com.ylinor.library.util.ecs.World;
 
 
 public class ArtemisUtils {

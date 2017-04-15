@@ -1,12 +1,13 @@
 package com.ylinor.library.api.terrain.block.type;
 
-import com.artemis.World;
 import com.ylinor.library.api.terrain.block.BlockAttributes;
 import com.ylinor.library.api.terrain.block.material.MapColor;
 import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.api.terrain.block.state.props.StateProperty;
+import com.ylinor.library.util.ecs.Entity;
+import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.math.BlockPos;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
@@ -172,7 +173,7 @@ public class BlockType {
         }
     }
 
-    public void onFallenUpon(World worldIn, BlockPos pos, int entityIn, float fallDistance) {
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         // entityIn.fall(fallDistance, 1.0F);
     }
 

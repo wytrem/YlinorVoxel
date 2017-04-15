@@ -1,7 +1,6 @@
 package com.ylinor.client.physics.components;
 
-import com.artemis.Component;
-
+import com.ylinor.library.util.ecs.Component;
 
 /**
  * Marks the entity the player is controlling.

@@ -1,6 +1,14 @@
 package com.ylinor.client.screen.pregame;
 
-import com.artemis.annotations.Wire;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,27 +26,20 @@ import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 import com.ylinor.packets.PacketLogin;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class MainMenuScreen extends YlinorScreen {
     
     private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
     
-	@Wire
+	@Inject
 	private ScreenSystem screenSystem;
 
-	@Wire
+	@Inject
 	private YlinorClient client;
 	
-	@Wire
+	@Inject
 	private Assets assets;
 
-	@Wire
+	@Inject
 	private ClientNetworkSystem networkSystem;
 	
     private String host = "localhost";
@@ -78,11 +79,11 @@ public class MainMenuScreen extends YlinorScreen {
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					screenSystem.setScreen(null);
-					try {
-						connectToServer();
-					} catch (IOException e) {
-						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
-					}
+//					try {
+//						connectToServer();
+//					} catch (IOException e) {
+//						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
+//					}
 					client.isInGame = true;
 				}
 			});

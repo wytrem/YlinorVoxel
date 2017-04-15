@@ -19,11 +19,17 @@ public final class Entity {
         this.entityId = entityId;
         this.world = world;
     }
+    
+    public <C extends Component> Entity set(Class<C> clazz) {
+        set(world.injector.getInstance(clazz));
+        return this;
+    }
 
-    public <C extends Component> void set(C component) {
+    public <C extends Component> Entity set(C component) {
         Assert.notNull(component, "Component cannot be null, use unset to remove a component from this entity.");
         components.put(component.getClass(), component);
         world.notifyAspectChanged(entityId);
+        return this;
     }
     
     @Nullable

@@ -1,13 +1,12 @@
 package com.ylinor.client.render;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -16,6 +15,9 @@ import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.Physics;
 import com.ylinor.client.physics.components.Position;
 import com.ylinor.library.api.ecs.systems.Timer;
+import com.ylinor.library.util.ecs.Aspect;
+import com.ylinor.library.util.ecs.Entity;
+import com.ylinor.library.util.ecs.IteratingSystem;
 
 
 /**
@@ -27,28 +29,17 @@ import com.ylinor.library.api.ecs.systems.Timer;
  * 
  * @author wytrem
  */
+@Singleton
 public class CameraSystem extends IteratingSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(CameraSystem.class);
 
-    @Wire
-    private ComponentMapper<Position> positionMapper;
-
-    @Wire
-    private ComponentMapper<Heading> headingMapper;
-
-    @Wire
-    private ComponentMapper<EyeHeight> eyeHeightMapper;
-
-    @Wire
+    @Inject
     private YlinorClient client;
     
-    @Wire
-    private ComponentMapper<Physics> physicsMapper;
-
     private Camera camera;
     
-    @Wire
+    @Inject
     private Timer timer;
 
     public CameraSystem() {
@@ -76,9 +67,9 @@ public class CameraSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int entityId) {
-        Position position = positionMapper.get(entityId);
-        Heading heading = headingMapper.get(entityId);
+    protected void process(Entity entity) {
+        Position position = entity.get(Position.class);
+        Heading heading = entity.get(Heading.class);
         
         camera.viewportWidth = Gdx.graphics.getWidth();
         camera.viewportHeight = Gdx.graphics.getHeight();
@@ -88,8 +79,8 @@ public class CameraSystem extends IteratingSystem {
         float d2 = position.prevPosition.z + (position.position.z - position.prevPosition.z) * timer.renderPartialTicks;
         camera.position.set(d0, d1, d2);
 
-        if (eyeHeightMapper.has(entityId)) {
-            Vector3f eyePadding = eyeHeightMapper.get(entityId).eyePadding;
+        if (entity.has(EyeHeight.class)) {
+            Vector3f eyePadding = entity.get(EyeHeight.class).eyePadding;
             camera.position.add(eyePadding.x, eyePadding.y, eyePadding.z);
         }
 

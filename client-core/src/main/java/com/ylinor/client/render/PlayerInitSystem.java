@@ -1,10 +1,8 @@
 package com.ylinor.client.render;
 
-import com.artemis.Archetype;
-import com.artemis.ArchetypeBuilder;
-import com.artemis.BaseSystem;
-import com.artemis.Entity;
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.ylinor.client.physics.components.AABB;
 import com.ylinor.client.physics.components.CollisionState;
 import com.ylinor.client.physics.components.Heading;
@@ -14,40 +12,49 @@ import com.ylinor.client.physics.components.Position;
 import com.ylinor.client.physics.components.Size;
 import com.ylinor.client.physics.components.Velocity;
 import com.ylinor.client.physics.systems.PhySystem;
+import com.ylinor.library.util.ecs.BaseSystem;
+import com.ylinor.library.util.ecs.Entity;
+
 
 /**
  * Initializes the player entity in the world. Used only for debugging.
  * 
  * @author wytrem
  */
+@Singleton
 public class PlayerInitSystem extends BaseSystem {
 
-	@Wire
-	private PhySystem phySystem;
-	private int id;
+    @Inject
+    private PhySystem phySystem;
+    private Entity player;
 
-	@Override
-	protected void initialize() {
-		Archetype playerArchetype = new ArchetypeBuilder().add(RenderViewEntity.class).add(InputControlledEntity.class)
-				.add(Heading.class).add(Position.class).add(Velocity.class).add(EyeHeight.class).add(Size.class)
-				.add(AABB.class).add(CollisionState.class).add(Physics.class).build(world);
+    @Override
+    protected void initialize() {
+        player = world.create();
+        player.set(RenderViewEntity.class)
+              .set(InputControlledEntity.class)
+              .set(Heading.class)
+              .set(Position.class)
+              .set(Velocity.class)
+              .set(EyeHeight.class)
+              .set(Size.class)
+              .set(AABB.class)
+              .set(CollisionState.class)
+              .set(Physics.class);
+        player.get(EyeHeight.class).eyePadding.y = 1.65f;
+        player.get(Size.class).setSize(0.6f, 1.8f);
+    }
 
-		Entity player = world.createEntity(playerArchetype);
-		player.getComponent(EyeHeight.class).eyePadding.y = 1.65f;
-		player.getComponent(Size.class).setSize(0.6f, 1.8f);
-		id = player.getId();
-	}
+    @Override
+    protected void processSystem() {
+        if (player != null) {
+            phySystem.setPosition(player, 1818, 126, 6710);
+            player = null;
+        }
+    }
 
-	@Override
-	protected void processSystem() {
-		if (id != -1) {
-			phySystem.setPosition(id, 1818, 126, 6710);
-			id = -1;
-		}
-	}
-
-	@Override
-	protected boolean checkProcessing() {
-		return true;
-	}
+    @Override
+    protected boolean checkProcessing() {
+        return true;
+    }
 }

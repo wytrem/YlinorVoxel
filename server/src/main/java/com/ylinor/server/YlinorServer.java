@@ -6,15 +6,15 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
-import com.artemis.WorldConfigurationBuilder;
+import com.google.inject.AbstractModule;
 import com.ylinor.library.api.YlinorApplication;
+import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.util.ecs.WorldConfiguration;
+import com.ylinor.library.util.ecs.World;
 
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
@@ -71,20 +71,24 @@ public class YlinorServer extends YlinorApplication {
     }
 
     @Override
-    protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
-        super.preConfigure(configurationBuilder);
-
-//      configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
-        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, NetworkSystem.class);
-    }
-
-    @Override
     protected void configure(WorldConfiguration configuration) {
         super.configure(configuration);
+        
+//      configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
+        configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, NetworkSystem.class);
+        
         // We want to inject any Terrain field with this
-        configuration.register(Terrain.class.getName(), terrain);
-        configuration.register(terrain);
-        configuration.register(this);
+        
+        configuration.with(new AbstractModule() {
+            
+            @Override
+            protected void configure() {
+                bind(Terrain.class).toInstance(terrain);
+                bind(YlinorApplication.class).toInstance(YlinorServer.this);
+                bind(YlinorServer.class).toInstance(YlinorServer.this);
+            }
+        });
+        
     }
 
     private void start() {
@@ -122,8 +126,8 @@ public class YlinorServer extends YlinorApplication {
                 }
             }
 
-            world.setDelta(deltaTime / 1000.0f);
-            world.process();
+            world.delta = (deltaTime / 1000.0f);
+            world.tick();
 
             if (deltaTime < (1000 / 50)) {
                 try {

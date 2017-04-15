@@ -1,13 +1,13 @@
 package com.ylinor.packets;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public abstract class Packet implements KryoSerializable {
     private static final List<Class<? extends Packet>> packetsList;

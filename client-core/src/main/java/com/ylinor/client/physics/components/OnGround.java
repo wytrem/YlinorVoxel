@@ -1,7 +1,6 @@
 package com.ylinor.client.physics.components;
 
-import com.artemis.Component;
-
+import com.ylinor.library.util.ecs.Component;
 
 /**
  * Marks an entity the is standing on the ground (not flying and not jumping).

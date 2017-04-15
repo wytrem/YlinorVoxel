@@ -13,7 +13,6 @@ import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.api.terrain.block.RenderType;
 import com.ylinor.library.api.terrain.block.state.BlockState;
-import com.ylinor.library.api.terrain.block.type.BlockType;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.procedure.TObjectProcedure;

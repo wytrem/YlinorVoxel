@@ -3,7 +3,6 @@ package com.ylinor.server;
 import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
-import com.arangodb.entity.BaseDocument;
 import com.arangodb.velocypack.module.jdk8.VPackJdk8Module;
 
 public final class DatabaseManager {

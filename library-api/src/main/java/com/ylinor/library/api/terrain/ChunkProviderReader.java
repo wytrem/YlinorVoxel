@@ -3,21 +3,22 @@ package com.ylinor.library.api.terrain;
 import java.io.File;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import org.jetbrains.annotations.NotNull;
 
-import com.artemis.annotations.Wire;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
 import com.ylinor.library.api.terrain.mc.McChunkLoader;
+import com.ylinor.library.util.ecs.EventSystem;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
-import net.mostlyoriginal.api.event.common.EventSystem;
 
 public class ChunkProviderReader implements IChunkProvider {
-    @Wire
+    @Inject
     private Terrain terrain;
 
-    @Wire
+    @Inject
     private EventSystem eventSystem;
 
     private File regionsFolder;
