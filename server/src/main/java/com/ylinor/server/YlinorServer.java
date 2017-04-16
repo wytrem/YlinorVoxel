@@ -13,8 +13,10 @@ import com.google.inject.AbstractModule;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.WorldConfiguration;
+
+import gnu.trove.map.TIntObjectMap;
 
 public class YlinorServer extends YlinorApplication {
     private static YlinorServer server;
@@ -24,12 +26,9 @@ public class YlinorServer extends YlinorApplication {
     private DatabaseManager databaseManager;
     private World world;
     private Terrain terrain;
-    private List<Player> playersList;
 
     public YlinorServer() {
         logger.info("Loading Ylinor server version Epsilon 0.1");
-
-        this.playersList = new ArrayList<Player>();
 
         initConfiguration();
 //        initDatabase();
@@ -76,16 +75,13 @@ public class YlinorServer extends YlinorApplication {
         
 //      configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, PhySystem.class);
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, NetworkSystem.class);
-        
-        // We want to inject any Terrain field with this
-        
         configuration.with(new AbstractModule() {
-            
             @Override
             protected void configure() {
                 bind(Terrain.class).toInstance(terrain);
                 bind(YlinorApplication.class).toInstance(YlinorServer.this);
                 bind(YlinorServer.class).toInstance(YlinorServer.this);
+                bind(InetSocketAddress.class).toInstance(new InetSocketAddress("localhost", 25565));
             }
         });
         
@@ -99,14 +95,6 @@ public class YlinorServer extends YlinorApplication {
         logger.info("Creating world object.");
         world = buildWorld();
 
-        logger.info("Starting network system.");
-
-        try {
-            world.getSystem(NetworkSystem.class).init(this, new InetSocketAddress("localhost", 25565));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         run();
     }
 
@@ -117,14 +105,6 @@ public class YlinorServer extends YlinorApplication {
             long time = System.currentTimeMillis();
             long deltaTime = time - lastFrameTime;
             lastFrameTime = time;
-
-            for (Player player : new ArrayList<>(playersList)) {
-                if (player.getPlayerConnection().shouldDisconnect()) {
-                    playersList.remove(player);
-
-                    System.out.println("Player disconnected :(");
-                }
-            }
 
             world.delta = (deltaTime / 1000.0f);
             world.tick();
@@ -137,14 +117,6 @@ public class YlinorServer extends YlinorApplication {
                 }
             }
         }
-    }
-
-    protected void newConnection(PlayerConnection playerConnection) {
-        playersList.add(new Player(playerConnection));
-    }
-
-    public List<Player> getPlayersList() {
-        return playersList;
     }
 
     public static YlinorServer server() {

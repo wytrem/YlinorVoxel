@@ -17,17 +17,17 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class World {
     private static final Logger logger = LoggerFactory.getLogger(World.class);
-    
+
     private TIntObjectMap<Entity> entities = new TIntObjectHashMap<>();
     private List<BaseSystem> systems = new ArrayList<>();
 
     public float delta;
     public final Injector injector;
-    
+
     public World(Injector injector) {
         this.injector = injector;
     }
-    
+
     private int findFirstEmptyId() {
         for (int i = 1; i < entities.size() + 1; i++) {
             if (!entities.containsKey(i)) {
@@ -38,7 +38,7 @@ public class World {
         // This should never happen.
         return 0;
     }
-    
+
     public List<BaseSystem> getSystems() {
         return systems;
     }
@@ -47,9 +47,16 @@ public class World {
         systems.add(sys);
         sys.setWorld(this);
     }
-    
+
     public void tick() {
-        systems.forEach(BaseSystem::process);
+        for (BaseSystem system : systems) {
+            try {
+                system.process();
+            }
+            catch (Exception ex) {
+                logger.error("Error while processing system " + system + " :", ex);
+            }
+        }
     }
 
     public Entity create() {
@@ -75,7 +82,7 @@ public class World {
         if (!entities.containsKey(entityId)) {
             return false;
         }
-        
+
         notifyDeleted(entityId);
         entities.remove(entityId);
         return true;
@@ -86,14 +93,20 @@ public class World {
     }
 
     private void notifyDeleted(int entityId) {
-        systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyDeleted(entities.get(entityId)));
+        systems.stream()
+               .filter(EntitySystem.class::isInstance)
+               .map(EntitySystem.class::cast)
+               .forEach(s -> s.notifyDeleted(entities.get(entityId)));
     }
 
     /**
      * INTERNAL USE ONLY.
      */
     public void notifyAspectChanged(int entityId) {
-        systems.stream().filter(EntitySystem.class::isInstance).map(EntitySystem.class::cast).forEach(s -> s.notifyAspectChanged(entities.get(entityId)));
+        systems.stream()
+               .filter(EntitySystem.class::isInstance)
+               .map(EntitySystem.class::cast)
+               .forEach(s -> s.notifyAspectChanged(entities.get(entityId)));
     }
 
     public <S extends BaseSystem> S getSystem(Class<S> clazz) {

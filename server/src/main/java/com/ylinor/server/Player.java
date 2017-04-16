@@ -1,6 +1,8 @@
 package com.ylinor.server;
 
-public class Player {
+import com.ylinor.library.util.ecs.component.Component;
+
+public class Player extends Component {
     private final PlayerConnection playerConnection;
 
     public Player(PlayerConnection playerConnection) {

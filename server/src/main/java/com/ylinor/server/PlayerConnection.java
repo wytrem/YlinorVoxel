@@ -34,4 +34,8 @@ public final class PlayerConnection implements PacketHandler {
     public boolean isSameConnection(Connection connection) {
         return this.connection.getID() == connection.getID();
     }
+
+    public int getConnectionId() {
+        return connection.getID();
+    }
 }
