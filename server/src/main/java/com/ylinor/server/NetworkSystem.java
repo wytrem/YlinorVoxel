@@ -19,15 +19,17 @@ import com.ylinor.packets.Packet;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+
+
 @Singleton
 public final class NetworkSystem extends BaseSystem {
     private static final Logger logger = LoggerFactory.getLogger(NetworkSystem.class);
-    
+
     private final Server server;
-    
+
     @Inject
     private YlinorServer ylinorServer;
-    
+
     @Inject
     private InetSocketAddress serverAdress;
     TIntObjectMap<PlayerConnection> onlineConnections = new TIntObjectHashMap<>();
@@ -59,7 +61,7 @@ public final class NetworkSystem extends BaseSystem {
             @Override
             public void disconnected(Connection connection) {
                 TIntObjectIterator<PlayerConnection> iterator = onlineConnections.iterator();
-                
+
                 while (iterator.hasNext()) {
                     iterator.advance();
                     if (iterator.value().isSameConnection(connection)) {
@@ -88,7 +90,7 @@ public final class NetworkSystem extends BaseSystem {
     @Override
     protected void processSystem() {
         TIntObjectIterator<PlayerConnection> iterator = onlineConnections.iterator();
-        
+
         while (iterator.hasNext()) {
             iterator.advance();
             if (iterator.value().shouldDisconnect()) {
