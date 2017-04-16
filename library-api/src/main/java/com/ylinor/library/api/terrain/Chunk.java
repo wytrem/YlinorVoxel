@@ -1,21 +1,16 @@
 package com.ylinor.library.api.terrain;
 
-import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.math.BlockPos;
-
-import gnu.trove.map.TShortObjectMap;
-import gnu.trove.map.hash.TShortObjectHashMap;
 
 public class Chunk implements IBlockContainer {
 	public static final short SIZE_X = 16;
 	public static final short SIZE_Y = 256;
 	public static final short SIZE_Z = 16;
 
-	private TShortObjectMap<Block> blockCache = new TShortObjectHashMap<>(64);
-	private short[][][] blocks;
-	private byte[][][] states;
+	private short[] blocks;
+	private byte[] states;
 	private Terrain world;
 	public final int x, z;
 	public final long id;
@@ -26,56 +21,23 @@ public class Chunk implements IBlockContainer {
 		this.x = chunkX;
 		this.z = chunkZ;
 		this.id = chunkXZ2Int(chunkX, chunkZ);
-		blocks = new short[SIZE_X][SIZE_Y][SIZE_Z];
-		states = new byte[SIZE_X][SIZE_Y][SIZE_Z];
+		blocks = new short[SIZE_X * SIZE_Y * SIZE_Z];
+		states = new byte[SIZE_X * SIZE_Y * SIZE_Z];
 		needsRenderUpdate = true;
+	}
+	
+	public void setDirty() {
+//	    needsRenderUpdate = true;
+	}
+	
+	public void fillChunk(short[] blocks, byte[] states) {
+	    this.blocks = blocks;
+	    this.states = states;
+	    setDirty();
 	}
 
 	public Terrain getWorld() {
 		return world;
-	}
-
-	@Override
-	public Block getBlock(int x, int y, int z) {
-		return _blockAt(posInChunkToShort(x, y, z));
-	}
-
-	private void _uncacheBlock(short pos) {
-		Block block = _blockAt(pos);
-
-		if (block != null) {
-			synchronized (block) {
-				synchronized (blockCache) {
-					blockCache.remove(pos);
-				}
-			}
-		} else {
-			synchronized (blockCache) {
-				blockCache.remove(pos);
-			}
-		}
-	}
-
-	private void _cacheBlock(short pos, Block block) {
-		Block previousBlock = _blockAt(pos);
-
-		if (previousBlock != null) {
-			synchronized (previousBlock) {
-				synchronized (blockCache) {
-					blockCache.put(pos, block);
-				}
-			}
-		} else {
-			synchronized (blockCache) {
-				blockCache.put(pos, block);
-			}
-		}
-	}
-
-	private Block _blockAt(short pos) {
-		synchronized (blockCache) {
-			return blockCache.get(pos);
-		}
 	}
 
 	private short _typeAt(int x, int y, int z) {
@@ -83,20 +45,22 @@ public class Chunk implements IBlockContainer {
 			return 0;
 		}
 		synchronized (blocks) {
-			return blocks[x][y][z];
+			return blocks[posInChunkToInt(x, y, z)];
 		}
 	}
 	
 	private void _setTypeAt(int x, int y, int z, short type) {
 		synchronized (blocks) {
-			blocks[x][y][z] = type;
+			blocks[posInChunkToInt(x, y, z)] = type;
+			setDirty();
 		}
 	}
 
 
 	private void _setState(int x, int y, int z, BlockState data) {
 		synchronized (states) {
-			states[x][y][z] = (byte) world.getBlockType(_typeAt(x, y, z)).getMetaFromState(data);
+			states[posInChunkToInt(x, y, z)] = (byte) world.getBlockType(_typeAt(x, y, z)).getMetaFromState(data);
+			setDirty();
 		}
 	}
 	
@@ -106,32 +70,9 @@ public class Chunk implements IBlockContainer {
         }
 	    
         synchronized (states) {
-            return world.getBlockType(_typeAt(x, y, z)).getStateFromMeta(states[x][y][z]);
+            return world.getBlockType(_typeAt(x, y, z)).getStateFromMeta(states[posInChunkToInt(x, y, z)]);
         }
     }
-
-	private BlockPos _newBlockPos(int x, int y, int z) {
-		return new BlockPos(x << 4 + x, y, z << 4 + z);
-	}
-
-	@Override
-	public Block getOrCreate(int x, int y, int z) {
-		short pos = posInChunkToShort(x, y, z);
-		Block block = _blockAt(pos);
-		// if (block == null) {
-		// BlockExtraData data = _dataAt(pos);
-		// if (data == null) {
-		// block = new Block(_newBlockPos(x, y, z), null,
-		// world.getBlockType(_typeAt(x, y, z)));
-		// }
-		// else {
-		// block = data.provide(world.getBlockType(_typeAt(x, y, z)),
-		// _newBlockPos(x, y, z), world);
-		// }
-		// _cacheBlock(pos, block);
-		// }
-		return block;
-	}
 
 	@Override
 	public BlockType getBlockType(int x, int y, int z) {
@@ -144,24 +85,13 @@ public class Chunk implements IBlockContainer {
 	}
 
 	@Override
-	public void setBlock(Block block) {
-		setBlockType(block.getPos(), block.getType());
-		setBlockState(block.getPos(), block.getData());
-		_cacheBlock(posInChunkToShort(block.getPos()), block);
-	}
-
-	@Override
 	public void setBlockType(int x, int y, int z, BlockType type) {
-		short pos = posInChunkToShort(x, y, z);
-		_uncacheBlock(pos);
 		_setTypeAt(x, y, z, type.getId());
 		_setState(x, y, z, type.getDefaultState());
 	}
 
 	@Override
 	public void setBlockState(int x, int y, int z, BlockState data) {
-		short pos = posInChunkToShort(x, y, z);
-		_uncacheBlock(pos);
 		_setState(x, y, z, data);
 	}
 
@@ -186,6 +116,10 @@ public class Chunk implements IBlockContainer {
 	private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
 	private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
 
+	public static int posInChunkToInt(int x, int y, int z) {
+        return (int) (((long) x & X_MASK) << X_SHIFT | ((long) y & Y_MASK) << Y_SHIFT | ((long) z & Z_MASK) << 0);
+    }
+	
 	public static short posInChunkToShort(int x, int y, int z) {
 		return (short) (((long) x & X_MASK) << X_SHIFT | ((long) y & Y_MASK) << Y_SHIFT | ((long) z & Z_MASK) << 0);
 	}
@@ -212,4 +146,12 @@ public class Chunk implements IBlockContainer {
 	public static long chunkXZ2Int(int chunkX, int chunkZ) {
 		return chunkX & 4294967295L | (chunkZ & 4294967295L) << 32;
 	}
+
+    public short[] getBlocksArray() {
+        return blocks;
+    }
+
+    public byte[] getStatesArray() {
+        return states;
+    }
 }

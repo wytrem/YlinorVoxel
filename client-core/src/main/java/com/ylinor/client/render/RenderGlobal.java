@@ -1,6 +1,7 @@
 package com.ylinor.client.render;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,7 +24,7 @@ import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.World;
 
-
+@Singleton
 public class RenderGlobal implements Disposable {
     int renderEngineVersion = 1;
 

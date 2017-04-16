@@ -26,7 +26,7 @@ public final class NetworkSystem extends BaseSystem {
             public void received(Connection connection, Object object) {
                 if (object instanceof Packet) {
                     Packet packet = (Packet) object;
-
+                    
                     for (Player player : ylinorServer.getPlayersList()) {
                         if (player.getPlayerConnection().isSameConnection(connection)) {
                             packet.handle(player.getPlayerConnection());

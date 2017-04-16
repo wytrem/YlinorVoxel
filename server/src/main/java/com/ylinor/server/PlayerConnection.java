@@ -3,6 +3,7 @@ package com.ylinor.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.ylinor.packets.PacketHandler;
 import com.ylinor.packets.PacketLogin;
+import com.ylinor.packets.PacketMapChunk;
 
 public final class PlayerConnection implements PacketHandler {
     private final Connection connection;
@@ -15,6 +16,11 @@ public final class PlayerConnection implements PacketHandler {
     @Override
     public void handleLogin(PacketLogin login) {
         System.out.println("New user loged in: " + login.getAuthToken());
+    }
+    
+    @Override
+    public void handleMapChunk(PacketMapChunk packetMapChunk) {
+        
     }
 
     public void disconnect() {

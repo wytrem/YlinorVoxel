@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 import com.google.common.eventbus.EventBus;
 import com.ylinor.library.util.ecs.Event;
 
-
 @Singleton
 public class EventSystem extends BaseSystem {
     

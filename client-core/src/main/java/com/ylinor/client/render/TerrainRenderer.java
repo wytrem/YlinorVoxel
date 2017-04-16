@@ -1,6 +1,7 @@
 package com.ylinor.client.render;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -33,6 +34,7 @@ import gnu.trove.procedure.TObjectProcedure;
  *
  * @author wytrem
  */
+@Singleton
 public class TerrainRenderer implements RenderableProvider, Disposable {
     Terrain terrain;
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
