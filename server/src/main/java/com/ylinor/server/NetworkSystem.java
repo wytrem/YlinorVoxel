@@ -74,6 +74,7 @@ public final class NetworkSystem extends BaseSystem {
         server.bind(address, null);
     }
 
+    @Override
     public void initialize() {
         logger.info("Loading server network system.");
         try {
