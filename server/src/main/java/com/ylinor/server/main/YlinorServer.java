@@ -49,7 +49,7 @@ public final class YlinorServer {
     private void run() throws IOException {
         Timer timer = new Timer(20.0f);
 
-        server.bind(new InetSocketAddress(InetAddress.getLocalHost(), 25565), null);
+        server.bind(new InetSocketAddress(25565), null);
 
         try {
             while (running) {
@@ -75,6 +75,8 @@ public final class YlinorServer {
             player.kick("Server is shutting down");
             player.getPlayerConnection().close();
         }
+
+        server.stop();
     }
 
     private void tick() {

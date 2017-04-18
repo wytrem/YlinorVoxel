@@ -13,6 +13,7 @@ import javax.swing.*;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.Position;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.BaseSystem;
@@ -81,10 +82,12 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     public void handleSpawnEntity(PacketSpawnEntity spawnEntity) {
         Entity entity = world.create()
                 .set(Position.class)
+                .set(Heading.class)
                 .set(NetworkIdentifierComponent.class);
 
         entity.get(NetworkIdentifierComponent.class).setIdentifier(spawnEntity.getEntityID());
         entity.get(Position.class).position.set(spawnEntity.getInitialX(), spawnEntity.getInitialY(), spawnEntity.getInitialZ());
+        entity.get(Heading.class).heading.set(spawnEntity.getInitialPitch(), spawnEntity.getInitialYaw(), 0.0f);
 
         // TODO pitch and yaw
 
@@ -92,7 +95,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     }
 
     @Override
-    public void handlePositionUpdate(PacketPositionUpdate positionUpdate) {
+    public void handlePositionUpdate(PacketPositionAndRotationUpdate positionUpdate) {
         for (Entity entity : nearbyEntities) {
             if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == positionUpdate.getEntityID()) {
                 Vector3f position = entity.get(Position.class).position;
