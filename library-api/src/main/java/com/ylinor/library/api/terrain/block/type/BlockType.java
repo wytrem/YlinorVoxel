@@ -121,7 +121,25 @@ public class BlockType {
     public static final BlockType melon = new BlockType(103).setModelName("melon");
     public static final BlockType pumpkinStem = new BlockType(104).setModelName("pumpkin_stem_growth0");
     public static final BlockType melonStem = new BlockType(105).setModelName("melon_stem_growth0");
-    // A intégrer :3
+    public static final BlockType vine = new BlockType(106).setModelName("vine_1");
+    public static final BlockType fenceGate = new BlockType(107).setModelName("fence_gate_closed");
+    public static final BlockType brickStairs = new BlockType(108).setModelName("brick_stairs");
+    public static final BlockType stoneBrickStairs = new BlockType(109).setModelName("stone_brick_stairs");
+    public static final BlockType mycelium = new BlockType(110).setModelName("mycelium");
+    public static final BlockType waterlily = new BlockType(111).setModelName("waterlily");
+    public static final BlockType netherBrick = new BlockType(112).setModelName("nether_brick");
+    public static final BlockType netherBrickFence = new BlockType(113).setModelName("nether_brick_fence_side");
+    public static final BlockType netherBrickStairs = new BlockType(114).setModelName("nether_brick_stairs");
+    public static final BlockType netherWart = new BlockType(115).setModelName("nether_wart");
+    public static final BlockType enchantingTable = new BlockType(116).setModelName("enchanting_table");
+    public static final BlockType brewingStand = new BlockType(117).setModelName("brewing_stand");
+    public static final BlockType cauldron = new BlockType(118).setModelName("cauldron_empty");
+    public static final BlockType endPortal = new BlockType(129).setModelName("end_portal");
+    public static final BlockType endPortalFrame = new BlockType(120).setModelName("end_portal_frame");
+    public static final BlockType endStone = new BlockType(121).setModelName("end_stone");
+    public static final BlockType dragonEgg = new BlockType(122).setModelName("dragon_egg");
+    public static final BlockType redstoneLamp = new BlockType(123).setModelName("redstone_lamp");
+    public static final BlockType litRedstoneLamp = new BlockType(124).setModelName("lit_redstone_lamp");
     // Crash :'( public static final BlockType doubleWoodenSlab = new BlockTypePlanks(125).setModelName("double_wooden_slab");
     public static final BlockType woodenSlab = new BlockTypePlanks(126).setModelName("wooden_slab");
     public static final BlockType cocoa = new BlockType(127).setModelName("cocoa_age0_s");

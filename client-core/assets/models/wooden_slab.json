@@ -1,5 +1,10 @@
 {
   "parent": "half_slab",
+  "textures": {
+    "top": "#all",
+    "side": "#all",
+    "bottom": "#all"
+  },
   "variants": {
     "variant=oak": {
       "textures": {
