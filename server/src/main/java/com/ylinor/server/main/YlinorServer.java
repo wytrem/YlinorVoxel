@@ -7,6 +7,7 @@ import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.packets.Packet;
 import com.ylinor.packets.PacketPositionUpdate;
 import com.ylinor.packets.PacketSpawnEntity;
+import com.ylinor.server.CommandLineThread;
 import com.ylinor.server.EntityIDAllocator;
 import com.ylinor.server.Player;
 import com.ylinor.server.PlayerConnection;
@@ -21,10 +22,12 @@ public final class YlinorServer {
     private static YlinorServer instance;
     private List<Player> onlinePlayers;
     private Server server;
+    private volatile boolean running;
 
     private YlinorServer() {
         this.onlinePlayers = new ArrayList<>();
         this.server = new Server();
+        this.running = true;
 
         server.addListener(new Listener() {
             @Override
@@ -37,6 +40,8 @@ public final class YlinorServer {
         });
         server.start();
         Packet.registerToKryo(server.getKryo());
+
+        new CommandLineThread(this).start();
     }
 
     private void run() throws IOException {
@@ -44,14 +49,27 @@ public final class YlinorServer {
 
         server.bind(25565);
 
-        while (true) {
-            if (timer.elapsedTicks > 0) {
-                for (int i = 0; i < timer.elapsedTicks; i++) {
-                    tick();
+        try {
+            while (running) {
+                if (timer.elapsedTicks > 0) {
+                    for (int i = 0; i < timer.elapsedTicks; i++) {
+                        tick();
+                    }
+                } else {
+                    Thread.yield();
                 }
-            } else {
-                Thread.yield();
             }
+        } finally {
+            shutdown();
+        }
+    }
+
+    private void shutdown() {
+        System.out.println("Shutting down server...");
+
+        for (Player player : onlinePlayers) {
+            player.kick("Server is shutting down");
+            player.getPlayerConnection().close();
         }
     }
 
@@ -110,6 +128,10 @@ public final class YlinorServer {
         });
 
         return players;
+    }
+
+    public void stop() {
+        running = false;
     }
 
     public static void main(String[] args) {
