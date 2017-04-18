@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.packets.Packet;
-import com.ylinor.packets.PacketPositionUpdate;
+import com.ylinor.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.packets.PacketSpawnEntity;
 import com.ylinor.server.CommandLineThread;
 import com.ylinor.server.EntityIDAllocator;
@@ -14,6 +14,8 @@ import com.ylinor.server.PlayerConnection;
 import org.joml.Vector3f;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +49,7 @@ public final class YlinorServer {
     private void run() throws IOException {
         Timer timer = new Timer(20.0f);
 
-        server.bind(25565);
+        server.bind(new InetSocketAddress(InetAddress.getLocalHost(), 25565), null);
 
         try {
             while (running) {
@@ -99,7 +101,7 @@ public final class YlinorServer {
         Vector3f playerPosition = player.getPosition();
 
         // TODO only nearby players should be notified about the position of this player
-        server.sendToAllExceptTCP(connectionID, new PacketPositionUpdate(player.getEntityID(), playerPosition.x, playerPosition.y, playerPosition.z));
+        server.sendToAllExceptTCP(connectionID, new PacketPositionAndRotationUpdate(player.getEntityID(), playerPosition.x, playerPosition.y, playerPosition.z, player.getPitch(), player.getYaw()));
 
         List<Player> nearbyPlayers = player.getNearbyPlayers();
 
@@ -115,8 +117,8 @@ public final class YlinorServer {
                         onlinePlayerPosition.x,
                         onlinePlayerPosition.y,
                         onlinePlayerPosition.z,
-                        0.0f,
-                        0.0f));
+                        onlinePlayer.getPitch(),
+                        onlinePlayer.getYaw()));
 
                 System.out.println("[Debug] Sending spawn entity packet to connection " + connectionID);
             }

@@ -42,8 +42,10 @@ public final class PlayerConnection implements PacketHandler {
     }
 
     @Override
-    public void handlePositionUpdate(PacketPositionUpdate positionUpdate) {
+    public void handlePositionUpdate(PacketPositionAndRotationUpdate positionUpdate) {
         player.setPosition(new Vector3f(positionUpdate.getX(), positionUpdate.getY(), positionUpdate.getZ()));
+        player.setPitch(positionUpdate.getPitch());
+        player.setYaw(positionUpdate.getYaw());
     }
 
     @Override

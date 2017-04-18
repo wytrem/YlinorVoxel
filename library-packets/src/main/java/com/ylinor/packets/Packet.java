@@ -16,7 +16,7 @@ public abstract class Packet implements KryoSerializable {
         packetsList = new ArrayList<>();
 
         registerPacket(PacketLogin.class);
-        registerPacket(PacketPositionUpdate.class);
+        registerPacket(PacketPositionAndRotationUpdate.class);
         registerPacket(PacketSpawnEntity.class);
         registerPacket(PacketDisconnect.class);
     }
