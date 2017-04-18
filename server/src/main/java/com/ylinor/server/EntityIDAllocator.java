@@ -1,4 +1,4 @@
-package com.ylinor.server.main;
+package com.ylinor.server;
 
 /**
  * Created by Utilisateur on 18/04/2017.

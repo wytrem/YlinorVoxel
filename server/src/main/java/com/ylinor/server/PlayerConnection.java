@@ -1,4 +1,4 @@
-package com.ylinor.server.main;
+package com.ylinor.server;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.ylinor.packets.*;

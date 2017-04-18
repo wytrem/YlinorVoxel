@@ -1,4 +1,4 @@
-package com.ylinor.server.main;
+package com.ylinor.server;
 
 import com.ylinor.packets.PacketDisconnect;
 import org.joml.Vector3f;
