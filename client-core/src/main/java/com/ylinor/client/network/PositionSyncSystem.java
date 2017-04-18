@@ -16,8 +16,7 @@ public final class PositionSyncSystem extends TickingIteratingSystem {
     protected ClientNetworkSystem networkSystem;
 
     public PositionSyncSystem() {
-        super(Aspect.all(PositionSyncComponent.class));
-
+        super(Aspect.all(PositionSyncComponent.class, Position.class));
     }
 
     @Override
