@@ -3,6 +3,7 @@ package com.ylinor.client.render;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.ylinor.client.network.PositionSyncComponent;
 import com.ylinor.client.physics.components.AABB;
 import com.ylinor.client.physics.components.CollisionState;
 import com.ylinor.client.physics.components.Heading;
@@ -40,7 +41,8 @@ public class PlayerInitSystem extends BaseSystem {
               .set(Size.class)
               .set(AABB.class)
               .set(CollisionState.class)
-              .set(Physics.class);
+              .set(Physics.class)
+              .set(PositionSyncComponent.class);
         player.get(EyeHeight.class).eyePadding.y = 1.65f;
         player.get(Size.class).setSize(0.6f, 1.8f);
     }

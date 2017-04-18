@@ -31,8 +31,10 @@ public final class ClientNetworkSystem extends BaseSystem {
     protected void processSystem() {
         Packet packet;
 
-        while ((packet = packetQueue.poll()) != null) {
-            client.sendTCP(packet);
+        if (client.isConnected()) {
+            while ((packet = packetQueue.poll()) != null) {
+                client.sendTCP(packet);
+            }
         }
     }
 

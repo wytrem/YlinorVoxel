@@ -5,6 +5,7 @@ import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
 import java.io.File;
 import java.io.IOException;
 
+import com.ylinor.client.network.PositionSyncSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,7 @@ public class YlinorClient extends YlinorApplication
 
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, ClientNetworkSystem.class);
 
-        configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
+        configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);
 
         configuration.with(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
     
