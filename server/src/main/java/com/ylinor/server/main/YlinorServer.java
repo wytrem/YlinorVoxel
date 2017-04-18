@@ -51,6 +51,8 @@ public final class YlinorServer {
 
         try {
             while (running) {
+                timer.updateTimer();
+
                 if (timer.elapsedTicks > 0) {
                     for (int i = 0; i < timer.elapsedTicks; i++) {
                         tick();
@@ -96,6 +98,7 @@ public final class YlinorServer {
     private void handlePlayer(Player player, int connectionID) {
         Vector3f playerPosition = player.getPosition();
 
+        // TODO only nearby players should be notified about the position of this player
         server.sendToAllExceptTCP(connectionID, new PacketPositionUpdate(player.getEntityID(), playerPosition.x, playerPosition.y, playerPosition.z));
 
         List<Player> nearbyPlayers = player.getNearbyPlayers();
@@ -114,6 +117,8 @@ public final class YlinorServer {
                         onlinePlayerPosition.z,
                         0.0f,
                         0.0f));
+
+                System.out.println("[Debug] Sending spawn entity packet to connection " + connectionID);
             }
         });
     }
