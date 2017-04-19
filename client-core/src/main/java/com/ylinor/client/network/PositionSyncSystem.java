@@ -6,7 +6,6 @@ import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.packets.PacketPositionUpdate;
 import org.joml.Vector3f;
-import sun.net.NetworkServer;
 
 import javax.inject.Inject;
 
