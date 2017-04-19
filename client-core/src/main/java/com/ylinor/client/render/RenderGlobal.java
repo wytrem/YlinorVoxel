@@ -1,8 +1,5 @@
 package com.ylinor.client.render;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,12 +14,21 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.ylinor.client.network.ClientNetworkSystem;
+import com.ylinor.client.physics.components.Heading;
+import com.ylinor.client.physics.components.Position;
 import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.entity.Entity;
+import org.joml.Vector3f;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class RenderGlobal implements Disposable {
@@ -42,16 +48,18 @@ public class RenderGlobal implements Disposable {
     
     @Inject
     Assets assets;
-    
-    ModelInstance test;
-    
+
+    @Inject
+    ClientNetworkSystem clientNetworkSystem;
+
     @Inject
     Terrain terrain;
     
     AnimationController controller;
     
     DirectionalLight sun;
-    
+
+    private ModelInstance placeholderEntityModelInstance;
 
     public RenderGlobal() {
 
@@ -68,8 +76,7 @@ public class RenderGlobal implements Disposable {
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.set(new ColorAttribute(ColorAttribute.Fog, 0.13f, 0.13f, 0.13f, 1f));
-        
-        
+
         sun = new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f);
         environment.add(sun);
         terrainRenderer = new TerrainRenderer(terrain, this);
@@ -80,10 +87,10 @@ public class RenderGlobal implements Disposable {
         font = new BitmapFont();
         
         Model player = assets.modelAssets.getModelTest();
-        test = new ModelInstance(player); 
-        test.transform.setToTranslation(0, 256, 0).scl(0.3f);
-        
-        controller = new AnimationController(test);
+        this.placeholderEntityModelInstance = new ModelInstance(player);
+        placeholderEntityModelInstance.transform.scl(0.3f);
+
+        controller = new AnimationController(placeholderEntityModelInstance);
         controller.setAnimation("run", -1);
     }
     
@@ -94,13 +101,23 @@ public class RenderGlobal implements Disposable {
 
         // Render terrain
         terrainBatch.render(terrainRenderer, environment);
-        
         terrainBatch.end();
-        
+
         entitiesBatch.begin(cameraSystem.getCamera());
 
-        // DEBUG
-        entitiesBatch.render(test, environment);
+        for (Entity entity : clientNetworkSystem.getNearbyEntities()) {
+            Vector3f position = entity.get(Position.class).position;
+            Vector3f heading = entity.get(Heading.class).heading;
+
+            placeholderEntityModelInstance.transform.idt()
+                    .scl(0.3f)
+                    .setTranslation(position.x, position.y, position.z)
+                    .rotate(Vector3.X, heading.x)
+                    .rotate(Vector3.Y, heading.y);
+
+            entitiesBatch.render(placeholderEntityModelInstance, environment);
+        }
+
         entitiesBatch.end();
     }
     
@@ -116,5 +133,8 @@ public class RenderGlobal implements Disposable {
     @Override
     public void dispose() {
         terrainRenderer.dispose();
+
+        terrainBatch.dispose();
+        entitiesBatch.dispose();
     }
 }

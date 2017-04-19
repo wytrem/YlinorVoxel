@@ -11,6 +11,7 @@ public final class Player {
     private long entityID;
     protected String username;
     private Vector3f position;
+    private float pitch, yaw;
 
     // TODO rename this to nearbyEntites
     private List<Player> nearbyPlayers;
@@ -47,5 +48,21 @@ public final class Player {
 
     public List<Player> getNearbyPlayers() {
         return nearbyPlayers;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
     }
 }
