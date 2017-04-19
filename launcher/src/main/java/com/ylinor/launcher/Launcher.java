@@ -88,7 +88,7 @@ public class Launcher {
         if (object.has("error"))
         {
             logger.warning("Erreur lors du refresh : " + object.get("message").getAsString());
-            return nulgl;
+            return null;
         }
 
         User user = gson.fromJson(object, User.class);
