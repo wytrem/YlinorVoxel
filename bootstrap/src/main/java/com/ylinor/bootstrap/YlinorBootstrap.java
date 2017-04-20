@@ -45,7 +45,6 @@ public class YlinorBootstrap {
     public static void update() {
         SUpdate su = new SUpdate(UPDATE_URL, FOLDER);
         su.addApplication(new FileDeleter());
-        su.getServerRequester().setRewriteEnabled(true);
 
         try {
             su.start();

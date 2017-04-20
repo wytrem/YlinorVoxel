@@ -11,7 +11,7 @@ deploy-client:
     - rm -rf /var/www/html/api.ylinor.com/launcher/public/files/assets
     - cp -rf client-core/assets /var/www/html/api.ylinor.com/launcher/public/files/
     - cd /var/www/html/api.ylinor.com/launcher/public/files
-    - rm -rf ./*
+    - rm -rf lib
     - unzip ../../client.zip
     - mv client-*/* .
     - rm -rf bin/ client-desktop/
