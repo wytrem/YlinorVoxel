@@ -48,7 +48,7 @@ public final class YlinorServer {
     private void run() throws IOException {
         Timer timer = new Timer(20.0f);
 
-        server.bind(new InetSocketAddress(25565), null);
+        server.bind(new InetSocketAddress(18325), null);
 
         try {
             while (running) {

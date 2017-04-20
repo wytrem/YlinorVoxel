@@ -42,8 +42,8 @@ public class MainMenuScreen extends YlinorScreen {
 	@Inject
 	private ClientNetworkSystem networkSystem;
 	
-    private String host = "localhost";
-    private int port = 25565;
+    private String host = "git.ylinor.com";
+    private int port = 18325;
 	
 	public MainMenuScreen() {
 	}
