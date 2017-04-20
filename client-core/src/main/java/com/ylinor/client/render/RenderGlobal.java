@@ -92,10 +92,6 @@ public class RenderGlobal implements Disposable {
     public void render() {
         update();
 
-        System.err.println(terrainBatch.getCamera());
-        System.out.println("camera = " + cameraSystem.getCamera());
-        System.out.println(Thread.currentThread().getName());
-        
         terrainBatch.begin(cameraSystem.getCamera());
 
         // Render terrain
