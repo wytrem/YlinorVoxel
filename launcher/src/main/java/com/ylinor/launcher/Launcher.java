@@ -112,7 +112,14 @@ public class Launcher {
         req.addHeader("Accept", "application/json;charset=UTF-8");
         HttpResponse response = http.execute(req);
 
-        return new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
+        String rep = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
+
+        if (rep.charAt(0) != '{')
+        {
+            rep = rep.substring(1);
+        }
+
+        return rep;
     }
 
     public static void update(final Runnable callback) throws Exception {
