@@ -5,6 +5,7 @@ deploy-client:
     - cd /var/www/html/api.ylinor.com/launcher/public/files
     - rm -rf ./*
     - unzip ../../client.zip
+    - rm -rf bin/
 
 deploy-server:
   script:
