@@ -3,6 +3,6 @@ deploy-server:
     - ./gradlew server:distZip
     - cp server/build/distributions/serve*.zip /home/shark/Serveurs/Ylinor/Epsilon/Temp/server.zip
     - cd /home/shark/Serveurs/Ylinor/Epsilon/
-    - bash stop.bash
+    - screen -X -S epsilon quit || echo
     - unzip Temp/server.zip
-    - bash launch.bash
+    - screen -dmS epsilon "server/bin/server"
