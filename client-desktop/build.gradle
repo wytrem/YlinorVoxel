@@ -1,14 +1,14 @@
 apply plugin: 'application'
 
-project.ext.mainClassName = 'com.ylinor.client.desktop.DesktopLauncher'
+project.ext.main = 'com.ylinor.client.desktop.DesktopLauncher'
 project.ext.assetsDir = new File('../client-core/assets');
 
-mainClassName = project.ext.mainClassName
+mainClassName = project.ext.main
 
 archivesBaseName = 'ylinor'
 
 task runClient(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+    main = project.main
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -22,7 +22,7 @@ task dist(type: Jar) {
     from files(project.assetsDir);
  
     manifest {
-        attributes 'Main-Class': project.mainClassName
+        attributes 'Main-Class': project.main
     }
 }
 
