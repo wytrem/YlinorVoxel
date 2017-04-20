@@ -1,11 +1,12 @@
 package com.ylinor.library.api.ecs.events.entity;
 
-import net.mostlyoriginal.api.event.common.Event;
+import com.ylinor.library.util.ecs.Event;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public abstract class EntityEvent implements Event {
-    public final int entityId;
+    public final Entity entity;
 
-    public EntityEvent(int entityId) {
-        this.entityId = entityId;
+    public EntityEvent(Entity entityId) {
+        this.entity = entityId;
     }
 }

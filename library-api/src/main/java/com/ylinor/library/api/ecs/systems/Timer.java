@@ -1,7 +1,10 @@
 package com.ylinor.library.api.ecs.systems;
 
+import javax.inject.Singleton;
+
 import com.ylinor.library.util.math.MathHelper;
 
+@Singleton
 public class Timer {
    float ticksPerSecond;
    private double lastHRTime;

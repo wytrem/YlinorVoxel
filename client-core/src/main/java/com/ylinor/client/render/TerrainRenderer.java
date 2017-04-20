@@ -1,6 +1,8 @@
 package com.ylinor.client.render;
 
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,12 +21,12 @@ import com.ylinor.client.renderlib.GdxTempVars;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.util.ecs.system.EventSystem;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.procedure.TObjectIntProcedure;
 import gnu.trove.procedure.TObjectProcedure;
-import net.mostlyoriginal.api.event.common.EventSystem;
 
 
 /**
@@ -32,21 +34,22 @@ import net.mostlyoriginal.api.event.common.EventSystem;
  *
  * @author wytrem
  */
+@Singleton
 public class TerrainRenderer implements RenderableProvider, Disposable {
     Terrain terrain;
     TLongObjectMap<ChunkRenderer> chunkRenderers = new TLongObjectHashMap<ChunkRenderer>();
     RenderGlobal renderGlobal;
     Material standardBlockMaterial;
     Texture texture;
-    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 4;
+    int renderChunkX = -1, renderChunkZ = -1, renderChunkSize = 8;
 
-    @Wire
+    @Inject
     CameraSystem cameraSystem;
 
-    @Wire
+    @Inject
     EventSystem eventSystem;
 
-    @Wire
+    @Inject
     Assets assets;
 
     public TerrainRenderer(Terrain world, RenderGlobal renderGlobal) {

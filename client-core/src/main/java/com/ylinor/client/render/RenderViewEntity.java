@@ -1,7 +1,6 @@
 package com.ylinor.client.render;
 
-import com.artemis.Component;
-
+import com.ylinor.library.util.ecs.component.Component;
 
 /**
  * Marks the entity holding the camera.

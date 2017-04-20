@@ -1,5 +1,7 @@
 package com.ylinor.client.resource;
 
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,7 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Litarvan
  * @since 1.0.0
  */
+@Singleton
 public class Assets implements Disposable {
 	private static final Logger logger = LoggerFactory.getLogger(Assets.class);
 

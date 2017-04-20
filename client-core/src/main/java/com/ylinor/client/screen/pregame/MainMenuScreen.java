@@ -1,6 +1,14 @@
 package com.ylinor.client.screen.pregame;
 
-import com.artemis.annotations.Wire;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,21 +20,31 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 import com.ylinor.client.YlinorClient;
+import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
+import com.ylinor.packets.PacketLogin;
 
 public class MainMenuScreen extends YlinorScreen {
-
-	@Wire
+    
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
+    
+	@Inject
 	private ScreenSystem screenSystem;
 
-	@Wire
+	@Inject
 	private YlinorClient client;
 	
-	@Wire
+	@Inject
 	private Assets assets;
 
+	@Inject
+	private ClientNetworkSystem networkSystem;
+	
+    private String host = "localhost";
+    private int port = 25565;
+	
 	public MainMenuScreen() {
 	}
 
@@ -61,6 +79,11 @@ public class MainMenuScreen extends YlinorScreen {
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					screenSystem.setScreen(null);
+					try {
+						connectToServer();
+					} catch (IOException e) {
+						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
+					}
 					client.isInGame = true;
 				}
 			});
@@ -70,6 +93,13 @@ public class MainMenuScreen extends YlinorScreen {
 
 		addActor(table);
 	}
+	
+	public void connectToServer() throws IOException {
+        logger.info("Connecting to server {}:{}.", host, port);
+        networkSystem.init(InetAddress.getByName(host), port);
+
+        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
+    }
 
 	@Override
 	public void resize(int width, int height) {

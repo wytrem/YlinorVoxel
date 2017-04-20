@@ -1,7 +1,8 @@
 package com.ylinor.library.api.terrain.block;
 
-import com.artemis.World;
 import com.ylinor.library.api.terrain.block.state.BlockState;
+import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public class BlockBehaviour {
 	private BlockState state;
@@ -10,7 +11,7 @@ public class BlockBehaviour {
 		this.state = state;
 	}
 	
-	public void onLanded(World world, int entityId) {
+	public void onLanded(World world, Entity entityId) {
 		
 	}
 }

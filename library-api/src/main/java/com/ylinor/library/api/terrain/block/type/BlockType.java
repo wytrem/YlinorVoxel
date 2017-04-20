@@ -1,13 +1,13 @@
 package com.ylinor.library.api.terrain.block.type;
 
-import com.artemis.World;
-import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.BlockAttributes;
 import com.ylinor.library.api.terrain.block.material.MapColor;
 import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.api.terrain.block.state.props.StateProperty;
+import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.math.BlockPos;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
@@ -59,7 +59,7 @@ public class BlockType {
     public static final BlockType goldBlock = new BlockType(41).setModelName("gold_block");
     public static final BlockType ironBlock = new BlockType(42).setModelName("iron_block");
     public static final BlockType doubleStoneSlab = new BlockType(43).setModelName("double_stone");
-    public static final BlockType stoneSlab = new BlockType(44).setModelName("half_slab_stone");
+    public static final BlockType stoneSlab = new BlockTypeHalfSlab(44).setModelName("half_slab_stone");
     public static final BlockType brickBlock = new BlockType(45).setModelName("brick");
     public static final BlockType tnt = new BlockType(46).setModelName("tnt");
     public static final BlockType bookshelf = new BlockType(47).setModelName("bookshelf");
@@ -96,7 +96,7 @@ public class BlockType {
     public static final BlockType snowLayer = new BlockType(78).setModelName("snow_layer");
     public static final BlockType ice = new BlockType(79).setModelName("ice");
     public static final BlockType snow = new BlockType(80).setModelName("snow");
-    public static final BlockType cactus = new BlockType(81).setModelName("cactus");
+    public static final BlockType cactus = new BlockTypeCactus(81).setModelName("cactus");
     public static final BlockType clay = new BlockType(82).setModelName("clay");
     public static final BlockType reeds = new BlockType(83).setModelName("reeds");
     public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
@@ -256,7 +256,7 @@ public class BlockType {
         }
     }
 
-    public void onFallenUpon(World worldIn, BlockPos pos, int entityIn, float fallDistance) {
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         // entityIn.fall(fallDistance, 1.0F);
     }
 

@@ -1,11 +1,13 @@
 package com.ylinor.client.render;
 
-import com.artemis.BaseSystem;
+import javax.inject.Singleton;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 
+@Singleton
 public class ClearScreenSystem extends BaseSystem {
-
     @Override
     protected void processSystem() {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

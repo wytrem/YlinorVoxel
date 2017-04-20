@@ -3,8 +3,9 @@ package com.ylinor.client.input;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.ylinor.client.events.input.keyboard.KeyDownEvent;
@@ -15,18 +16,18 @@ import com.ylinor.client.events.input.mouse.MouseMovedEvent;
 import com.ylinor.client.events.input.mouse.MouseScrolledEvent;
 import com.ylinor.client.events.input.mouse.MouseTouchDownEvent;
 import com.ylinor.client.events.input.mouse.MouseTouchUpEvent;
-
-import net.mostlyoriginal.api.event.common.EventSystem;
-
+import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.EventSystem;
+@Singleton
 public class GdxInputDispatcherSystem extends BaseSystem implements InputProcessor{
 
     private List<Integer> pressedKeys = new ArrayList<>();
     
-    @Wire
+    @Inject
     private EventSystem eventSystem;
     
     @Override
-    protected void initialize() {
+    public  void initialize() {
         Gdx.input.setInputProcessor(this);
     }
     

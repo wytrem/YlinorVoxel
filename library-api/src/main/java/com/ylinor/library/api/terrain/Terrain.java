@@ -1,11 +1,9 @@
 package com.ylinor.library.api.terrain;
 
-import com.artemis.World;
-import com.ylinor.library.api.terrain.block.Block;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.type.BlockType;
+import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.math.BlockPos;
-import com.ylinor.library.util.math.PositionableObject2D;
 
 
 public class Terrain implements IChunkProvider, IBlockContainer {
@@ -18,15 +16,11 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     }
     
     public void inject(World world) {
-        world.inject(storage);
+        world.injector.injectMembers(storage);
     }
 
     public void setStorage(IChunkProvider storage) {
         this.storage = storage;
-    }
-
-    public Chunk getChunkOf(Block block) {
-        return getChunkOf(block.getPos());
     }
 
     public Chunk getChunkOf(BlockPos pos) {
@@ -35,11 +29,6 @@ public class Terrain implements IChunkProvider, IBlockContainer {
 
     public Chunk getChunkOf(int x, int y, int z) {
         return getChunk(x >> 4, z >> 4);
-    }
-
-    @Override
-    public Chunk getChunk(PositionableObject2D pos) {
-        return storage.getChunk(pos);
     }
 
     @Override
@@ -53,26 +42,6 @@ public class Terrain implements IChunkProvider, IBlockContainer {
 
     public BlockType getBlockType(float x, float y, float z) {
         return getBlockType((int) x, (int) y, (int) z);
-    }
-
-    @Override
-    public Block getBlock(BlockPos pos) {
-        return getChunkOf(pos).getBlock(pos.x & 15, pos.y, pos.z & 15);
-    }
-
-    @Override
-    public Block getBlock(int x, int y, int z) {
-        return getChunkOf(x, y, z).getBlock(x & 15, y, z & 15);
-    }
-
-    @Override
-    public Block getOrCreate(BlockPos pos) {
-        return getChunkOf(pos).getOrCreate(pos.x & 15, pos.y, pos.z & 15);
-    }
-
-    @Override
-    public Block getOrCreate(int x, int y, int z) {
-        return getChunkOf(x, y, z).getOrCreate(x & 15, y, z & 15);
     }
 
     @Override
@@ -93,14 +62,6 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     @Override
     public BlockState getBlockState(int x, int y, int z) {
         return getChunkOf(x, y, z).getBlockState(x & 15, y, z & 15);
-    }
-
-    @Override
-    public void setBlock(Block block) {
-        Chunk chunk = getChunkOf(block.getPos());
-
-        chunk.setBlockType(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getType());
-        chunk.setBlockState(block.getPos().x & 15, block.getPos().y, block.getPos().z & 15, block.getData());
     }
 
     @Override

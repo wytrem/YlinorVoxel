@@ -1,15 +1,14 @@
 package com.ylinor.library.api;
 
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
-import com.artemis.WorldConfigurationBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.AbstractModule;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.library.api.ecs.systems.TimerUpdateSystem;
 import com.ylinor.library.api.ecs.systems.WorldEventsDispatcherSystem;
-
-import net.mostlyoriginal.api.event.common.EventSystem;
+import com.ylinor.library.util.ecs.WorldConfiguration;
+import com.ylinor.library.util.ecs.system.EventSystem;
+import com.ylinor.library.util.ecs.World;
 
 
 public abstract class YlinorApplication {
@@ -18,24 +17,26 @@ public abstract class YlinorApplication {
 
     public final World buildWorld() {
         
-        WorldConfigurationBuilder configurationBuilder = new WorldConfigurationBuilder();
-        preConfigure(configurationBuilder);
-        WorldConfiguration configuration = configurationBuilder.build();
+        WorldConfiguration configuration = new WorldConfiguration();
         configure(configuration);
-        return new World(configuration);
+        return configuration.build();
     }
     
     public abstract String getVersion();
 
-    protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
-        configurationBuilder.dependsOn(SystemsPriorities.Update.TIMER_UPDATE, TimerUpdateSystem.class);
-
-        configurationBuilder.dependsOn(SystemsPriorities.Update.WORLD_UPDATE, WorldEventsDispatcherSystem.class);
-        configurationBuilder.dependsOn(SystemsPriorities.Update.EVENT_DISPATCH, EventSystem.class);
-    }
-    
     protected void configure(WorldConfiguration configuration) {
-        configuration.register(new Timer(20.0f));
+        
+        configuration.with(SystemsPriorities.Update.TIMER_UPDATE, TimerUpdateSystem.class);
+
+        configuration.with(SystemsPriorities.Update.WORLD_UPDATE, WorldEventsDispatcherSystem.class);
+        configuration.with(SystemsPriorities.Update.EVENT_DISPATCH, EventSystem.class);
+        configuration.with(new AbstractModule() {
+            
+            @Override
+            protected void configure() {
+                bind(Timer.class).toInstance(new Timer(20.0f));
+            }
+        });
     }
 
     public static YlinorApplication getYlinorApplication() {

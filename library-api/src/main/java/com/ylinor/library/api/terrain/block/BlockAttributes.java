@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.artemis.World;
 import com.ylinor.library.api.terrain.IBlockContainer;
 import com.ylinor.library.api.terrain.block.material.EnumPushReaction;
 import com.ylinor.library.api.terrain.block.material.MapColor;
 import com.ylinor.library.api.terrain.block.material.Material;
+import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.math.AxisAlignedBB;
 import com.ylinor.library.util.math.BlockPos;
 

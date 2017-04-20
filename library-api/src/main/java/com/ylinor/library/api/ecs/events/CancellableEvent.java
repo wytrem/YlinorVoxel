@@ -1,7 +1,7 @@
 package com.ylinor.library.api.ecs.events;
 
-import net.mostlyoriginal.api.event.common.Cancellable;
-import net.mostlyoriginal.api.event.common.Event;
+import com.ylinor.library.util.ecs.Cancellable;
+import com.ylinor.library.util.ecs.Event;
 
 
 public class CancellableEvent implements Cancellable, Event {

@@ -1,14 +1,14 @@
 package com.ylinor.client.input;
 
-import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.IteratingSystem;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.google.common.eventbus.Subscribe;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.input.keyboard.KeyUpEvent;
 import com.ylinor.client.events.input.mouse.MouseMovedEvent;
@@ -16,8 +16,9 @@ import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.InputControlledEntity;
 import com.ylinor.client.physics.components.Motion;
 import com.ylinor.client.physics.components.Physics;
-
-import net.mostlyoriginal.api.event.common.Subscribe;
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.IteratingSystem;
 
 
 /**
@@ -26,10 +27,8 @@ import net.mostlyoriginal.api.event.common.Subscribe;
  *
  * @author wytrem
  */
+@Singleton
 public class PlayerInputSystem extends IteratingSystem {
-
-    private ComponentMapper<Heading> headingMapper;
-    private ComponentMapper<Physics> physicsMapper;
 
     private int STRAFE_LEFT = Keys.S;
     private int STRAFE_RIGHT = Keys.F;
@@ -41,7 +40,7 @@ public class PlayerInputSystem extends IteratingSystem {
     private int mouseY = 0;
     private float rotSpeed = 0.2f;
 
-    @Wire
+    @Inject
     private YlinorClient client;
 
     /**
@@ -49,7 +48,7 @@ public class PlayerInputSystem extends IteratingSystem {
      */
     private Camera camera;
 
-    @Wire
+    @Inject
     private GdxInputDispatcherSystem inputDispatcherSystem;
 
     public PlayerInputSystem() {
@@ -57,7 +56,7 @@ public class PlayerInputSystem extends IteratingSystem {
     }
 
     @Override
-    protected void initialize() {
+    public  void initialize() {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.lookAt(0, 0, 0);
         camera.near = 0.1f;
@@ -66,10 +65,10 @@ public class PlayerInputSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int entityId) {
+    protected void process(Entity entity) {
         //        Motion motion = motionMapper.get(entityId);
-        Heading heading = headingMapper.get(entityId);
-        Physics physics = physicsMapper.get(entityId);
+        Heading heading = entity.get(Heading.class);
+        Physics physics = entity.get(Physics.class);
 
         physics.moveStrafing = 0.0F;
         physics.moveForward = 0.0F;
@@ -77,7 +76,6 @@ public class PlayerInputSystem extends IteratingSystem {
         float mvt = 1;
 
         if (inputDispatcherSystem.getPressedKeys().contains(FORWARD)) {
-
             physics.moveForward = mvt;
         }
         if (inputDispatcherSystem.getPressedKeys().contains(BACKWARD)) {

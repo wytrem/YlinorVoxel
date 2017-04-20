@@ -1,9 +1,10 @@
 package com.ylinor.client.screen.pregame;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
@@ -28,7 +29,7 @@ public class LoadingScreen extends YlinorScreen {
     /* Logger */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Wire
+    @Inject
     private Assets assets;
 
     /* Appele lors de la création du screen */

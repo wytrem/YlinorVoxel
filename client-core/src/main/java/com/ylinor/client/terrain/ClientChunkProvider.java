@@ -1,24 +1,24 @@
 package com.ylinor.client.terrain;
 
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.ylinor.library.api.events.terrain.ChunkLoadedEvent;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.IChunkProvider;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.api.terrain.block.type.BlockType;
-import com.ylinor.library.util.math.PositionableObject2D;
+import com.ylinor.library.util.ecs.system.EventSystem;
 
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
-import net.mostlyoriginal.api.event.common.EventSystem;
 
 
 public class ClientChunkProvider implements IChunkProvider {
-    @Wire
+    @Inject
     private Terrain terrain;
 
-    @Wire
+    @Inject
     private EventSystem eventSystem;
 
     public ClientChunkProvider() {
@@ -84,10 +84,5 @@ public class ClientChunkProvider implements IChunkProvider {
      */
     public static long chunkXZ2Int(int chunkX, int chunkZ) {
         return chunkX & 4294967295L | (chunkZ & 4294967295L) << 32;
-    }
-
-    @Override
-    public Chunk getChunk(PositionableObject2D pos) {
-        return getChunk(pos.x(), pos.y());
     }
 }

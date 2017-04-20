@@ -1,16 +1,19 @@
 package com.ylinor.library.api.ecs.systems;
 
-import com.artemis.Aspect;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.IteratingSystem;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.ylinor.library.api.ecs.events.entity.EntityDeletedEvent;
 import com.ylinor.library.api.ecs.events.entity.EntitySpawnedEvent;
+import com.ylinor.library.util.ecs.entity.Aspect;
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.util.ecs.system.EventSystem;
+import com.ylinor.library.util.ecs.system.IteratingSystem;
 
-import net.mostlyoriginal.api.event.common.EventSystem;
-
+@Singleton
 public class WorldEventsDispatcherSystem extends IteratingSystem {
 
-    @Wire
+    @Inject
     private EventSystem eventSystem;
     
     public WorldEventsDispatcherSystem() {
@@ -18,17 +21,17 @@ public class WorldEventsDispatcherSystem extends IteratingSystem {
     }
 
     @Override
-    protected void process(int entityId) {
+    protected void process(Entity entityId) {
         
     }
     
     @Override
-    protected void inserted(int entityId) {
+    protected void inserted(Entity entityId) {
         eventSystem.dispatch(new EntitySpawnedEvent(entityId));
     }
     
     @Override
-    protected void removed(int entityId) {
+    protected void removed(Entity entityId) {
         eventSystem.dispatch(new EntityDeletedEvent(entityId));
     }
 }

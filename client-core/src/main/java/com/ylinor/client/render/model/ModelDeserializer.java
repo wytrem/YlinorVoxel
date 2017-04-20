@@ -1,6 +1,6 @@
 package com.ylinor.client.render.model;
 
-import static com.ylinor.library.util.JsonUtil.*;
+import static com.ylinor.library.util.JsonUtil.makeTree;
 import static com.ylinor.library.util.JsonUtil.mergeExcluding;
 import static com.ylinor.library.util.JsonUtil.walkTree;
 import static com.ylinor.library.util.JsonUtil.walkTreeOrArray;

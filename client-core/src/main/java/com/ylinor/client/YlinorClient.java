@@ -4,22 +4,18 @@ import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
 
 import java.io.File;
 import java.io.IOException;
-
+import com.ylinor.client.network.PositionSyncSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.artemis.ArtemisMultiException;
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
-import com.artemis.WorldConfigurationBuilder;
-import com.artemis.WorldConfigurationBuilder.Priority;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.google.inject.AbstractModule;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
+import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.AssetsLoadingSystem;
 import com.ylinor.client.render.CameraSystem;
@@ -28,13 +24,14 @@ import com.ylinor.client.render.HudRenderSystem;
 import com.ylinor.client.render.PlayerInitSystem;
 import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.render.TerrainRenderSystem;
-import com.ylinor.client.resource.Assets;
 import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.client.util.YlinorFiles;
 import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
+import com.ylinor.library.util.ecs.WorldConfiguration;
+import com.ylinor.library.util.ecs.World;
 
 
 /**
@@ -48,13 +45,10 @@ import com.ylinor.library.api.terrain.Terrain;
 public class YlinorClient extends YlinorApplication
                 implements ApplicationListener {
     /**
-     * La verision du client
+     * La verision du client.
      */
     public static final String VERSION = "Espilon 0.1";
 
-    /**
-     * Un logger Wylog
-     */
     private static final Logger logger = LoggerFactory.getLogger(YlinorClient.class);
 
     /**
@@ -78,7 +72,7 @@ public class YlinorClient extends YlinorApplication
 
     @Override
     public void create() {
-        logger.info("Loading Ylinor Client - " + VERSION);
+        logger.info("Loading Ylinor Client version {}", getVersion());
 
         try {
             settings = GameSettings.get(new File(YlinorFiles.getGameFolder(), "settings.json"));
@@ -91,37 +85,38 @@ public class YlinorClient extends YlinorApplication
         terrain = new ClientTerrain();
 
         world = buildWorld();
-
-        //        protocol = new HandlerProtocol<>();
-
-        //        clientNetwork = new ClientNetwork<>(new Kryo(), "127.0.0.1", 25565, protocol, ServerEntity::new);
-        //        clientNetwork.start();
-    }
-
-    @Override
-    protected void preConfigure(WorldConfigurationBuilder configurationBuilder) {
-        super.preConfigure(configurationBuilder);
-        configurationBuilder.dependsOn(Priority.HIGHEST, PlayerInitSystem.class);
-
-        configurationBuilder.dependsOn(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class);
-
-        configurationBuilder.dependsOn(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
     }
 
     @Override
     protected void configure(WorldConfiguration configuration) {
         super.configure(configuration);
+        
+        
+        configuration.with(Integer.MAX_VALUE, PlayerInitSystem.class);
+
+        configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, ClientNetworkSystem.class);
+
+        configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);
+
+        configuration.with(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
+    
         // We want to inject any Terrain field with this
-        configuration.register(Terrain.class.getName(), terrain);
-        configuration.register(terrain);
-        configuration.register(new Assets());
-        configuration.register(this);
+        
+        
+        configuration.with(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Terrain.class).toInstance(terrain);
+                bind(YlinorApplication.class).toInstance(YlinorClient.this);
+                bind(YlinorClient.class).toInstance(YlinorClient.this);
+            }
+        });
     }
 
     @Override
     public void render() {
-        world.setDelta(Gdx.graphics.getDeltaTime());
-        world.process();
+        world.delta = Gdx.graphics.getDeltaTime();
+        world.tick();
     }
 
     @Override
@@ -132,13 +127,12 @@ public class YlinorClient extends YlinorApplication
     @Override
     public void dispose() {
         logger.info("Disposing world.");
-        
+
         try {
             world.dispose();
-        } catch (ArtemisMultiException e) {
-            e.getExceptions().stream().forEach(ex -> {
-                logger.error("Error while disposing world :", ex);
-            });
+        }
+        catch (Exception ex) {
+            logger.error("Error while disposing world :", ex);
         }
         logger.info("Stopping!");
     }

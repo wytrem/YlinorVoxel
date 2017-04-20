@@ -1,7 +1,9 @@
 package com.ylinor.client.render;
 
-import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import com.google.common.eventbus.Subscribe;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.AssetsLoadedEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
@@ -9,8 +11,7 @@ import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
-
-import net.mostlyoriginal.api.event.common.Subscribe;
+import com.ylinor.library.util.ecs.system.BaseSystem;
 
 
 /**
@@ -19,30 +20,31 @@ import net.mostlyoriginal.api.event.common.Subscribe;
  *
  * @author wytrem
  */
+@Singleton
 public class TerrainRenderSystem extends BaseSystem {
 
-    @Wire
+    @Inject
     private Terrain terrain;
 
     /**
      * L'instance des assets
      */
-    @Wire
+    @Inject
     private Assets assets;
 
-    @Wire
+    @Inject
     private AssetsLoadingSystem assetsLoadingSystem;
 
-    @Wire
+    @Inject
     private PlayerInputSystem playerInputSystem;
 
-    @Wire
+    @Inject
     private GdxInputDispatcherSystem inputDispatcherSystem;
 
-    @Wire
+    @Inject
     private CameraSystem cameraSystem;
 
-    @Wire
+    @Inject
     private YlinorClient client;
 
     private RenderGlobal renderGlobal;
@@ -67,7 +69,7 @@ public class TerrainRenderSystem extends BaseSystem {
     public void assetsLoaded(AssetsLoadedEvent event) {
     	renderGlobal = new RenderGlobal();
         terrain.inject(world);
-        world.inject(renderGlobal);
+        world.injector.injectMembers(renderGlobal);
         renderGlobal.init(world);
     }
 

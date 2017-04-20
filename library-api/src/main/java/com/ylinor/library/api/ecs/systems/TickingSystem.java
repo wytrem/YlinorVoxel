@@ -1,11 +1,11 @@
 package com.ylinor.library.api.ecs.systems;
 
-import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
+import javax.inject.Inject;
 
+import com.ylinor.library.util.ecs.system.BaseSystem;
 public abstract class TickingSystem extends BaseSystem {
     
-    @Wire
+    @Inject
     private Timer timer;
     
     @Override
