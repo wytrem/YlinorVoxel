@@ -1,0 +1,6 @@
+{
+  "parent": "wall_side",
+  "textures": {
+    "wall": "cobblestone"
+  }
+}

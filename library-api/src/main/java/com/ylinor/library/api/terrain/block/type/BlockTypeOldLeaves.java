@@ -1,20 +1,13 @@
 package com.ylinor.library.api.terrain.block.type;
 
-import java.util.function.Predicate;
-
 import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
 import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.api.terrain.block.state.props.PropertyEnum;
 import com.ylinor.library.api.terrain.block.type.BlockTypePlanks.PlanksType;
 
-
 public class BlockTypeOldLeaves extends BlockType {
-    public static final PropertyEnum<PlanksType> VARIANT = PropertyEnum.create("variant", PlanksType.class, new Predicate<PlanksType>() {
-        public boolean test(PlanksType type) {
-            return type.getMetadata() < 4;
-        }
-    });
+    public static final PropertyEnum<PlanksType> VARIANT = PropertyEnum.create("variant", PlanksType.class, type -> type.getMetadata() < 4);
 
     protected BlockTypeOldLeaves(int id) {
         super(id, Material.LEAVES);

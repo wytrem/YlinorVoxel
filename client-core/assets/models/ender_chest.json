@@ -1,0 +1,7 @@
+{
+  "parent": "chest",
+  "textures":
+  {
+    "all": "ender_chest"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "crop",
+  "textures": {
+    "crop": "potatoes_stage_3"
+  }
+}

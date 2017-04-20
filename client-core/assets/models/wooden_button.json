@@ -1,0 +1,6 @@
+{
+    "parent": "button",
+    "textures": {
+        "texture": "wood"
+    }
+}
