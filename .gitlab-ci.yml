@@ -9,7 +9,7 @@ deploy-client:
     - ./gradlew client-desktop:distZip
     - cp client-desktop/build/distributions/client-deskto*.zip /var/www/html/api.ylinor.com/launcher/client.zip
     - rm -rf /var/www/html/api.ylinor.com/launcher/public/files/assets
-    - cp -rf client/assets /var/www/html/api.ylinor.com/launcher/public/files/
+    - cp -rf client-core/assets /var/www/html/api.ylinor.com/launcher/public/files/
     - cd /var/www/html/api.ylinor.com/launcher/public/files
     - rm -rf ./*
     - unzip ../../client.zip
