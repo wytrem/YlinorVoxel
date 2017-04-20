@@ -150,9 +150,8 @@ public class LauncherPanel extends JPanel
             }
 
             try {
-                Launcher.launch();
-            }
-            catch (Exception e) {
+                Launcher.launch(logged);
+            } catch (Exception e) {
                 YlinorLauncher.handleCrash(e instanceof LaunchException ? "Erreur de lancement !" : e instanceof InvocationTargetException ? "Le jeu a crashé !" : "Erreur inconnue !", e);
             }
         }, "Launch Thread");

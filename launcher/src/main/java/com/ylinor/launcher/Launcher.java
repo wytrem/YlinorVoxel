@@ -5,8 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.theshark34.openlauncherlib.external.ClasspathConstructor;
+import fr.theshark34.openlauncherlib.external.ExternalLaunchProfile;
+import fr.theshark34.openlauncherlib.external.ExternalLauncher;
 import fr.theshark34.openlauncherlib.internal.InternalLaunchProfile;
 import fr.theshark34.openlauncherlib.internal.InternalLauncher;
+import fr.theshark34.openlauncherlib.util.ProcessLogManager;
 import fr.theshark34.openlauncherlib.util.Saver;
 import fr.theshark34.openlauncherlib.util.explorer.Explorer;
 import fr.theshark34.supdate.SUpdate;
@@ -17,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -97,9 +101,6 @@ public class Launcher {
 
         logger.info("Utilisateur connecté : " + user.getUsername());
 
-        System.setProperty("ylinor.user.token", token);
-        System.setProperty("ylinor.user.username", user.getUsername());
-
         return user;
     }
 
@@ -130,19 +131,33 @@ public class Launcher {
         shutdown();
     }
 
-    public static void launch() throws Exception {
+    public static void launch(User user) throws Exception {
         logger.info("Lancement du jeu");
 
-        InternalLaunchProfile profile = new InternalLaunchProfile(MAIN_CLASS);
-        profile.setClasspath(Explorer.dir(new File(GAME_FOLDER, LIB_FOLDER)).allRecursive().match("^(.*\\.((jar)$))*$").files().get());
+        ClasspathConstructor classpath = new ClasspathConstructor();
+        classpath.add(Explorer.dir(new File(GAME_FOLDER, LIB_FOLDER)).allRecursive().match("^(.*\\.((jar)$))*$").files().get());
 
-        System.setProperty("user.dir", GAME_FOLDER.getAbsolutePath());
-        InternalLauncher launcher = new InternalLauncher(profile);
+        ExternalLaunchProfile profile =
+                new ExternalLaunchProfile(MAIN_CLASS,
+                                          classpath.make(),
+                                          Arrays.asList("-Dylinor.user.token=" + saver.get("token"),
+                                                        "-Dylinor.user.username=" + user.getUsername()),
+                                          Collections.emptyList(),
+                                          true,
+                                          "Ylinor Epsilon",
+                                          GAME_FOLDER);
+        ExternalLauncher launcher = new ExternalLauncher(profile);
+
+        Process p = launcher.launch();
+        logger.info("Jeu lance !");
+
+        ProcessLogManager manager = new ProcessLogManager(p.getInputStream());
+        manager.start();
 
         Main.hide();
+        p.waitFor();
 
-        logger.info("Jeu lance !");
-        launcher.launch();
+        System.exit(0);
     }
 
     /**
