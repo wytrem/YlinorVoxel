@@ -1,3 +1,11 @@
+deploy-client:
+  script:
+    - ./gradlew client-desktop:distZip
+    - cp client-desktop/build/distributions/client-deskto*.zip /var/www/html/api.ylinor.com/launcher/client.zip
+    - cd /var/www/html/api.ylinor.com/launcher/public/files
+    - rm -rf ./*
+    - unzip ../../client.zip
+
 deploy-server:
   script:
     - ./gradlew server:distZip
