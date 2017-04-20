@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.packets.Packet;
+import com.ylinor.packets.PacketDespawnEntity;
 import com.ylinor.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.packets.PacketSpawnEntity;
 import com.ylinor.server.CommandLineThread;
@@ -89,6 +90,18 @@ public final class YlinorServer {
             if (playerConnection.shouldDisconnect()) {
                 playerConnection.close();
                 server.removeListener(playerConnection.getConnectionListener());
+
+                for (Player onlinePlayer : getOnlinePlayers()) {
+                    if (onlinePlayer != player) {
+                        List<Player> nearbyPlayers = onlinePlayer.getNearbyPlayers();
+
+                        if (nearbyPlayers.contains(player)) {
+                            nearbyPlayers.remove(player);
+
+                            onlinePlayer.getPlayerConnection().sendPacket(new PacketDespawnEntity(player.getEntityID()));
+                        }
+                    }
+                }
 
                 onlinePlayersIt.remove();
             } else {

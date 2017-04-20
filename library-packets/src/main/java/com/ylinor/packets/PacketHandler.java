@@ -7,6 +7,8 @@ public interface PacketHandler {
 
     void handleSpawnEntity(PacketSpawnEntity spawnEntity);
 
+    void handleDespawnEntity(PacketDespawnEntity despawnEntity);
+
     void handlePositionUpdate(PacketPositionAndRotationUpdate positionUpdate);
 
     void handleDisconnect(PacketDisconnect disconnect);
