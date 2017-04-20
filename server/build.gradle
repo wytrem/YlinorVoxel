@@ -1,6 +1,10 @@
+apply plugin: 'application'
+
 eclipse.project {
     name = 'server'
 }
+
+mainClassName = 'com.ylinor.server.main.YlinorServer'
 
 dependencies {
     compile 'com.arangodb:arangodb-java-driver:4.1.11'
