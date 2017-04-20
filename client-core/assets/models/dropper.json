@@ -1,0 +1,8 @@
+{
+  "parent": "cube_sided",
+  "textures": {
+    "all": "furnace_top",
+    "side": "furnace_side",
+    "front": "dropper_front_horizontal"
+  }
+}

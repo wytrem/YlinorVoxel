@@ -28,7 +28,7 @@ public class Variants {
             BlockModel variant = modelDeserializer.variant(data);
 
             if (variant == null) {
-                throw new IllegalArgumentException("Block model variant for '" + key + "' not found.");
+                throw new IllegalArgumentException("Block model variant for '" + key + "' not found for type " + type.getId() + ".");
             }
 
             variants.put(key, variant);

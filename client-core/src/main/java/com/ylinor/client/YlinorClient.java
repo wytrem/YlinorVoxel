@@ -4,11 +4,9 @@ import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
 
 import java.io.File;
 import java.io.IOException;
-
 import com.ylinor.client.network.PositionSyncSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;

@@ -1,0 +1,7 @@
+{
+    "parent": "cube_column",
+    "textures": {
+        "end": "melon_top",
+        "side": "melon_side"
+    }
+}

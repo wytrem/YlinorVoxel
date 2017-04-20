@@ -1,0 +1,6 @@
+{
+  "parent": "fence_side",
+  "textures": {
+    "texture": "nether_brick"
+  }
+}

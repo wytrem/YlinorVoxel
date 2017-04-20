@@ -1,0 +1,24 @@
+archivesBaseName = 'Ylinor-Launcher'
+
+dependencies {
+    compile 'fr.theshark34.swinger:swinger:1.0.1-BETA'
+    compile 'fr.litarvan:openlauncherlib:3.0.3-BETA'
+    compile 'fr.theshark34.s-update:s-update:3.1.0-BETA'
+}
+
+task fatjar(type: Jar) {
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    with jar
+
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'com.ylinor.bootstrap.Main'
+        )
+    }
+}

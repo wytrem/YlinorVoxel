@@ -13,9 +13,23 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         jcenter()
+
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/releases/'
+        }
+
+        maven {
+            url 'http://wytrem.github.io/maven/'
+        }
+
+        maven {
+            url 'http://litarvan.github.io/maven/'
+        }
     }
 
 

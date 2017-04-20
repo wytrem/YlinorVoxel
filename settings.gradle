@@ -1,4 +1,5 @@
 rootProject.name = 'Ylinor'
 
+include 'client-core', 'client-desktop', 'renderlib', 'library-api', 'library-packets', 'library-util', 'server', 'launcher', 'bootstrap'
 
-include 'client-core', 'client-desktop', 'library-api', 'library-packets', 'library-util', 'server', 'renderlib'
+
