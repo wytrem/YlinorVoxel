@@ -10,10 +10,6 @@ public class Physics extends Component {
     public float moveStrafing;
     public float moveForward;
     public Vector3f motion = new Vector3f();
-    public float rotationYaw;
-    public float rotationPitch;
-    public float prevRotationYaw;
-    public float prevRotationPitch;
     public float stepHeight;
     public float fallDistance;
     public float landMovementFactor = 0.1f;

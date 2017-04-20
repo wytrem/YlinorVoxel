@@ -14,6 +14,7 @@ import com.ylinor.client.physics.components.CollisionState;
 import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.Physics;
 import com.ylinor.client.physics.components.Position;
+import com.ylinor.client.physics.components.Rotation;
 import com.ylinor.client.physics.components.Size;
 import com.ylinor.client.physics.components.Sneaking;
 import com.ylinor.library.api.ecs.systems.TickingIteratingSystem;
@@ -44,7 +45,7 @@ public class PhySystem extends TickingIteratingSystem {
     private TempVars tempVars;
 
     public PhySystem() {
-        super(Aspect.all(Physics.class, Position.class, Heading.class, Size.class, AABB.class, CollisionState.class));
+        super(Aspect.all(Physics.class, Position.class, Heading.class, Rotation.class, Size.class, AABB.class, CollisionState.class));
     }
 
     @Override
@@ -59,6 +60,7 @@ public class PhySystem extends TickingIteratingSystem {
     private Size size;
     private AABB aabb;
     private CollisionState collisionState;
+    private Rotation rotation;
     private boolean isSneaking;
 
     protected void tickEntity(Entity entityId) {
@@ -70,6 +72,7 @@ public class PhySystem extends TickingIteratingSystem {
         aabb = entityId.get(AABB.class);
         isSneaking = entityId.has(Sneaking.class);
         collisionState = entityId.get(CollisionState.class);
+        rotation = entityId.get(Rotation.class);
 
         tick();
     }
@@ -98,8 +101,8 @@ public class PhySystem extends TickingIteratingSystem {
         physics.jumpMovementFactor = physics.speedInAir;
 
         position.prevPosition.set(position.position);
-        physics.prevRotationPitch = physics.rotationPitch;
-        physics.prevRotationYaw = physics.rotationYaw;
+        rotation.prevRotationPitch = rotation.rotationPitch;
+        rotation.prevRotationYaw = rotation.rotationYaw;
 
         if (Math.abs(physics.motion.x) < 0.003f) {
             physics.motion.x = 0.0f;
@@ -127,7 +130,7 @@ public class PhySystem extends TickingIteratingSystem {
             physics.jumpTicks = 0;
         }
 
-        physics.rotationYaw = (float) Math.atan2(heading.heading.x, heading.heading.z) * -MathHelper.RAD_TO_DEG;
+        rotation.rotationYaw = (float) Math.atan2(heading.heading.x, heading.heading.z) * -MathHelper.RAD_TO_DEG;
 
         physics.moveStrafing *= 0.98f;
         physics.moveForward *= 0.98f;
@@ -549,8 +552,8 @@ public class PhySystem extends TickingIteratingSystem {
             f = friction / f;
             strafe = strafe * f;
             forward = forward * f;
-            float f1 = MathHelper.sin(physics.rotationYaw * MathHelper.DEG_TO_RAD);
-            float f2 = MathHelper.cos(physics.rotationYaw * MathHelper.DEG_TO_RAD);
+            float f1 = MathHelper.sin(rotation.rotationYaw * MathHelper.DEG_TO_RAD);
+            float f2 = MathHelper.cos(rotation.rotationYaw * MathHelper.DEG_TO_RAD);
             physics.motion.x += (strafe * f2 - forward * f1);
             physics.motion.z += (forward * f2 + strafe * f1);
         }

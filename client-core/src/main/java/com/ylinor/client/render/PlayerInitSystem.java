@@ -10,6 +10,7 @@ import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.InputControlledEntity;
 import com.ylinor.client.physics.components.Physics;
 import com.ylinor.client.physics.components.Position;
+import com.ylinor.client.physics.components.Rotation;
 import com.ylinor.client.physics.components.Size;
 import com.ylinor.client.physics.components.Velocity;
 import com.ylinor.client.physics.systems.PhySystem;
@@ -41,7 +42,7 @@ public class PlayerInitSystem extends BaseSystem {
               .set(Size.class)
               .set(AABB.class)
               .set(CollisionState.class)
-              .set(Physics.class)
+              .set(Physics.class).set(Rotation.class)
               .set(PositionSyncComponent.class);
         player.get(EyeHeight.class).eyePadding.y = 1.65f;
         player.get(Size.class).setSize(0.6f, 1.8f);

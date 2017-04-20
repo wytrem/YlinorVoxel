@@ -8,17 +8,25 @@ import java.util.Deque;
 import java.util.List;
 
 import javax.inject.Singleton;
-import javax.swing.*;
+import javax.swing.JOptionPane;
+
+import org.joml.Vector3f;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.Position;
+import com.ylinor.client.physics.components.Rotation;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.BaseSystem;
-import com.ylinor.packets.*;
-import org.joml.Vector3f;
+import com.ylinor.packets.Packet;
+import com.ylinor.packets.PacketDisconnect;
+import com.ylinor.packets.PacketHandler;
+import com.ylinor.packets.PacketLogin;
+import com.ylinor.packets.PacketMapChunk;
+import com.ylinor.packets.PacketPositionAndRotationUpdate;
+import com.ylinor.packets.PacketSpawnEntity;
 
 @Singleton
 public final class ClientNetworkSystem extends BaseSystem implements PacketHandler {
@@ -82,7 +90,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     public void handleSpawnEntity(PacketSpawnEntity spawnEntity) {
         Entity entity = world.create()
                 .set(Position.class)
-                .set(Heading.class)
+                .set(Heading.class).set(Rotation.class)
                 .set(NetworkIdentifierComponent.class);
 
         entity.get(NetworkIdentifierComponent.class).setIdentifier(spawnEntity.getEntityID());
@@ -99,8 +107,11 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
         for (Entity entity : nearbyEntities) {
             if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == positionUpdate.getEntityID()) {
                 Vector3f position = entity.get(Position.class).position;
+                Rotation rotation = entity.get(Rotation.class);
 
                 position.set(positionUpdate.getX(), positionUpdate.getY(), positionUpdate.getZ());
+                rotation.rotationPitch = positionUpdate.getPitch();
+                rotation.rotationYaw = positionUpdate.getYaw();
             }
         }
     }

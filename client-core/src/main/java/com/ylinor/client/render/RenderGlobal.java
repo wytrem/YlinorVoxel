@@ -22,14 +22,15 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.network.ClientNetworkSystem;
-import com.ylinor.client.physics.components.Heading;
 import com.ylinor.client.physics.components.Position;
+import com.ylinor.client.physics.components.Rotation;
 import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.ecs.entity.Entity;
+
 
 @Singleton
 public class RenderGlobal implements Disposable {
@@ -39,14 +40,14 @@ public class RenderGlobal implements Disposable {
     ModelBatch entitiesBatch;
     Environment environment;
     TerrainRenderer terrainRenderer;
-    
+
     SpriteBatch spriteBatch;
     BitmapFont font;
     ModelRegistry blockModels;
 
     @Inject
     CameraSystem cameraSystem;
-    
+
     @Inject
     Assets assets;
 
@@ -55,9 +56,9 @@ public class RenderGlobal implements Disposable {
 
     @Inject
     Terrain terrain;
-    
+
     AnimationController controller;
-    
+
     DirectionalLight sun;
 
     private ModelInstance placeholderEntityModelInstance;
@@ -65,7 +66,7 @@ public class RenderGlobal implements Disposable {
     public RenderGlobal() {
 
     }
-    
+
     public void init(World world) {
         DefaultShader.Config shaderConfig = new Config();
 
@@ -86,7 +87,7 @@ public class RenderGlobal implements Disposable {
 
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
-        
+
         Model player = assets.modelAssets.getModelTest();
         this.placeholderEntityModelInstance = new ModelInstance(player);
         placeholderEntityModelInstance.transform.scl(0.3f);
@@ -94,7 +95,7 @@ public class RenderGlobal implements Disposable {
         controller = new AnimationController(placeholderEntityModelInstance);
         controller.setAnimation("run", -1);
     }
-    
+
     public void render() {
         update();
 
@@ -108,29 +109,28 @@ public class RenderGlobal implements Disposable {
 
         for (Entity entity : clientNetworkSystem.getNearbyEntities()) {
             Vector3f position = entity.get(Position.class).position;
-            Vector3f heading = entity.get(Heading.class).heading;
+            Rotation rotation = entity.get(Rotation.class);
 
             placeholderEntityModelInstance.transform.idt()
-                    .scl(0.3f)
-                    .setTranslation(position.x, position.y, position.z)
-                    .rotate(Vector3.X, heading.x)
-                    .rotate(Vector3.Y, heading.y);
+                                                    .rotate(Vector3.Y, rotation.rotationYaw)
+                                                    .scl(0.3f)
+                                                    .setTranslation(position.x, position.y, position.z);
 
             entitiesBatch.render(placeholderEntityModelInstance, environment);
         }
 
         entitiesBatch.end();
     }
-    
+
     private void update() {
         terrainRenderer.update();
         controller.update(Gdx.graphics.getDeltaTime());
     }
-    
+
     public ChunkRenderer getChunkRenderer(Chunk chunk) {
         return terrainRenderer.chunkRenderers.get(chunk.id);
     }
-    
+
     @Override
     public void dispose() {
         terrainRenderer.dispose();
