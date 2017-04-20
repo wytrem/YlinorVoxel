@@ -135,6 +135,8 @@ public class Launcher {
 
         InternalLaunchProfile profile = new InternalLaunchProfile(MAIN_CLASS);
         profile.setClasspath(Explorer.dir(new File(GAME_FOLDER, LIB_FOLDER)).allRecursive().match("^(.*\\.((jar)$))*$").files().get());
+
+        System.setProperty("user.dir", GAME_FOLDER.getAbsolutePath());
         InternalLauncher launcher = new InternalLauncher(profile);
 
         Main.hide();
