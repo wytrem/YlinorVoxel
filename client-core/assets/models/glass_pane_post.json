@@ -1,0 +1,7 @@
+{
+    "parent": "pane_post",
+    "textures": {
+        "edge": "glass_pane_top",
+        "pane": "glass"
+    }
+}

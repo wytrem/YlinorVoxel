@@ -48,9 +48,9 @@ public class BlockType {
     public static final BlockType tallgrass = new BlockTallGrass(31).setModelName("tallgrass");
     public static final BlockType deadBush = new BlockType(32).setModelName("dead_bush");
     public static final BlockType piston = new BlockType(33).setModelName("piston_normal");
-    // 34 : piston head
+    // 34: piston head
     public static final BlockType wool = new BlockType(35).setModelName("wool");
-    // 36 : piston moving
+    // 36: piston moving
     public static final BlockType yellowFlower = new BlockType(37).setModelName("yellow_flower");
     public static final BlockType redFlower = new BlockType(38).setModelName("red_flower");
     public static final BlockType brownMushroom = new BlockType(39).setModelName("brown_mushroom");
@@ -100,7 +100,56 @@ public class BlockType {
     public static final BlockType reeds = new BlockType(83).setModelName("reeds");
     public static final BlockType jukebox = new BlockType(84).setModelName("jukebox");
     public static final BlockType fence = new BlockType(85).setModelName("oak_fence_side");
-//    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
+    public static final BlockType pumpkin = new BlockType(86).setModelName("pumpkin");
+    public static final BlockType netherrack = new BlockType(87).setModelName("netherrack");
+    public static final BlockType soulSand = new BlockType(88).setModelName("soul_sand");
+    public static final BlockType glowstone = new BlockType(89).setModelName("glowstone");
+    public static final BlockType portal = new BlockType(90).setModelName("portal");
+    public static final BlockType litPumpkin = new BlockType(91).setModelName("lit_pumpkin");
+    public static final BlockType cake = new BlockType(92).setModelName("cake");
+    public static final BlockType unpoweredRepeater = new BlockType(93).setModelName("repeater_1tick");
+    public static final BlockType poweredRepeater = new BlockType(94).setModelName("repeater_1tick");
+    public static final BlockType stainedGlass = new BlockType(95).setModelName("glass_white");
+    public static final BlockType trapdoor = new BlockType(96).setModelName("wooden_trapdoor_bottom");
+    public static final BlockType monsterEgg = new BlockType(97).setModelName("stonebrick_normal");
+    public static final BlockType stonebrick = new BlockType(98).setModelName("stonebrick_normal");
+    public static final BlockType brownMushroomBlock = new BlockType(99).setModelName("brown_mushroom_block_cap_all");
+    public static final BlockType redMushroomBlock = new BlockType(100).setModelName("red_mushroom_block_cap_all");
+    public static final BlockType ironBars = new BlockType(101).setModelName("iron_bars_post");
+    public static final BlockType glassPane = new BlockType(102).setModelName("glass_pane_post");
+    public static final BlockType melon = new BlockType(103).setModelName("melon");
+    public static final BlockType pumpkinStem = new BlockType(104).setModelName("pumpkin_stem_growth0");
+    public static final BlockType melonStem = new BlockType(105).setModelName("melon_stem_growth0");
+
+    
+    // 144: Skull
+    public static final BlockType anvil = new BlockType(145).setModelName("anvil_undamaged");
+    public static final BlockType trappedChest = new BlockType(146).setModelName("chest");
+    public static final BlockType lightWeightedPressurePlate = new BlockType(147).setModelName("light_weighted_pressure_plate_up");
+    public static final BlockType heavyWeightedPressurePlate = new BlockType(148).setModelName("heavy_weighted_pressure_plate_up");
+    public static final BlockType unpoweredComparator = new BlockType(149).setModelName("comparator_unlit");
+    public static final BlockType poweredComparator = new BlockType(150).setModelName("comparator_lit");
+    public static final BlockType daylightDetector = new BlockType(151).setModelName("daylight_detector");
+    public static final BlockType redstoneBlock = new BlockType(152).setModelName("redstone_block");
+    public static final BlockType quartzOre = new BlockType(153).setModelName("quartz_ore");
+    public static final BlockType hopper = new BlockType(154).setModelName("hopper");
+    public static final BlockType quartzBlock = new BlockType(155).setModelName("quartz_block");
+    public static final BlockType quartzStairs = new BlockType(156).setModelName("quartz_stairs");
+    public static final BlockType activatorRail = new BlockType(157).setModelName("activator_rail");
+    public static final BlockType dropper = new BlockType(158).setModelName("dropper");
+    public static final BlockType stainedHardenedClay = new BlockType(159).setModelName("hardened_clay");
+    public static final BlockType stainedGlassPane = new BlockType(160).setModelName("glass_pane_post");
+    public static final BlockType leaves2 = new BlockTypeOldLeaves(161).setModelName("old_leaves");
+    public static final BlockType log2 = new BlockTypeOldLog(162).setModelName("old_log");
+    public static final BlockType acaciaStairs = new BlockType(163).setModelName("acacia_stairs");
+    public static final BlockType darkOakStairs = new BlockType(164).setModelName("dark_oak_stairs");
+    public static final BlockType slime = new BlockType(165).setModelName("slime");
+    public static final BlockType hayBlock = new BlockType(170).setModelName("hay");
+    public static final BlockType carpet = new BlockType(171).setModelName("carpet_blue");
+    public static final BlockType hardenedClay = new BlockType(172).setModelName("hardened_clay");
+    public static final BlockType coalBlock = new BlockType(173).setModelName("coal_block");
+    public static final BlockType packedIce = new BlockType(174).setModelName("packed_ice");
+    public static final BlockType doublePlante = new BlockType(175).setModelName("double_rose_top");
 
     private final short id;
     protected BlockStateFactory blockStateFactory;

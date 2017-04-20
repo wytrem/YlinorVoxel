@@ -1,0 +1,6 @@
+{
+    "parent": "stem_growth0",
+    "textures": {
+        "stem": "pumpkin_stem_disconnected"
+    }
+}

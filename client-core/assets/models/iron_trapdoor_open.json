@@ -1,0 +1,6 @@
+{
+    "parent": "trapdoor_open",
+    "textures": {
+        "texture": "iron_trapdoor"
+    }
+}

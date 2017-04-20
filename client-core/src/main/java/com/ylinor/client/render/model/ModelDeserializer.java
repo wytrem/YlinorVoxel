@@ -104,6 +104,7 @@ public class ModelDeserializer {
         this.bakedJson = bakeJson(originalJson, this.name);
 
         try {
+            logger.trace("Mapper: {}, textures node: {}", mapper, bakedJson.get("textures"));
             this.textures = mapper.treeToValue(bakedJson.get("textures"), Map.class);
         }
         catch (JsonProcessingException e) {
