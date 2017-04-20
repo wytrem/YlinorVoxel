@@ -1,40 +1,42 @@
 package com.ylinor.launcher;
 
-import fr.theshark34.openlauncherlib.LaunchException;
-import fr.theshark34.supdate.BarAPI;
-import fr.theshark34.swinger.colored.SColoredButton;
-import fr.theshark34.swinger.event.SwingerEvent;
-import fr.theshark34.swinger.event.SwingerEventListener;
-import fr.theshark34.swinger.textured.STexturedButton;
-import fr.theshark34.swinger.textured.STexturedProgressBar;
+import static com.ylinor.launcher.Resources.BACKGROUND;
+import static com.ylinor.launcher.Resources.BAR_EMPTY;
+import static com.ylinor.launcher.Resources.BAR_FILLED;
+import static fr.theshark34.swinger.Swinger.getResource;
+import static fr.theshark34.swinger.Swinger.getTransparentWhite;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import fr.theshark34.openlauncherlib.LaunchException;
+import fr.theshark34.supdate.BarAPI;
+import fr.theshark34.swinger.colored.SColoredButton;
+import fr.theshark34.swinger.event.SwingerEvent;
+import fr.theshark34.swinger.event.SwingerEventListener;
+import fr.theshark34.swinger.textured.STexturedProgressBar;
 
-import static com.ylinor.launcher.Resources.*;
-import static fr.theshark34.swinger.Swinger.*;
 
-public class LauncherPanel extends JPanel implements KeyListener, SwingerEventListener {
+public class LauncherPanel extends JPanel
+                implements KeyListener, SwingerEventListener {
     private Image background = getResource(BACKGROUND);
 
     private SColoredButton play = new SColoredButton(getTransparentWhite(100), getTransparentWhite(125));
     private STexturedProgressBar bar = new STexturedProgressBar(getResource(BAR_EMPTY), getResource(BAR_FILLED));
 
     private JLabel user = new JLabel("Connexion...", SwingConstants.CENTER);
-    private JTextField usernameField = new JTextField(Launcher.getUsername("E-Mail"));
-    private JPasswordField passwordField = new JPasswordField(Launcher.getUsername(null) == null ? "Mot de passe" : "");
+    private PlaceholderTextField usernameField = new PlaceholderTextField();
+    private PlaceholderPasswordField passwordField = new PlaceholderPasswordField();
 
     private User logged;
 
@@ -48,6 +50,12 @@ public class LauncherPanel extends JPanel implements KeyListener, SwingerEventLi
         usernameField.setForeground(Color.WHITE);
         usernameField.setCaretColor(usernameField.getForeground());
         usernameField.setFont(usernameField.getFont().deriveFont(18F));
+        if (Launcher.getUsername(null) == null) {
+            usernameField.setPlaceholder("E-Mail");
+        }
+        else {
+            usernameField.setText(Launcher.getUsername(null));
+        }
         this.add(usernameField);
 
         passwordField.setBounds(100, 355, 425, 25);
@@ -57,6 +65,7 @@ public class LauncherPanel extends JPanel implements KeyListener, SwingerEventLi
         passwordField.setForeground(Color.WHITE);
         passwordField.setCaretColor(passwordField.getForeground());
         passwordField.setFont(usernameField.getFont());
+        passwordField.setPlaceholder("Mot de passe");
         this.add(passwordField);
 
         user.setBounds(100, 275, 425, 25);
@@ -81,20 +90,22 @@ public class LauncherPanel extends JPanel implements KeyListener, SwingerEventLi
             new Thread(() -> {
                 try {
                     logged = Launcher.getUser();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                 }
 
                 if (logged == null) {
                     user.setText("Connecte toi !");
                     setFieldsEnabled(true);
-                } else {
+                }
+                else {
                     user.setText("<html>Bienvenue, <b>" + logged.getUsername() + "</b></html>");
                     usernameField.setText(logged.getEmail());
 
                     play.setEnabled(true);
                 }
             }, "Refresh thread").start();
-       });
+        });
     }
 
     @Override
@@ -105,8 +116,7 @@ public class LauncherPanel extends JPanel implements KeyListener, SwingerEventLi
     }
 
     @Override
-    public void onEvent(SwingerEvent event)
-    {
+    public void onEvent(SwingerEvent event) {
         Thread thread = new Thread(() -> {
             setFieldsEnabled(false);
 
@@ -114,7 +124,8 @@ public class LauncherPanel extends JPanel implements KeyListener, SwingerEventLi
                 try {
                     Launcher.auth(usernameField.getText(), passwordField.getText());
                     logged = Launcher.getUser();
-                } catch (AuthException e) {
+                }
+                catch (AuthException e) {
                     JOptionPane.showMessageDialog(this, "Impossible de s'authentifier : " + e.getMessage(), "Erreur d'authentification", JOptionPane.WARNING_MESSAGE);
                     setFieldsEnabled(true);
 
@@ -132,17 +143,17 @@ public class LauncherPanel extends JPanel implements KeyListener, SwingerEventLi
                     bar.setMaximum((int) (BarAPI.getNumberOfTotalBytesToDownload() / 1000));
                     bar.setValue((int) (BarAPI.getNumberOfTotalDownloadedBytes() / 1000));
                 });
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Launcher.shutdown();
                 YlinorLauncher.handleCrash("Erreur pendant la mise à jour !", e);
             }
 
             try {
                 Launcher.launch();
-            } catch (Exception e) {
-                YlinorLauncher.handleCrash(e instanceof LaunchException ? "Erreur de lancement !" :
-                                           e instanceof InvocationTargetException ? "Le jeu a crashé !" :
-                                           "Erreur inconnue !", e);
+            }
+            catch (Exception e) {
+                YlinorLauncher.handleCrash(e instanceof LaunchException ? "Erreur de lancement !" : e instanceof InvocationTargetException ? "Le jeu a crashé !" : "Erreur inconnue !", e);
             }
         }, "Launch Thread");
 
