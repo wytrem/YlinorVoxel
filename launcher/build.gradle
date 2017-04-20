@@ -1,0 +1,16 @@
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = 'launcher'
+
+dependencies {
+    compile 'fr.theshark34.swinger:swinger:1.0.1-BETA'
+    compile 'fr.litarvan:openlauncherlib:3.0.3-BETA'
+    compile 'fr.theshark34.s-update:s-update:3.1.0-BETA'
+    compile 'org.apache.httpcomponents:httpclient:4.5.3'
+}
+
+task copyLibs(type: Copy) {
+    into 'build/libs/libs'
+    from configurations.compile
+}

@@ -1,6 +1,8 @@
 project.ext.mainClassName = 'com.ylinor.client.desktop.DesktopLauncher'
 project.ext.assetsDir = new File('../client-core/assets');
 
+archivesBaseName = 'ylinor'
+
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
