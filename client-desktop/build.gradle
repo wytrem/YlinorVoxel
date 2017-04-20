@@ -7,7 +7,7 @@ mainClassName = project.ext.mainClassName
 
 archivesBaseName = 'ylinor'
 
-task run(dependsOn: classes, type: JavaExec) {
+task runClient(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
