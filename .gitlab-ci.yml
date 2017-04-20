@@ -2,7 +2,9 @@ deploy-server:
   script:
     - ./gradlew server:distZip
     - cp server/build/distributions/serve*.zip /home/shark/Serveurs/Ylinor/Epsilon/Temp/server.zip
-    - cd /home/shark/Serveurs/Ylinor/Epsilon/
+    - cd /home/shark/Serveurs/Ylinor/Epsilon/Temp/Extract
+    - unzip ../server.zip
+    - cd ../..
     - screen -X -S epsilon quit || echo
-    - unzip Temp/server.zip
+    - cp -rf Temp/Extract/* .
     - screen -dmS epsilon "server/bin/server"
