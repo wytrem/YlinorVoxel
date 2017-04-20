@@ -1,5 +1,9 @@
+apply plugin: 'application'
+
 project.ext.mainClassName = 'com.ylinor.client.desktop.DesktopLauncher'
 project.ext.assetsDir = new File('../client-core/assets');
+
+mainClassName = project.ext.mainClassName
 
 archivesBaseName = 'ylinor'
 
