@@ -1,6 +1,6 @@
 deploy-server:
   script:
-    - gradle server:distZip
+    - ./gradlew server:distZip
     - cp server/build/distributions/serve*.zip /home/shark/Serveurs/Ylinor/Epsilon/Temp/server.zip
     - cd /home/shark/Serveurs/Ylinor/Epsilon/
     - bash stop.bash
