@@ -5,13 +5,15 @@ deploy-client:
     - cd /var/www/html/api.ylinor.com/launcher/public/files
     - rm -rf ./*
     - unzip ../../client.zip
-    - rm -rf bin/
+    - mv client-*/* .
+    - rm -rf bin/ client-desktop/
 
 deploy-server:
   script:
     - ./gradlew server:distZip
     - cp server/build/distributions/serve*.zip /home/shark/Serveurs/Ylinor/Epsilon/Temp/server.zip
     - cd /home/shark/Serveurs/Ylinor/Epsilon/Temp/Extract
+    - rm -rf ./*
     - unzip ../server.zip
     - cd ../..
     - screen -X -S epsilon quit || echo
