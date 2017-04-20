@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import fr.theshark34.openlauncherlib.external.ClasspathConstructor;
 import fr.theshark34.openlauncherlib.internal.InternalLaunchProfile;
 import fr.theshark34.openlauncherlib.internal.InternalLauncher;
 import fr.theshark34.openlauncherlib.util.Saver;
+import fr.theshark34.openlauncherlib.util.explorer.Explorer;
 import fr.theshark34.supdate.SUpdate;
 import fr.theshark34.supdate.application.integrated.FileDeleter;
 import java.io.BufferedReader;
@@ -132,7 +134,7 @@ public class Launcher {
         logger.info("Lancement du jeu");
 
         InternalLaunchProfile profile = new InternalLaunchProfile(MAIN_CLASS);
-        profile.setClasspath(Collections.singletonList(new File(GAME_FOLDER, MAIN_JAR)));
+        profile.setClasspath(Explorer.dir(new File(GAME_FOLDER, LIB_FOLDER)).allRecursive().match("^(.*\\.((jar)$))*$").files().get());
         InternalLauncher launcher = new InternalLauncher(profile);
 
         Main.hide();

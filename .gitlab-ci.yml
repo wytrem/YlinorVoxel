@@ -1,7 +1,15 @@
+deploy-launcher:
+  script:
+    - ./gradlew launcher:build launcher:copyLibs
+    - rm -rf /var/www/html/api.ylinor.com/bootstrap/public/files/*
+    - cp -r launcher/build/libs/* /var/www/html/api.ylinor.com/bootstrap/public/files/
+
 deploy-client:
   script:
     - ./gradlew client-desktop:distZip
     - cp client-desktop/build/distributions/client-deskto*.zip /var/www/html/api.ylinor.com/launcher/client.zip
+    - rm -rf /var/www/html/api.ylinor.com/launcher/public/files/assets
+    - cp -rf client/assets /var/www/html/api.ylinor.com/launcher/public/files/
     - cd /var/www/html/api.ylinor.com/launcher/public/files
     - rm -rf ./*
     - unzip ../../client.zip

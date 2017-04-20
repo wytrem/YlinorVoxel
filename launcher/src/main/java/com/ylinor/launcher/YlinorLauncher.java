@@ -21,7 +21,7 @@ public final class YlinorLauncher {
     public static final String UPDATE_URL = "http://api.ylinor.com:9571/";
     public static final String AUTH_URL = "http://users.ylinor.com/";
 
-    public static final String MAIN_JAR = "ylinor.jar";
+    public static final String LIB_FOLDER = "lib/";
     public static final String MAIN_CLASS = "com.ylinor.client.desktop.DesktopLauncher";
 
     private static final BasicLogger logger = LoggerFactory.getLogger(YlinorLauncher.class);
