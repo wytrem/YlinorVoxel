@@ -122,7 +122,7 @@ public class BlockType {
     public static final BlockType pumpkinStem = new BlockType(104).setModelName("pumpkin_stem_growth0");
     public static final BlockType melonStem = new BlockType(105).setModelName("melon_stem_growth0");
     public static final BlockType vine = new BlockType(106).setModelName("vine_1");
-    public static final BlockType fenceGate = new BlockType(107).setModelName("fence_gate_closed");
+    public static final BlockType fenceGate = new BlockType(107).setModelName("oak_fence_gate_closed");
     public static final BlockType brickStairs = new BlockType(108).setModelName("brick_stairs");
     public static final BlockType stoneBrickStairs = new BlockType(109).setModelName("stone_brick_stairs");
     public static final BlockType mycelium = new BlockType(110).setModelName("mycelium");

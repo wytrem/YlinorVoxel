@@ -1,0 +1,6 @@
+{
+    "parent": "fence_gate_closed",
+    "textures": {
+        "texture": "planks_oak"
+    }
+}
