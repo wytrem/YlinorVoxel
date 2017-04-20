@@ -5,7 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 public final class PacketSpawnEntity extends Packet {
-    private long entityID;
+    private int entityID;
     private float initialX;
     private float initialY;
     private float initialZ;
@@ -16,7 +16,7 @@ public final class PacketSpawnEntity extends Packet {
 
     }
 
-    public PacketSpawnEntity(long entityID, float initialX, float initialY, float initialZ, float initialPitch, float initialYaw) {
+    public PacketSpawnEntity(int entityID, float initialX, float initialY, float initialZ, float initialPitch, float initialYaw) {
         this.entityID = entityID;
         this.initialX = initialX;
         this.initialY = initialY;
@@ -32,7 +32,7 @@ public final class PacketSpawnEntity extends Packet {
 
     @Override
     public void write(Kryo kryo, Output output) {
-        output.writeLong(entityID);
+        output.writeInt(entityID);
         output.writeFloat(initialX);
         output.writeFloat(initialY);
         output.writeFloat(initialZ);
@@ -42,7 +42,7 @@ public final class PacketSpawnEntity extends Packet {
 
     @Override
     public void read(Kryo kryo, Input input) {
-        this.entityID = input.readLong();
+        this.entityID = input.readInt();
         this.initialX = input.readFloat();
         this.initialY = input.readFloat();
         this.initialZ = input.readFloat();
@@ -50,11 +50,11 @@ public final class PacketSpawnEntity extends Packet {
         this.initialYaw = input.readFloat();
     }
 
-    public long getEntityID() {
+    public int getEntityID() {
         return entityID;
     }
 
-    public void setEntityID(long entityID) {
+    public void setEntityID(int entityID) {
         this.entityID = entityID;
     }
 

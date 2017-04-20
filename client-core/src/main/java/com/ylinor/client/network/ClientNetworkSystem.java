@@ -86,9 +86,8 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
 
         entity.get(NetworkIdentifierComponent.class).setIdentifier(spawnEntity.getEntityID());
         entity.get(Position.class).position.set(spawnEntity.getInitialX(), spawnEntity.getInitialY(), spawnEntity.getInitialZ());
-        entity.get(Heading.class).heading.set(spawnEntity.getInitialPitch(), spawnEntity.getInitialYaw(), 0.0f);
-
-        // TODO pitch and yaw
+        entity.get(Rotation.class).rotationPitch = spawnEntity.getInitialPitch();
+        entity.get(Rotation.class).rotationYaw = spawnEntity.getInitialYaw();
 
         nearbyEntities.add(entity);
     }
@@ -100,7 +99,6 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
         while (it.hasNext()) {
             Entity entity = it.next();
 
-//            if (entity.getEntityId() == despawnEntity.getEntityID()) {
             if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == despawnEntity.getEntityID()) {
                 entity.delete();
                 it.remove();
