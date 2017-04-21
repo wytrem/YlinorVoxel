@@ -56,6 +56,8 @@ public class YlinorScreen extends Stage implements Screen {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 System.out.printf("ClickEvent{x=%d,y=%d}\n", screenX, screenY);
+                System.out.flush();
+
                 return YlinorScreen.this.touchDown(screenX, screenY, pointer, button);
             }
 
