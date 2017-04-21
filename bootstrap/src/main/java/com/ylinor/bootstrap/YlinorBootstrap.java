@@ -59,6 +59,11 @@ public class YlinorBootstrap {
         constructor.add(Explorer.dir(FOLDER).get(LAUNCHER_FILE));
 
         ExternalLaunchProfile profile = new ExternalLaunchProfile(MAIN_CLASS, constructor.make());
+        
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            profile.getVmArgs().add("-XstartOnFirstThread");
+        }
+        
         profile.setRedirectErrorStream(true);
         ExternalLauncher launcher = new ExternalLauncher(profile);
 
