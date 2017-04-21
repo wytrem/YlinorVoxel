@@ -1,6 +1,7 @@
 package com.ylinor.client.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -35,7 +36,49 @@ public class YlinorScreen extends Stage implements Screen {
     @Override
     public void show() {
         Gdx.input.setCursorCatched(false);
-        Gdx.input.setInputProcessor(this);
+
+        Gdx.input.setInputProcessor(new InputProcessor() {
+            @Override
+            public boolean keyDown(int keycode) {
+                return YlinorScreen.this.keyDown(keycode);
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                return YlinorScreen.this.keyUp(keycode);
+            }
+
+            @Override
+            public boolean keyTyped(char character) {
+                return YlinorScreen.this.keyTyped(character);
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                System.out.printf("ClickEvent{x=%d,y=%d}\n", screenX, screenY);
+                return YlinorScreen.this.touchDown(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                return YlinorScreen.this.touchUp(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                return YlinorScreen.this.touchDragged(screenX, screenY, pointer);
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                return YlinorScreen.this.mouseMoved(screenX, screenY);
+            }
+
+            @Override
+            public boolean scrolled(int amount) {
+                return YlinorScreen.this.scrolled(amount);
+            }
+        });
     }
 
     @Override
