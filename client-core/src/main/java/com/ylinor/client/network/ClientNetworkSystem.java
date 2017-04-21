@@ -2,14 +2,12 @@ package com.ylinor.client.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 import javax.inject.Singleton;
 import javax.swing.JOptionPane;
 
+import com.ylinor.packets.*;
 import org.joml.Vector3f;
 
 import com.esotericsoftware.kryonet.Client;
@@ -20,13 +18,6 @@ import com.ylinor.client.physics.components.Position;
 import com.ylinor.client.physics.components.Rotation;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.BaseSystem;
-import com.ylinor.packets.Packet;
-import com.ylinor.packets.PacketDisconnect;
-import com.ylinor.packets.PacketHandler;
-import com.ylinor.packets.PacketLogin;
-import com.ylinor.packets.PacketMapChunk;
-import com.ylinor.packets.PacketPositionAndRotationUpdate;
-import com.ylinor.packets.PacketSpawnEntity;
 
 @Singleton
 public final class ClientNetworkSystem extends BaseSystem implements PacketHandler {
@@ -95,11 +86,26 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
 
         entity.get(NetworkIdentifierComponent.class).setIdentifier(spawnEntity.getEntityID());
         entity.get(Position.class).position.set(spawnEntity.getInitialX(), spawnEntity.getInitialY(), spawnEntity.getInitialZ());
-        entity.get(Heading.class).heading.set(spawnEntity.getInitialPitch(), spawnEntity.getInitialYaw(), 0.0f);
-
-        // TODO pitch and yaw
+        entity.get(Rotation.class).rotationPitch = spawnEntity.getInitialPitch();
+        entity.get(Rotation.class).rotationYaw = spawnEntity.getInitialYaw();
 
         nearbyEntities.add(entity);
+    }
+
+    @Override
+    public void handleDespawnEntity(PacketDespawnEntity despawnEntity) {
+        Iterator<Entity> it = nearbyEntities.iterator();
+
+        while (it.hasNext()) {
+            Entity entity = it.next();
+
+            if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == despawnEntity.getEntityID()) {
+                entity.delete();
+                it.remove();
+
+                break;
+            }
+        }
     }
 
     @Override

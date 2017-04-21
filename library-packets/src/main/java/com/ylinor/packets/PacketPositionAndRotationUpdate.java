@@ -5,14 +5,14 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 public final class PacketPositionAndRotationUpdate extends Packet {
-    private long entityID;
+    private int entityID;
     private float x, y, z, pitch, yaw;
 
     public PacketPositionAndRotationUpdate() {
 
     }
 
-    public PacketPositionAndRotationUpdate(long entityID, float x, float y, float z, float pitch, float yaw) {
+    public PacketPositionAndRotationUpdate(int entityID, float x, float y, float z, float pitch, float yaw) {
         this.entityID = entityID;
         this.x = x;
         this.y = y;
@@ -28,7 +28,7 @@ public final class PacketPositionAndRotationUpdate extends Packet {
 
     @Override
     public void write(Kryo kryo, Output output) {
-        output.writeLong(entityID);
+        output.writeInt(entityID);
         output.writeFloat(x);
         output.writeFloat(y);
         output.writeFloat(z);
@@ -38,7 +38,7 @@ public final class PacketPositionAndRotationUpdate extends Packet {
 
     @Override
     public void read(Kryo kryo, Input input) {
-        this.entityID = input.readLong();
+        this.entityID = input.readInt();
         this.x = input.readFloat();
         this.y = input.readFloat();
         this.z = input.readFloat();
@@ -46,11 +46,11 @@ public final class PacketPositionAndRotationUpdate extends Packet {
         this.yaw = input.readFloat();
     }
 
-    public long getEntityID() {
+    public int getEntityID() {
         return entityID;
     }
 
-    public void setEntityID(long entityID) {
+    public void setEntityID(int entityID) {
         this.entityID = entityID;
     }
 

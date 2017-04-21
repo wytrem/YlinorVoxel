@@ -1,24 +1,15 @@
 package com.ylinor.launcher;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import fr.theshark34.openlauncherlib.external.ClasspathConstructor;
-import fr.theshark34.openlauncherlib.external.ExternalLaunchProfile;
-import fr.theshark34.openlauncherlib.external.ExternalLauncher;
-import fr.theshark34.openlauncherlib.internal.InternalLaunchProfile;
-import fr.theshark34.openlauncherlib.internal.InternalLauncher;
-import fr.theshark34.openlauncherlib.util.ProcessLogManager;
-import fr.theshark34.openlauncherlib.util.Saver;
-import fr.theshark34.openlauncherlib.util.explorer.Explorer;
-import fr.theshark34.supdate.SUpdate;
-import fr.theshark34.supdate.application.integrated.FileDeleter;
+import static com.ylinor.launcher.YlinorLauncher.AUTH_URL;
+import static com.ylinor.launcher.YlinorLauncher.GAME_FOLDER;
+import static com.ylinor.launcher.YlinorLauncher.LIB_FOLDER;
+import static com.ylinor.launcher.YlinorLauncher.MAIN_CLASS;
+import static com.ylinor.launcher.YlinorLauncher.UPDATE_URL;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,8 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import net.wytrem.wylog.BasicLogger;
-import net.wytrem.wylog.LoggerFactory;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -36,12 +26,24 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import static com.ylinor.launcher.YlinorLauncher.*;
+import fr.theshark34.openlauncherlib.external.ClasspathConstructor;
+import fr.theshark34.openlauncherlib.external.ExternalLaunchProfile;
+import fr.theshark34.openlauncherlib.external.ExternalLauncher;
+import fr.theshark34.openlauncherlib.util.ProcessLogManager;
+import fr.theshark34.openlauncherlib.util.Saver;
+import fr.theshark34.openlauncherlib.util.explorer.Explorer;
+import fr.theshark34.supdate.SUpdate;
+import fr.theshark34.supdate.application.integrated.FileDeleter;
+import net.wytrem.wylog.BasicLogger;
+import net.wytrem.wylog.LoggerFactory;
 
 public class Launcher {
     private static final BasicLogger logger = LoggerFactory.getLogger(Launcher.class);
@@ -144,17 +146,24 @@ public class Launcher {
         ClasspathConstructor classpath = new ClasspathConstructor();
         classpath.add(Explorer.dir(new File(GAME_FOLDER, LIB_FOLDER)).allRecursive().match("^(.*\\.((jar)$))*$").files().get());
 
+        List<String> vmArgs = new ArrayList<>();
+        vmArgs.addAll(Arrays.asList("-Dylinor.user.token=" + saver.get("token"),
+                                                        "-Dylinor.user.username=" + user.getUsername()));
+        
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            vmArgs.add("-XstartOnFirstThread");
+        }
+        
         ExternalLaunchProfile profile =
                 new ExternalLaunchProfile(MAIN_CLASS,
                                           classpath.make(),
-                                          Arrays.asList("-Dylinor.user.token=" + saver.get("token"),
-                                                        "-Dylinor.user.username=" + user.getUsername()),
+                                          vmArgs,
                                           Collections.emptyList(),
                                           true,
                                           "Ylinor Epsilon",
                                           GAME_FOLDER);
         ExternalLauncher launcher = new ExternalLauncher(profile);
-
+        
         Process p = launcher.launch();
         logger.info("Jeu lance !");
 

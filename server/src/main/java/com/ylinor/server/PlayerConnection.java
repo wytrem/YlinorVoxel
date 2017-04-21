@@ -23,7 +23,7 @@ public final class PlayerConnection implements PacketHandler {
         if (!logged) {
             player.username = login.getAuthToken().toString();
 
-            System.out.println("[PlayerConnection] user logged: " + player.username);
+            System.out.printf("[PlayerConnection] user '%s' logged in with entity id %d\n", player.username, player.getEntityID());
 
             this.logged = true;
         } else {
@@ -38,6 +38,11 @@ public final class PlayerConnection implements PacketHandler {
 
     @Override
     public void handleSpawnEntity(PacketSpawnEntity spawnEntity) {
+
+    }
+
+    @Override
+    public void handleDespawnEntity(PacketDespawnEntity despawnEntity) {
 
     }
 

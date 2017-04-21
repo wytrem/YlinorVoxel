@@ -1,5 +1,6 @@
 package com.ylinor.server;
 
+import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.packets.PacketDisconnect;
 import org.joml.Vector3f;
 
@@ -8,16 +9,16 @@ import java.util.List;
 
 public final class Player {
     private final PlayerConnection playerConnection;
-    private long entityID;
+    private final Entity entity;
     protected String username;
     private Vector3f position;
     private float pitch, yaw;
 
-    // TODO rename this to nearbyEntites
+    // TODO rename this to nearbyEntities
     private List<Player> nearbyPlayers;
 
-    public Player(PlayerConnection playerConnection, long entityID) {
-        this.entityID = entityID;
+    public Player(PlayerConnection playerConnection, Entity entity) {
+        this.entity = entity;
         this.playerConnection = playerConnection;
         this.position = new Vector3f();
         this.nearbyPlayers = new ArrayList<>();
@@ -34,8 +35,12 @@ public final class Player {
         return playerConnection;
     }
 
-    public long getEntityID() {
-        return entityID;
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public int getEntityID() {
+        return entity.getEntityId();
     }
 
     public Vector3f getPosition() {
