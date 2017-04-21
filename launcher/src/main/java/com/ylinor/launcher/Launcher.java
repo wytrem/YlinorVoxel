@@ -60,7 +60,6 @@ public class Launcher {
         params.add(new BasicNameValuePair("password", password));
 
         String rep = http(post, params);
-        System.out.println("'" + rep + "'");
         JsonObject object = parser.parse(rep).getAsJsonObject();
 
         if (object.has("error"))
@@ -115,7 +114,7 @@ public class Launcher {
 
         String rep = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
 
-        if (rep.charAt(0) != '{')
+        while (rep.charAt(0) != '{')
         {
             rep = rep.substring(1);
         }

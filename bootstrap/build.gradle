@@ -1,5 +1,7 @@
 archivesBaseName = 'Ylinor-Launcher'
 
+compileJava.options.encoding = 'UTF-8'
+
 dependencies {
     compile 'fr.theshark34.swinger:swinger:1.0.1-BETA'
     compile 'fr.litarvan:openlauncherlib:3.0.3-BETA'
