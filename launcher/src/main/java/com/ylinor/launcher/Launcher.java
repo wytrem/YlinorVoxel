@@ -60,6 +60,7 @@ public class Launcher {
         params.add(new BasicNameValuePair("password", password));
 
         String rep = http(post, params);
+        System.out.println("'" + rep + "'");
         JsonObject object = parser.parse(rep).getAsJsonObject();
 
         if (object.has("error"))
