@@ -3,12 +3,15 @@ package com.ylinor.server.main;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.Timer;
+import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.packets.Packet;
+import com.ylinor.packets.PacketDespawnEntity;
 import com.ylinor.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.packets.PacketSpawnEntity;
 import com.ylinor.server.CommandLineThread;
-import com.ylinor.server.EntityIDAllocator;
 import com.ylinor.server.Player;
 import com.ylinor.server.PlayerConnection;
 import org.joml.Vector3f;
@@ -19,13 +22,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class YlinorServer {
-    private static YlinorServer instance;
+public final class YlinorServer extends YlinorApplication {
+    private final World world;
     private List<Player> onlinePlayers;
     private Server server;
     private volatile boolean running;
 
     private YlinorServer() {
+        this.world = buildWorld();
         this.onlinePlayers = new ArrayList<>();
         this.server = new Server();
         this.running = true;
@@ -36,7 +40,7 @@ public final class YlinorServer {
                 PlayerConnection playerConnection = new PlayerConnection(connection);
                 server.addListener(playerConnection.getConnectionListener());
 
-                onlinePlayers.add(new Player(playerConnection, EntityIDAllocator.allocateEntityID()));
+                onlinePlayers.add(new Player(playerConnection, world.create()));
             }
         });
         server.start();
@@ -45,8 +49,14 @@ public final class YlinorServer {
         new CommandLineThread(this).start();
     }
 
+    @Override
+    protected void configure(WorldConfiguration configuration) {
+        super.configure(configuration);
+    }
+
     private void run() throws IOException {
-        Timer timer = new Timer(20.0f);
+        final float tps = 20.0f;
+        Timer timer = new Timer(tps);
 
         server.bind(new InetSocketAddress(18325), null);
 
@@ -55,6 +65,10 @@ public final class YlinorServer {
                 timer.updateTimer();
 
                 if (timer.elapsedTicks > 0) {
+                    // TODO check delta time
+                    world.delta = 1.0f / tps * timer.elapsedTicks;
+                    world.tick();
+
                     for (int i = 0; i < timer.elapsedTicks; i++) {
                         tick();
                     }
@@ -88,6 +102,18 @@ public final class YlinorServer {
             if (playerConnection.shouldDisconnect()) {
                 playerConnection.close();
                 server.removeListener(playerConnection.getConnectionListener());
+
+                for (Player onlinePlayer : getOnlinePlayers()) {
+                    if (onlinePlayer != player) {
+                        List<Player> nearbyPlayers = onlinePlayer.getNearbyPlayers();
+
+                        if (nearbyPlayers.contains(player)) {
+                            nearbyPlayers.remove(player);
+
+                            onlinePlayer.getPlayerConnection().sendPacket(new PacketDespawnEntity(player.getEntityID()));
+                        }
+                    }
+                }
 
                 onlinePlayersIt.remove();
             } else {
@@ -142,13 +168,22 @@ public final class YlinorServer {
         running = false;
     }
 
+    public static YlinorServer getInstance() {
+        return (YlinorServer) instance;
+    }
+
     public static void main(String[] args) {
         instance = new YlinorServer();
 
         try {
-            instance.run();
+            getInstance().run();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getVersion() {
+        return "0.1";
     }
 }
