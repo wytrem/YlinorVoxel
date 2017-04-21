@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.logging.Logger;
+
 
 /**
  * An Ylinor screen.
@@ -55,8 +57,7 @@ public class YlinorScreen extends Stage implements Screen {
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                System.out.printf("ClickEvent{x=%d,y=%d}\n", screenX, screenY);
-                System.out.flush();
+                Logger.getLogger("InputProcessorFilter").info(String.format("ClickEvent{x=%d,y=%d}", screenX, screenY));
 
                 return YlinorScreen.this.touchDown(screenX, screenY, pointer, button);
             }
