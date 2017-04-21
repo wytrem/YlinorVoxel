@@ -25,4 +25,4 @@ deploy-server:
     - cd ../..
     - screen -X -S epsilon quit || echo
     - cp -rf Temp/Extract/* .
-    - screen -dmS epsilon "server/bin/server"
+    - screen -dmS epsilon server/bin/server

@@ -1,5 +1,8 @@
 package com.ylinor.client.screen.pregame;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -69,6 +72,14 @@ public class LoadingScreen extends YlinorScreen {
 
     @Override
     public void render(float delta) {
+        ShapeRenderer renderer = new ShapeRenderer();
+        renderer.begin(ShapeType.Filled);
+
+        renderer.setColor(Color.BLACK);
+        renderer.rect(0, 0, getWidth(), getHeight());
+
+        renderer.end();
+
         /* Appeller la méthode super (cf YlinorClient) */
         super.render(delta);
 
@@ -76,6 +87,19 @@ public class LoadingScreen extends YlinorScreen {
          * Changer la valeur de la progress bar en fonction du nombre d'assets
          * chargés
          */
-        loading.setValue(assets.assetsLoaded());
+        int value = assets.assetsLoaded();
+
+        if (value != loading.getValue())
+        {
+            try
+            {
+                Thread.sleep(750L);
+            }
+            catch (InterruptedException e)
+            {
+            }
+
+            loading.setValue(assets.assetsLoaded());
+        }
     }
 }
