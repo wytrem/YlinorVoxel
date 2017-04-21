@@ -114,7 +114,7 @@ public class Launcher {
 
         String rep = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
 
-        if (rep.charAt(0) != '{')
+        while (rep.charAt(0) != '{')
         {
             rep = rep.substring(1);
         }
