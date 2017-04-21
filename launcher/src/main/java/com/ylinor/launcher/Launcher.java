@@ -154,6 +154,10 @@ public class Launcher {
                                           "Ylinor Epsilon",
                                           GAME_FOLDER);
         ExternalLauncher launcher = new ExternalLauncher(profile);
+        
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            profile.getVmArgs().add("-XstartOnFirstThread");
+        }
 
         Process p = launcher.launch();
         logger.info("Jeu lance !");
