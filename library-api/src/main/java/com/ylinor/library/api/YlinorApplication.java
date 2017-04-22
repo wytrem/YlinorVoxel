@@ -6,14 +6,13 @@ import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.library.api.ecs.systems.TimerUpdateSystem;
 import com.ylinor.library.api.ecs.systems.WorldEventsDispatcherSystem;
+import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.library.util.ecs.system.EventSystem;
-import com.ylinor.library.util.ecs.World;
 
 
 public abstract class YlinorApplication {
     private ObjectMapper mapper = new ObjectMapper();
-    protected static YlinorApplication instance;
 
     public final World buildWorld() {
         
@@ -35,15 +34,9 @@ public abstract class YlinorApplication {
             @Override
             protected void configure() {
                 bind(Timer.class).toInstance(new Timer(20.0f));
+                bind(YlinorApplication.class).toInstance(YlinorApplication.this);
+                bind(ObjectMapper.class).toInstance(mapper);
             }
         });
-    }
-
-    public static YlinorApplication getYlinorApplication() {
-        return instance;
-    }
-    
-    public ObjectMapper getMapper() {
-        return mapper;
     }
 }

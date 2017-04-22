@@ -48,7 +48,7 @@ public class World {
         sys.setWorld(this);
     }
 
-    public void tick() {
+    public void process() {
         for (BaseSystem system : systems) {
             try {
                 system.process();

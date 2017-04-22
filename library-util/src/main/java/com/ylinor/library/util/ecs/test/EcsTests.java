@@ -22,13 +22,13 @@ public class EcsTests {
         World world = conf.build();
 
         Entity test = world.create();
-        world.tick();
+        world.process();
         test.set(new TestComp());
-        world.tick();
+        world.process();
         test.unset(TestComp.class);
-        world.tick();
+        world.process();
         test.delete();
-        world.tick();
+        world.process();
     }
     
     @Singleton
