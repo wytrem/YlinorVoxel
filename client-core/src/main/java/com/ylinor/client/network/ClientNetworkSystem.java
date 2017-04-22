@@ -22,6 +22,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.EyeHeight;
 import com.ylinor.client.render.RenderViewEntity;
+import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.library.api.ecs.components.AABB;
 import com.ylinor.library.api.ecs.components.CollisionState;
 import com.ylinor.library.api.ecs.components.Heading;
@@ -58,10 +59,12 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
      */
 
     @Inject
-    private PhySystem phySystem;
+    PhySystem phySystem;
+    
+    @Inject
+    ScreenSystem screenSystem;
     
     public ClientNetworkSystem() {
-       
         this.nearbyEntities = new ArrayList<>();
     }
     
@@ -194,5 +197,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
         player.get(Size.class).setSize(0.6f, 1.8f);
         
         phySystem.setPosition(player, 1818, 126, 6710);
+        
+        screenSystem.setScreen(null);
     }
 }

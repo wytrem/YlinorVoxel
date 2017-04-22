@@ -6,13 +6,13 @@ import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
 
 public final class PacketDespawnEntity extends Packet {
-    private long entityID;
+    private int entityID;
 
     public PacketDespawnEntity() {
 
     }
 
-    public PacketDespawnEntity(long entityID) {
+    public PacketDespawnEntity(int entityID) {
         this.entityID = entityID;
     }
 
@@ -23,19 +23,19 @@ public final class PacketDespawnEntity extends Packet {
 
     @Override
     public void write(Kryo kryo, Output output) {
-        output.writeLong(entityID);
+        output.writeInt(entityID);
     }
 
     @Override
     public void read(Kryo kryo, Input input) {
-        this.entityID = input.readLong();
+        this.entityID = input.readInt();
     }
 
     public long getEntityID() {
         return entityID;
     }
 
-    public void setEntityID(long entityID) {
+    public void setEntityID(int entityID) {
         this.entityID = entityID;
     }
 }
