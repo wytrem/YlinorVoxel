@@ -1,6 +1,5 @@
 package com.ylinor.server;
 
-import java.rmi.server.SocketSecurityException;
 import java.util.Scanner;
 
 import javax.inject.Inject;
@@ -21,7 +20,6 @@ public class CommandLineSystem extends BaseSystem {
 
     @Override
     protected void processSystem() {
-        System.out.println("hey command");
     }
 
     public static final class CommandLineThread extends Thread {

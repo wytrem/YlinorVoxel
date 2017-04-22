@@ -12,5 +12,13 @@ public class FramerateLimitSystem extends BaseSystem {
     
     @Override
     protected void processSystem() {
+        if (timer.elapsedTicks == 0) {
+            try {
+                Thread.sleep(10l);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
