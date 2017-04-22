@@ -6,6 +6,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.github.luben.zstd.Zstd;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.util.ArrayUtils;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public class PacketMapChunk extends Packet {
     
@@ -43,7 +44,7 @@ public class PacketMapChunk extends Packet {
     }
 
     @Override
-    public void handle(PacketHandler handler) {
-        handler.handleMapChunk(this);
+    public void handle(Entity sender, PacketHandler handler) {
+        handler.handleMapChunk(sender, this);
     }
 }

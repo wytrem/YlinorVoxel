@@ -5,13 +5,13 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.library.util.ecs.component.Component;
 import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.BaseSystem;
 import com.ylinor.library.util.ecs.system.IteratingSystem;
-import com.ylinor.library.util.ecs.World;
 
 
 public class EcsTests {
@@ -22,13 +22,13 @@ public class EcsTests {
         World world = conf.build();
 
         Entity test = world.create();
-        world.tick();
+        world.process();
         test.set(new TestComp());
-        world.tick();
+        world.process();
         test.unset(TestComp.class);
-        world.tick();
+        world.process();
         test.delete();
-        world.tick();
+        world.process();
     }
     
     @Singleton

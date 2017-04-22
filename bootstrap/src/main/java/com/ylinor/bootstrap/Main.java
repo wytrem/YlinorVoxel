@@ -1,11 +1,10 @@
 package com.ylinor.bootstrap;
 
+import static com.ylinor.bootstrap.Resources.RESOURCE_PATH;
+
 import fr.theshark34.swinger.Swinger;
 import net.wytrem.wylog.BasicLogger;
 import net.wytrem.wylog.LoggerFactory;
-
-
-import static com.ylinor.bootstrap.Resources.*;
 
 public final class Main {
     private static BasicLogger logger = LoggerFactory.getLogger(Main.class);

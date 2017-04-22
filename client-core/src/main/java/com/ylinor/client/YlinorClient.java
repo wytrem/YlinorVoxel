@@ -4,9 +4,10 @@ import static com.ylinor.library.api.ecs.ArtemisUtils.dispatchEvent;
 
 import java.io.File;
 import java.io.IOException;
-import com.ylinor.client.network.PositionSyncSystem;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
@@ -16,12 +17,12 @@ import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.client.input.PlayerInputSystem;
 import com.ylinor.client.network.ClientNetworkSystem;
+import com.ylinor.client.network.PositionSyncSystem;
 import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.AssetsLoadingSystem;
 import com.ylinor.client.render.CameraSystem;
 import com.ylinor.client.render.ClearScreenSystem;
 import com.ylinor.client.render.HudRenderSystem;
-import com.ylinor.client.render.PlayerInitSystem;
 import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.render.TerrainRenderSystem;
 import com.ylinor.client.terrain.ClientTerrain;
@@ -30,8 +31,8 @@ import com.ylinor.client.util.settings.GameSettings;
 import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.ecs.systems.SystemsPriorities;
 import com.ylinor.library.api.terrain.Terrain;
-import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.library.util.ecs.World;
+import com.ylinor.library.util.ecs.WorldConfiguration;
 
 
 /**
@@ -66,8 +67,6 @@ public class YlinorClient extends YlinorApplication
     public boolean isInGame = false;
 
     public YlinorClient() {
-        instance = this;
-        client = this;
     }
 
     @Override
@@ -92,8 +91,6 @@ public class YlinorClient extends YlinorApplication
         super.configure(configuration);
         
         
-        configuration.with(Integer.MAX_VALUE, PlayerInitSystem.class);
-
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, ClientNetworkSystem.class);
 
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);
@@ -116,7 +113,7 @@ public class YlinorClient extends YlinorApplication
     @Override
     public void render() {
         world.delta = Gdx.graphics.getDeltaTime();
-        world.tick();
+        world.process();
     }
 
     @Override
@@ -149,12 +146,6 @@ public class YlinorClient extends YlinorApplication
 
     public GameSettings getSettings() {
         return settings;
-    }
-
-    private static YlinorClient client;
-
-    public static final YlinorClient client() {
-        return client;
     }
 
     @Override

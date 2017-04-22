@@ -9,7 +9,18 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Singleton
 public final class ServerConfiguration {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ServerConfiguration.class);
+    
     private static Map<String, String> defaultProperties;
     private Map<String, String> properties;
 
@@ -28,7 +39,10 @@ public final class ServerConfiguration {
         this.properties = new HashMap<>();
     }
 
-    public void read(File file) throws IOException {
+    @Inject
+    public void read(@Named("configFile") File file) {
+        loadDefaults(false);
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
 
@@ -48,13 +62,19 @@ public final class ServerConfiguration {
                 }
             }
         }
+        catch (IOException e) {
+            logger.warn("Could not load configuration from file '" + file.getAbsolutePath() + "':", e);
+        }
     }
 
-    public void write(File file) throws IOException {
+    public void write(File file) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             for (Map.Entry<String, String> property : properties.entrySet()) {
                 writer.println(String.format("%s: %s", property.getKey(), property.getValue()));
             }
+        }
+        catch (IOException e) {
+            logger.warn("Could not write configuration to file '" + file.getAbsolutePath() + "':", e);
         }
     }
 

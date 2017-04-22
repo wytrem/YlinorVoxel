@@ -1,73 +1,30 @@
 package com.ylinor.server;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.ylinor.packets.*;
-import org.joml.Vector3f;
+import com.ylinor.library.util.ecs.component.Component;
+import com.ylinor.packets.Packet;
+import com.ylinor.packets.PacketDisconnect;
 
-public final class PlayerConnection implements PacketHandler {
+public final class PlayerConnection extends Component {
     private final Connection connection;
-    private final ConnectionListener connectionListener;
-    private Player player;
     private boolean shouldDisconnect;
-    private boolean logged;
+    private boolean loggedIn;
 
     public PlayerConnection(Connection connection) {
         this.connection = connection;
-
-        this.connectionListener = new ConnectionListener(this);
     }
 
-
-    @Override
-    public void handleLogin(PacketLogin login) {
-        if (!logged) {
-            player.username = login.getAuthToken().toString();
-
-            System.out.printf("[PlayerConnection] user '%s' logged in with entity id %d\n", player.username, player.getEntityID());
-
-            this.logged = true;
-        } else {
-            player.kick("Protocol error : logged twice");
-        }
+    public void kick(String reason) {
+        sendPacket(new PacketDisconnect(reason));
+        disconnect();
     }
-
-    @Override
-    public void handleMapChunk(PacketMapChunk packetMapChunk) {
-
-    }
-
-    @Override
-    public void handleSpawnEntity(PacketSpawnEntity spawnEntity) {
-
-    }
-
-    @Override
-    public void handleDespawnEntity(PacketDespawnEntity despawnEntity) {
-
-    }
-
-    @Override
-    public void handlePositionUpdate(PacketPositionAndRotationUpdate positionUpdate) {
-        player.setPosition(new Vector3f(positionUpdate.getX(), positionUpdate.getY(), positionUpdate.getZ()));
-        player.setPitch(positionUpdate.getPitch());
-        player.setYaw(positionUpdate.getYaw());
-    }
-
-    @Override
-    public void handleDisconnect(PacketDisconnect disconnect) {
-
+    
+    public int getConnectionId() {
+        return connection.getID();
     }
 
     public void sendPacket(Packet packet) {
         connection.sendTCP(packet);
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public void close() {
@@ -82,15 +39,15 @@ public final class PlayerConnection implements PacketHandler {
         return shouldDisconnect;
     }
 
-    public boolean isLogged() {
-        return logged;
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 
     public void disconnect() {
         this.shouldDisconnect = true;
     }
 
-    public ConnectionListener getConnectionListener() {
-        return connectionListener;
+    public void setLoggedIn(boolean flag) {
+        this.loggedIn = flag;
     }
 }

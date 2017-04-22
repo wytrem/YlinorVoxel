@@ -31,9 +31,6 @@ public class MainMenuScreen extends YlinorScreen {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
     
 	@Inject
-	private ScreenSystem screenSystem;
-
-	@Inject
 	private YlinorClient client;
 	
 	@Inject
@@ -78,7 +75,6 @@ public class MainMenuScreen extends YlinorScreen {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					screenSystem.setScreen(null);
 					try {
 						connectToServer();
 					} catch (IOException e) {
