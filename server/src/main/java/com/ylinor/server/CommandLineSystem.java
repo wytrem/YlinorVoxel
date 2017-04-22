@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import javax.inject.Inject;
 
-import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.NonProcessingSystem;
 import com.ylinor.server.main.YlinorServer;
 
 
-public class CommandLineSystem extends BaseSystem {
+public class CommandLineSystem extends NonProcessingSystem {
 
     @Inject
     CommandLineThread commandLineThread;
@@ -16,10 +16,6 @@ public class CommandLineSystem extends BaseSystem {
     @Override
     public void initialize() {
         commandLineThread.start();
-    }
-
-    @Override
-    protected void processSystem() {
     }
 
     public static final class CommandLineThread extends Thread {

@@ -2,11 +2,10 @@ package com.ylinor.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import org.joml.Vector3f;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,33 +13,61 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.ylinor.library.api.ecs.systems.TickingSystem;
+import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.packets.Packet;
-import com.ylinor.packets.PacketDespawnEntity;
-import com.ylinor.packets.PacketPositionAndRotationUpdate;
+import com.ylinor.packets.PacketSpawnClientPlayer;
 import com.ylinor.packets.PacketSpawnEntity;
 
+import gnu.trove.iterator.TIntObjectIterator;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+
+
+@Singleton
 public class ServerNetworkSystem extends TickingSystem {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ServerNetworkSystem.class);
 
-    private List<Player> onlinePlayers;
     private Server server;
-    
+    private TIntObjectMap<Entity> playersByConnectionId;
+    private TIntObjectMap<PlayerConnection> playerConnections;
+
+    @Inject
+    NetworkHandlerSystem networkHandlerSystem;
+
     @Override
     public void initialize() {
-        this.onlinePlayers = new ArrayList<>();
+        logger.info("Starting up network system.");
         this.server = new Server();
         
+        playersByConnectionId = new TIntObjectHashMap<>();
+        playerConnections = new TIntObjectHashMap<>();
+
         server.addListener(new Listener() {
             @Override
             public void connected(Connection connection) {
+                logger.info("New connection from {}, id: {}", connection.getRemoteAddressTCP().toString(), connection.getID());
+                Entity player = world.create();
+                playersByConnectionId.put(connection.getID(), player);
+                
                 PlayerConnection playerConnection = new PlayerConnection(connection);
-                server.addListener(playerConnection.getConnectionListener());
+                player.set(playerConnection);
+                playerConnections.put(connection.getID(), playerConnection);
 
-                onlinePlayers.add(new Player(playerConnection, world.create()));
+                sendToAllExcept(connection.getID(), new PacketSpawnEntity(player.getEntityId()));
+                playerConnection.sendPacket(new PacketSpawnClientPlayer(player.getEntityId()));
+                
+                for (Entity other : playersByConnectionId.valueCollection()) {
+                    if (other.getEntityId() != player.getEntityId()) {
+                        playerConnection.sendPacket(new PacketSpawnEntity(other.getEntityId()));
+                    }
+                }
             }
         });
+        
+        server.addListener(networkHandlerSystem.getConnectionListener());
         server.start();
+
         Packet.registerToKryo(server.getKryo());
 
         try {
@@ -49,93 +76,50 @@ public class ServerNetworkSystem extends TickingSystem {
         catch (IOException e) {
             logger.error("Failed to bind server network :", e);
         }
+        
+        logger.info("Network system successfully started!");
     }
-    
+
     @Override
     protected void tick() {
-        Iterator<Player> onlinePlayersIt = onlinePlayers.iterator();
-
-        while (onlinePlayersIt.hasNext()) {
-            Player player = onlinePlayersIt.next();
-            PlayerConnection playerConnection = player.getPlayerConnection();
-
-            if (playerConnection.shouldDisconnect()) {
-                playerConnection.close();
-                server.removeListener(playerConnection.getConnectionListener());
-
-                for (Player onlinePlayer : getOnlinePlayers()) {
-                    if (onlinePlayer != player) {
-                        List<Player> nearbyPlayers = onlinePlayer.getNearbyPlayers();
-
-                        if (nearbyPlayers.contains(player)) {
-                            nearbyPlayers.remove(player);
-
-                            onlinePlayer.getPlayerConnection().sendPacket(new PacketDespawnEntity(player.getEntityID()));
-                        }
-                    }
-                }
-
-                onlinePlayersIt.remove();
-            } else {
-                if (playerConnection.isLogged()) {
-                    handlePlayer(player, playerConnection.getConnection().getID());
-                }
+        
+        TIntObjectIterator<Entity> iterator = playersByConnectionId.iterator();
+        
+        while (iterator.hasNext()) {
+            iterator.advance();
+            
+            PlayerConnection connection = iterator.value().get(PlayerConnection.class);
+            
+            if (connection.shouldDisconnect()) {
+                connection.close();
+                iterator.remove();
             }
         }
     }
     
-    private void handlePlayer(Player player, int connectionID) {
-        Vector3f playerPosition = player.getPosition();
+    public Entity getPlayerByConnectionId(int id) {
+        return playersByConnectionId.get(id);
+    }
 
-        // TODO only nearby players should be notified about the position of this player
-        server.sendToAllExceptTCP(connectionID, new PacketPositionAndRotationUpdate(player.getEntityID(), playerPosition.x, playerPosition.y, playerPosition.z, player.getPitch(), player.getYaw()));
-
-        List<Player> nearbyPlayers = player.getNearbyPlayers();
-
-        getOnlinePlayers().forEach(onlinePlayer -> {
-            // TODO distance check
-
-            Vector3f onlinePlayerPosition = onlinePlayer.getPosition();
-
-            if (onlinePlayer != player && !nearbyPlayers.contains(onlinePlayer)) {
-                nearbyPlayers.add(onlinePlayer);
-                player.getPlayerConnection().sendPacket(new PacketSpawnEntity(
-                        onlinePlayer.getEntityID(),
-                        onlinePlayerPosition.x,
-                        onlinePlayerPosition.y,
-                        onlinePlayerPosition.z,
-                        onlinePlayer.getPitch(),
-                        onlinePlayer.getYaw()));
-
-                
-                logger.trace("Sending spawn entity packet to connection {}", connectionID);
+    public Connection getConnection(int id) {
+        for (Connection connection : server.getConnections()) {
+            if (connection.getID() == id) {
+                return connection;
             }
-        });
+        }
+
+        return null;
     }
 
-    public List<Player> getOnlinePlayers() {
-        List<Player> players = new ArrayList<>(onlinePlayers.size());
-
-        onlinePlayers.forEach(player -> {
-           if (player.getPlayerConnection().isLogged()) {
-               players.add(player);
-           }
-        });
-
-        return players;
-    }
-    
-    
-    
-    public void sendToAllTCP(Object object) {
+    public void sendToAll(Packet object) {
         server.sendToAllTCP(object);
     }
 
-    public void sendToAllExceptTCP(int connectionID, Object object) {
+    public void sendToAllExcept(int connectionID, Packet object) {
         server.sendToAllExceptTCP(connectionID, object);
     }
 
-    public void sendToTCP(int connectionID, Object object) {
+    public void sendTo(int connectionID, Packet object) {
         server.sendToTCP(connectionID, object);
     }
 
@@ -143,9 +127,12 @@ public class ServerNetworkSystem extends TickingSystem {
     public void dispose() {
         logger.info("Closing connections");
         
-        for (Player player : onlinePlayers) {
-            player.kick("Server is shutting down");
-            player.getPlayerConnection().close();
+        TIntObjectIterator<PlayerConnection> iterator = playerConnections.iterator();
+        
+        while (iterator.hasNext()) {
+            iterator.advance();
+            iterator.value().kick("Server is shutting down.");
+            iterator.value().close();
         }
 
         server.stop();

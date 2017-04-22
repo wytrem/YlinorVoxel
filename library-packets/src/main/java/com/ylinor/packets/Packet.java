@@ -8,6 +8,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public abstract class Packet implements KryoSerializable {
     private static final List<Class<? extends Packet>> packetsList;
@@ -20,6 +21,7 @@ public abstract class Packet implements KryoSerializable {
         registerPacket(PacketSpawnEntity.class);
         registerPacket(PacketDespawnEntity.class);
         registerPacket(PacketDisconnect.class);
+        registerPacket(PacketSpawnClientPlayer.class);
     }
 
     private static void registerPacket(Class<? extends Packet> packetClass) {
@@ -39,5 +41,5 @@ public abstract class Packet implements KryoSerializable {
         output.writeLong(uuid.getLeastSignificantBits());
     }
 
-    public abstract void handle(PacketHandler handler);
+    public abstract void handle(Entity sender, PacketHandler handler);
 }

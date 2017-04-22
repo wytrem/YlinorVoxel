@@ -1,4 +1,4 @@
-package com.ylinor.client.physics.components;
+package com.ylinor.library.api.ecs.components;
 
 import org.joml.Vector3f;
 

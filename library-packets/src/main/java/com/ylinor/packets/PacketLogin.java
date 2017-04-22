@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public final class PacketLogin extends Packet {
     private UUID authToken;
@@ -28,8 +29,8 @@ public final class PacketLogin extends Packet {
     }
 
     @Override
-    public void handle(PacketHandler handler) {
-        handler.handleLogin(this);
+    public void handle(Entity sender, PacketHandler handler) {
+        handler.handleLogin(sender, this);
     }
 
     @Override

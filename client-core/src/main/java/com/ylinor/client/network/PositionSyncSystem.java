@@ -4,9 +4,9 @@ import javax.inject.Inject;
 
 import org.joml.Vector3f;
 
-import com.ylinor.client.physics.components.Heading;
-import com.ylinor.client.physics.components.Position;
-import com.ylinor.client.physics.components.Rotation;
+import com.ylinor.library.api.ecs.components.Heading;
+import com.ylinor.library.api.ecs.components.Position;
+import com.ylinor.library.api.ecs.components.Rotation;
 import com.ylinor.library.api.ecs.systems.TickingIteratingSystem;
 import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
@@ -26,5 +26,10 @@ public final class PositionSyncSystem extends TickingIteratingSystem {
         Vector3f currentPosition = i.get(Position.class).position;
         Rotation rotation = i.get(Rotation.class);
         networkSystem.enqueuePacket(new PacketPositionAndRotationUpdate(-1, currentPosition.x, currentPosition.y, currentPosition.z, rotation.rotationPitch, rotation.rotationYaw));
+    }
+    
+    @Override
+    protected boolean checkProcessing() {
+        return networkSystem.loggedIn;
     }
 }

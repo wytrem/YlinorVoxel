@@ -1,15 +1,19 @@
 package com.ylinor.packets;
 
+import com.ylinor.library.util.ecs.entity.Entity;
+
 public interface PacketHandler {
-    void handleLogin(PacketLogin login);
+    void handleLogin(Entity sender, PacketLogin login);
     
-    void handleMapChunk(PacketMapChunk packetMapChunk);
+    void handleMapChunk(Entity sender, PacketMapChunk packetMapChunk);
 
-    void handleSpawnEntity(PacketSpawnEntity spawnEntity);
+    void handleSpawnEntity(Entity sender, PacketSpawnEntity spawnEntity);
 
-    void handleDespawnEntity(PacketDespawnEntity despawnEntity);
+    void handleDespawnEntity(Entity sender, PacketDespawnEntity despawnEntity);
 
-    void handlePositionUpdate(PacketPositionAndRotationUpdate positionUpdate);
+    void handlePositionUpdate(Entity sender, PacketPositionAndRotationUpdate positionUpdate);
 
-    void handleDisconnect(PacketDisconnect disconnect);
+    void handleDisconnect(Entity sender, PacketDisconnect disconnect);
+    
+    void handleSpawnClientPlayer(Entity sender, PacketSpawnClientPlayer spawnClientPlayer);
 }

@@ -1,5 +1,11 @@
 package com.ylinor.bootstrap;
 
+import static com.ylinor.bootstrap.Resources.ICON;
+import static com.ylinor.bootstrap.Resources.SPLASH;
+import static fr.theshark34.swinger.Swinger.getResource;
+
+import java.io.File;
+
 import fr.theshark34.openlauncherlib.LaunchException;
 import fr.theshark34.openlauncherlib.external.ClasspathConstructor;
 import fr.theshark34.openlauncherlib.external.ExternalLaunchProfile;
@@ -11,11 +17,6 @@ import fr.theshark34.openlauncherlib.util.SplashScreen;
 import fr.theshark34.openlauncherlib.util.explorer.Explorer;
 import fr.theshark34.supdate.SUpdate;
 import fr.theshark34.supdate.application.integrated.FileDeleter;
-import java.io.File;
-
-import static com.ylinor.bootstrap.Resources.*;
-
-import static fr.theshark34.swinger.Swinger.*;
 
 public class YlinorBootstrap {
     public static final String NAME = "Ylinor";

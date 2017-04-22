@@ -1,11 +1,10 @@
 package com.ylinor.launcher;
 
-import fr.theshark34.openlauncherlib.minecraft.util.GameDirGenerator;
-import fr.theshark34.openlauncherlib.util.CrashReporter;
-import fr.theshark34.openlauncherlib.util.Saver;
 import java.awt.Dimension;
 import java.io.File;
 
+import fr.theshark34.openlauncherlib.minecraft.util.GameDirGenerator;
+import fr.theshark34.openlauncherlib.util.CrashReporter;
 import net.wytrem.wylog.BasicLogger;
 import net.wytrem.wylog.LoggerFactory;
 

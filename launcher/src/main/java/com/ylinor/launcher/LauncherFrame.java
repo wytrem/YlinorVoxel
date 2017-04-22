@@ -1,12 +1,13 @@
 package com.ylinor.launcher;
 
-import fr.theshark34.swinger.util.WindowMover;
+import static com.ylinor.launcher.Resources.ICON;
+import static com.ylinor.launcher.YlinorLauncher.SIZE;
+import static com.ylinor.launcher.YlinorLauncher.TITLE;
+import static fr.theshark34.swinger.Swinger.getResource;
+
 import javax.swing.JFrame;
 
-
-import static com.ylinor.launcher.YlinorLauncher.*;
-import static com.ylinor.launcher.Resources.*;
-import static fr.theshark34.swinger.Swinger.*;
+import fr.theshark34.swinger.util.WindowMover;
 
 public class LauncherFrame extends JFrame {
     private WindowMover mover = new WindowMover(this);

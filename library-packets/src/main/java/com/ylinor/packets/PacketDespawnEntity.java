@@ -3,6 +3,7 @@ package com.ylinor.packets;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public final class PacketDespawnEntity extends Packet {
     private long entityID;
@@ -16,8 +17,8 @@ public final class PacketDespawnEntity extends Packet {
     }
 
     @Override
-    public void handle(PacketHandler handler) {
-        handler.handleDespawnEntity(this);
+    public void handle(Entity sender, PacketHandler handler) {
+        handler.handleDespawnEntity(sender, this);
     }
 
     @Override

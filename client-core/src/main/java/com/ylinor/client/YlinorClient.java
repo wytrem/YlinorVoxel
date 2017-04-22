@@ -23,7 +23,6 @@ import com.ylinor.client.render.AssetsLoadingSystem;
 import com.ylinor.client.render.CameraSystem;
 import com.ylinor.client.render.ClearScreenSystem;
 import com.ylinor.client.render.HudRenderSystem;
-import com.ylinor.client.render.PlayerInitSystem;
 import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.render.TerrainRenderSystem;
 import com.ylinor.client.terrain.ClientTerrain;
@@ -92,8 +91,6 @@ public class YlinorClient extends YlinorApplication
         super.configure(configuration);
         
         
-        configuration.with(Integer.MAX_VALUE, PlayerInitSystem.class);
-
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, ClientNetworkSystem.class);
 
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);

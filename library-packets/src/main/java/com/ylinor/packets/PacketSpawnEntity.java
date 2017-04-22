@@ -3,6 +3,7 @@ package com.ylinor.packets;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.ylinor.library.util.ecs.entity.Entity;
 
 public final class PacketSpawnEntity extends Packet {
     private int entityID;
@@ -15,6 +16,10 @@ public final class PacketSpawnEntity extends Packet {
     public PacketSpawnEntity() {
 
     }
+    
+    public PacketSpawnEntity(int entityId) {
+        this(entityId, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    }
 
     public PacketSpawnEntity(int entityID, float initialX, float initialY, float initialZ, float initialPitch, float initialYaw) {
         this.entityID = entityID;
@@ -26,8 +31,8 @@ public final class PacketSpawnEntity extends Packet {
     }
 
     @Override
-    public void handle(PacketHandler handler) {
-        handler.handleSpawnEntity(this);
+    public void handle(Entity sender, PacketHandler handler) {
+        handler.handleSpawnEntity(sender, this);
     }
 
     @Override

@@ -2,41 +2,79 @@ package com.ylinor.client.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.JOptionPane;
 
-import com.ylinor.packets.*;
 import org.joml.Vector3f;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.ylinor.client.physics.components.Heading;
-import com.ylinor.client.physics.components.Position;
-import com.ylinor.client.physics.components.Rotation;
+import com.ylinor.client.physics.systems.PhySystem;
+import com.ylinor.client.render.EyeHeight;
+import com.ylinor.client.render.RenderViewEntity;
+import com.ylinor.library.api.ecs.components.AABB;
+import com.ylinor.library.api.ecs.components.CollisionState;
+import com.ylinor.library.api.ecs.components.Heading;
+import com.ylinor.library.api.ecs.components.InputControlledEntity;
+import com.ylinor.library.api.ecs.components.Physics;
+import com.ylinor.library.api.ecs.components.Position;
+import com.ylinor.library.api.ecs.components.Rotation;
+import com.ylinor.library.api.ecs.components.Size;
+import com.ylinor.library.api.ecs.components.Velocity;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.packets.Packet;
+import com.ylinor.packets.PacketDespawnEntity;
+import com.ylinor.packets.PacketDisconnect;
+import com.ylinor.packets.PacketHandler;
+import com.ylinor.packets.PacketLogin;
+import com.ylinor.packets.PacketMapChunk;
+import com.ylinor.packets.PacketPositionAndRotationUpdate;
+import com.ylinor.packets.PacketSpawnClientPlayer;
+import com.ylinor.packets.PacketSpawnEntity;
 
 @Singleton
 public final class ClientNetworkSystem extends BaseSystem implements PacketHandler {
-    private final Client client;
-    private final Deque<Packet> packetQueue;
+    private static final Logger logger = LoggerFactory.getLogger(ClientNetworkSystem.class);
+    
+    private Client client;
+    private Deque<Packet> packetQueue;
     private List<Entity> nearbyEntities;
+    public boolean loggedIn;
 
     /*
     TODO maybe create a new implementation of PacketHandler for a cleaner code ?
+    wytrem : approved.
      */
 
+    @Inject
+    private PhySystem phySystem;
+    
     public ClientNetworkSystem() {
+       
+        this.nearbyEntities = new ArrayList<>();
+    }
+    
+    @Override
+    public void initialize() {
         this.client = new Client();
         client.start();
 
         Packet.registerToKryo(client.getKryo());
-
+        
         this.packetQueue = new ArrayDeque<>();
-        this.nearbyEntities = new ArrayList<>();
+        
+        loggedIn = false;
     }
 
     @Override
@@ -57,7 +95,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
             @Override
             public void received(Connection connection, Object object) {
                 if (object instanceof Packet) {
-                    ((Packet) object).handle(ClientNetworkSystem.this);
+                    ((Packet) object).handle(null, ClientNetworkSystem.this);
                 }
             }
         });
@@ -68,18 +106,19 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     }
 
     @Override
-    public void handleLogin(PacketLogin login) {
+    public void handleLogin(Entity sender, PacketLogin login) {
+        loggedIn = true;
+        logger.info("Successfully logged in.");
+    }
+
+    @Override
+    public void handleMapChunk(Entity sender, PacketMapChunk packetMapChunk) {
 
     }
 
     @Override
-    public void handleMapChunk(PacketMapChunk packetMapChunk) {
-
-    }
-
-    @Override
-    public void handleSpawnEntity(PacketSpawnEntity spawnEntity) {
-        Entity entity = world.create()
+    public void handleSpawnEntity(Entity sender, PacketSpawnEntity spawnEntity) {
+        Entity entity = world.create(spawnEntity.getEntityID())
                 .set(Position.class)
                 .set(Heading.class).set(Rotation.class)
                 .set(NetworkIdentifierComponent.class);
@@ -90,10 +129,11 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
         entity.get(Rotation.class).rotationYaw = spawnEntity.getInitialYaw();
 
         nearbyEntities.add(entity);
+        logger.info("Spawned entity {}", spawnEntity.getEntityID());
     }
 
     @Override
-    public void handleDespawnEntity(PacketDespawnEntity despawnEntity) {
+    public void handleDespawnEntity(Entity sender, PacketDespawnEntity despawnEntity) {
         Iterator<Entity> it = nearbyEntities.iterator();
 
         while (it.hasNext()) {
@@ -109,7 +149,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     }
 
     @Override
-    public void handlePositionUpdate(PacketPositionAndRotationUpdate positionUpdate) {
+    public void handlePositionUpdate(Entity sender, PacketPositionAndRotationUpdate positionUpdate) {
         for (Entity entity : nearbyEntities) {
             if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == positionUpdate.getEntityID()) {
                 Vector3f position = entity.get(Position.class).position;
@@ -123,7 +163,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     }
 
     @Override
-    public void handleDisconnect(PacketDisconnect disconnect) {
+    public void handleDisconnect(Entity sender, PacketDisconnect disconnect) {
         // TODO create a proper gui alert dialog
 
         JOptionPane.showMessageDialog(null, "You have been disconnected from the server, reason : " + disconnect.getReason(), "Connection lost", JOptionPane.ERROR_MESSAGE);
@@ -132,5 +172,27 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
 
     public List<Entity> getNearbyEntities() {
         return nearbyEntities;
+    }
+
+    @Override
+    public void handleSpawnClientPlayer(Entity sender, PacketSpawnClientPlayer spawnClientPlayer) {
+        
+        logger.info("Spawning client player");
+        Entity player = world.create(spawnClientPlayer.getEntityId());
+        player.set(RenderViewEntity.class)
+              .set(InputControlledEntity.class)
+              .set(Heading.class)
+              .set(Position.class)
+              .set(Velocity.class)
+              .set(EyeHeight.class)
+              .set(Size.class)
+              .set(AABB.class)
+              .set(CollisionState.class)
+              .set(Physics.class).set(Rotation.class)
+              .set(PositionSyncComponent.class);
+        player.get(EyeHeight.class).eyePadding.y = 1.65f;
+        player.get(Size.class).setSize(0.6f, 1.8f);
+        
+        phySystem.setPosition(player, 1818, 126, 6710);
     }
 }

@@ -1,13 +1,14 @@
 package com.ylinor.server;
 
-import com.ylinor.library.util.ecs.entity.Entity;
-import com.ylinor.packets.PacketDisconnect;
-import org.joml.Vector3f;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Player {
+import org.joml.Vector3f;
+
+import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.packets.PacketDisconnect;
+
+public final class PlayerDeprecated {
     private final PlayerConnection playerConnection;
     private final Entity entity;
     protected String username;
@@ -15,32 +16,13 @@ public final class Player {
     private float pitch, yaw;
 
     // TODO rename this to nearbyEntities
-    private List<Player> nearbyPlayers;
+    private List<PlayerDeprecated> nearbyPlayers;
 
-    public Player(PlayerConnection playerConnection, Entity entity) {
+    public PlayerDeprecated(PlayerConnection playerConnection, Entity entity) {
         this.entity = entity;
         this.playerConnection = playerConnection;
         this.position = new Vector3f();
         this.nearbyPlayers = new ArrayList<>();
-
-        playerConnection.setPlayer(this);
-    }
-
-    public void kick(String reason) {
-        playerConnection.sendPacket(new PacketDisconnect(reason));
-        playerConnection.disconnect();
-    }
-
-    public PlayerConnection getPlayerConnection() {
-        return playerConnection;
-    }
-
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public int getEntityID() {
-        return entity.getEntityId();
     }
 
     public Vector3f getPosition() {
@@ -51,7 +33,7 @@ public final class Player {
         this.position = position;
     }
 
-    public List<Player> getNearbyPlayers() {
+    public List<PlayerDeprecated> getNearbyPlayers() {
         return nearbyPlayers;
     }
 
