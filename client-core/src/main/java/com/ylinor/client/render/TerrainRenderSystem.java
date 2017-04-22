@@ -6,9 +6,6 @@ import javax.inject.Singleton;
 import com.google.common.eventbus.Subscribe;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.AssetsLoadedEvent;
-import com.ylinor.client.input.GdxInputDispatcherSystem;
-import com.ylinor.client.input.PlayerInputSystem;
-import com.ylinor.client.resource.Assets;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.system.BaseSystem;
@@ -26,23 +23,8 @@ public class TerrainRenderSystem extends BaseSystem {
     @Inject
     private Terrain terrain;
 
-    /**
-     * L'instance des assets
-     */
-    @Inject
-    private Assets assets;
-
     @Inject
     private AssetsLoadingSystem assetsLoadingSystem;
-
-    @Inject
-    private PlayerInputSystem playerInputSystem;
-
-    @Inject
-    private GdxInputDispatcherSystem inputDispatcherSystem;
-
-    @Inject
-    private CameraSystem cameraSystem;
 
     @Inject
     private YlinorClient client;

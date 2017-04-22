@@ -14,4 +14,8 @@ public class BlockBehaviour {
 	public void onLanded(World world, Entity entityId) {
 		
 	}
+	
+	public BlockState getState() {
+        return state;
+    }
 }

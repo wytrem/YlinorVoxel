@@ -18,11 +18,9 @@ import com.ylinor.library.api.ecs.components.Rotation;
 import com.ylinor.library.api.ecs.components.Size;
 import com.ylinor.library.api.ecs.components.Sneaking;
 import com.ylinor.library.api.ecs.systems.TickingIteratingSystem;
-import com.ylinor.library.api.ecs.systems.Timer;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.api.terrain.block.state.BlockState;
-import com.ylinor.library.api.terrain.block.type.BlockType;
 import com.ylinor.library.util.TempVars;
 import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
@@ -38,9 +36,6 @@ public class PhySystem extends TickingIteratingSystem {
 
     @Inject
     private YlinorClient client;
-
-    @Inject
-    private Timer timer;
 
     private TempVars tempVars;
 
@@ -383,9 +378,9 @@ public class PhySystem extends TickingIteratingSystem {
             BlockPos blockpos = new BlockPos(j4, l4, i5);
             BlockState iblockstate = terrain.getBlockState(blockpos);
             if (iblockstate.getAttributes().getMaterial() == Material.AIR) {
-                BlockPos blockpos1 = blockpos.down();
-                BlockState iblockstate1 = terrain.getBlockState(blockpos1);
-                BlockType block1 = iblockstate1.getBlockType();
+//                BlockPos blockpos1 = blockpos.down();
+//                BlockState iblockstate1 = terrain.getBlockState(blockpos1);
+//                BlockType block1 = iblockstate1.getBlockType();
                 // if (block1 instanceof BlockFence || block1 instanceof
                 // BlockWall || block1 instanceof BlockFenceGate) {
                 // iblockstate = iblockstate1;
