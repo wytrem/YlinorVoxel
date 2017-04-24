@@ -1,0 +1,31 @@
+
+
+deploy-launcher:
+   script:
+     - ./gradlew launcher:build launcher:copyLibs
+     - rm -rf /var/www/html/api.ylinor.com/bootstrap/public/files/*
+     - cp -r launcher/build/libs/* /var/www/html/api.ylinor.com/bootstrap/public/files/
+
+deploy-client:
+   script:
+     - ./gradlew client-desktop:distZip
+     - cp client-desktop/build/distributions/client-deskto*.zip /var/www/html/api.ylinor.com/launcher/client.zip
+     - rm -rf /var/www/html/api.ylinor.com/launcher/public/files/*
+     - cp -rf client-core/assets/* /var/www/html/api.ylinor.com/launcher/public/files/
+     - cd /var/www/html/api.ylinor.com/launcher/public/files
+     - unzip ../../client.zip
+     - mv client-*/* .
+     - rm -rf bin/ client-desktop/
+
+deploy-server:
+   script:
+     - ./gradlew server:distZip
+     - cp server/build/distributions/serve*.zip /home/shark/Serveurs/Ylinor/Epsilon/Temp/server.zip
+     - cd /home/shark/Serveurs/Ylinor/Epsilon/Temp/Extract
+     - rm -rf ./*
+     - unzip ../server.zip
+     - cd ../..
+     - screen -X -S epsilon quit || echo
+     - cp -rf Temp/Extract/* .
+     - screen -dmS epsilon server/bin/server
+
