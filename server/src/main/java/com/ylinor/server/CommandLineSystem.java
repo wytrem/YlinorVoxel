@@ -12,7 +12,7 @@ public class CommandLineSystem extends NonProcessingSystem {
 
     @Inject
     CommandLineThread commandLineThread;
-    
+
     @Override
     public void initialize() {
         commandLineThread.start();

@@ -5,6 +5,7 @@ import com.ylinor.library.util.ecs.component.Component;
 import com.ylinor.packets.Packet;
 import com.ylinor.packets.PacketDisconnect;
 
+
 public final class PlayerConnection extends Component {
     private final Connection connection;
     private boolean shouldDisconnect;
@@ -18,7 +19,7 @@ public final class PlayerConnection extends Component {
         sendPacket(new PacketDisconnect(reason));
         disconnect();
     }
-    
+
     public int getConnectionId() {
         return connection.getID();
     }

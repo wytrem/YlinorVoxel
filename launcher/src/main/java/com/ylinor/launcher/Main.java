@@ -4,6 +4,7 @@ import fr.theshark34.swinger.Swinger;
 import net.wytrem.wylog.BasicLogger;
 import net.wytrem.wylog.LoggerFactory;
 
+
 public final class Main {
     private static BasicLogger logger = LoggerFactory.getLogger(Main.class);
     private static LauncherFrame frame;

@@ -46,7 +46,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     private long assetsTime;
 
     @Override
-    public  void initialize() {
+    public void initialize() {
         assetsTime = System.currentTimeMillis();
         assets.beginPreloding();
     }
@@ -67,7 +67,7 @@ public class AssetsLoadingSystem extends BaseSystem {
             }
             else {
                 logger.info("Assets loaded in " + (System.currentTimeMillis() - assetsTime) + "ms");
-                
+
                 assetsTime = 0;
                 loaded = true;
 
@@ -78,7 +78,7 @@ public class AssetsLoadingSystem extends BaseSystem {
     }
 
     @Override
-    public  void dispose() {
+    public void dispose() {
         if (assets != null)
             assets.dispose();
     }

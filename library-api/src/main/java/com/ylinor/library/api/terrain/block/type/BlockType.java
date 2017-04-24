@@ -199,26 +199,25 @@ public class BlockType {
         defaultAttributes = new BlockAttributes(blockMaterialIn, blockMapColorIn);
         REGISTRY.put(this.id, this);
     }
-    
+
     public BlockType setModelName(String name) {
         this.modelName = name;
         return this;
     }
-    
+
     public String getModelName() {
         return modelName;
     }
-    
+
     protected final void initStateFactory() {
         this.blockStateFactory = createBlockState();
         setDefaultState(blockStateFactory.getOneState());
     }
-    
+
     protected void initStates() {
-        
+
     }
 
-    
     protected BlockType(int id) {
         this(id, Material.ROCK);
     }
@@ -228,7 +227,7 @@ public class BlockType {
     }
 
     protected BlockStateFactory createBlockState() {
-        return new BlockStateFactory(this, new StateProperty<?> [0]);
+        return new BlockStateFactory(this, new StateProperty<?>[0]);
     }
 
     public void setDefaultState(BlockState defaultBlockState) {
@@ -245,8 +244,8 @@ public class BlockType {
 
     public BlockState getStateFromMeta(int meta) {
         return this.getDefaultState();
-     }
-    
+    }
+
     public int getMetaFromState(BlockState state) {
         if (state.getProperties().isEmpty()) {
             return 0;
@@ -263,7 +262,7 @@ public class BlockType {
     public BlockAttributes getDefaultAttributes() {
         return defaultAttributes;
     }
-    
+
     static {
         REGISTRY.valueCollection().forEach(type -> {
             type.initStateFactory();

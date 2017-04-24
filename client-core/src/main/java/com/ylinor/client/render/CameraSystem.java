@@ -36,9 +36,9 @@ public class CameraSystem extends IteratingSystem {
 
     @Inject
     private YlinorClient client;
-    
+
     private Camera camera;
-    
+
     @Inject
     private Timer timer;
 
@@ -47,7 +47,7 @@ public class CameraSystem extends IteratingSystem {
     }
 
     @Override
-    public  void initialize() {
+    public void initialize() {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.lookAt(0, 0, 0);
         camera.near = 0.1f;
@@ -70,7 +70,7 @@ public class CameraSystem extends IteratingSystem {
     protected void process(Entity entity) {
         Position position = entity.get(Position.class);
         Heading heading = entity.get(Heading.class);
-        
+
         camera.viewportWidth = Gdx.graphics.getWidth();
         camera.viewportHeight = Gdx.graphics.getHeight();
 

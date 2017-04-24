@@ -18,6 +18,7 @@ import fr.theshark34.openlauncherlib.util.explorer.Explorer;
 import fr.theshark34.supdate.SUpdate;
 import fr.theshark34.supdate.application.integrated.FileDeleter;
 
+
 public class YlinorBootstrap {
     public static final String NAME = "Ylinor";
     public static final String TITLE = "Ylinor";
@@ -50,7 +51,8 @@ public class YlinorBootstrap {
 
         try {
             su.start();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             reporter.catchError(e, "Erreur lors de la mise à jour du launcher !");
         }
     }
@@ -69,7 +71,8 @@ public class YlinorBootstrap {
         Process process = null;
         try {
             process = launcher.launch();
-        } catch (LaunchException e) {
+        }
+        catch (LaunchException e) {
             reporter.catchError(e, "Erreur lors du lancement du launcher !");
         }
 
@@ -79,7 +82,8 @@ public class YlinorBootstrap {
 
         try {
             process.waitFor();
-        } catch (InterruptedException ignored) {
+        }
+        catch (InterruptedException ignored) {
         }
 
         System.exit(0);

@@ -11,7 +11,6 @@ import com.ylinor.client.renderlib.buffers.VertexBuffer;
 import com.ylinor.library.api.terrain.IBlockContainer;
 
 
-
 public class BlockModel implements Renderable {
     @Nullable
     private String name;

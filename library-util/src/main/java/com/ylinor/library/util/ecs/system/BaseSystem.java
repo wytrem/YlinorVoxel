@@ -2,13 +2,15 @@ package com.ylinor.library.util.ecs.system;
 
 import com.ylinor.library.util.ecs.World;
 
+
 public abstract class BaseSystem {
     /**
      * The world this system belongs to.
      */
     protected World world;
 
-    public BaseSystem() {}
+    public BaseSystem() {
+    }
 
     protected void begin() {
     }
@@ -30,6 +32,7 @@ public abstract class BaseSystem {
     protected boolean checkProcessing() {
         return true;
     }
+
     public void initialize() {
     }
 

@@ -25,79 +25,82 @@ import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 import com.ylinor.packets.PacketLogin;
 
-public class MainMenuScreen extends YlinorScreen {
-    
-    private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
-    
-	@Inject
-	private YlinorClient client;
-	
-	@Inject
-	private Assets assets;
 
-	@Inject
-	private ClientNetworkSystem networkSystem;
-	
+public class MainMenuScreen extends YlinorScreen {
+
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
+
+    @Inject
+    private YlinorClient client;
+
+    @Inject
+    private Assets assets;
+
+    @Inject
+    private ClientNetworkSystem networkSystem;
+
     private String host = "localhost";
     private int port = 25565;
-	
-	public MainMenuScreen() {
-	}
 
-	Image logo;
+    public MainMenuScreen() {
+    }
 
-	@Override
-	public void show() {
-		super.show();
+    Image logo;
 
-		VisTable table = new VisTable();
+    @Override
+    public void show() {
+        super.show();
 
-		TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
-		table.setBackground(new TextureRegionDrawable(backgroundRegion));
+        VisTable table = new VisTable();
 
-		table.setFillParent(true);
+        TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
+        table.setBackground(new TextureRegionDrawable(backgroundRegion));
 
-		{
-			logo = new Image(assets.screen.mainMenuLogo());
-			logo.setWidth(350);
-			logo.setHeight(150);
-			table.addActor(logo);
-		}
+        table.setFillParent(true);
 
-		{
-			final VisTextButtonStyle ylButtonStyle = new VisTextButtonStyle();
-			ylButtonStyle.font = assets.screen.liberation().generateFont(new FreeTypeFontParameter());
-			ylButtonStyle.up = new NinePatchDrawable(assets.screen.bigTextButtonNormal());
+        {
+            logo = new Image(assets.screen.mainMenuLogo());
+            logo.setWidth(350);
+            logo.setHeight(150);
+            table.addActor(logo);
+        }
 
-			VisTextButton play = new VisTextButton("Jouer", ylButtonStyle);
-			play.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					super.clicked(event, x, y);
-					try {
-						connectToServer();
-					} catch (IOException e) {
-						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
-					}
-					client.isInGame = true;
-				}
-			});
+        {
+            final VisTextButtonStyle ylButtonStyle = new VisTextButtonStyle();
+            ylButtonStyle.font = assets.screen.liberation()
+                                              .generateFont(new FreeTypeFontParameter());
+            ylButtonStyle.up = new NinePatchDrawable(assets.screen.bigTextButtonNormal());
 
-			table.add(play);
-		}
+            VisTextButton play = new VisTextButton("Jouer", ylButtonStyle);
+            play.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    try {
+                        connectToServer();
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
+                    }
+                    client.isInGame = true;
+                }
+            });
 
-		addActor(table);
-	}
-	
-	public void connectToServer() throws IOException {
+            table.add(play);
+        }
+
+        addActor(table);
+    }
+
+    public void connectToServer() throws IOException {
         logger.info("Connecting to server {}:{}.", host, port);
         networkSystem.init(InetAddress.getByName(host), port);
 
         networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
     }
 
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-	}
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+    }
 }

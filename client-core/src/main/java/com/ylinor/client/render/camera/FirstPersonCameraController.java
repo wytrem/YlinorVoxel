@@ -27,29 +27,25 @@ public class FirstPersonCameraController extends InputAdapter {
     private float degreesPerPixel = 0.5f;
     private final Vector3 tmp = new Vector3();
 
-    public FirstPersonCameraController(Camera camera)
-    {
+    public FirstPersonCameraController(Camera camera) {
         this.cam = camera;
     }
 
     @Override
-    public boolean keyDown(int keycode)
-    {
+    public boolean keyDown(int keycode) {
         keys.put(keycode, keycode);
         return true;
     }
 
     @Override
-    public boolean keyUp(int keycode)
-    {
+    public boolean keyUp(int keycode) {
         keys.remove(keycode, 0);
 
-        if (keycode == Keys.ESCAPE)
-        {
+        if (keycode == Keys.ESCAPE) {
             Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
             Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
-        
+
         return true;
     }
 
@@ -59,8 +55,7 @@ public class FirstPersonCameraController extends InputAdapter {
      * 
      * @param velocity the velocity in units per second
      */
-    public void setVelocity(float velocity)
-    {
+    public void setVelocity(float velocity) {
         this.velocity = velocity;
     }
 
@@ -69,14 +64,12 @@ public class FirstPersonCameraController extends InputAdapter {
      * 
      * @param degreesPerPixel
      */
-    public void setDegreesPerPixel(float degreesPerPixel)
-    {
+    public void setDegreesPerPixel(float degreesPerPixel) {
         this.degreesPerPixel = degreesPerPixel;
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer)
-    {
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
         float deltaX = -Gdx.input.getDeltaX() * degreesPerPixel;
         float deltaY = -Gdx.input.getDeltaY() * degreesPerPixel;
         cam.direction.rotate(cam.up, deltaX);
@@ -86,40 +79,32 @@ public class FirstPersonCameraController extends InputAdapter {
         return true;
     }
 
-    public void update()
-    {
+    public void update() {
         update(Gdx.graphics.getDeltaTime());
     }
 
-    public void update(float deltaTime)
-    {
-        if (keys.containsKey(FORWARD))
-        {
+    public void update(float deltaTime) {
+        if (keys.containsKey(FORWARD)) {
             tmp.set(cam.direction).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(BACKWARD))
-        {
+        if (keys.containsKey(BACKWARD)) {
             tmp.set(cam.direction).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(STRAFE_LEFT))
-        {
+        if (keys.containsKey(STRAFE_LEFT)) {
             tmp.set(cam.direction).crs(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(STRAFE_RIGHT))
-        {
+        if (keys.containsKey(STRAFE_RIGHT)) {
             tmp.set(cam.direction).crs(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(UP))
-        {
+        if (keys.containsKey(UP)) {
             tmp.set(cam.up).nor().scl(deltaTime * velocity);
             cam.position.add(tmp);
         }
-        if (keys.containsKey(DOWN))
-        {
+        if (keys.containsKey(DOWN)) {
             tmp.set(cam.up).nor().scl(-deltaTime * velocity);
             cam.position.add(tmp);
         }
@@ -131,40 +116,36 @@ public class FirstPersonCameraController extends InputAdapter {
     private float rotSpeed = 0.2f;
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY)
-    {
-        if (!Gdx.input.isCursorCatched())
-        {
+    public boolean mouseMoved(int screenX, int screenY) {
+        if (!Gdx.input.isCursorCatched()) {
             return false;
         }
-        
+
         int magX = Math.abs(mouseX - screenX);
         int magY = Math.abs(mouseY - screenY);
 
-        if (mouseX > screenX)
-        {
+        if (mouseX > screenX) {
             cam.rotate(Vector3.Y, 1 * magX * rotSpeed);
             cam.update();
         }
 
-        if (mouseX < screenX)
-        {
+        if (mouseX < screenX) {
             cam.rotate(Vector3.Y, -1 * magX * rotSpeed);
             cam.update();
         }
 
-        if (mouseY < screenY)
-        {
+        if (mouseY < screenY) {
             if (cam.direction.y > -0.965)
-                cam.rotate(cam.direction.cpy().crs(Vector3.Y), -1 * magY * rotSpeed);
+                cam.rotate(cam.direction.cpy()
+                                        .crs(Vector3.Y), -1 * magY * rotSpeed);
             cam.update();
         }
 
-        if (mouseY > screenY)
-        {
+        if (mouseY > screenY) {
 
             if (cam.direction.y < 0.965)
-                cam.rotate(cam.direction.cpy().crs(Vector3.Y), 1 * magY * rotSpeed);
+                cam.rotate(cam.direction.cpy()
+                                        .crs(Vector3.Y), 1 * magY * rotSpeed);
             cam.update();
         }
 

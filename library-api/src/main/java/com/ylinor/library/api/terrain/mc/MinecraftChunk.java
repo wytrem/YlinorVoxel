@@ -10,6 +10,7 @@ import com.flowpowered.nbt.CompoundTag;
 import com.flowpowered.nbt.ListTag;
 import com.flowpowered.nbt.stream.NBTInputStream;
 
+
 public final class MinecraftChunk {
     /// xxxx xxxx yyyy zzzz x = block id, y = add, z = metadata
     private final short[][] sectionsBlocks;
@@ -25,7 +26,8 @@ public final class MinecraftChunk {
     }
 
     private void readChunk(CompoundTag chunkTag) {
-        ListTag<?> sectionsListTag = (ListTag<?>) chunkTag.getValue().get("Sections");
+        ListTag<?> sectionsListTag = (ListTag<?>) chunkTag.getValue()
+                                                          .get("Sections");
         List<?> sectionsList = sectionsListTag.getValue();
 
         for (int i = 0; i < sectionsList.size(); i++) {

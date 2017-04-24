@@ -9,5 +9,5 @@ import com.ylinor.client.events.ClientEvent;
  * @author wytrem
  */
 public interface InputEvent extends ClientEvent {
-    
+
 }

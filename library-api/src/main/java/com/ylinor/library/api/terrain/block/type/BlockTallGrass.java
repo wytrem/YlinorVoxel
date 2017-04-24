@@ -4,6 +4,7 @@ import com.ylinor.library.api.terrain.block.BlockRenderLayer;
 import com.ylinor.library.api.terrain.block.material.Material;
 import com.ylinor.library.util.math.AxisAlignedBB;
 
+
 public class BlockTallGrass extends BlockType {
 
     protected BlockTallGrass(int id) {

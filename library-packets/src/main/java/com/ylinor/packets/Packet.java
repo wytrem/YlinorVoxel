@@ -10,6 +10,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
 
+
 public abstract class Packet implements KryoSerializable {
     private static final List<Class<? extends Packet>> packetsList;
 

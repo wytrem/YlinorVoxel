@@ -57,20 +57,23 @@ public class ChunkRenderer implements Disposable {
                 for (int z = 0; z < Chunk.SIZE_Z; z++) {
                     state = neighbours.getBlockState(x, y, z);
 
-                    if (state.getAttributes().getRenderType().equals(RenderType.BLOCKMODEL)) {
+                    if (state.getAttributes()
+                             .getRenderType()
+                             .equals(RenderType.BLOCKMODEL)) {
                         model = renderer.assets.blockAssets.modelsRegistry.get(chunk.getWorld(), state.getBlockType(), state);
-                        
+
                         if (model == null) {
-                            throw new RenderingException("Missing model for properties : '" + state.propertiesToString() + "' in block type " + state.getBlockType().getModelName());
+                            throw new RenderingException("Missing model for properties : '" + state.propertiesToString() + "' in block type " + state.getBlockType()
+                                                                                                                                                     .getModelName());
                         }
-                        
+
                         vertexBuffer.offset.set(gdxTempVars.vect0.x + x, gdxTempVars.vect0.y + y, gdxTempVars.vect0.z + z);
                         if (vertexBuffer.getIndicesCount() > RenderConstants.MAX_INDICES_PER_MESH - model.neededIndices()) {
                             vertexBuffer.finishDrawing();
                             pushMesh(vertexBuffer);
                             vertexBuffer.begin(VertexBuffer.Mode.QUADS, VertexFormats.BLOCKS);
                         }
-                        
+
                         model.render(vertexBuffer, neighbours, x, y, z);
                     }
                 }
@@ -96,7 +99,7 @@ public class ChunkRenderer implements Disposable {
     public static int indicesIn(int numVertices) {
         return numVertices * 6 / 4;
     }
-    
+
     public static int verticesIn(int numIndices) {
         return numIndices * 4 / 6;
     }

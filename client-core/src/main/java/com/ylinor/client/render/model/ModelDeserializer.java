@@ -143,14 +143,14 @@ public class ModelDeserializer {
             }
             else if (variantsNode.isArray()) {
                 ArrayNode variantsArrayNode = ((ArrayNode) variantsNode);
-                
+
                 ObjectNode model = this.bakedJson;
                 Iterator<JsonNode> it = variantsArrayNode.elements();
 
                 while (it.hasNext()) {
                     JsonNode element = it.next();
                     if (element.has("when") && element.has("apply")) {
-                        
+
                         ObjectNode when = (ObjectNode) element.get("when");
                         ObjectNode apply = (ObjectNode) element.get("apply");
 
@@ -160,10 +160,10 @@ public class ModelDeserializer {
                         }
                     }
                 }
-                
+
                 ModelDeserializer deserializer = new ModelDeserializer(name + "#" + state.propertiesToString(), atlas, model, this.modelsResolver);
                 deserializer.deserialize();
-                
+
                 return deserializer.getModel();
             }
         }
@@ -180,7 +180,7 @@ public class ModelDeserializer {
                 return false;
             }
         }
-        
+
         return true;
     }
 

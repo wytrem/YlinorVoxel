@@ -6,6 +6,7 @@ import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.api.terrain.block.state.props.PropertyEnum;
 import com.ylinor.library.api.terrain.block.type.BlockTypePlanks.PlanksType;
 
+
 public class BlockTypeOldLog extends BlockType {
     public static final PropertyEnum<PlanksType> VARIANT = PropertyEnum.create("variant", PlanksType.class, type -> type.getMetadata() < 4);
     public static final PropertyEnum<EnumAxis> LOG_AXIS = PropertyEnum.create("axis", EnumAxis.class);

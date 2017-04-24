@@ -13,11 +13,12 @@ import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.packets.PacketPositionAndRotationUpdate;
 
+
 @Singleton
 public class PositionSyncSystem extends TickingIteratingSystem {
     @Inject
     ServerNetworkSystem networkSystem;
-    
+
     public PositionSyncSystem() {
         super(Aspect.all(Player.class, Position.class, Rotation.class, PlayerConnection.class));
     }

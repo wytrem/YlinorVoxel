@@ -112,9 +112,9 @@ public class RenderGlobal implements Disposable {
             Rotation rotation = entity.get(Rotation.class);
 
             placeholderEntityModelInstance.transform.idt()
-                    .scl(0.3f)
-                    .rotate(Vector3.Y, -rotation.rotationYaw)
-                    .setTranslation(position.x, position.y, position.z);
+                                                    .scl(0.3f)
+                                                    .rotate(Vector3.Y, -rotation.rotationYaw)
+                                                    .setTranslation(position.x, position.y, position.z);
 
             entitiesBatch.render(placeholderEntityModelInstance, environment);
         }

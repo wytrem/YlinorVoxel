@@ -22,12 +22,12 @@ public class BlockTypeGrass extends BlockType {
     public int getMetaFromState(BlockState state) {
         return state.get(SNOWY) ? 1 : 0;
     }
-    
+
     @Override
     public BlockState getStateFromMeta(int meta) {
         return this.getDefaultState().with(SNOWY, meta == 1);
     }
-    
+
     @Override
     protected void initStates() {
         this.setDefaultState(this.blockStateFactory.getOneState()

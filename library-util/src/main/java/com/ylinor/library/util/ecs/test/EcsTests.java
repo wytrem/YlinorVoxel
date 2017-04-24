@@ -30,16 +30,16 @@ public class EcsTests {
         test.delete();
         world.process();
     }
-    
+
     @Singleton
     public static final class PrintSystem extends IteratingSystem {
-        
+
         @Inject
         ComputeSystem computeSystem;
-        
+
         @Inject
         Truc truc;
-        
+
         public PrintSystem() {
             super(Aspect.all(TestComp.class));
         }
@@ -51,7 +51,7 @@ public class EcsTests {
             System.out.println(truc.prop);
         }
     }
-    
+
     @Singleton
     public static final class ComputeSystem extends BaseSystem {
 
@@ -59,7 +59,7 @@ public class EcsTests {
         protected void processSystem() {
             System.out.println("Computing general...");
         }
-        
+
         public void test(TestComp comp) {
             System.out.println("Tested with " + comp);
         }
@@ -68,7 +68,7 @@ public class EcsTests {
     public static void main(String[] args) {
         testEcs();
     }
-    
+
     public static class Truc {
         public final String prop = UUID.randomUUID().toString();
     }

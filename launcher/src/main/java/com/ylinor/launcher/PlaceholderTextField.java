@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
+
 @SuppressWarnings("serial")
 public class PlaceholderTextField extends JTextField {
 
@@ -15,11 +16,7 @@ public class PlaceholderTextField extends JTextField {
     public PlaceholderTextField() {
     }
 
-    public PlaceholderTextField(
-        final Document pDoc,
-        final String pText,
-        final int pColumns)
-    {
+    public PlaceholderTextField(final Document pDoc, final String pText, final int pColumns) {
         super(pDoc, pText, pColumns);
     }
 
@@ -48,12 +45,10 @@ public class PlaceholderTextField extends JTextField {
         }
 
         final Graphics2D g = (Graphics2D) pG;
-        g.setRenderingHint(
-            RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(getDisabledTextColor());
         g.drawString(placeholder, getInsets().left, pG.getFontMetrics()
-            .getMaxAscent() + getInsets().top);
+                                                      .getMaxAscent() + getInsets().top);
     }
 
     public void setPlaceholder(final String s) {

@@ -14,6 +14,7 @@ import com.ylinor.library.util.ecs.system.EventSystem;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
+
 public class ChunkProviderReader implements IChunkProvider {
     @Inject
     private Terrain terrain;
@@ -22,10 +23,10 @@ public class ChunkProviderReader implements IChunkProvider {
     private EventSystem eventSystem;
 
     private File regionsFolder;
-    
+
     public ChunkProviderReader(File regionsFolder) {
         this.regionsFolder = regionsFolder;
-    }   
+    }
 
     private TLongObjectMap<Chunk> chunkMap = new TLongObjectHashMap<Chunk>();
 
@@ -37,7 +38,8 @@ public class ChunkProviderReader implements IChunkProvider {
         if (chunk == null) {
             try {
                 chunk = McChunkLoader.loadChunk(terrain, x, z, regionsFolder);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
 
                 chunk = new Chunk(terrain, x, z);

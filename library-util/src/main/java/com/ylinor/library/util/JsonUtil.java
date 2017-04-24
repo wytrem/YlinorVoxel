@@ -71,12 +71,14 @@ public final class JsonUtil {
 
         return result;
     }
-    
+
     public static void walkTreeOrArray(JsonNode tree, BiConsumer<String, JsonNode> consumer) {
         if (tree.isObject()) {
             walkTree(tree, consumer);
-        } else if (tree.isArray()) {
-            walkArray(((ArrayNode) tree), node -> consumer.accept(UUID.randomUUID().toString(), node));
+        }
+        else if (tree.isArray()) {
+            walkArray(((ArrayNode) tree), node -> consumer.accept(UUID.randomUUID()
+                                                                      .toString(), node));
         }
     }
 

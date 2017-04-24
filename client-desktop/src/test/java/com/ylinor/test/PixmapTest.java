@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 
 package com.ylinor.test;
@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ylinor.client.render.model.Icon;
 import com.ylinor.client.resource.TextureAtlas;
+
 
 public class PixmapTest extends GdxTest {
     Texture texture;
@@ -42,9 +43,10 @@ public class PixmapTest extends GdxTest {
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         texture.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
 
-        region = new TextureRegion(texture, 0, 0, atlas.getSheet().getWidth(), atlas.getSheet().getHeight());
+        region = new TextureRegion(texture, 0, 0, atlas.getSheet()
+                                                       .getWidth(), atlas.getSheet()
+                                                                         .getHeight());
         batch = new SpriteBatch();
-
 
         System.out.println(atlas.getUVFor("slime"));
         region2 = fromIcon(atlas.getUVFor("slime"));

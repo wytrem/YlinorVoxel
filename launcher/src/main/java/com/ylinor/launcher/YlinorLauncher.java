@@ -8,6 +8,7 @@ import fr.theshark34.openlauncherlib.util.CrashReporter;
 import net.wytrem.wylog.BasicLogger;
 import net.wytrem.wylog.LoggerFactory;
 
+
 public final class YlinorLauncher {
     public static final String SERVER = "Ylinor";
     public static final String TITLE = "Ylinor Launcher";

@@ -28,6 +28,7 @@ import com.ylinor.library.util.math.AxisAlignedBB;
 import com.ylinor.library.util.math.BlockPos;
 import com.ylinor.library.util.math.MathHelper;
 
+
 @Singleton
 public class PhySystem extends TickingIteratingSystem {
 
@@ -378,9 +379,9 @@ public class PhySystem extends TickingIteratingSystem {
             BlockPos blockpos = new BlockPos(j4, l4, i5);
             BlockState iblockstate = terrain.getBlockState(blockpos);
             if (iblockstate.getAttributes().getMaterial() == Material.AIR) {
-//                BlockPos blockpos1 = blockpos.down();
-//                BlockState iblockstate1 = terrain.getBlockState(blockpos1);
-//                BlockType block1 = iblockstate1.getBlockType();
+                //                BlockPos blockpos1 = blockpos.down();
+                //                BlockState iblockstate1 = terrain.getBlockState(blockpos1);
+                //                BlockType block1 = iblockstate1.getBlockType();
                 // if (block1 instanceof BlockFence || block1 instanceof
                 // BlockWall || block1 instanceof BlockFenceGate) {
                 // iblockstate = iblockstate1;

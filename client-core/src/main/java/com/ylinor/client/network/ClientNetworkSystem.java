@@ -44,39 +44,41 @@ import com.ylinor.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.packets.PacketSpawnClientPlayer;
 import com.ylinor.packets.PacketSpawnEntity;
 
+
 @Singleton
-public final class ClientNetworkSystem extends BaseSystem implements PacketHandler {
+public final class ClientNetworkSystem extends BaseSystem
+                implements PacketHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientNetworkSystem.class);
-    
+
     private Client client;
     private Deque<Packet> packetQueue;
     private List<Entity> nearbyEntities;
     public boolean loggedIn;
 
     /*
-    TODO maybe create a new implementation of PacketHandler for a cleaner code ?
-    wytrem : approved.
+     * TODO maybe create a new implementation of PacketHandler for a cleaner
+     * code ? wytrem : approved.
      */
 
     @Inject
     PhySystem phySystem;
-    
+
     @Inject
     ScreenSystem screenSystem;
-    
+
     public ClientNetworkSystem() {
         this.nearbyEntities = new ArrayList<>();
     }
-    
+
     @Override
     public void initialize() {
         this.client = new Client();
         client.start();
 
         Packet.registerToKryo(client.getKryo());
-        
+
         this.packetQueue = new ArrayDeque<>();
-        
+
         loggedIn = false;
     }
 
@@ -122,11 +124,13 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     @Override
     public void handleSpawnEntity(Entity sender, PacketSpawnEntity spawnEntity) {
         Entity entity = world.create(spawnEntity.getEntityID())
-                .set(Position.class)
-                .set(Heading.class).set(Rotation.class)
-                .set(NetworkIdentifierComponent.class);
+                             .set(Position.class)
+                             .set(Heading.class)
+                             .set(Rotation.class)
+                             .set(NetworkIdentifierComponent.class);
 
-        entity.get(NetworkIdentifierComponent.class).setIdentifier(spawnEntity.getEntityID());
+        entity.get(NetworkIdentifierComponent.class)
+              .setIdentifier(spawnEntity.getEntityID());
         entity.get(Position.class).position.set(spawnEntity.getInitialX(), spawnEntity.getInitialY(), spawnEntity.getInitialZ());
         entity.get(Rotation.class).rotationPitch = spawnEntity.getInitialPitch();
         entity.get(Rotation.class).rotationYaw = spawnEntity.getInitialYaw();
@@ -142,7 +146,8 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
         while (it.hasNext()) {
             Entity entity = it.next();
 
-            if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == despawnEntity.getEntityID()) {
+            if (entity.get(NetworkIdentifierComponent.class)
+                      .getIdentifier() == despawnEntity.getEntityID()) {
                 entity.delete();
                 it.remove();
 
@@ -154,7 +159,8 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
     @Override
     public void handlePositionUpdate(Entity sender, PacketPositionAndRotationUpdate positionUpdate) {
         for (Entity entity : nearbyEntities) {
-            if (entity.get(NetworkIdentifierComponent.class).getIdentifier() == positionUpdate.getEntityID()) {
+            if (entity.get(NetworkIdentifierComponent.class)
+                      .getIdentifier() == positionUpdate.getEntityID()) {
                 Vector3f position = entity.get(Position.class).position;
                 Rotation rotation = entity.get(Rotation.class);
 
@@ -179,7 +185,7 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
 
     @Override
     public void handleSpawnClientPlayer(Entity sender, PacketSpawnClientPlayer spawnClientPlayer) {
-        
+
         logger.info("Spawning client player");
         Entity player = world.create(spawnClientPlayer.getEntityId());
         player.set(RenderViewEntity.class)
@@ -191,13 +197,14 @@ public final class ClientNetworkSystem extends BaseSystem implements PacketHandl
               .set(Size.class)
               .set(AABB.class)
               .set(CollisionState.class)
-              .set(Physics.class).set(Rotation.class)
+              .set(Physics.class)
+              .set(Rotation.class)
               .set(PositionSyncComponent.class);
         player.get(EyeHeight.class).eyePadding.y = 1.65f;
         player.get(Size.class).setSize(0.6f, 1.8f);
-        
+
         phySystem.setPosition(player, 1818, 126, 6710);
-        
+
         screenSystem.setScreen(null);
     }
 }

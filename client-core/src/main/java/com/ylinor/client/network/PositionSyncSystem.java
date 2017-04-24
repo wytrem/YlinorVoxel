@@ -12,6 +12,7 @@ import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.packets.PacketPositionAndRotationUpdate;
 
+
 public final class PositionSyncSystem extends TickingIteratingSystem {
 
     @Inject
@@ -27,7 +28,7 @@ public final class PositionSyncSystem extends TickingIteratingSystem {
         Rotation rotation = i.get(Rotation.class);
         networkSystem.enqueuePacket(new PacketPositionAndRotationUpdate(-1, currentPosition.x, currentPosition.y, currentPosition.z, rotation.rotationPitch, rotation.rotationYaw));
     }
-    
+
     @Override
     protected boolean checkProcessing() {
         return networkSystem.loggedIn;

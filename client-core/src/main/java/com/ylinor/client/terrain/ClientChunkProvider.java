@@ -63,7 +63,7 @@ public class ClientChunkProvider implements IChunkProvider {
                     chunk.setBlockType(8 + x, 115 + 3, 8 + z, BlockType.oldLeaves);
                 }
             }
-            
+
             chunk.setBlockType(8 - 1, 115 + 4, 8, BlockType.oldLeaves);
             chunk.setBlockType(8 + 1, 115 + 4, 8, BlockType.oldLeaves);
             chunk.setBlockType(8, 115 + 4, 8 - 1, BlockType.oldLeaves);
