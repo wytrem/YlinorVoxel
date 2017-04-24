@@ -29,6 +29,8 @@ import fr.theshark34.swinger.textured.STexturedProgressBar;
 
 public class LauncherPanel extends JPanel
                 implements KeyListener, SwingerEventListener {
+    private static final long serialVersionUID = -8583455959529463374L;
+
     private Image background = getResource(BACKGROUND);
 
     private SColoredButton play = new SColoredButton(getTransparentWhite(100), getTransparentWhite(125));

@@ -26,9 +26,6 @@ public class AssetsLoadingSystem extends BaseSystem {
     private EventSystem eventSystem;
 
     @Inject
-    private TerrainRenderSystem renderSystem;
-    
-    @Inject
     private ScreenSystem screenSystem;
 
     /**

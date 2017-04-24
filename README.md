@@ -11,25 +11,6 @@ First import the project. Then :
 
 ## Contributing
 
-### Code style
-
-Do not do this :
-
-```java
-public void function(){
-
-}
-```
-
-Do this :
-
-```java
-public void function()
-{
-
-}
-```
-
 ---------
 
 Do not do this :

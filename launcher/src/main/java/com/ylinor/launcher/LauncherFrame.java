@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import fr.theshark34.swinger.util.WindowMover;
 
 public class LauncherFrame extends JFrame {
+    private static final long serialVersionUID = 2546381036428513497L;
     private WindowMover mover = new WindowMover(this);
 
     public LauncherFrame() {

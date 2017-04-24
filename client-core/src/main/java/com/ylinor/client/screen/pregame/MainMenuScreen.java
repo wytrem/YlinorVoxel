@@ -21,7 +21,6 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.network.ClientNetworkSystem;
-import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 import com.ylinor.packets.PacketLogin;

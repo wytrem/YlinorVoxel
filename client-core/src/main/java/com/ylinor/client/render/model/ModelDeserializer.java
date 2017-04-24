@@ -99,6 +99,7 @@ public class ModelDeserializer {
         return bakedJson;
     }
 
+    @SuppressWarnings("unchecked")
     public void deserialize() {
 
         this.bakedJson = bakeJson(originalJson, this.name);
