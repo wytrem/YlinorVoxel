@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
@@ -65,8 +66,10 @@ public class YlinorClient extends YlinorApplication
     private World world;
 
     public boolean isInGame = false;
+    private String serverIp;
 
-    public YlinorClient() {
+    public YlinorClient(String serverIp) {
+        this.serverIp = serverIp;
     }
 
     @Override
@@ -94,7 +97,8 @@ public class YlinorClient extends YlinorApplication
 
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);
 
-        configuration.with(SystemsPriorities.Render.TERRAIN_RENDER, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class);
+        configuration.with(SystemsPriorities.Render.TERRAIN_RENDER, ClearScreenSystem.class);
+        configuration.with(SystemsPriorities.Render.TERRAIN_RENDER, CameraSystem.class, TerrainRenderSystem.class);
 
         configuration.with(SystemsPriorities.Render.HUD_RENDER, HudRenderSystem.class);
         
@@ -108,6 +112,7 @@ public class YlinorClient extends YlinorApplication
                 bind(Terrain.class).toInstance(terrain);
                 bind(YlinorApplication.class).toInstance(YlinorClient.this);
                 bind(YlinorClient.class).toInstance(YlinorClient.this);
+                bind(String.class).annotatedWith(Names.named("serverIp")).toInstance(serverIp);
             }
         });
     }

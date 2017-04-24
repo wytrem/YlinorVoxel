@@ -18,6 +18,7 @@ import com.ylinor.packets.Packet;
 import com.ylinor.packets.PacketDespawnEntity;
 import com.ylinor.packets.PacketSpawnClientPlayer;
 import com.ylinor.packets.PacketSpawnEntity;
+import com.ylinor.packets.Protocol;
 
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.TIntObjectMap;
@@ -39,6 +40,7 @@ public class ServerNetworkSystem extends TickingSystem {
     @Override
     public void initialize() {
         logger.info("Starting up network system.");
+        logger.info("Protocol version: {}.", Protocol.PROTOCOL_VERSION);
         this.server = new Server();
 
         playersByConnectionId = new TIntObjectHashMap<>();
@@ -68,7 +70,6 @@ public class ServerNetworkSystem extends TickingSystem {
 
             @Override
             public void disconnected(Connection connection) {
-
                 // TODO @wytrem : cleanup repeating code
                 PlayerConnection playerConnection = playerConnections.get(connection.getID());
 
@@ -88,7 +89,7 @@ public class ServerNetworkSystem extends TickingSystem {
         Packet.registerToKryo(server.getKryo());
 
         try {
-            server.bind(new InetSocketAddress(25565), null);
+            server.bind(new InetSocketAddress(Protocol.SERVER_PORT), null);
         }
         catch (IOException e) {
             logger.error("Failed to bind server network :", e);

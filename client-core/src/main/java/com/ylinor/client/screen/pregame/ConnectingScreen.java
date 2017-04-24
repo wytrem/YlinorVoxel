@@ -16,8 +16,9 @@ public class ConnectingScreen extends YlinorScreen {
 
     @Override
     public void show() {
+        super.show();
         VisTable table = new VisTable();
-
+        
         TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
         table.setBackground(new TextureRegionDrawable(backgroundRegion));
 

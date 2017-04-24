@@ -19,7 +19,7 @@ import com.ylinor.server.ServerNetworkSystem;
 public final class YlinorServer extends YlinorApplication {
     private final World world;
     private volatile boolean running;
-
+    
     private YlinorServer() {
         this.world = buildWorld();
 

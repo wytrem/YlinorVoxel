@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.swing.JOptionPane;
 
@@ -43,6 +44,7 @@ import com.ylinor.packets.PacketMapChunk;
 import com.ylinor.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.packets.PacketSpawnClientPlayer;
 import com.ylinor.packets.PacketSpawnEntity;
+import com.ylinor.packets.Protocol;
 
 
 @Singleton
@@ -65,6 +67,10 @@ public final class ClientNetworkSystem extends BaseSystem
 
     @Inject
     ScreenSystem screenSystem;
+    
+    @Inject
+    @Named("serverIp")
+    String serverIp;
 
     public ClientNetworkSystem() {
         this.nearbyEntities = new ArrayList<>();
@@ -93,8 +99,10 @@ public final class ClientNetworkSystem extends BaseSystem
         }
     }
 
-    public void init(InetAddress address, int port) throws IOException {
-        client.connect(10000, address, port);
+    public void init() throws IOException {
+        logger.info("Protocol version: {}.", Protocol.PROTOCOL_VERSION);
+        logger.info("Connecting to {}:{}.", serverIp, Protocol.SERVER_PORT);
+        client.connect(10000, InetAddress.getByName(serverIp), Protocol.SERVER_PORT);
 
         client.addListener(new Listener() {
             @Override
@@ -185,8 +193,7 @@ public final class ClientNetworkSystem extends BaseSystem
 
     @Override
     public void handleSpawnClientPlayer(Entity sender, PacketSpawnClientPlayer spawnClientPlayer) {
-
-        logger.info("Spawning client player");
+        logger.info("Spawning client player.");
         Entity player = world.create(spawnClientPlayer.getEntityId());
         player.set(RenderViewEntity.class)
               .set(InputControlledEntity.class)

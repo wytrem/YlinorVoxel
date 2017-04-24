@@ -1,7 +1,6 @@
 package com.ylinor.client.screen.pregame;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -42,9 +41,6 @@ public class MainMenuScreen extends YlinorScreen {
     
     @Inject
     ScreenSystem screenSystem;
-
-    private String host = "localhost";
-    private int port = 25565;
 
     public MainMenuScreen() {
     }
@@ -98,10 +94,8 @@ public class MainMenuScreen extends YlinorScreen {
     }
 
     public void connectToServer() throws IOException {
-        logger.info("Connecting to server {}:{}.", host, port);
-        networkSystem.init(InetAddress.getByName(host), port);
-
-        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
+        networkSystem.init();
+        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID()));
     }
 
     @Override
