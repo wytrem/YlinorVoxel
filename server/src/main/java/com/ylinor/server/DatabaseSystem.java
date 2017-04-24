@@ -16,18 +16,18 @@ import com.ylinor.library.util.ecs.system.NonProcessingSystem;
 @Singleton
 public final class DatabaseSystem extends NonProcessingSystem {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSystem.class);
-    
+
     private ArangoDB arangoDB;
     private ArangoDatabase database;
     private ArangoCollection playersCollection;
-    
+
     @Inject
     ServerConfigurationSystem configurationSystem;
 
     @Override
     public void initialize() {
         logger.info("Connecting to database at {}:{}", configurationSystem.get("database.host"), configurationSystem.get("database.port"));
-        
+
         this.arangoDB = new ArangoDB.Builder().host(configurationSystem.get("database.host"), configurationSystem.getInt("database.port"))
                                               .user(configurationSystem.get("database.user"))
                                               .password(configurationSystem.get("database.password"))
@@ -37,7 +37,7 @@ public final class DatabaseSystem extends NonProcessingSystem {
         this.database = arangoDB.db(configurationSystem.get("database.dbname"));
         this.playersCollection = database.collection("players");
     }
-    
+
     public ArangoDatabase getDatabase() {
         return database;
     }

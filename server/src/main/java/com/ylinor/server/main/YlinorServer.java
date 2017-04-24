@@ -42,7 +42,8 @@ public final class YlinorServer extends YlinorApplication {
             @Override
             protected void configure() {
                 bind(YlinorServer.class).toInstance(YlinorServer.this);
-                bind(File.class).annotatedWith(Names.named("configFile")).toInstance(new File("server.properties"));
+                bind(File.class).annotatedWith(Names.named("configFile"))
+                                .toInstance(new File("server.properties"));
             }
         });
     }

@@ -68,7 +68,7 @@ public class ServerNetworkSystem extends TickingSystem {
 
             @Override
             public void disconnected(Connection connection) {
-                
+
                 // TODO @wytrem : cleanup repeating code
                 PlayerConnection playerConnection = playerConnections.get(connection.getID());
 

@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
 
+
 public final class PacketSpawnEntity extends Packet {
     private int entityID;
     private float initialX;
@@ -16,7 +17,7 @@ public final class PacketSpawnEntity extends Packet {
     public PacketSpawnEntity() {
 
     }
-    
+
     public PacketSpawnEntity(int entityId) {
         this(entityId, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     }

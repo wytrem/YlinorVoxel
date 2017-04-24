@@ -11,6 +11,7 @@ import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.ecs.component.Component;
 import com.ylinor.library.util.spring.Assert;
 
+
 @SuppressWarnings("unchecked")
 public final class Entity {
     private Map<Class<? extends Component>, Component> components = new HashMap<>();
@@ -21,7 +22,7 @@ public final class Entity {
         this.entityId = entityId;
         this.world = world;
     }
-    
+
     public <C extends Component> Entity set(Class<C> clazz) {
         set(world.injector.getInstance(clazz));
         return this;
@@ -33,7 +34,7 @@ public final class Entity {
         world.notifyAspectChanged(entityId);
         return this;
     }
-    
+
     @Nullable
     public <C extends Component> C unset(Class<C> clazz) {
         C result = (C) components.remove(clazz);
@@ -49,7 +50,7 @@ public final class Entity {
     public <C extends Component> C get(Class<C> clazz) {
         return (C) components.get(clazz);
     }
-    
+
     public Set<Class<? extends Component>> componentsTypes() {
         return components.keySet();
     }
@@ -57,13 +58,16 @@ public final class Entity {
     public void delete() {
         world.delete(entityId);
     }
-    
+
     public int getEntityId() {
         return entityId;
     }
-    
+
     @Override
     public String toString() {
-        return "Entity [components={" + components.keySet().stream().map(Class::getSimpleName).collect(Collectors.joining(";")) + "}, entityId=" + entityId + "]";
+        return "Entity [components={" + components.keySet()
+                                                  .stream()
+                                                  .map(Class::getSimpleName)
+                                                  .collect(Collectors.joining(";")) + "}, entityId=" + entityId + "]";
     }
 }

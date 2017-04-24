@@ -133,10 +133,10 @@ public class NetworkHandlerSystem extends NonProcessingSystem
 
     @Override
     public void handleSpawnClientPlayer(Entity sender, PacketSpawnClientPlayer spawnClientPlayer) {
-        
+
     }
 
     public void connected(Connection connection) {
-         
+
     }
 }

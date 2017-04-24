@@ -147,7 +147,7 @@ public class AxisAlignedBB {
         this.maxZ += z;
         return this;
     }
-    
+
     public AxisAlignedBB offsetLocal(Vector3f offset) {
         this.minX += offset.x;
         this.minY += offset.y;

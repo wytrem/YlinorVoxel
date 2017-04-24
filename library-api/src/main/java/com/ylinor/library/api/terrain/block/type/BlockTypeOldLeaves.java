@@ -6,6 +6,7 @@ import com.ylinor.library.api.terrain.block.state.BlockStateFactory;
 import com.ylinor.library.api.terrain.block.state.props.PropertyEnum;
 import com.ylinor.library.api.terrain.block.type.BlockTypePlanks.PlanksType;
 
+
 public class BlockTypeOldLeaves extends BlockType {
     public static final PropertyEnum<PlanksType> VARIANT = PropertyEnum.create("variant", PlanksType.class, type -> type.getMetadata() < 4);
 
@@ -17,7 +18,7 @@ public class BlockTypeOldLeaves extends BlockType {
         getDefaultAttributes().setNeedsRandomTick(true);
         getDefaultAttributes().setColorMultiplier(-8602261);
     }
-    
+
     @Override
     protected void initStates() {
         this.setDefaultState(this.blockStateFactory.getOneState()
@@ -25,7 +26,8 @@ public class BlockTypeOldLeaves extends BlockType {
     }
 
     public BlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().with(VARIANT, PlanksType.byMetadata((meta & 3) % 4));
+        return this.getDefaultState()
+                   .with(VARIANT, PlanksType.byMetadata((meta & 3) % 4));
     }
 
     public int getMetaFromState(BlockState state) {

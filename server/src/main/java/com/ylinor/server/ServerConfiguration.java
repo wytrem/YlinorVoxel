@@ -16,11 +16,12 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 @Singleton
 public final class ServerConfiguration {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ServerConfiguration.class);
-    
+
     private static Map<String, String> defaultProperties;
     private Map<String, String> properties;
 
@@ -42,7 +43,7 @@ public final class ServerConfiguration {
     @Inject
     public void read(@Named("configFile") File file) {
         loadDefaults(false);
-        
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
 

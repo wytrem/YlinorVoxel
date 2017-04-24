@@ -7,18 +7,15 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class BasicBlockModel extends BlockModel {
-    public BasicBlockModel()
-    {
+    public BasicBlockModel() {
         super();
     }
 
-    public BasicBlockModel(@NotNull List<Cube> cubes)
-    {
+    public BasicBlockModel(@NotNull List<Cube> cubes) {
         super(cubes);
     }
 
-    public BasicBlockModel(@Nullable String name, @NotNull List<Cube> cubes)
-    {
+    public BasicBlockModel(@Nullable String name, @NotNull List<Cube> cubes) {
         super(name, cubes);
     }
 }

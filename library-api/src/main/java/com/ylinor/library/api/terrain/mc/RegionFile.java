@@ -1,59 +1,58 @@
 /*
  ** 2011 January 5
  **
- ** The author disclaims copyright to this source code.  In place of
- ** a legal notice, here is a blessing:
+ ** The author disclaims copyright to this source code. In place of a legal
+ * notice, here is a blessing:
  **
- **    May you do good and not evil.
- **    May you find forgiveness for yourself and forgive others.
- **    May you share freely, never taking more than you give.
+ ** May you do good and not evil. May you find forgiveness for yourself and
+ * forgive others. May you share freely, never taking more than you give.
  **/
 
 /*
  * 2011 February 16
  *
- * This source code is based on the work of Scaevolus (see notice above).
- * It has been slightly modified by Mojang AB (constants instead of magic
- * numbers, a chunk timestamp header, and auto-formatted according to our
- * formatter template).
+ * This source code is based on the work of Scaevolus (see notice above). It has
+ * been slightly modified by Mojang AB (constants instead of magic numbers, a
+ * chunk timestamp header, and auto-formatted according to our formatter
+ * template).
  *
  */
 
 // Interfaces with region files on the disk
 
 /*
-
- Region File Format
-
- Concept: The minimum unit of storage on hard drives is 4KB. 90% of Minecraft
- chunks are smaller than 4KB. 99% are smaller than 8KB. Write a simple
- container to store chunks in single files in runs of 4KB sectors.
-
- Each region file represents a 32x32 group of chunks. The conversion from
- chunk number to region number is floor(coord / 32): a chunk at (30, -3)
- would be in region (0, -1), and one at (70, -30) would be at (3, -1).
- Region files are named "r.x.z.data", where x and z are the region coordinates.
-
- A region file begins with a 4KB header that describes where chunks are stored
- in the file. A 4-byte big-endian integer represents sector offsets and sector
- counts. The chunk offset for a chunk (x, z) begins at byte 4*(x+z*32) in the
- file. The bottom byte of the chunk offset indicates the number of sectors the
- chunk takes up, and the top 3 bytes represent the sector number of the chunk.
- Given a chunk offset o, the chunk data begins at byte 4096*(o/256) and takes up
- at most 4096*(o%256) bytes. A chunk cannot exceed 1MB in size. If a chunk
- offset is 0, the corresponding chunk is not stored in the region file.
-
- Chunk data begins with a 4-byte big-endian integer representing the chunk data
- length in bytes, not counting the length field. The length must be smaller than
- 4096 times the number of sectors. The next byte is a version field, to allow
- backwards-compatible updates to how chunks are encoded.
-
- A version of 1 represents a gzipped NBT file. The gzipped data is the chunk
- length - 1.
-
- A version of 2 represents a deflated (zlib compressed) NBT file. The deflated
- data is the chunk length - 1.
-
+ * 
+ * Region File Format
+ * 
+ * Concept: The minimum unit of storage on hard drives is 4KB. 90% of Minecraft
+ * chunks are smaller than 4KB. 99% are smaller than 8KB. Write a simple
+ * container to store chunks in single files in runs of 4KB sectors.
+ * 
+ * Each region file represents a 32x32 group of chunks. The conversion from
+ * chunk number to region number is floor(coord / 32): a chunk at (30, -3) would
+ * be in region (0, -1), and one at (70, -30) would be at (3, -1). Region files
+ * are named "r.x.z.data", where x and z are the region coordinates.
+ * 
+ * A region file begins with a 4KB header that describes where chunks are stored
+ * in the file. A 4-byte big-endian integer represents sector offsets and sector
+ * counts. The chunk offset for a chunk (x, z) begins at byte 4*(x+z*32) in the
+ * file. The bottom byte of the chunk offset indicates the number of sectors the
+ * chunk takes up, and the top 3 bytes represent the sector number of the chunk.
+ * Given a chunk offset o, the chunk data begins at byte 4096*(o/256) and takes
+ * up at most 4096*(o%256) bytes. A chunk cannot exceed 1MB in size. If a chunk
+ * offset is 0, the corresponding chunk is not stored in the region file.
+ * 
+ * Chunk data begins with a 4-byte big-endian integer representing the chunk
+ * data length in bytes, not counting the length field. The length must be
+ * smaller than 4096 times the number of sectors. The next byte is a version
+ * field, to allow backwards-compatible updates to how chunks are encoded.
+ * 
+ * A version of 1 represents a gzipped NBT file. The gzipped data is the chunk
+ * length - 1.
+ * 
+ * A version of 2 represents a deflated (zlib compressed) NBT file. The deflated
+ * data is the chunk length - 1.
+ * 
  */
 
 package com.ylinor.library.api.terrain.mc;
@@ -69,6 +68,7 @@ import java.util.ArrayList;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
+
 
 public class RegionFile {
 
@@ -150,7 +150,8 @@ public class RegionFile {
                 int lastModValue = file.readInt();
                 chunkTimestamps[i] = lastModValue;
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -169,7 +170,7 @@ public class RegionFile {
 
     // various small debug printing helpers
     private void debug(String in) {
-// 	     System.out.print(in);
+        // 	     System.out.print(in);
     }
 
     private void debugln(String in) {
@@ -228,7 +229,8 @@ public class RegionFile {
                 DataInputStream ret = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(data)));
                 // debug("READ", x, z, " = found");
                 return ret;
-            } else if (version == VERSION_DEFLATE) {
+            }
+            else if (version == VERSION_DEFLATE) {
                 byte[] data = new byte[length - 1];
                 file.read(data);
                 DataInputStream ret = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)));
@@ -238,14 +240,16 @@ public class RegionFile {
 
             debugln("READ", x, z, "unknown version " + version);
             return null;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             debugln("READ", x, z, "exception");
             return null;
         }
     }
 
     public DataOutputStream getChunkDataOutputStream(int x, int z) {
-        if (outOfBounds(x, z)) return null;
+        if (outOfBounds(x, z))
+            return null;
 
         return new DataOutputStream(new DeflaterOutputStream(new ChunkBuffer(x, z)));
     }
@@ -285,7 +289,8 @@ public class RegionFile {
                 /* we can simply overwrite the old sectors */
                 debug("SAVE", x, z, length, "rewrite");
                 write(sectorNumber, data, length);
-            } else {
+            }
+            else {
                 /* we need to allocate new sectors */
 
                 /* mark the sectors previously used for this chunk as free */
@@ -299,9 +304,12 @@ public class RegionFile {
                 if (runStart != -1) {
                     for (int i = runStart; i < sectorFree.size(); ++i) {
                         if (runLength != 0) {
-                            if (sectorFree.get(i)) runLength++;
-                            else runLength = 0;
-                        } else if (sectorFree.get(i)) {
+                            if (sectorFree.get(i))
+                                runLength++;
+                            else
+                                runLength = 0;
+                        }
+                        else if (sectorFree.get(i)) {
                             runStart = i;
                             runLength = 1;
                         }
@@ -320,7 +328,8 @@ public class RegionFile {
                         sectorFree.set(sectorNumber + i, false);
                     }
                     write(sectorNumber, data, length);
-                } else {
+                }
+                else {
                     /*
                      * no free space large enough found -- we need to grow the
                      * file
@@ -339,7 +348,8 @@ public class RegionFile {
                 }
             }
             setTimestamp(x, z, (int) (System.currentTimeMillis() / 1000L));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

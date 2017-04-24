@@ -67,7 +67,7 @@ public class ModelRegistry {
     public void register(BlockType type, Variants variants) {
         register(type.getId(), variants);
     }
-    
+
     public void register(short typeId, Variants variants) {
         variantsById.put(typeId, variants);
     }

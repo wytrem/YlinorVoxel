@@ -27,7 +27,8 @@ public class Aspect {
             return true;
         }
 
-        return allTypes.isEmpty() ? true : entity.componentsTypes().containsAll(allTypes);
+        return allTypes.isEmpty() ? true : entity.componentsTypes()
+                                                 .containsAll(allTypes);
     }
 
     @SafeVarargs

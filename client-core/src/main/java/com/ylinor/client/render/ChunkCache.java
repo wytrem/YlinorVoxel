@@ -18,7 +18,6 @@ public class ChunkCache implements IBlockContainer {
         zNeg = terrain.getChunk(chunk.x, chunk.z - 1);
     }
 
-
     @Override
     public BlockType getBlockType(int x, int y, int z) {
         if (x < 0) {

@@ -13,7 +13,7 @@ import com.ylinor.client.screen.YlinorScreen;
 public class ConnectingScreen extends YlinorScreen {
     @Inject
     private Assets assets;
-    
+
     @Override
     public void show() {
         VisTable table = new VisTable();

@@ -89,17 +89,15 @@ public class YlinorClient extends YlinorApplication
     @Override
     protected void configure(WorldConfiguration configuration) {
         super.configure(configuration);
-        
-        
+
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, ClientNetworkSystem.class);
 
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);
 
         configuration.with(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
-    
+
         // We want to inject any Terrain field with this
-        
-        
+
         configuration.with(new AbstractModule() {
             @Override
             protected void configure() {

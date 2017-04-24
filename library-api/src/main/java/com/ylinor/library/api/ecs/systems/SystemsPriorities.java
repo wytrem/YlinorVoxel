@@ -2,7 +2,7 @@ package com.ylinor.library.api.ecs.systems;
 
 public class SystemsPriorities {
     public static final int RENDER_PRIORITY = 1000;
-    
+
     public static final class Update {
         public static final int UPDATE_PRIORITY = 10000;
 

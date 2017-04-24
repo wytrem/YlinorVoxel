@@ -5,13 +5,14 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
 
+
 public class PacketSpawnClientPlayer extends Packet {
 
-    private int entityId;   
-    
+    private int entityId;
+
     public PacketSpawnClientPlayer() {
     }
-    
+
     public PacketSpawnClientPlayer(int entityId) {
         this.entityId = entityId;
     }

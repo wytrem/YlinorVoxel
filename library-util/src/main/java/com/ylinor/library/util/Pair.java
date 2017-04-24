@@ -113,10 +113,10 @@ public class Pair<K, V> implements Serializable {
         return key.hashCode() * 13 + (value == null ? 0 : value.hashCode());
     }
 
-    
     public static <K, V> Pair<K, V> of(K key, V value) {
         return new Pair<K, V>(key, value);
     }
+
     /**
      * <p>
      * Test this <code>Pair</code> for equality with another

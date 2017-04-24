@@ -14,7 +14,7 @@ public class Terrain implements IChunkProvider, IBlockContainer {
     public Terrain(IChunkProvider storage) {
         this.storage = storage;
     }
-    
+
     public void inject(World world) {
         world.injector.injectMembers(storage);
     }

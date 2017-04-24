@@ -7,9 +7,10 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
 
+
 public final class PacketLogin extends Packet {
     private UUID authToken;
-    
+
     public PacketLogin() {
 
     }

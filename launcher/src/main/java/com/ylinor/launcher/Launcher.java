@@ -45,6 +45,7 @@ import fr.theshark34.supdate.application.integrated.FileDeleter;
 import net.wytrem.wylog.BasicLogger;
 import net.wytrem.wylog.LoggerFactory;
 
+
 public class Launcher {
     private static final BasicLogger logger = LoggerFactory.getLogger(Launcher.class);
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -64,8 +65,7 @@ public class Launcher {
         String rep = http(post, params);
         JsonObject object = parser.parse(rep).getAsJsonObject();
 
-        if (object.has("error"))
-        {
+        if (object.has("error")) {
             throw new AuthException(object.get("message").getAsString());
         }
 
@@ -76,16 +76,14 @@ public class Launcher {
         logger.info("Session créée, token : " + token);
     }
 
-    public static String getUsername(String def)
-    {
+    public static String getUsername(String def) {
         return saver.get("email", def);
     }
 
     public static User getUser() throws IOException {
         String token = saver.get("token");
 
-        if (token == null)
-        {
+        if (token == null) {
             return null;
         }
 
@@ -93,9 +91,9 @@ public class Launcher {
         String rep = http(post, null);
         JsonObject object = parser.parse(rep).getAsJsonObject();
 
-        if (object.has("error"))
-        {
-            logger.warning("Erreur lors du refresh : " + object.get("message").getAsString());
+        if (object.has("error")) {
+            logger.warning("Erreur lors du refresh : " + object.get("message")
+                                                               .getAsString());
             return null;
         }
 
@@ -179,8 +177,7 @@ public class Launcher {
     /**
      * Termine la mise à jour de la barre
      */
-    public static void shutdown()
-    {
+    public static void shutdown() {
         scheduler.shutdown();
     }
 }

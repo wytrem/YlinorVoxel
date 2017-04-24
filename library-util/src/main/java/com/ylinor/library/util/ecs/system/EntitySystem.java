@@ -10,7 +10,7 @@ import com.ylinor.library.util.ecs.entity.Entity;
 public abstract class EntitySystem extends BaseSystem {
     protected List<Entity> entities;
     protected Aspect aspect;
-    
+
     public EntitySystem(Aspect.Builder builder) {
         this.entities = new ArrayList<>();
         this.aspect = builder.build();
@@ -26,7 +26,7 @@ public abstract class EntitySystem extends BaseSystem {
             inserted(entity);
         }
     }
-    
+
     public void notifyDeleted(Entity entity) {
         if (entities.contains(entity)) {
             entities.remove(entity);

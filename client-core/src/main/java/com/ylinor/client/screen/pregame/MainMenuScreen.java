@@ -25,79 +25,82 @@ import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 import com.ylinor.packets.PacketLogin;
 
+
 public class MainMenuScreen extends YlinorScreen {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
-    
-	@Inject
-	private YlinorClient client;
-	
-	@Inject
-	private Assets assets;
 
-	@Inject
-	private ClientNetworkSystem networkSystem;
-	
-    private String host = "git.ylinor.com";
-    private int port = 18325;
-	
-	public MainMenuScreen() {
-	}
+    @Inject
+    private YlinorClient client;
 
-	Image logo;
+    @Inject
+    private Assets assets;
 
-	@Override
-	public void show() {
-		super.show();
+    @Inject
+    private ClientNetworkSystem networkSystem;
 
-		VisTable table = new VisTable();
+    private String host = "localhost";
+    private int port = 25565;
 
-		TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
-		table.setBackground(new TextureRegionDrawable(backgroundRegion));
+    public MainMenuScreen() {
+    }
 
-		table.setFillParent(true);
+    Image logo;
 
-		{
-			logo = new Image(assets.screen.mainMenuLogo());
-			logo.setWidth(350);
-			logo.setHeight(150);
-			table.addActor(logo);
-		}
+    @Override
+    public void show() {
+        super.show();
 
-		{
-			final VisTextButtonStyle ylButtonStyle = new VisTextButtonStyle();
-			ylButtonStyle.font = assets.screen.liberation().generateFont(new FreeTypeFontParameter());
-			ylButtonStyle.up = new NinePatchDrawable(assets.screen.bigTextButtonNormal());
+        VisTable table = new VisTable();
 
-			VisTextButton play = new VisTextButton("Jouer", ylButtonStyle);
-			play.addListener(new ClickListener() {
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					super.clicked(event, x, y);
-					try {
-						connectToServer();
-					} catch (IOException e) {
-						throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
-					}
-					client.isInGame = true;
-				}
-			});
+        TextureRegion backgroundRegion = new TextureRegion(assets.screen.mainMenuBackground());
+        table.setBackground(new TextureRegionDrawable(backgroundRegion));
 
-			table.add(play);
-		}
+        table.setFillParent(true);
 
-		addActor(table);
-	}
-	
-	public void connectToServer() throws IOException {
+        {
+            logo = new Image(assets.screen.mainMenuLogo());
+            logo.setWidth(350);
+            logo.setHeight(150);
+            table.addActor(logo);
+        }
+
+        {
+            final VisTextButtonStyle ylButtonStyle = new VisTextButtonStyle();
+            ylButtonStyle.font = assets.screen.liberation()
+                                              .generateFont(new FreeTypeFontParameter());
+            ylButtonStyle.up = new NinePatchDrawable(assets.screen.bigTextButtonNormal());
+
+            VisTextButton play = new VisTextButton("Jouer", ylButtonStyle);
+            play.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    try {
+                        connectToServer();
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
+                    }
+                    client.isInGame = true;
+                }
+            });
+
+            table.add(play);
+        }
+
+        addActor(table);
+    }
+
+    public void connectToServer() throws IOException {
         logger.info("Connecting to server {}:{}.", host, port);
         networkSystem.init(InetAddress.getByName(host), port);
 
         networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID())); // TODO
     }
 
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-	}
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+    }
 }

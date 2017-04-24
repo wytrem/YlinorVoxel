@@ -13,7 +13,6 @@ public class DesktopLauncher {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setWindowedMode(800, 600);
         config.setHdpiMode(Lwjgl3ApplicationConfiguration.HdpiMode.Logical);
-        
         YlinorClient client = new YlinorClient();
         config.setTitle("Ylinor client - " + client.getVersion());
 

@@ -56,7 +56,7 @@ public class PlayerInputSystem extends IteratingSystem {
     }
 
     @Override
-    public  void initialize() {
+    public void initialize() {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.lookAt(0, 0, 0);
         camera.near = 0.1f;

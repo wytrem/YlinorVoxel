@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
 
+
 public final class PacketPositionAndRotationUpdate extends Packet {
     private int entityID;
     private float x, y, z, pitch, yaw;

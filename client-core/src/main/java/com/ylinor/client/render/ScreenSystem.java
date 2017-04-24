@@ -14,19 +14,21 @@ import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
 import com.ylinor.library.util.ecs.system.BaseSystem;
+
+
 @Singleton
 public class ScreenSystem extends BaseSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(ScreenSystem.class);
-    
+
     /**
      * Current screen.
      */
     private Screen screen;
-    
+
     @Inject
     private GdxInputDispatcherSystem inputDispatcherSystem;
-    
+
     @Override
     protected void processSystem() {
         // Screen updating
@@ -34,7 +36,7 @@ public class ScreenSystem extends BaseSystem {
             screen.render(Gdx.graphics.getDeltaTime());
         }
     }
-    
+
     @Subscribe
     public void resize(GdxResizeEvent event) {
         if (screen != null) {
@@ -69,7 +71,7 @@ public class ScreenSystem extends BaseSystem {
             screen.dispose();
         }
     }
-    
+
     @Subscribe
     public void pause(GdxPauseEvent event) {
         if (screen != null) {
