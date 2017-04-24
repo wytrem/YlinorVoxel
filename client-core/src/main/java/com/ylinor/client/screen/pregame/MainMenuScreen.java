@@ -21,6 +21,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.network.ClientNetworkSystem;
+import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
 import com.ylinor.packets.PacketLogin;
@@ -31,13 +32,16 @@ public class MainMenuScreen extends YlinorScreen {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
 
     @Inject
-    private YlinorClient client;
+    YlinorClient client;
 
     @Inject
-    private Assets assets;
+    Assets assets;
 
     @Inject
-    private ClientNetworkSystem networkSystem;
+    ClientNetworkSystem networkSystem;
+    
+    @Inject
+    ScreenSystem screenSystem;
 
     private String host = "localhost";
     private int port = 25565;
@@ -76,6 +80,7 @@ public class MainMenuScreen extends YlinorScreen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
+                    screenSystem.setScreen(ConnectingScreen.class);
                     try {
                         connectToServer();
                     }

@@ -205,6 +205,6 @@ public final class ClientNetworkSystem extends BaseSystem
 
         phySystem.setPosition(player, 1818, 126, 6710);
 
-        screenSystem.setScreen(null);
+        screenSystem.setNoScreen();
     }
 }

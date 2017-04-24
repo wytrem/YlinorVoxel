@@ -94,8 +94,12 @@ public class YlinorClient extends YlinorApplication
 
         configuration.with(SystemsPriorities.Update.UPDATE_PRIORITY, AssetsLoadingSystem.class, GdxInputDispatcherSystem.class, PlayerInputSystem.class, PhySystem.class, PositionSyncSystem.class);
 
-        configuration.with(SystemsPriorities.RENDER_PRIORITY, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class, HudRenderSystem.class, ScreenSystem.class);
+        configuration.with(SystemsPriorities.Render.TERRAIN_RENDER, CameraSystem.class, ClearScreenSystem.class, TerrainRenderSystem.class);
 
+        configuration.with(SystemsPriorities.Render.HUD_RENDER, HudRenderSystem.class);
+        
+        configuration.with(SystemsPriorities.Render.SCREEN_RENDER, ScreenSystem.class);
+        
         // We want to inject any Terrain field with this
 
         configuration.with(new AbstractModule() {

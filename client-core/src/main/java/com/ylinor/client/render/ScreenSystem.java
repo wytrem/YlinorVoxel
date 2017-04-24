@@ -44,6 +44,14 @@ public class ScreenSystem extends BaseSystem {
         }
         logger.info("Window resized : " + event.width + "x" + event.height);
     }
+    
+    public void setScreen(Class<? extends Screen> clazz) {
+        setScreen(world.injector.getInstance(clazz));
+    }
+    
+    public void setNoScreen() {
+        setScreen((Screen) null);
+    }
 
     public void setScreen(Screen screen) {
         if (this.screen != null) {
