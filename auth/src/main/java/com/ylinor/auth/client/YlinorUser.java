@@ -121,7 +121,25 @@ public class YlinorUser
      */
     public void fetch() throws AuthException, IOException
     {
-        this.user = client.user(this.token);
+        if (!isLogged())
+        {
+            return;
+        }
+
+        fetch(this.token);
+    }
+
+    /**
+     * Fetch the user infos without login, using a session token.
+     *
+     * @param token The user session token to use
+     *
+     * @throws AuthException If the server dropped an error
+     * @throws IOException If the HTTP client dropped an error
+     */
+    public void fetch(String token) throws AuthException, IOException
+    {
+        this.user = client.user(token);
     }
 
     /**
