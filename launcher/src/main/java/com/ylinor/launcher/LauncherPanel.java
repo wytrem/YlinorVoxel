@@ -6,6 +6,10 @@ import static com.ylinor.launcher.Resources.BAR_FILLED;
 import static fr.theshark34.swinger.Swinger.getResource;
 import static fr.theshark34.swinger.Swinger.getTransparentWhite;
 
+
+import com.ylinor.auth.client.YlinorUser;
+import com.ylinor.auth.client.model.AuthException;
+import com.ylinor.auth.client.model.User;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -40,6 +44,7 @@ public class LauncherPanel extends JPanel
     private PlaceholderTextField usernameField = new PlaceholderTextField();
     private PlaceholderPasswordField passwordField = new PlaceholderPasswordField();
 
+    private YlinorUser auth = new YlinorUser();
     private User logged;
 
     public LauncherPanel() {
@@ -91,7 +96,8 @@ public class LauncherPanel extends JPanel
 
             new Thread(() -> {
                 try {
-                    logged = Launcher.getUser();
+                    auth.fetch(Launcher.getToken());
+                    logged = auth.user();
                 }
                 catch (Exception e) {
                 }
@@ -124,8 +130,8 @@ public class LauncherPanel extends JPanel
 
             if (logged == null) {
                 try {
-                    Launcher.auth(usernameField.getText(), passwordField.getText());
-                    logged = Launcher.getUser();
+                    auth.login(usernameField.getText(), passwordField.getText());
+                    logged = auth.user();
                 }
                 catch (AuthException e) {
                     JOptionPane.showMessageDialog(this, "Impossible de s'authentifier : " + e.getMessage(), "Erreur d'authentification", JOptionPane.WARNING_MESSAGE);
