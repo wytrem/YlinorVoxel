@@ -1,8 +1,6 @@
 archivesBaseName = 'ylinor-auth'
 
-repositories {
-    mavenCentral()
-}
+compileJava.options.encoding = 'UTF-8'
 
 dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
