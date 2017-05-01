@@ -40,8 +40,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         visuiVersion = '1.2.4'
-        artemisVersion = '2.1.0'
-        artemisContribVersion = '1.2.1'
+        joptVersion = '6.0-alpha-1'
     }
     
     jar {

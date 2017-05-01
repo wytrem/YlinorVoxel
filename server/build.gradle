@@ -7,10 +7,11 @@ eclipse.project {
 mainClassName = 'com.ylinor.server.main.YlinorServer'
 
 dependencies {
-    compile 'com.arangodb:arangodb-java-driver:4.1.11'
-    compile 'com.arangodb:velocypack-module-jdk8:1.0.1'
-
     compile project(':library-api')
     compile project(':library-packets')
     compile project(':library-util')
+    
+    compile "com.arangodb:arangodb-java-driver:4.1.11"
+    compile "com.arangodb:velocypack-module-jdk8:1.0.1"
+    compile "net.sf.jopt-simple:jopt-simple:$joptVersion"
 }
