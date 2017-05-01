@@ -48,6 +48,7 @@ task afterEclipseImport(description: 'Post processing after project generation',
 
 dependencies {
     compile project(':client-core')
+    compile project(':auth')
 
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"

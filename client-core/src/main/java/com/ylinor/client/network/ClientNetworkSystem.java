@@ -19,6 +19,7 @@ import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.EyeHeight;
 import com.ylinor.client.render.RenderViewEntity;
 import com.ylinor.client.render.ScreenSystem;
+import com.ylinor.client.screen.pregame.MainMenuScreen;
 import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.library.api.ecs.components.AABB;
 import com.ylinor.library.api.ecs.components.CollisionState;
@@ -155,9 +156,8 @@ public class ClientNetworkSystem extends NonProcessingSystem
     @Override
     public void handleDisconnect(Entity sender, PacketDisconnect disconnect) {
         // TODO create a proper gui alert dialog
-
+        screenSystem.setScreen(MainMenuScreen.class);
         JOptionPane.showMessageDialog(null, "You have been disconnected from the server, reason : " + disconnect.getReason(), "Connection lost", JOptionPane.ERROR_MESSAGE);
-        System.exit(1);
     }
 
     @Override

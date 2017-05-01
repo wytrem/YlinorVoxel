@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.google.common.eventbus.Subscribe;
+import com.ylinor.client.YlinorClient;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
 import com.ylinor.client.input.GdxInputDispatcherSystem;
+import com.ylinor.client.screen.pregame.MainMenuScreen;
 import com.ylinor.library.util.ecs.system.BaseSystem;
 
 
@@ -28,6 +30,9 @@ public class ScreenSystem extends BaseSystem {
 
     @Inject
     private GdxInputDispatcherSystem inputDispatcherSystem;
+    
+    @Inject
+    YlinorClient client;
 
     @Override
     protected void processSystem() {
@@ -56,6 +61,10 @@ public class ScreenSystem extends BaseSystem {
     public void setScreen(Screen screen) {
         if (this.screen != null) {
             this.screen.hide();
+        }
+        
+        if (screen instanceof MainMenuScreen) {
+            client.isInGame = false;
         }
 
         this.screen = screen;

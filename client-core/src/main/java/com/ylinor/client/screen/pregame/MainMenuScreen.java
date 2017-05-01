@@ -1,12 +1,8 @@
 package com.ylinor.client.screen.pregame;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -18,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
+import com.ylinor.auth.client.YlinorUser;
 import com.ylinor.client.YlinorClient;
 import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.render.ScreenSystem;
@@ -27,8 +24,6 @@ import com.ylinor.packets.PacketLogin;
 
 
 public class MainMenuScreen extends YlinorScreen {
-
-    private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
 
     @Inject
     YlinorClient client;
@@ -41,6 +36,9 @@ public class MainMenuScreen extends YlinorScreen {
     
     @Inject
     ScreenSystem screenSystem;
+    
+    @Inject
+    YlinorUser user;
 
     public MainMenuScreen() {
     }
@@ -95,7 +93,7 @@ public class MainMenuScreen extends YlinorScreen {
 
     public void connectToServer() throws IOException {
         networkSystem.connectToServer();
-        networkSystem.send(new PacketLogin(UUID.randomUUID()));
+        networkSystem.send(new PacketLogin(user.getToken() + "azeaze"));
     }
 
     @Override

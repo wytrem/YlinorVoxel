@@ -12,6 +12,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import com.ylinor.auth.client.YlinorUser;
 import com.ylinor.client.events.GdxPauseEvent;
 import com.ylinor.client.events.GdxResizeEvent;
 import com.ylinor.client.events.GdxResumeEvent;
@@ -67,9 +68,11 @@ public class YlinorClient extends YlinorApplication
 
     public boolean isInGame = false;
     private String serverIp;
+    private YlinorUser user;
 
-    public YlinorClient(String serverIp) {
+    public YlinorClient(String serverIp, YlinorUser user) {
         this.serverIp = serverIp;
+        this.user = user;
     }
 
     @Override
@@ -101,9 +104,9 @@ public class YlinorClient extends YlinorApplication
         configuration.with(SystemsPriorities.Render.TERRAIN_RENDER, CameraSystem.class, TerrainRenderSystem.class);
 
         configuration.with(SystemsPriorities.Render.HUD_RENDER, HudRenderSystem.class);
-        
+
         configuration.with(SystemsPriorities.Render.SCREEN_RENDER, ScreenSystem.class);
-        
+
         // We want to inject any Terrain field with this
 
         configuration.with(new AbstractModule() {
@@ -112,7 +115,9 @@ public class YlinorClient extends YlinorApplication
                 bind(Terrain.class).toInstance(terrain);
                 bind(YlinorApplication.class).toInstance(YlinorClient.this);
                 bind(YlinorClient.class).toInstance(YlinorClient.this);
-                bind(String.class).annotatedWith(Names.named("serverIp")).toInstance(serverIp);
+                bind(String.class).annotatedWith(Names.named("serverIp"))
+                                  .toInstance(serverIp);
+                bind(YlinorUser.class).toInstance(user);
             }
         });
     }

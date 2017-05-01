@@ -1,7 +1,5 @@
 package com.ylinor.packets;
 
-import java.util.UUID;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -9,24 +7,24 @@ import com.ylinor.library.util.ecs.entity.Entity;
 
 
 public final class PacketLogin extends Packet {
-    private UUID authToken;
+    private String token;
 
     public PacketLogin() {
 
     }
 
-    public PacketLogin(UUID playerToken) {
-        this.authToken = playerToken;
+    public PacketLogin(String playerToken) {
+        this.token = playerToken;
     }
 
     @Override
     public void write(Kryo kryo, Output output) {
-        writeUUID(output, authToken);
+        output.writeString(token);
     }
 
     @Override
     public void read(Kryo kryo, Input input) {
-        this.authToken = readUUID(input);
+        this.token = input.readString();
     }
 
     @Override
@@ -36,10 +34,10 @@ public final class PacketLogin extends Packet {
 
     @Override
     public String toString() {
-        return "PacketLogin [authToken=" + authToken + "]";
+        return "PacketLogin [authToken=" + token + "]";
     }
 
-    public UUID getAuthToken() {
-        return authToken;
+    public String getAuthToken() {
+        return token;
     }
 }

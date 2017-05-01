@@ -21,7 +21,7 @@ import com.ylinor.server.ServerTerrain;
 public final class YlinorServer extends YlinorApplication {
     private final World world;
     private volatile boolean running;
-    
+
     private YlinorServer() {
         this.world = buildWorld();
 
@@ -46,6 +46,8 @@ public final class YlinorServer extends YlinorApplication {
                 bind(YlinorServer.class).toInstance(YlinorServer.this);
                 bind(File.class).annotatedWith(Names.named("configFile"))
                                 .toInstance(new File("server.properties"));
+                bind(File.class).annotatedWith(Names.named("mapFolder"))
+                                .toInstance(new File(".", "map/"));
                 bind(Terrain.class).to(ServerTerrain.class);
             }
         });

@@ -1,5 +1,7 @@
 package com.ylinor.server;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -8,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.ylinor.auth.client.YlinorUser;
+import com.ylinor.auth.client.model.AuthException;
 import com.ylinor.library.api.ecs.components.Player;
 import com.ylinor.library.api.ecs.components.Position;
 import com.ylinor.library.api.ecs.components.Rotation;
@@ -49,8 +53,19 @@ public class NetworkHandlerSystem extends NonProcessingSystem
         PlayerConnection connection = sender.get(PlayerConnection.class);
 
         if (!connection.isLoggedIn()) {
-            logger.info("Player {} logged in.", login.getAuthToken());
-            sender.set(new Player(login.getAuthToken().toString()));
+            YlinorUser user = new YlinorUser();
+            
+            try {
+                user.fetch(login.getAuthToken());
+            }
+            catch (AuthException | IOException e) {
+                logger.warn("Login failed from address {}.", connection.getConnection().getRemoteAddressTCP().toString());
+                connection.kick("Login failed.");
+                return;
+            }
+            
+            logger.info("Player {} successfully logged in.", user.user().getUsername());
+            sender.set(new Player(user));
             sender.set(Position.class);
             sender.set(Rotation.class);
             connection.setLoggedIn(true);

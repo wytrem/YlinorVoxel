@@ -67,6 +67,7 @@ public class ServerNetworkSystem extends TickingSystem {
                     }
                 }
                 
+                // TODO : do not spawn entity player on conenction, but on character choice
                 // TODO : read player position/rotation in database and synchronise
                 // TODO : send near chunks
             }
