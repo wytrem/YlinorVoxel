@@ -10,7 +10,8 @@ import com.ylinor.library.util.ecs.entity.Entity;
 
 
 public class PacketMapChunk extends Packet {
-
+    
+    private int x, z;
     private byte[] blocks;
     private byte[] states;
 
@@ -18,6 +19,8 @@ public class PacketMapChunk extends Packet {
     }
 
     public PacketMapChunk(Chunk chunk) {
+        x = chunk.x;
+        z = chunk.z;
         blocks = Zstd.compress(ArrayUtils.toByteArray(chunk.getBlocksArray()));
         states = Zstd.compress(chunk.getStatesArray());
     }
@@ -32,6 +35,8 @@ public class PacketMapChunk extends Packet {
 
     @Override
     public void write(Kryo kryo, Output output) {
+        output.writeInt(x);
+        output.writeInt(z);
         output.writeInt(blocks.length);
         output.write(blocks);
         output.writeInt(states.length);
@@ -40,6 +45,8 @@ public class PacketMapChunk extends Packet {
 
     @Override
     public void read(Kryo kryo, Input input) {
+        x = input.readInt();
+        z = input.readInt();
         blocks = input.readBytes(input.readInt());
         states = input.readBytes(input.readInt());
     }
@@ -47,5 +54,13 @@ public class PacketMapChunk extends Packet {
     @Override
     public void handle(Entity sender, PacketHandler handler) {
         handler.handleMapChunk(sender, this);
+    }
+    
+    public int getX() {
+        return x;
+    }
+    
+    public int getZ() {
+        return z;
     }
 }

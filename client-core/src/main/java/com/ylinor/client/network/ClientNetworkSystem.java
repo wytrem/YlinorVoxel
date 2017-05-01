@@ -2,11 +2,6 @@ package com.ylinor.client.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,6 +19,7 @@ import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.EyeHeight;
 import com.ylinor.client.render.RenderViewEntity;
 import com.ylinor.client.render.ScreenSystem;
+import com.ylinor.client.terrain.ClientTerrain;
 import com.ylinor.library.api.ecs.components.AABB;
 import com.ylinor.library.api.ecs.components.CollisionState;
 import com.ylinor.library.api.ecs.components.Heading;
@@ -33,8 +29,9 @@ import com.ylinor.library.api.ecs.components.Position;
 import com.ylinor.library.api.ecs.components.Rotation;
 import com.ylinor.library.api.ecs.components.Size;
 import com.ylinor.library.api.ecs.components.Velocity;
+import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.util.ecs.entity.Entity;
-import com.ylinor.library.util.ecs.system.BaseSystem;
+import com.ylinor.library.util.ecs.system.NonProcessingSystem;
 import com.ylinor.packets.Packet;
 import com.ylinor.packets.PacketDespawnEntity;
 import com.ylinor.packets.PacketDisconnect;
@@ -48,32 +45,29 @@ import com.ylinor.packets.Protocol;
 
 
 @Singleton
-public final class ClientNetworkSystem extends BaseSystem
+public class ClientNetworkSystem extends NonProcessingSystem
                 implements PacketHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientNetworkSystem.class);
 
     private Client client;
-    private Deque<Packet> packetQueue;
-    private List<Entity> nearbyEntities;
     public boolean loggedIn;
-
-    /*
-     * TODO maybe create a new implementation of PacketHandler for a cleaner
-     * code ? wytrem : approved.
-     */
 
     @Inject
     PhySystem phySystem;
 
     @Inject
     ScreenSystem screenSystem;
-    
+
     @Inject
     @Named("serverIp")
     String serverIp;
+    
+    @Inject
+    ClientTerrain terrain;
+    
+    public boolean hasReceivedChunkPacket;
 
     public ClientNetworkSystem() {
-        this.nearbyEntities = new ArrayList<>();
     }
 
     @Override
@@ -83,23 +77,11 @@ public final class ClientNetworkSystem extends BaseSystem
 
         Packet.registerToKryo(client.getKryo());
 
-        this.packetQueue = new ArrayDeque<>();
-
         loggedIn = false;
+        hasReceivedChunkPacket = false;
     }
 
-    @Override
-    protected void processSystem() {
-        Packet packet;
-
-        if (client.isConnected()) {
-            while ((packet = packetQueue.poll()) != null) {
-                client.sendTCP(packet);
-            }
-        }
-    }
-
-    public void init() throws IOException {
+    public void connectToServer() throws IOException {
         logger.info("Protocol version: {}.", Protocol.PROTOCOL_VERSION);
         logger.info("Connecting to {}:{}.", serverIp, Protocol.SERVER_PORT);
         client.connect(10000, InetAddress.getByName(serverIp), Protocol.SERVER_PORT);
@@ -114,8 +96,8 @@ public final class ClientNetworkSystem extends BaseSystem
         });
     }
 
-    public void enqueuePacket(Packet packet) {
-        packetQueue.addLast(packet);
+    public int send(Packet packet) {
+        return client.sendTCP(packet);
     }
 
     @Override
@@ -126,57 +108,48 @@ public final class ClientNetworkSystem extends BaseSystem
 
     @Override
     public void handleMapChunk(Entity sender, PacketMapChunk packetMapChunk) {
-
+        Chunk chunk = terrain.getChunk(packetMapChunk.getX(), packetMapChunk.getZ());
+        packetMapChunk.populateChunk(chunk);
+        
+        if (!hasReceivedChunkPacket) {
+            hasReceivedChunkPacket = true;
+        }
     }
 
     @Override
     public void handleSpawnEntity(Entity sender, PacketSpawnEntity spawnEntity) {
-        Entity entity = world.create(spawnEntity.getEntityID())
+        Entity entity = world.create(spawnEntity.getEntityId())
                              .set(Position.class)
                              .set(Heading.class)
-                             .set(Rotation.class)
-                             .set(NetworkIdentifierComponent.class);
+                             .set(Rotation.class);
 
-        entity.get(NetworkIdentifierComponent.class)
-              .setIdentifier(spawnEntity.getEntityID());
         entity.get(Position.class).position.set(spawnEntity.getInitialX(), spawnEntity.getInitialY(), spawnEntity.getInitialZ());
         entity.get(Rotation.class).rotationPitch = spawnEntity.getInitialPitch();
         entity.get(Rotation.class).rotationYaw = spawnEntity.getInitialYaw();
 
-        nearbyEntities.add(entity);
-        logger.info("Spawned entity {}", spawnEntity.getEntityID());
+        logger.info("Spawned entity {}", spawnEntity.getEntityId());
     }
 
     @Override
     public void handleDespawnEntity(Entity sender, PacketDespawnEntity despawnEntity) {
-        Iterator<Entity> it = nearbyEntities.iterator();
-
-        while (it.hasNext()) {
-            Entity entity = it.next();
-
-            if (entity.get(NetworkIdentifierComponent.class)
-                      .getIdentifier() == despawnEntity.getEntityID()) {
-                entity.delete();
-                it.remove();
-
-                break;
-            }
-        }
+        world.delete(despawnEntity.getEntityId());
     }
 
     @Override
     public void handlePositionUpdate(Entity sender, PacketPositionAndRotationUpdate positionUpdate) {
-        for (Entity entity : nearbyEntities) {
-            if (entity.get(NetworkIdentifierComponent.class)
-                      .getIdentifier() == positionUpdate.getEntityID()) {
-                Vector3f position = entity.get(Position.class).position;
-                Rotation rotation = entity.get(Rotation.class);
+        Entity entity = world.get(positionUpdate.getEntityId());
 
-                position.set(positionUpdate.getX(), positionUpdate.getY(), positionUpdate.getZ());
-                rotation.rotationPitch = positionUpdate.getPitch();
-                rotation.rotationYaw = positionUpdate.getYaw();
-            }
+        if (entity == null) {
+            logger.warn("Client received a position packet for a null entity!");
+            return;
         }
+
+        Vector3f position = entity.get(Position.class).position;
+        Rotation rotation = entity.get(Rotation.class);
+
+        position.set(positionUpdate.getX(), positionUpdate.getY(), positionUpdate.getZ());
+        rotation.rotationPitch = positionUpdate.getPitch();
+        rotation.rotationYaw = positionUpdate.getYaw();
     }
 
     @Override
@@ -185,10 +158,6 @@ public final class ClientNetworkSystem extends BaseSystem
 
         JOptionPane.showMessageDialog(null, "You have been disconnected from the server, reason : " + disconnect.getReason(), "Connection lost", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
-    }
-
-    public List<Entity> getNearbyEntities() {
-        return nearbyEntities;
     }
 
     @Override

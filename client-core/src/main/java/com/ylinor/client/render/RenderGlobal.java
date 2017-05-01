@@ -3,8 +3,6 @@ package com.ylinor.client.render;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.joml.Vector3f;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -19,17 +17,13 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Config;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.render.model.ModelRegistry;
 import com.ylinor.client.resource.Assets;
-import com.ylinor.library.api.ecs.components.Position;
-import com.ylinor.library.api.ecs.components.Rotation;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.World;
-import com.ylinor.library.util.ecs.entity.Entity;
 
 
 @Singleton
@@ -105,21 +99,22 @@ public class RenderGlobal implements Disposable {
         terrainBatch.render(terrainRenderer, environment);
         terrainBatch.end();
 
-        entitiesBatch.begin(cameraSystem.getCamera());
+//        entitiesBatch.begin(cameraSystem.getCamera());
 
-        for (Entity entity : clientNetworkSystem.getNearbyEntities()) {
-            Vector3f position = entity.get(Position.class).position;
-            Rotation rotation = entity.get(Rotation.class);
-
-            placeholderEntityModelInstance.transform.idt()
-                                                    .scl(0.3f)
-                                                    .rotate(Vector3.Y, -rotation.rotationYaw)
-                                                    .setTranslation(position.x, position.y, position.z);
-
-            entitiesBatch.render(placeholderEntityModelInstance, environment);
-        }
-
-        entitiesBatch.end();
+        // TODO : create dedicated system
+//        for (Entity entity : clientNetworkSystem.getNearbyEntities()) {
+//            Vector3f position = entity.get(Position.class).position;
+//            Rotation rotation = entity.get(Rotation.class);
+//
+//            placeholderEntityModelInstance.transform.idt()
+//                                                    .scl(0.3f)
+//                                                    .rotate(Vector3.Y, -rotation.rotationYaw)
+//                                                    .setTranslation(position.x, position.y, position.z);
+//
+//            entitiesBatch.render(placeholderEntityModelInstance, environment);
+//        }
+//
+//        entitiesBatch.end();
     }
 
     private void update() {

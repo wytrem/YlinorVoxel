@@ -66,6 +66,9 @@ public class ServerNetworkSystem extends TickingSystem {
                         playerConnection.sendPacket(new PacketSpawnEntity(other.getEntityId()));
                     }
                 }
+                
+                // TODO : read player position/rotation in database and synchronise
+                // TODO : send near chunks
             }
 
             @Override

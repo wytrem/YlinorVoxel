@@ -42,8 +42,4 @@ public final class PacketLogin extends Packet {
     public UUID getAuthToken() {
         return authToken;
     }
-
-    public void setAuthToken(UUID authToken) {
-        this.authToken = authToken;
-    }
 }

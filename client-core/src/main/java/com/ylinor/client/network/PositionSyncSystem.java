@@ -26,7 +26,7 @@ public final class PositionSyncSystem extends TickingIteratingSystem {
     protected void tickEntity(Entity i) {
         Vector3f currentPosition = i.get(Position.class).position;
         Rotation rotation = i.get(Rotation.class);
-        networkSystem.enqueuePacket(new PacketPositionAndRotationUpdate(-1, currentPosition.x, currentPosition.y, currentPosition.z, rotation.rotationPitch, rotation.rotationYaw));
+        networkSystem.send(new PacketPositionAndRotationUpdate(-1, currentPosition.x, currentPosition.y, currentPosition.z, rotation.rotationPitch, rotation.rotationYaw));
     }
 
     @Override

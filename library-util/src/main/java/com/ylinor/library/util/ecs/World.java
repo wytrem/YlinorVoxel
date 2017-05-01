@@ -87,6 +87,10 @@ public class World {
         entities.remove(entityId);
         return true;
     }
+    
+    public Entity get(int id) {
+        return entities.get(id);
+    }
 
     private void notifyCreated(int entityId) {
         notifyAspectChanged(entityId);

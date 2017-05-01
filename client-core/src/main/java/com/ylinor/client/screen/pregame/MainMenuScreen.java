@@ -94,8 +94,8 @@ public class MainMenuScreen extends YlinorScreen {
     }
 
     public void connectToServer() throws IOException {
-        networkSystem.init();
-        networkSystem.enqueuePacket(new PacketLogin(UUID.randomUUID()));
+        networkSystem.connectToServer();
+        networkSystem.send(new PacketLogin(UUID.randomUUID()));
     }
 
     @Override

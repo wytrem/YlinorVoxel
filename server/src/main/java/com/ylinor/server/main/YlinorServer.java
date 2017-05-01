@@ -5,6 +5,7 @@ import java.io.File;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.ylinor.library.api.YlinorApplication;
+import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.ecs.WorldConfiguration;
 import com.ylinor.server.CommandLineSystem;
@@ -14,6 +15,7 @@ import com.ylinor.server.NetworkHandlerSystem;
 import com.ylinor.server.PositionSyncSystem;
 import com.ylinor.server.ServerConfigurationSystem;
 import com.ylinor.server.ServerNetworkSystem;
+import com.ylinor.server.ServerTerrain;
 
 
 public final class YlinorServer extends YlinorApplication {
@@ -44,6 +46,7 @@ public final class YlinorServer extends YlinorApplication {
                 bind(YlinorServer.class).toInstance(YlinorServer.this);
                 bind(File.class).annotatedWith(Names.named("configFile"))
                                 .toInstance(new File("server.properties"));
+                bind(Terrain.class).to(ServerTerrain.class);
             }
         });
     }

@@ -35,8 +35,4 @@ public final class PacketDisconnect extends Packet {
     public String getReason() {
         return reason;
     }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
 }

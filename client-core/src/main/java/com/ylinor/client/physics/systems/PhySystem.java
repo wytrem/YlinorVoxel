@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import org.joml.Vector3f;
 
 import com.ylinor.client.YlinorClient;
+import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.library.api.ecs.components.AABB;
 import com.ylinor.library.api.ecs.components.CollisionState;
 import com.ylinor.library.api.ecs.components.Heading;
@@ -33,10 +34,13 @@ import com.ylinor.library.util.math.MathHelper;
 public class PhySystem extends TickingIteratingSystem {
 
     @Inject
-    private Terrain terrain;
+    Terrain terrain;
 
     @Inject
-    private YlinorClient client;
+    YlinorClient client;
+    
+    @Inject
+    ClientNetworkSystem clientNetworkSystem;
 
     private TempVars tempVars;
 
@@ -566,7 +570,7 @@ public class PhySystem extends TickingIteratingSystem {
 
     @Override
     protected boolean checkProcessing() {
-        return client.isInGame;
+        return client.isInGame && clientNetworkSystem.hasReceivedChunkPacket;
     }
 
     public static interface MotionModifier {
