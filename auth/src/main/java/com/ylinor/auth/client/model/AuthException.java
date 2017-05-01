@@ -11,6 +11,7 @@ package com.ylinor.auth.client.model;
  */
 public class AuthException extends Exception
 {
+    private static final long serialVersionUID = -3335580292281431458L;
     private String error;
     private String message;
 

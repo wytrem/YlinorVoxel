@@ -6,7 +6,7 @@ import com.ylinor.client.YlinorClient;
 import com.ylinor.packets.Protocol;
 
 
-/**
+/**our,
  * Le lanceur de l'appli pour bureau
  */
 public class DesktopLauncher {

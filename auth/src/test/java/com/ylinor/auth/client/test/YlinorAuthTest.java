@@ -21,6 +21,8 @@ public class YlinorAuthTest
             update(scanner.nextLine());
             System.out.print("> ");
         }
+        
+        scanner.close();
     }
 
     private static void update(String line)
