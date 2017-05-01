@@ -11,5 +11,4 @@ dependencies {
     compile "com.kotcrab.vis:vis-ui:$visuiVersion"
     compile "com.kotcrab.vis:vis-usl:0.2.1"
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-    compile "net.sf.jopt-simple:jopt-simple:$joptVersion"
 }
