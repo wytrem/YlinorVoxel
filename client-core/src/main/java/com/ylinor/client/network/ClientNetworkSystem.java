@@ -119,6 +119,7 @@ public class ClientNetworkSystem extends NonProcessingSystem
 
     @Override
     public void handleMapChunk(PacketSender sender, PacketMapChunk packetMapChunk) {
+        logger.info("Received a chunk!");
         Chunk chunk = terrain.getChunk(packetMapChunk.getX(), packetMapChunk.getZ());
         packetMapChunk.populateChunk(chunk);
         

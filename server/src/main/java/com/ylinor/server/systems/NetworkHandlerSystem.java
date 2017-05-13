@@ -28,6 +28,7 @@ import com.ylinor.library.api.protocol.packets.PacketMapChunk;
 import com.ylinor.library.api.protocol.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.library.api.protocol.packets.PacketSpawnClientPlayer;
 import com.ylinor.library.api.protocol.packets.PacketSpawnEntity;
+import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.NonProcessingSystem;
 
@@ -43,6 +44,9 @@ public class NetworkHandlerSystem extends NonProcessingSystem
 
     @Inject
     private ConnectionListener connectionListener;
+    
+    @Inject
+    Terrain terrain;
 
     @Override
     public void initialize() {
@@ -128,7 +132,7 @@ public class NetworkHandlerSystem extends NonProcessingSystem
         player.set(new Player(sender));
         sender.setEntity(player);
         Position position = new Position();
-        position.position.set(1818, 126, 6710);
+        position.position.set(1818, 150, 6710);
         player.set(position);
         player.set(new Rotation());
         
@@ -141,6 +145,15 @@ public class NetworkHandlerSystem extends NonProcessingSystem
                 sender.sendPacket(new PacketSpawnEntity(other.getEntityId()));
             }
         }
+        int chunkX = ((int) position.position.x) / 16;
+        int chunkZ = ((int) position.position.z) / 16;
+
+        for (int i = -5; i < 6; i++) {
+            for (int j = -5; j < 6; j++) {
+                sender.sendPacket(new PacketMapChunk(terrain.getChunk(chunkX + i, chunkZ + j)));
+            }
+        }
+        
         // -- end todo
     }
 
