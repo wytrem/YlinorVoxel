@@ -20,7 +20,7 @@ import com.ylinor.client.network.ClientNetworkSystem;
 import com.ylinor.client.render.ScreenSystem;
 import com.ylinor.client.resource.Assets;
 import com.ylinor.client.screen.YlinorScreen;
-import com.ylinor.packets.PacketLogin;
+import com.ylinor.library.api.protocol.packets.PacketLogin;
 
 
 public class MainMenuScreen extends YlinorScreen {
@@ -81,7 +81,6 @@ public class MainMenuScreen extends YlinorScreen {
                     catch (IOException e) {
                         throw new RuntimeException(e); // TODO mieux gérer les exceptions :-D
                     }
-                    client.isInGame = true;
                 }
             });
 
@@ -93,7 +92,7 @@ public class MainMenuScreen extends YlinorScreen {
 
     public void connectToServer() throws IOException {
         networkSystem.connectToServer();
-        networkSystem.send(new PacketLogin(user.getToken() + "azeaze"));
+        networkSystem.send(new PacketLogin(user.getToken()));
     }
 
     @Override

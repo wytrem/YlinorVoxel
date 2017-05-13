@@ -3,7 +3,6 @@ eclipse.project {
 }
 
 dependencies {
-    compile project(':library-util')
     compile project(':library-api')
 
     compile 'com.esotericsoftware:kryonet:2.22.0-RC1'

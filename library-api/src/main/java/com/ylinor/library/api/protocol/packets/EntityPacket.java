@@ -1,4 +1,4 @@
-package com.ylinor.packets;
+package com.ylinor.library.api.protocol.packets;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;

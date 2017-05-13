@@ -8,9 +8,9 @@ import com.ylinor.library.api.ecs.components.Heading;
 import com.ylinor.library.api.ecs.components.Position;
 import com.ylinor.library.api.ecs.components.Rotation;
 import com.ylinor.library.api.ecs.systems.TickingIteratingSystem;
+import com.ylinor.library.api.protocol.packets.PacketPositionAndRotationUpdate;
 import com.ylinor.library.util.ecs.entity.Aspect;
 import com.ylinor.library.util.ecs.entity.Entity;
-import com.ylinor.packets.PacketPositionAndRotationUpdate;
 
 
 public final class PositionSyncSystem extends TickingIteratingSystem {

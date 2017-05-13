@@ -1,4 +1,4 @@
-package com.ylinor.server;
+package com.ylinor.server.systems;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -12,9 +12,11 @@ import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.ylinor.client.YlinorClient;
 import com.ylinor.client.physics.systems.PhySystem;
 import com.ylinor.client.render.EyeHeight;
 import com.ylinor.client.render.RenderViewEntity;
@@ -30,19 +32,22 @@ import com.ylinor.library.api.ecs.components.Position;
 import com.ylinor.library.api.ecs.components.Rotation;
 import com.ylinor.library.api.ecs.components.Size;
 import com.ylinor.library.api.ecs.components.Velocity;
+import com.ylinor.library.api.protocol.PacketSender;
+import com.ylinor.library.api.protocol.Protocol;
+import com.ylinor.library.api.protocol.packets.Packet;
+import com.ylinor.library.api.protocol.packets.PacketCharacterSelection;
+import com.ylinor.library.api.protocol.packets.PacketCharactersList;
+import com.ylinor.library.api.protocol.packets.PacketDespawnEntity;
+import com.ylinor.library.api.protocol.packets.PacketDisconnect;
+import com.ylinor.library.api.protocol.packets.PacketHandler;
+import com.ylinor.library.api.protocol.packets.PacketLogin;
+import com.ylinor.library.api.protocol.packets.PacketMapChunk;
+import com.ylinor.library.api.protocol.packets.PacketPositionAndRotationUpdate;
+import com.ylinor.library.api.protocol.packets.PacketSpawnClientPlayer;
+import com.ylinor.library.api.protocol.packets.PacketSpawnEntity;
 import com.ylinor.library.api.terrain.Chunk;
 import com.ylinor.library.util.ecs.entity.Entity;
 import com.ylinor.library.util.ecs.system.NonProcessingSystem;
-import com.ylinor.packets.Packet;
-import com.ylinor.packets.PacketDespawnEntity;
-import com.ylinor.packets.PacketDisconnect;
-import com.ylinor.packets.PacketHandler;
-import com.ylinor.packets.PacketLogin;
-import com.ylinor.packets.PacketMapChunk;
-import com.ylinor.packets.PacketPositionAndRotationUpdate;
-import com.ylinor.packets.PacketSpawnClientPlayer;
-import com.ylinor.packets.PacketSpawnEntity;
-import com.ylinor.packets.Protocol;
 
 
 @Singleton
@@ -50,7 +55,7 @@ public class ClientNetworkSystem extends NonProcessingSystem
                 implements PacketHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientNetworkSystem.class);
 
-    private Client client;
+    private Client kryoClient;
     public boolean loggedIn;
 
     @Inject
@@ -66,6 +71,9 @@ public class ClientNetworkSystem extends NonProcessingSystem
     @Inject
     ClientTerrain terrain;
     
+    @Inject
+    YlinorClient client;
+    
     public boolean hasReceivedChunkPacket;
 
     public ClientNetworkSystem() {
@@ -73,10 +81,10 @@ public class ClientNetworkSystem extends NonProcessingSystem
 
     @Override
     public void initialize() {
-        this.client = new Client();
-        client.start();
+        this.kryoClient = new Client();
+        kryoClient.start();
 
-        Packet.registerToKryo(client.getKryo());
+        Packet.registerToKryo(kryoClient.getKryo());
 
         loggedIn = false;
         hasReceivedChunkPacket = false;
@@ -85,30 +93,32 @@ public class ClientNetworkSystem extends NonProcessingSystem
     public void connectToServer() throws IOException {
         logger.info("Protocol version: {}.", Protocol.PROTOCOL_VERSION);
         logger.info("Connecting to {}:{}.", serverIp, Protocol.SERVER_PORT);
-        client.connect(10000, InetAddress.getByName(serverIp), Protocol.SERVER_PORT);
+        kryoClient.connect(10000, InetAddress.getByName(serverIp), Protocol.SERVER_PORT);
 
-        client.addListener(new Listener() {
+        kryoClient.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
                 if (object instanceof Packet) {
-                    ((Packet) object).handle(null, ClientNetworkSystem.this);
+                    Gdx.app.postRunnable(() -> {
+                        ((Packet) object).handle(null, ClientNetworkSystem.this);
+                    });
                 }
             }
         });
     }
 
     public int send(Packet packet) {
-        return client.sendTCP(packet);
+        return kryoClient.sendTCP(packet);
     }
 
     @Override
-    public void handleLogin(Entity sender, PacketLogin login) {
+    public void handleLogin(PacketSender sender, PacketLogin login) {
         loggedIn = true;
         logger.info("Successfully logged in.");
     }
 
     @Override
-    public void handleMapChunk(Entity sender, PacketMapChunk packetMapChunk) {
+    public void handleMapChunk(PacketSender sender, PacketMapChunk packetMapChunk) {
         Chunk chunk = terrain.getChunk(packetMapChunk.getX(), packetMapChunk.getZ());
         packetMapChunk.populateChunk(chunk);
         
@@ -118,7 +128,7 @@ public class ClientNetworkSystem extends NonProcessingSystem
     }
 
     @Override
-    public void handleSpawnEntity(Entity sender, PacketSpawnEntity spawnEntity) {
+    public void handleSpawnEntity(PacketSender sender, PacketSpawnEntity spawnEntity) {
         Entity entity = world.create(spawnEntity.getEntityId())
                              .set(Position.class)
                              .set(Heading.class)
@@ -132,12 +142,12 @@ public class ClientNetworkSystem extends NonProcessingSystem
     }
 
     @Override
-    public void handleDespawnEntity(Entity sender, PacketDespawnEntity despawnEntity) {
+    public void handleDespawnEntity(PacketSender sender, PacketDespawnEntity despawnEntity) {
         world.delete(despawnEntity.getEntityId());
     }
 
     @Override
-    public void handlePositionUpdate(Entity sender, PacketPositionAndRotationUpdate positionUpdate) {
+    public void handlePositionUpdate(PacketSender sender, PacketPositionAndRotationUpdate positionUpdate) {
         Entity entity = world.get(positionUpdate.getEntityId());
 
         if (entity == null) {
@@ -154,14 +164,15 @@ public class ClientNetworkSystem extends NonProcessingSystem
     }
 
     @Override
-    public void handleDisconnect(Entity sender, PacketDisconnect disconnect) {
+    public void handleDisconnect(PacketSender sender, PacketDisconnect disconnect) {
         // TODO create a proper gui alert dialog
         screenSystem.setScreen(MainMenuScreen.class);
         JOptionPane.showMessageDialog(null, "You have been disconnected from the server, reason : " + disconnect.getReason(), "Connection lost", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
-    public void handleSpawnClientPlayer(Entity sender, PacketSpawnClientPlayer spawnClientPlayer) {
+    public void handleSpawnClientPlayer(PacketSender sender, PacketSpawnClientPlayer spawnClientPlayer) {
+        client.isInGame = true;
         logger.info("Spawning client player.");
         Entity player = world.create(spawnClientPlayer.getEntityId());
         player.set(RenderViewEntity.class)
@@ -182,5 +193,16 @@ public class ClientNetworkSystem extends NonProcessingSystem
         phySystem.setPosition(player, 1818, 126, 6710);
 
         screenSystem.setNoScreen();
+    }
+
+    @Override
+    public void handleCharacterSelection(PacketSender sender, PacketCharacterSelection packetCharacterSelection) {
+        // Invalid.
+    }
+
+    @Override
+    public void handleCharacterList(PacketSender sender, PacketCharactersList packetCharactersList) {
+        // TODO : display character list, and when a choice is done :
+        send(new PacketCharacterSelection());
     }
 }

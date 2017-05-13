@@ -1,4 +1,4 @@
-package com.ylinor.packets;
+package com.ylinor.library.api.protocol.packets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.KryoSerializable;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.api.protocol.PacketSender;
 
 
 public abstract class Packet implements KryoSerializable {
@@ -23,6 +23,8 @@ public abstract class Packet implements KryoSerializable {
         registerPacket(PacketDespawnEntity.class);
         registerPacket(PacketDisconnect.class);
         registerPacket(PacketSpawnClientPlayer.class);
+        registerPacket(PacketCharacterSelection.class);
+        registerPacket(PacketCharactersList.class);
     }
 
     private static void registerPacket(Class<? extends Packet> packetClass) {
@@ -42,5 +44,5 @@ public abstract class Packet implements KryoSerializable {
         output.writeLong(uuid.getLeastSignificantBits());
     }
 
-    public abstract void handle(Entity sender, PacketHandler handler);
+    public abstract void handle(PacketSender sender, PacketHandler handler);
 }

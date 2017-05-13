@@ -4,5 +4,6 @@ eclipse.project {
 
 dependencies {
     compile project(':library-util')
+    
     compile "com.flowpowered:flow-nbt:1.0.0"
 }

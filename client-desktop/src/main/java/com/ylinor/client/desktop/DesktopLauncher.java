@@ -10,7 +10,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.ylinor.auth.client.YlinorUser;
 import com.ylinor.auth.client.model.AuthException;
 import com.ylinor.client.YlinorClient;
-import com.ylinor.packets.Protocol;
+import com.ylinor.library.api.protocol.Protocol;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;

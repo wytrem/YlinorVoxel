@@ -1,4 +1,4 @@
-package com.ylinor.server;
+package com.ylinor.server.systems;
 
 import java.io.File;
 
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ylinor.library.util.ecs.system.NonProcessingSystem;
+import com.ylinor.server.ServerConfiguration;
 
 
 @Singleton

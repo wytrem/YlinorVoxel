@@ -8,14 +8,14 @@ import com.ylinor.library.api.YlinorApplication;
 import com.ylinor.library.api.terrain.Terrain;
 import com.ylinor.library.util.ecs.World;
 import com.ylinor.library.util.ecs.WorldConfiguration;
-import com.ylinor.server.CommandLineSystem;
-import com.ylinor.server.DatabaseSystem;
-import com.ylinor.server.FramerateLimitSystem;
-import com.ylinor.server.NetworkHandlerSystem;
-import com.ylinor.server.PositionSyncSystem;
-import com.ylinor.server.ServerConfigurationSystem;
-import com.ylinor.server.ServerNetworkSystem;
 import com.ylinor.server.ServerTerrain;
+import com.ylinor.server.systems.CommandLineSystem;
+import com.ylinor.server.systems.DatabaseSystem;
+import com.ylinor.server.systems.EntityTrackerSystem;
+import com.ylinor.server.systems.FramerateLimitSystem;
+import com.ylinor.server.systems.NetworkHandlerSystem;
+import com.ylinor.server.systems.ServerConfigurationSystem;
+import com.ylinor.server.systems.ServerNetworkSystem;
 
 
 public final class YlinorServer extends YlinorApplication {
@@ -36,7 +36,7 @@ public final class YlinorServer extends YlinorApplication {
         configuration.with(CommandLineSystem.class);
         configuration.with(DatabaseSystem.class);
         configuration.with(NetworkHandlerSystem.class);
-        configuration.with(PositionSyncSystem.class);
+        configuration.with(EntityTrackerSystem.class);
         configuration.with(Integer.MAX_VALUE, ServerConfigurationSystem.class);
         configuration.with(Integer.MIN_VALUE, FramerateLimitSystem.class);
 

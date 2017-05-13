@@ -1,4 +1,4 @@
-package com.ylinor.server;
+package com.ylinor.server.systems;
 
 import java.util.Scanner;
 

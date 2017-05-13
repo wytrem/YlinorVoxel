@@ -1,9 +1,10 @@
-package com.ylinor.packets;
+package com.ylinor.library.api.protocol.packets;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.api.protocol.PacketSender;
 
 
 public final class PacketSpawnEntity extends EntityPacket {
@@ -31,7 +32,7 @@ public final class PacketSpawnEntity extends EntityPacket {
     }
 
     @Override
-    public void handle(Entity sender, PacketHandler handler) {
+    public void handle(PacketSender sender, PacketHandler handler) {
         handler.handleSpawnEntity(sender, this);
     }
 

@@ -1,6 +1,7 @@
-package com.ylinor.packets;
+package com.ylinor.library.api.protocol.packets;
 
 import com.ylinor.library.util.ecs.entity.Entity;
+import com.ylinor.library.api.protocol.PacketSender;
 
 
 public final class PacketDespawnEntity extends EntityPacket {
@@ -13,7 +14,7 @@ public final class PacketDespawnEntity extends EntityPacket {
     }
 
     @Override
-    public void handle(Entity sender, PacketHandler handler) {
+    public void handle(PacketSender sender, PacketHandler handler) {
         handler.handleDespawnEntity(sender, this);
     }
 }

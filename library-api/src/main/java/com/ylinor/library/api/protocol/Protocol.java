@@ -1,4 +1,4 @@
-package com.ylinor.packets;
+package com.ylinor.library.api.protocol;
 
 public class Protocol {
     public static final int SERVER_PORT = 1876;
