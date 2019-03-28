@@ -5,6 +5,7 @@
 client-core/assets/settings.json
 build/
 
+server/launch/*
 build/
 
 ### Eclipse ###
@@ -20,6 +21,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+eclimd.log
 
 # Eclipse Core
 .project
